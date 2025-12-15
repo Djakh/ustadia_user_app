@@ -28,7 +28,7 @@ class _SplashPageState extends State<SplashPage> {
 
   void start() => Future.delayed(const Duration(seconds: 2), () {
         if (!mounted) return;
-        //  goToOnboarding();
+          goToOnboarding();
       });
 
   /// --- Widgets ---
