@@ -17,7 +17,8 @@ class PostPage extends StatelessWidget {
       ),
       body: BlocConsumer<PostBloc, PostState>(
         listener: (context, state) {
-          if (state.status == PostStatus.failure && state.errorMessage != null) {
+          if (state.status == PostStatus.failure &&
+              state.errorMessage != null) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.errorMessage!)),
             );
@@ -34,7 +35,8 @@ class PostPage extends StatelessWidget {
 
           return Center(
             child: ElevatedButton(
-              onPressed: () => context.read<PostBloc>().add(const PostRequested()),
+              onPressed: () =>
+                  context.read<PostBloc>().add(const PostRequested()),
               child: const Text('Load Posts'),
             ),
           );

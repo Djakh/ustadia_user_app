@@ -6,8 +6,8 @@ import 'post_state.dart';
 
 class PostBloc extends Bloc<PostEvent, PostState> {
   PostBloc({required FetchPosts fetchPosts})
-      : _fetchPosts = fetchPosts,
-        super(const PostState()) {
+    : _fetchPosts = fetchPosts,
+      super(const PostState()) {
     on<PostRequested>(_onPostRequested);
   }
 
