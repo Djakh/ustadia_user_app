@@ -1,0 +1,15 @@
+name: ✨ Feature
+description: New feature request
+title: "[Enhancement | ]: "
+labels: ["enhancement, UI"]
+assignees:
+  - Djakh
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature description
+      placeholder: What do you want to add?
+    validations:
+      required: true
