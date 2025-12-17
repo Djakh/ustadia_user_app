@@ -5,9 +5,10 @@ class AppImages {
   static const mapImage = 'assets/images/map_image.png';
   static const createDonationImage = 'assets/images/create_donation_image.png';
 
-  /// --- Onboard ---
+  /// --- PNG ---
 
   static const onboard1 = 'assets/images/on_board1.png';
   static const onboard2 = 'assets/images/on_board2.png';
   static const onboard3 = 'assets/images/on_board3.png';
+  static const loginLogo = 'assets/images/login_logo.png';
 }

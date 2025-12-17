@@ -129,16 +129,13 @@ class Style {
   }
 
   // ---------- Headline (24) ----------
-  
+
   static TextStyle headline9w7(BuildContext context, {TextColorRole? color}) =>
       _text(context, size: 40, weight: FontWeight.w700, color: color);
 
-  
-  
   static TextStyle headline7w7(BuildContext context, {TextColorRole? color}) =>
       _text(context, size: 36, weight: FontWeight.w700, color: color);
 
-  
   static TextStyle headline2w7(BuildContext context, {TextColorRole? color}) =>
       _text(context, size: 26, weight: FontWeight.w700, color: color);
 
@@ -189,6 +186,9 @@ class Style {
 
   static TextStyle small3w3(BuildContext context, {TextColorRole? color}) =>
       _text(context, size: 14, weight: FontWeight.w300, color: color ?? TextColorRole.onSurface);
+
+  static TextStyle small2w5(BuildContext context, {TextColorRole? color}) =>
+      _text(context, size: 12, weight: FontWeight.w500, color: color ?? TextColorRole.onSurface);
 
   static TextStyle small2w4(BuildContext context, {TextColorRole? color}) =>
       _text(context, size: 12, weight: FontWeight.w400, color: color ?? TextColorRole.onSurface);
