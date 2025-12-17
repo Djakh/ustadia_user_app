@@ -5,10 +5,12 @@ import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
+import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/router.dart';
 
 class OtpPage extends StatefulWidget {
-  const OtpPage({super.key});
+  final String contact;
+  const OtpPage({super.key, required this.contact});
 
   @override
   State<OtpPage> createState() => OtpPageState();
@@ -45,9 +47,7 @@ class OtpPageState extends State<OtpPage> {
 
   String get codeValue => codes.map((c) => c.text).join();
 
-  bool get isComplete => codeValue.length == codeLength && !codeValue.contains('');
-
-  void goBack() => context.pop();
+  bool get isComplete => codeValue.length == codeLength;
 
   void goToHome() => context.go(postsRoute);
 
@@ -97,26 +97,23 @@ class OtpPageState extends State<OtpPage> {
 
   /// --- Widgets ---
 
-  Widget get appBar => Row(children: [
-        IconButton(
-            onPressed: goBack,
-            icon: Icon(Icons.arrow_back_ios_new, color: context.cs.onSurface, size: 18)),
-      ]);
-
-  Widget get headline => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Enter OTP', style: Style.body2w6(context)),
-        const SizedBox(height: 6),
-        Text(
-            'Enter the 4-digit OTP sent to your email to complete sign-up verification, +998 (99) 971 23 45',
-            style: Style.small3w4(context, color: TextColorRole.greyColor))
-      ]);
+  Widget get contactText => Text.rich(TextSpan(children: [
+        TextSpan(
+          text: 'Enter the 4-digit OTP sent to complete verification, ',
+          style: Style.small3w4(context, color: TextColorRole.greyColor),
+        ),
+        TextSpan(
+          text: widget.contact,
+          style: Style.small3w5(context).copyWith(fontWeight: FontWeight.w600),
+        )
+      ]));
 
   InputBorder otpBorder(Color color) => OutlineInputBorder(
       borderRadius: Style.border10, borderSide: BorderSide(color: color, width: 1.4));
 
   Widget otpBox(int index) => SizedBox(
-      width: 58,
-      height: 56,
+      width: 82.25,
+      height: 54,
       child: TextField(
           controller: codes[index],
           focusNode: nodes[index],
@@ -129,7 +126,7 @@ class OtpPageState extends State<OtpPage> {
               filled: true,
               fillColor: context.cs.surface,
               contentPadding: EdgeInsets.zero,
-              enabledBorder: otpBorder(context.cs.onTertiary.withOpacity(0.4)),
+              enabledBorder: otpBorder(context.cs.surface),
               focusedBorder: otpBorder(context.cs.primary)),
           onChanged: (value) => onDigitChanged(index, value)));
 
@@ -137,32 +134,37 @@ class OtpPageState extends State<OtpPage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: List.generate(codeLength, (index) => otpBox(index)));
 
-  Widget get resend => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+  Widget get resendButton => TextButton(
+      onPressed: secondsLeft == 0 ? onResend : null,
+      child: Text(secondsLeft == 0 ? 'Resend now' : timerLabel,
+          style: Style.small3w5(context,
+                  color: secondsLeft == 0 ? TextColorRole.onSurface : TextColorRole.greyColor)
+              .copyWith(color: secondsLeft == 0 ? context.cs.primary : context.cs.onSurface)));
+
+  Widget get resend => Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Text('Resend code in', style: Style.small3w4(context, color: TextColorRole.greyColor)),
-        TextButton(
-            onPressed: secondsLeft == 0 ? onResend : null,
-            child: Text(secondsLeft == 0 ? 'Resend now' : timerLabel,
-                style: Style.small3w5(context,
-                        color: secondsLeft == 0 ? TextColorRole.onSurface : TextColorRole.greyColor)
-                    .copyWith(
-                        color: secondsLeft == 0 ? context.cs.primary : context.cs.onTertiary)))
+        resendButton
       ]);
+
+  Widget get confirmButton =>
+      SafeArea(child: Button.primary(onTap: onConfirm, isAvialable: isComplete, text: 'Confirm'));
+
+  Widget get view => PrimaryBackground(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        const SizedBox(height: 20),
+        Text('Enter OTP', style: Style.body2w6(context)),
+        const SizedBox(height: 4),
+        contactText,
+        const SizedBox(height: 24),
+        otpRow,
+        resend,
+        const Spacer(),
+        confirmButton
+      ]));
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      backgroundColor: context.theme.scaffoldBackgroundColor,
-      body: SafeArea(
-          child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                appBar,
-                const SizedBox(height: 20),
-                headline,
-                const SizedBox(height: 24),
-                otpRow,
-                const SizedBox(height: 12),
-                resend,
-                const SizedBox(height: 24),
-                Button.primary(onTap: onConfirm, isAvialable: isComplete, text: 'Confirm')
-              ]))));
+        backgroundColor: context.cs.surface,
+        body: view,
+      );
 }

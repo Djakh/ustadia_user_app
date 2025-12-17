@@ -97,7 +97,12 @@ class InputField extends StatelessWidget {
     return InputDecoration(
         hintText: type == InputFieldType.phone ? phoneHint : hint,
         hintStyle: Style.small3w4(context, color: TextColorRole.greyColor),
-        prefixText: type == InputFieldType.phone ? '+998 ' : null,
+        prefixIcon: type == InputFieldType.phone
+            ? Padding(
+                padding: const EdgeInsets.only(left: 12, right: 2),
+                child: Text('+998', style: Style.small3w4(context)))
+            : null,
+        prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
         prefixStyle: Style.small3w4(context),
         filled: true,
         fillColor: context.cs.surface,

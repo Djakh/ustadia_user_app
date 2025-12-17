@@ -35,11 +35,11 @@ class LoginPageState extends State<LoginPage> {
 
   bool get isPhoneValid => phoneController.text.replaceAll(RegExp(r'\D'), '').length >= 9;
 
-  void goToOtp() => context.push(otpRoute);
+  void goToOtp() => context.push(otpRoute, extra: '+998 ${phoneController.text}');
 
   void goToEmailLogin() => context.push(loginEmailRoute);
 
-  void goToSignup() => goToOtp();
+  void goToSignup() => context.push(signUpRoute);
 
   void toggleRemember(bool value) => setState(() => rememberMe = value);
 
@@ -92,7 +92,6 @@ class LoginPageState extends State<LoginPage> {
 
   Widget get view => PrimaryBackground(
           child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-        const SizedBox(height: 12),
         logo,
         const SizedBox(height: 24),
         Text('Welcome back', style: Style.headlinew7(context)),
