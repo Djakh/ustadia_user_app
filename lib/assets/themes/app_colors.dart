@@ -4,13 +4,14 @@ class AppColors {
   // Brand
   static const Color primary = Color(0xFF00C950);
   static const Color secondary = Color(0xFF111111);
-  static const Color surface = Color(0xFFF4F4F4);
+  static const Color surface = Color(0xFFFFFFFF);
 
   // Neutrals
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF000000);
 
   static const Color gray8D = Color(0xFF8D8D8D);
+  static const Color secondaryContainer = Color(0xFFF4F4F4);
 
   static const Color gray50 = Color(0xFFF9FAFB);
   static const Color gray100 = Color(0xFFF3F4F6);
@@ -22,6 +23,7 @@ class AppColors {
   static const Color gray900 = Color(0xFF111827);
   static const Color green49 = Color(0xFF01B549);
   static const Color green50 = Color(0xFF029E50);
+  static const Color green36 = Color(0xFF008236);
 
   static const Color purplec3 = Color(0xFF8839C3);
   static const Color purpled6 = Color(0xFF8A2FD6);
