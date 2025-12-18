@@ -51,6 +51,8 @@ class OtpPageState extends State<OtpPage> {
 
   void goToHome() => context.go(postsRoute);
 
+  void goToIntroSurvey() => context.go(introSurveyRoute);
+
   void startTimer() {
     countdown?.cancel();
     setState(() => secondsLeft = 30);
@@ -72,7 +74,7 @@ class OtpPageState extends State<OtpPage> {
   }
 
   void onConfirm() {
-    if (isComplete) goToHome();
+    if (isComplete) goToIntroSurvey();
   }
 
   void onDigitChanged(int index, String value) {
