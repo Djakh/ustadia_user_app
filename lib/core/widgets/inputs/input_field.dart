@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 
@@ -16,6 +15,10 @@ class InputField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final TextInputAction? textInputAction;
   final FocusNode? focusNode;
+  final bool? obscure;
+  final bool showVisibilityToggle;
+  final VoidCallback? onToggleVisibility;
+  final Widget? suffix;
 
   const InputField.primary({
     super.key,
@@ -27,6 +30,10 @@ class InputField extends StatelessWidget {
     this.onChanged,
     this.textInputAction,
     this.focusNode,
+    this.obscure,
+    this.showVisibilityToggle = false,
+    this.onToggleVisibility,
+    this.suffix,
   }) : type = InputFieldType.primary;
 
   const InputField.phone({
@@ -39,6 +46,10 @@ class InputField extends StatelessWidget {
     this.onChanged,
     this.textInputAction,
     this.focusNode,
+    this.obscure,
+    this.showVisibilityToggle = false,
+    this.onToggleVisibility,
+    this.suffix,
   }) : type = InputFieldType.phone;
 
   const InputField.email({
@@ -51,6 +62,10 @@ class InputField extends StatelessWidget {
     this.onChanged,
     this.textInputAction,
     this.focusNode,
+    this.obscure,
+    this.showVisibilityToggle = false,
+    this.onToggleVisibility,
+    this.suffix,
   }) : type = InputFieldType.email;
 
   const InputField.password({
@@ -63,6 +78,10 @@ class InputField extends StatelessWidget {
     this.onChanged,
     this.textInputAction,
     this.focusNode,
+    this.obscure,
+    this.showVisibilityToggle = false,
+    this.onToggleVisibility,
+    this.suffix,
   }) : type = InputFieldType.password;
 
   /// --- Methods ---
@@ -73,7 +92,9 @@ class InputField extends StatelessWidget {
         _ => TextInputType.text
       };
 
-  bool get obscureText => type == InputFieldType.password;
+  bool get isPassword => type == InputFieldType.password;
+
+  bool get obscureText => isPassword ? (obscure ?? true) : false;
 
   bool get hasError => errorText != null && errorText!.isNotEmpty;
 
@@ -86,6 +107,18 @@ class InputField extends StatelessWidget {
       };
 
   String get phoneHint => hint ?? '(--) --- -- --';
+
+  Widget? suffixIcon(BuildContext context) {
+    if (suffix != null) return suffix;
+    if (isPassword && showVisibilityToggle) {
+      return IconButton(
+          onPressed: onToggleVisibility,
+          icon: Icon(
+              obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+              color: context.cs.onTertiary));
+    }
+    return null;
+  }
 
   InputBorder border(BuildContext context, Color color) => OutlineInputBorder(
       borderRadius: Style.border12, borderSide: BorderSide(color: color, width: 1.4));
@@ -104,6 +137,7 @@ class InputField extends StatelessWidget {
             : null,
         prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
         prefixStyle: Style.small3w4(context),
+        suffixIcon: suffixIcon(context),
         filled: true,
         fillColor: context.cs.surface,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -134,7 +168,7 @@ class InputField extends StatelessWidget {
             controller: controller,
             focusNode: focusNode,
             enabled: enabled,
-            cursorColor: AppColors.green36,
+            cursorColor: context.cs.primary,
             keyboardType: keyboardType,
             textInputAction: textInputAction,
             obscureText: obscureText,
