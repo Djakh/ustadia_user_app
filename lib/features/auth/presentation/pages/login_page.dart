@@ -37,8 +37,6 @@ class LoginPageState extends State<LoginPage> {
 
   void goToOtp() => context.push(otpRoute, extra: '+998 ${phoneController.text}');
 
-  void goToEmailLogin() => context.push(loginEmailRoute);
-
   void goToSignup() => context.push(signUpRoute);
 
   void toggleRemember(bool value) => setState(() => rememberMe = value);
@@ -104,12 +102,7 @@ class LoginPageState extends State<LoginPage> {
         rememberRow,
         const SizedBox(height: 12),
         Button.primary(onTap: onLogin, text: 'Log in'),
-        const SizedBox(height: 24),
-        divider,
-        const SizedBox(height: 24),
-        Button.border(
-            onTap: goToEmailLogin, text: 'Log in with Email', textStyle: Style.bodyw5(context)),
-        const SizedBox(height: 24),
+        const SizedBox(height: 12),
         signup
       ]));
 
