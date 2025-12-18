@@ -1,43 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
-
-class IntroSurveyChipData {
-  final String label;
-  final Color backgroundColor;
-  final Color selectedBackgroundColor;
-  final Color textColor;
-  final Color selectedTextColor;
-
-  const IntroSurveyChipData({
-    required this.label,
-    required this.backgroundColor,
-    required this.selectedBackgroundColor,
-    required this.textColor,
-    required this.selectedTextColor,
-  });
-}
+import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_models.dart';
 
 class IntroSurveyChip extends StatelessWidget {
-  final IntroSurveyChipData data;
+  final IntroSurveyTopicModel topic;
   final bool selected;
   final VoidCallback onTap;
 
-  const IntroSurveyChip({
-    super.key,
-    required this.data,
-    required this.selected,
-    required this.onTap,
-  });
+  const IntroSurveyChip({super.key, required this.topic, required this.selected, required this.onTap});
 
   /// --- Methods ---
 
-  Color get background => selected ? data.selectedBackgroundColor : data.backgroundColor;
-  Color get textColor => selected ? data.selectedTextColor : data.textColor;
+  Color get background => selected ? topic.selectedBackgroundColor : topic.backgroundColor;
+  Color get textColor => selected ? topic.selectedTextColor : topic.textColor;
 
   /// --- Widgets ---
 
   Widget label(BuildContext context) =>
-      Text(data.label, style: Style.small2w5(context).copyWith(color: textColor));
+      Text(topic.label, style: Style.small2w5(context).copyWith(color: textColor));
 
   Widget view(BuildContext context) => Material(
       color: Colors.transparent,
@@ -52,3 +32,4 @@ class IntroSurveyChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) => view(context);
 }
+

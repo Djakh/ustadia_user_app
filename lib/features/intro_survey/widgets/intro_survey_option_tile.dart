@@ -1,24 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
-
-class IntroSurveyOptionData {
-  final String title;
-  final String description;
-
-  const IntroSurveyOptionData({
-    required this.title,
-    required this.description,
-  });
-}
+import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_models.dart';
 
 class IntroSurveyOptionTile extends StatelessWidget {
-  final IntroSurveyOptionData data;
+  final IntroSurveyOptionModel option;
   final bool selected;
   final VoidCallback onTap;
 
   const IntroSurveyOptionTile(
-      {super.key, required this.data, required this.selected, required this.onTap});
+      {super.key, required this.option, required this.selected, required this.onTap});
 
   /// --- Methods ---
 
@@ -42,10 +33,10 @@ class IntroSurveyOptionTile extends StatelessWidget {
               border: Border.all(color: context.cs.onTertiary.withAlpha(140), width: 1.4),
               shape: BoxShape.circle));
 
-  Widget titleText(BuildContext context) => Text(data.title, style: Style.small3w5(context));
+  Widget titleText(BuildContext context) => Text(option.title, style: Style.small3w5(context));
 
   Widget descriptionText(BuildContext context) =>
-      Text(data.description, style: Style.small2w4(context, color: TextColorRole.greyColor));
+      Text(option.description, style: Style.small2w4(context, color: TextColorRole.greyColor));
 
   Widget content(BuildContext context) => Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
         leading(context),
@@ -74,3 +65,4 @@ class IntroSurveyOptionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => view(context);
 }
+

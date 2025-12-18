@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_models.dart';
 import 'package:ustadia_user_app/features/intro_survey/widgets/intro_survey_option_tile.dart';
 
 class IntroSurveyEnglishLevelStep extends StatelessWidget {
-  final List<IntroSurveyOptionData> options;
+  final List<IntroSurveyOptionModel> options;
   final int? selectedIndex;
   final ValueChanged<int> onSelectIndex;
 
@@ -21,7 +22,7 @@ class IntroSurveyEnglishLevelStep extends StatelessWidget {
           itemCount: options.length,
           separatorBuilder: (_, __) => const SizedBox(height: 10),
           itemBuilder: (context, index) => IntroSurveyOptionTile(
-              data: options[index],
+              option: options[index],
               selected: selectedIndex == index,
               onTap: () => onSelectIndex(index))));
 

@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_models.dart';
 import 'package:ustadia_user_app/features/intro_survey/widgets/intro_survey_chip.dart';
 
 class IntroSurveyTopicsStep extends StatelessWidget {
-  final List<IntroSurveyChipData> topics;
+  final List<IntroSurveyTopicModel> topics;
   final Set<String> selectedTopics;
   final ValueChanged<String> onToggleTopic;
 
-  const IntroSurveyTopicsStep({
-    super.key,
-    required this.topics,
-    required this.selectedTopics,
-    required this.onToggleTopic,
-  });
+  const IntroSurveyTopicsStep(
+      {super.key, required this.topics, required this.selectedTopics, required this.onToggleTopic});
 
   /// --- Widgets ---
 
-  Widget chip(IntroSurveyChipData topic) => IntroSurveyChip(
-      data: topic,
-      selected: selectedTopics.contains(topic.label),
-      onTap: () => onToggleTopic(topic.label));
+  Widget chip(IntroSurveyTopicModel topic) => IntroSurveyChip(
+      topic: topic, selected: selectedTopics.contains(topic.label), onTap: () => onToggleTopic(topic.label));
 
   Widget get chips => Center(
       child: Wrap(
