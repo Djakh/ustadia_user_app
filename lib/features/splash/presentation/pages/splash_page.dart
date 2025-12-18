@@ -25,10 +25,11 @@ class _SplashPageState extends State<SplashPage> {
   /// --- Methods ---
 
   void goToOnboarding() => context.go(onboardingRoute);
+  void goToIntroSurvey() => context.go(introSurveyRoute);
 
   void start() => Future.delayed(const Duration(seconds: 2), () {
         if (!mounted) return;
-          goToOnboarding();
+        goToIntroSurvey();
       });
 
   /// --- Widgets ---

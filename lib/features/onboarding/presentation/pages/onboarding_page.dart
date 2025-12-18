@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
-import 'package:go_router/go_router.dart';
+import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
 import 'package:ustadia_user_app/features/onboarding/data/models/slide_model.dart';
 import 'package:ustadia_user_app/features/onboarding/widgets/onboarding_slide_view.dart';
-import 'package:ustadia_user_app/features/onboarding/widgets/page_indicator.dart';
 import 'package:ustadia_user_app/router.dart';
 
 class OnboardingPage extends StatefulWidget {

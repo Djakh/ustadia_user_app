@@ -35,4 +35,29 @@ class AppColors {
   static const Color success = Color(0xFF16A34A);
   static const Color warning = Color(0xFFF59E0B);
   static const Color error = Color(0xFFDC2626);
+
+  // Intro survey topic chips
+  static const Color introTopicBusinessLight = Color(0xFFEDE7FF);
+  static const Color introTopicBusinessDark = Color(0xFF6B2DFF);
+  static const Color introTopicBusinessSelected = Color(0xFF6B2DFF);
+
+  static const Color introTopicEducationLight = Color(0xFFE3F4E9);
+  static const Color introTopicEducationDark = Color(0xFF137A3B);
+  static const Color introTopicEducationSelected = Color(0xFF289B55);
+
+  static const Color introTopicTravelLight = Color(0xFFFFEFE6);
+  static const Color introTopicTravelDark = Color(0xFFCC5A00);
+  static const Color introTopicTravelSelected = Color(0xFFFF8A00);
+
+  static const Color introTopicDailyLight = Color(0xFFE7F3FF);
+  static const Color introTopicDailyDark = Color(0xFF0B6BD3);
+  static const Color introTopicDailySelected = Color(0xFF0086B3);
+
+  static const Color introTopicCultureLight = Color(0xFFF0F9D8);
+  static const Color introTopicCultureDark = Color(0xFF4E7C00);
+  static const Color introTopicCultureSelected = Color(0xFF71B000);
+
+  static const Color introTopicGrowthLight = Color(0xFFFFE7F7);
+  static const Color introTopicGrowthDark = Color(0xFFB70072);
+  static const Color introTopicGrowthSelected = Color(0xFFD100B7);
 }
