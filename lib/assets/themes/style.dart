@@ -145,9 +145,12 @@ class Style {
   static TextStyle headlinew6(BuildContext context, {TextColorRole? color}) =>
       _text(context, size: 24, weight: FontWeight.w600, color: color);
 
+  // ---------- Body (20) ----------
+
+  static TextStyle body3w7(BuildContext context, {TextColorRole? color}) =>
+      _text(context, size: 20, weight: FontWeight.w700, color: color);
+
   // ---------- Body (18) ----------
-  static TextStyle body3w5(BuildContext context, {TextColorRole? color}) =>
-      _text(context, size: 18, weight: FontWeight.w500, color: color);
 
   static TextStyle body2w6(BuildContext context, {TextColorRole? color}) =>
       _text(context, size: 18, weight: FontWeight.w600, color: color);

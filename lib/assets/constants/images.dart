@@ -11,11 +11,12 @@ class AppImages {
   static const onboard2 = 'assets/images/on_board2.png';
   static const onboard3 = 'assets/images/on_board3.png';
   static const loginLogo = 'assets/images/login_logo.png';
-  static const buildTheSentence = 'assets/images/build_the_sentence.png';
 
+  static const buildTheSentence = 'assets/images/build_the_sentence.png';
   static const flashcardSprint = 'assets/images/flashcard_sprint.png';
   static const listenTap = 'assets/images/listen_tap.png';
   static const speedMix = 'assets/images/speed_mix.png';
   static const worldMatch = 'assets/images/world_match.png';
   static const writingAssesment = 'assets/images/writing_assesment.png';
+  static const dailyChallangeBackground = 'assets/images/daily_challange_background.png';
 }

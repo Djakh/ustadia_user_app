@@ -101,7 +101,7 @@ class OtpPageState extends State<OtpPage> {
 
   Widget get contactText => Text.rich(TextSpan(children: [
         TextSpan(
-          text: 'Enter the 4-digit OTP sent to complete verification, ',
+          text: 'Enter the 4-digit OTP sent to your email to complete sign-up verification, ',
           style: Style.small3w4(context, color: TextColorRole.greyColor),
         ),
         TextSpan(
@@ -138,13 +138,13 @@ class OtpPageState extends State<OtpPage> {
 
   Widget get resendButton => TextButton(
       onPressed: secondsLeft == 0 ? onResend : null,
-      child: Text(secondsLeft == 0 ? 'Resend now' : timerLabel,
+      child: Text(secondsLeft == 0 ? 'Resend' : timerLabel,
           style: Style.small3w5(context,
                   color: secondsLeft == 0 ? TextColorRole.onSurface : TextColorRole.greyColor)
               .copyWith(color: secondsLeft == 0 ? context.cs.primary : context.cs.onSurface)));
 
   Widget get resend => Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text('Resend code in', style: Style.small3w4(context, color: TextColorRole.greyColor)),
+        Text('Didn’t receive the OTP?', style: Style.small3w4(context, color: TextColorRole.greyColor)),
         resendButton
       ]);
 
