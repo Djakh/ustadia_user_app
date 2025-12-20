@@ -7,6 +7,7 @@ import 'package:ustadia_user_app/features/onboarding/presentation/pages/onboardi
 import 'package:ustadia_user_app/features/posts/presentation/pages/post_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint_result_page.dart';
 import 'package:ustadia_user_app/features/splash/presentation/pages/splash_page.dart';
 
 const splashRoute = '/';
@@ -18,6 +19,7 @@ const signUpRoute = '/sign-up';
 const postsRoute = '/posts';
 const practiceRoute = '/practice';
 const flashcardSprintRoute = '/practice/flashcard-sprint';
+const flashcardSprintResultRoute = '/practice/flashcard-sprint/result';
 
 final appRouter = GoRouter(initialLocation: splashRoute, routes: [
   GoRoute(path: splashRoute, builder: (context, state) => const SplashPage()),
@@ -30,5 +32,9 @@ final appRouter = GoRouter(initialLocation: splashRoute, routes: [
   GoRoute(path: signUpRoute, builder: (context, state) => const SignUpPage()),
   GoRoute(path: postsRoute, builder: (context, state) => const PostPage()),
   GoRoute(path: practiceRoute, builder: (context, state) => const PracticePage()),
-  GoRoute(path: flashcardSprintRoute, builder: (context, state) => const FlashcardSprintPage())
+  GoRoute(path: flashcardSprintRoute, builder: (context, state) => const FlashcardSprintPage()),
+  GoRoute(
+      path: flashcardSprintResultRoute,
+      builder: (context, state) =>
+          FlashcardSprintResultPage(stats: state.extra as FlashcardSprintResultStats?))
 ]);
