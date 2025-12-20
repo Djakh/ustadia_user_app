@@ -124,7 +124,7 @@ class InputField extends StatelessWidget {
       borderRadius: Style.border12, borderSide: BorderSide(color: color, width: 1.4));
 
   InputDecoration decoration(BuildContext context) {
-    final baseColor = context.cs.onTertiary.withOpacity(0.4);
+    final baseColor = context.cs.onTertiary.withValues(alpha: 0.4);
     final borderColor = hasError ? context.cs.error : baseColor;
     final focusColor = hasError ? context.cs.error : context.cs.onTertiary;
     return InputDecoration(

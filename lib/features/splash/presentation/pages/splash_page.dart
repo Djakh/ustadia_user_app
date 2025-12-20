@@ -44,7 +44,7 @@ class _SplashPageState extends State<SplashPage> {
       child: CircularProgressIndicator(
           strokeWidth: 3,
           valueColor: AlwaysStoppedAnimation(context.cs.primary),
-          backgroundColor: context.cs.primary.withOpacity(0.18)));
+          backgroundColor: context.cs.primary.withValues(alpha: 0.18)));
 
   Widget get footer => Text('Ustadia Mobile v1.0',
       textAlign: TextAlign.center, style: Style.bodyw6(context, color: TextColorRole.greyColor));
