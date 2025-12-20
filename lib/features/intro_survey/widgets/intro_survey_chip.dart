@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_models.dart';
 
@@ -7,12 +8,13 @@ class IntroSurveyChip extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  const IntroSurveyChip({super.key, required this.topic, required this.selected, required this.onTap});
+  const IntroSurveyChip(
+      {super.key, required this.topic, required this.selected, required this.onTap});
 
   /// --- Methods ---
 
   Color get background => selected ? topic.selectedBackgroundColor : topic.backgroundColor;
-  Color get textColor => selected ? topic.selectedTextColor : topic.textColor;
+  Color get textColor => selected ? AppColors.white : topic.textColor;
 
   /// --- Widgets ---
 
@@ -32,4 +34,3 @@ class IntroSurveyChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) => view(context);
 }
-

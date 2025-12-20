@@ -18,40 +18,34 @@ class IntroSurveyStaticData {
   static const topics = <IntroSurveyTopicModel>[
     IntroSurveyTopicModel(
         label: 'Career & Business',
-        backgroundColor: AppColors.introTopicBusinessLight,
-        selectedBackgroundColor: AppColors.introTopicBusinessSelected,
-        textColor: AppColors.introTopicBusinessDark,
-        selectedTextColor: AppColors.white),
+        backgroundColor: AppColors.purpleFF,
+        selectedBackgroundColor: AppColors.purpleD6,
+        textColor: AppColors.purpleD6),
     IntroSurveyTopicModel(
         label: 'Education & Studies',
-        backgroundColor: AppColors.introTopicEducationLight,
-        selectedBackgroundColor: AppColors.introTopicEducationSelected,
-        textColor: AppColors.introTopicEducationDark,
-        selectedTextColor: AppColors.white),
+        backgroundColor: AppColors.greenE9,
+        selectedBackgroundColor: AppColors.green55,
+        textColor: AppColors.green3B),
     IntroSurveyTopicModel(
         label: 'Travel & Tourism',
-        backgroundColor: AppColors.introTopicTravelLight,
-        selectedBackgroundColor: AppColors.introTopicTravelSelected,
-        textColor: AppColors.introTopicTravelDark,
-        selectedTextColor: AppColors.white),
+        backgroundColor: AppColors.orangeE6,
+        selectedBackgroundColor: AppColors.orange00,
+        textColor: AppColors.orange5A),
     IntroSurveyTopicModel(
         label: 'Daily Communication',
-        backgroundColor: AppColors.introTopicDailyLight,
-        selectedBackgroundColor: AppColors.introTopicDailySelected,
-        textColor: AppColors.introTopicDailyDark,
-        selectedTextColor: AppColors.white),
+        backgroundColor: AppColors.blueFF,
+        selectedBackgroundColor: AppColors.blueB3,
+        textColor: AppColors.blueD3),
     IntroSurveyTopicModel(
         label: 'Culture & Entertainment',
-        backgroundColor: AppColors.introTopicCultureLight,
-        selectedBackgroundColor: AppColors.introTopicCultureSelected,
-        textColor: AppColors.introTopicCultureDark,
-        selectedTextColor: AppColors.white),
+        backgroundColor: AppColors.greenD8,
+        selectedBackgroundColor: AppColors.green00,
+        textColor: AppColors.green7C),
     IntroSurveyTopicModel(
         label: 'Personal Growth',
-        backgroundColor: AppColors.introTopicGrowthLight,
-        selectedBackgroundColor: AppColors.introTopicGrowthSelected,
-        textColor: AppColors.introTopicGrowthDark,
-        selectedTextColor: AppColors.white),
+        backgroundColor: AppColors.pinkF7,
+        selectedBackgroundColor: AppColors.pinkB7,
+        textColor: AppColors.pink72),
   ];
 
   static const englishLevels = <IntroSurveyOptionModel>[
@@ -63,16 +57,20 @@ class IntroSurveyStaticData {
         description: 'I can say hello, introduce myself and understand simple phrases'),
     IntroSurveyOptionModel(
         title: 'Getting comfortable',
-        description: 'I can have basic conversations about everyday topics and understand simple texts'),
+        description:
+            'I can have basic conversations about everyday topics and understand simple texts'),
     IntroSurveyOptionModel(
         title: 'Conversational speaker',
-        description: 'I can express ideas clearly, discuss various topics, and understand most conversations'),
+        description:
+            'I can express ideas clearly, discuss various topics, and understand most conversations'),
     IntroSurveyOptionModel(
         title: 'Confident and fluent',
-        description: 'I speak English fluently with few mistakes and can understand complex content'),
+        description:
+            'I speak English fluently with few mistakes and can understand complex content'),
     IntroSurveyOptionModel(
         title: 'Near-native mastery',
-        description: 'I have mastered English and can communicate like a native speaker in all situations'),
+        description:
+            'I have mastered English and can communicate like a native speaker in all situations'),
   ];
 
   static const dailyGoals = <IntroSurveyOptionModel>[
@@ -81,4 +79,3 @@ class IntroSurveyStaticData {
     IntroSurveyOptionModel(title: 'Serious', description: '20 minutes a day'),
   ];
 }
-
