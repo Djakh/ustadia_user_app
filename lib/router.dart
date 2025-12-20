@@ -8,6 +8,7 @@ import 'package:ustadia_user_app/features/posts/presentation/pages/post_page.dar
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint_result_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/word_match_page.dart';
 import 'package:ustadia_user_app/features/splash/presentation/pages/splash_page.dart';
 
 const splashRoute = '/';
@@ -20,6 +21,7 @@ const postsRoute = '/posts';
 const practiceRoute = '/practice';
 const flashcardSprintRoute = '/practice/flashcard-sprint';
 const flashcardSprintResultRoute = '/practice/flashcard-sprint/result';
+const wordMatchRoute = '/practice/word-match';
 
 final appRouter = GoRouter(initialLocation: splashRoute, routes: [
   GoRoute(path: splashRoute, builder: (context, state) => const SplashPage()),
@@ -37,4 +39,6 @@ final appRouter = GoRouter(initialLocation: splashRoute, routes: [
       path: flashcardSprintResultRoute,
       builder: (context, state) =>
           FlashcardSprintResultPage(stats: state.extra as FlashcardSprintResultStats?))
+  ,
+  GoRoute(path: wordMatchRoute, builder: (context, state) => const WordMatchPage())
 ]);
