@@ -6,6 +6,7 @@ import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/practice/data/models/activity_model.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/item_tile_card.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_daily_card.dart';
+import 'package:ustadia_user_app/router.dart';
 
 class PracticePage extends StatelessWidget {
   const PracticePage({super.key});
@@ -16,27 +17,33 @@ class PracticePage extends StatelessWidget {
         ActivityModel(
             title: 'Flashcard sprint',
             description: 'Flip cards to review words',
-            image: AppImages.flashcardSprint),
+            image: AppImages.flashcardSprint,
+            route: flashcardSprintRoute),
         ActivityModel(
             title: 'World match',
             description: 'Match words & meanings',
-            image: AppImages.worldMatch),
+            image: AppImages.worldMatch,
+            route: flashcardSprintRoute),
         ActivityModel(
             title: 'Build the sentence',
             description: 'Put words in order',
-            image: AppImages.buildTheSentence),
+            image: AppImages.buildTheSentence,
+            route: flashcardSprintRoute),
         ActivityModel(
             title: 'Writing assessment',
             description: 'Get AI feedback & score',
-            image: AppImages.writingAssesment),
+            image: AppImages.writingAssesment,
+            route: flashcardSprintRoute),
         ActivityModel(
             title: 'Listen & Tap',
             description: 'Train your ear with audio',
-            image: AppImages.listenTap),
+            image: AppImages.listenTap,
+            route: flashcardSprintRoute),
         ActivityModel(
             title: 'Speed Mix',
             description: 'A fast mix of tasks for 2 minutes',
-            image: AppImages.speedMix),
+            image: AppImages.speedMix,
+            route: flashcardSprintRoute),
       ];
 
   /// --- Methods ---

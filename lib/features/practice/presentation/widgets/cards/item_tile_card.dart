@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/features/practice/data/models/activity_model.dart';
@@ -6,6 +7,9 @@ import 'package:ustadia_user_app/features/practice/data/models/activity_model.da
 class ItemTileCard extends StatelessWidget {
   final ActivityModel activityModel;
   const ItemTileCard({super.key, required this.activityModel});
+
+  /// --- Methods ---
+  void goToPracticeActivityPage(BuildContext context) => context.push(activityModel.route);
 
   /// --- Widgets ---
 
@@ -31,7 +35,7 @@ class ItemTileCard extends StatelessWidget {
   Widget build(BuildContext context) => Material(
       color: Colors.transparent,
       child: InkWell(
-          onTap: () {},
+          onTap: () => goToPracticeActivityPage(context),
           borderRadius: Style.border20,
           child: Ink(
               padding: const EdgeInsets.all(16),

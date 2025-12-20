@@ -19,4 +19,10 @@ class AppImages {
   static const worldMatch = 'assets/images/world_match.png';
   static const writingAssesment = 'assets/images/writing_assesment.png';
   static const dailyChallangeBackground = 'assets/images/daily_challange_background.png';
+  static const flashcardBackrgound = 'assets/images/flashcard_background.png';
+
+  /// --- Icons PNG ---
+
+  static const flapIcon = 'assets/icons/flip_icon.png';
+  static const arrowLeft = 'assets/icons/arrow_left.png';
 }

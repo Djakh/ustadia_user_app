@@ -73,11 +73,11 @@ class LoginPageState extends State<LoginPage> {
       onChanged: (_) => setState(() => showError = false));
 
   Widget get divider => Row(children: [
-        Expanded(child: Divider(color: context.cs.onTertiary.withOpacity(0.4))),
+        Expanded(child: Divider(color: context.cs.onTertiary.withValues(alpha: 0.4))),
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text('or', style: Style.small3w4(context, color: TextColorRole.greyColor))),
-        Expanded(child: Divider(color: context.cs.onTertiary.withOpacity(0.4)))
+        Expanded(child: Divider(color: context.cs.onTertiary.withValues(alpha: 0.4)))
       ]);
 
   Widget get signup => Row(mainAxisAlignment: MainAxisAlignment.center, children: [
