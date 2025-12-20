@@ -32,8 +32,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
             description:
                 'Master new words and grammar with fun,\nbite-sized practices in just 5 minutes a day.',
             asset: AppImages.onboard2,
-            background: AppColors.purplec3,
-            accent: AppColors.purpled6),
+            background: AppColors.purpleC3,
+            accent: AppColors.purpleD6),
         const SlideModel(
             title: 'See Your Growth',
             description:

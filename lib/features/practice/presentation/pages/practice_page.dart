@@ -28,7 +28,7 @@ class PracticePage extends StatelessWidget {
             title: 'Build the sentence',
             description: 'Put words in order',
             image: AppImages.buildTheSentence,
-            route: flashcardSprintRoute),
+            route: buildSentenceRoute),
         ActivityModel(
             title: 'Writing assessment',
             description: 'Get AI feedback & score',
