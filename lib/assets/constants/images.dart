@@ -20,6 +20,7 @@ class AppImages {
   static const writingAssesment = 'assets/images/writing_assesment.png';
   static const dailyChallangeBackground = 'assets/images/daily_challange_background.png';
   static const flashcardBackrgound = 'assets/images/flashcard_background.png';
+  static const clap = 'assets/images/clap.png';
 
   /// --- Icons PNG ---
 

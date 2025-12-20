@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/practice/data/models/flashcard_model.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint_result_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/flashcard_view.dart';
+import 'package:ustadia_user_app/router.dart';
 
 class FlashcardSprintPage extends StatefulWidget {
   const FlashcardSprintPage({super.key});
@@ -16,6 +19,9 @@ class FlashcardSprintPage extends StatefulWidget {
 class _FlashcardSprintPageState extends State<FlashcardSprintPage> {
   int index = 0;
   bool showMeaning = false;
+  int knownCount = 0;
+  int learningCount = 0;
+  final Set<int> _seenMeaning = {};
 
   List<FlashcardModel> get cards => const [
         FlashcardModel(
@@ -30,20 +36,51 @@ class _FlashcardSprintPageState extends State<FlashcardSprintPage> {
 
   FlashcardModel get current => cards[index];
   String get progress => 'Card ${index + 1}/${cards.length}';
+  bool get hasSeenMeaning => _seenMeaning.contains(index);
 
-  void toggleFace() => setState(() => showMeaning = !showMeaning);
+  void toggleFace() => setState(() {
+        showMeaning = !showMeaning;
+        if (showMeaning && !hasSeenMeaning) {
+          learningCount++;
+          _seenMeaning.add(index);
+        }
+      });
 
-  void onKnowIt() => _nextCard(resetFace: true);
+  void onKnowIt() {
+    if (!hasSeenMeaning) knownCount++;
+    _nextCard(resetFace: true);
+  }
 
   void onStudyAgain() => setState(() {
         showMeaning = false;
         index = 0;
+        knownCount = 0;
+        learningCount = 0;
+        _seenMeaning.clear();
       });
 
   void _nextCard({required bool resetFace}) {
+    if (index == cards.length - 1) {
+      _finish();
+      return;
+    }
     setState(() {
       if (resetFace) showMeaning = false;
       index = (index + 1) % cards.length;
+    });
+  }
+
+  void _finish() {
+    final stats =
+        FlashcardSprintResultStats(known: knownCount, learning: learningCount, total: cards.length);
+    if (!mounted) return;
+    context.pushReplacement(flashcardSprintResultRoute, extra: stats);
+    setState(() {
+      index = 0;
+      knownCount = 0;
+      learningCount = 0;
+      showMeaning = false;
+      _seenMeaning.clear();
     });
   }
 
@@ -61,15 +98,16 @@ class _FlashcardSprintPageState extends State<FlashcardSprintPage> {
   Widget controls(BuildContext context) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(children: [
-        Expanded(child: Button.border(onTap: onKnowIt, text: "I know it")),
+        Expanded(child: Button.border(onTap: onKnowIt, text: hasSeenMeaning ? "Next" : "I know it")),
         const SizedBox(width: 12),
         Expanded(child: Button.border(onTap: onStudyAgain, text: "Study again")),
       ]));
 
   Widget get view => PrimaryBackground(
-      header: header,
-      child: Column(children: [
+          child: Column(children: [
         const SizedBox(height: 12),
+        header,
+        const SizedBox(height: 16),
         card,
         const SizedBox(height: 20),
         controls(context)
