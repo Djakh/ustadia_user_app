@@ -5,6 +5,7 @@ import 'package:ustadia_user_app/features/auth/presentation/pages/sign_up_page.d
 import 'package:ustadia_user_app/features/intro_survey/presentation/pages/intro_survey_page.dart';
 import 'package:ustadia_user_app/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:ustadia_user_app/features/posts/presentation/pages/post_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/practice_page.dart';
 import 'package:ustadia_user_app/features/splash/presentation/pages/splash_page.dart';
 
 const splashRoute = '/';
@@ -14,6 +15,7 @@ const loginRoute = '/login';
 const otpRoute = '/otp';
 const signUpRoute = '/sign-up';
 const postsRoute = '/posts';
+const practiceRoute = '/practice';
 
 final appRouter = GoRouter(initialLocation: splashRoute, routes: [
   GoRoute(path: splashRoute, builder: (context, state) => const SplashPage()),
@@ -24,5 +26,6 @@ final appRouter = GoRouter(initialLocation: splashRoute, routes: [
       path: otpRoute,
       builder: (context, state) => OtpPage(contact: (state.extra as String?) ?? '')),
   GoRoute(path: signUpRoute, builder: (context, state) => const SignUpPage()),
-  GoRoute(path: postsRoute, builder: (context, state) => const PostPage())
+  GoRoute(path: postsRoute, builder: (context, state) => const PostPage()),
+  GoRoute(path: practiceRoute, builder: (context, state) => const PracticePage())
 ]);

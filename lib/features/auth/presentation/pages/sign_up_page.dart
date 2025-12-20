@@ -156,10 +156,7 @@ class SignUpPageState extends State<SignUpPage> {
                   showPasswordError = false;
                   showConfirmError = false;
                 })),
-        if (showPasswordError) ...[
-          const SizedBox(height: 8),
-          passwordChecklist
-        ],
+        if (showPasswordError) ...[const SizedBox(height: 8), passwordChecklist],
         const SizedBox(height: 12),
         InputField.password(
             controller: confirmController,
@@ -183,7 +180,8 @@ class SignUpPageState extends State<SignUpPage> {
       ]);
 
   Widget get view => PrimaryBackground(
-          child: ListView( children: [
+      isHeader: false,
+      child: ListView(children: [
         const SizedBox(height: 12),
         logo,
         const SizedBox(height: 16),

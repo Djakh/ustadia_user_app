@@ -37,7 +37,7 @@ class LoginPageState extends State<LoginPage> {
 
   void goToOtp() => context.push(otpRoute, extra: '+998 ${phoneController.text}');
 
-  void goToSignup() => context.push(signUpRoute);
+  void goToSignup() => context.go(signUpRoute);
 
   void toggleRemember(bool value) => setState(() => rememberMe = value);
 
@@ -89,7 +89,9 @@ class LoginPageState extends State<LoginPage> {
       ]);
 
   Widget get view => PrimaryBackground(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+      isHeader: false,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+        const SizedBox(height: 12),
         logo,
         const SizedBox(height: 24),
         Text('Welcome back', style: Style.headlinew7(context)),
