@@ -23,7 +23,7 @@ class PracticePage extends StatelessWidget {
             title: 'World match',
             description: 'Match words & meanings',
             image: AppImages.worldMatch,
-            route: flashcardSprintRoute),
+            route: wordMatchRoute),
         ActivityModel(
             title: 'Build the sentence',
             description: 'Put words in order',

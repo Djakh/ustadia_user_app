@@ -35,7 +35,7 @@ class AppColors {
   // Status
   static const Color success = Color(0xFF16A34A);
   static const Color warning = Color(0xFFF59E0B);
-  static const Color error = Color(0xFFDC2626);
+  static const Color error = Color(0xFFF04438);
 
   // Intro survey topic chips
   static const Color introTopicBusinessLight = Color(0xFFEDE7FF);
