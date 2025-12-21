@@ -10,6 +10,7 @@ import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_
 import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint_result_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/word_match_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/build_sentence_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/writing_assessment_page.dart';
 import 'package:ustadia_user_app/features/splash/presentation/pages/splash_page.dart';
 
 const splashRoute = '/';
@@ -24,6 +25,7 @@ const flashcardSprintRoute = '/practice/flashcard-sprint';
 const flashcardSprintResultRoute = '/practice/flashcard-sprint/result';
 const wordMatchRoute = '/practice/word-match';
 const buildSentenceRoute = '/practice/build-sentence';
+const writingAssessmentRoute = '/practice/writing-assessment';
 
 final appRouter = GoRouter(initialLocation: splashRoute, routes: [
   GoRoute(path: splashRoute, builder: (context, state) => const SplashPage()),
@@ -45,4 +47,6 @@ final appRouter = GoRouter(initialLocation: splashRoute, routes: [
   GoRoute(path: wordMatchRoute, builder: (context, state) => const WordMatchPage())
   ,
   GoRoute(path: buildSentenceRoute, builder: (context, state) => const BuildSentencePage())
+  ,
+  GoRoute(path: writingAssessmentRoute, builder: (context, state) => const WritingAssessmentPage())
 ]);
