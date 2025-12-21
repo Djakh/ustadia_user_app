@@ -33,7 +33,7 @@ class PracticePage extends StatelessWidget {
             title: 'Writing assessment',
             description: 'Get AI feedback & score',
             image: AppImages.writingAssesment,
-            route: flashcardSprintRoute),
+            route: writingAssessmentRoute),
         ActivityModel(
             title: 'Listen & Tap',
             description: 'Train your ear with audio',

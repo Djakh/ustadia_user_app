@@ -103,10 +103,13 @@ class _PrimaryBackgroundState extends State<PrimaryBackground> {
           padding: widget.padding ?? const EdgeInsets.all(12),
           decoration:
               BoxDecoration(color: context.cs.secondaryContainer, borderRadius: Style.border24),
-          child: Column(children: [
-            if (widget.isHeader) backButtonAndCenterWidget(context),
-            Expanded(child: widget.child)
-          ])));
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch, // ✅ THIS FIXES IT
+
+              children: [
+                if (widget.isHeader) backButtonAndCenterWidget(context),
+                Expanded(child: widget.child)
+              ])));
 
   @override
   Widget build(BuildContext context) => view(context);

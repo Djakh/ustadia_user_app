@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 
-enum InputFieldType { primary, phone, email, password }
+enum InputFieldType { primary, phone, email, password, textArea }
 
 class InputField extends StatelessWidget {
   final InputFieldType type;
   final TextEditingController controller;
-  final String label;
+  final String? label;
   final String? hint;
   final String? errorText;
   final bool enabled;
@@ -19,76 +19,117 @@ class InputField extends StatelessWidget {
   final bool showVisibilityToggle;
   final VoidCallback? onToggleVisibility;
   final Widget? suffix;
+  final int? maxLines;
+  final Color? borderColor;
+  final TextStyle? hintStyle;
+  final BorderRadius? inputBorderRadius;
 
-  const InputField.primary({
-    super.key,
-    required this.controller,
-    required this.label,
-    this.hint,
-    this.errorText,
-    this.enabled = true,
-    this.onChanged,
-    this.textInputAction,
-    this.focusNode,
-    this.obscure,
-    this.showVisibilityToggle = false,
-    this.onToggleVisibility,
-    this.suffix,
-  }) : type = InputFieldType.primary;
+  const InputField.primary(
+      {super.key,
+      required this.controller,
+      this.label,
+      this.hint,
+      this.errorText,
+      this.enabled = true,
+      this.onChanged,
+      this.textInputAction,
+      this.focusNode,
+      this.obscure,
+      this.showVisibilityToggle = false,
+      this.onToggleVisibility,
+      this.suffix,
+      this.maxLines,
+      this.borderColor,
+      this.hintStyle,
+      this.inputBorderRadius})
+      : type = InputFieldType.primary;
 
-  const InputField.phone({
-    super.key,
-    required this.controller,
-    required this.label,
-    this.hint,
-    this.errorText,
-    this.enabled = true,
-    this.onChanged,
-    this.textInputAction,
-    this.focusNode,
-    this.obscure,
-    this.showVisibilityToggle = false,
-    this.onToggleVisibility,
-    this.suffix,
-  }) : type = InputFieldType.phone;
+  const InputField.phone(
+      {super.key,
+      required this.controller,
+      this.label,
+      this.hint,
+      this.errorText,
+      this.enabled = true,
+      this.onChanged,
+      this.textInputAction,
+      this.focusNode,
+      this.obscure,
+      this.showVisibilityToggle = false,
+      this.onToggleVisibility,
+      this.suffix,
+      this.maxLines,
+      this.borderColor,
+      this.hintStyle,
+      this.inputBorderRadius})
+      : type = InputFieldType.phone;
 
-  const InputField.email({
-    super.key,
-    required this.controller,
-    required this.label,
-    this.hint,
-    this.errorText,
-    this.enabled = true,
-    this.onChanged,
-    this.textInputAction,
-    this.focusNode,
-    this.obscure,
-    this.showVisibilityToggle = false,
-    this.onToggleVisibility,
-    this.suffix,
-  }) : type = InputFieldType.email;
+  const InputField.email(
+      {super.key,
+      required this.controller,
+      this.label,
+      this.hint,
+      this.errorText,
+      this.enabled = true,
+      this.onChanged,
+      this.textInputAction,
+      this.focusNode,
+      this.obscure,
+      this.showVisibilityToggle = false,
+      this.onToggleVisibility,
+      this.suffix,
+      this.maxLines,
+      this.borderColor,
+      this.hintStyle,
+      this.inputBorderRadius})
+      : type = InputFieldType.email;
 
-  const InputField.password({
-    super.key,
-    required this.controller,
-    required this.label,
-    this.hint,
-    this.errorText,
-    this.enabled = true,
-    this.onChanged,
-    this.textInputAction,
-    this.focusNode,
-    this.obscure,
-    this.showVisibilityToggle = false,
-    this.onToggleVisibility,
-    this.suffix,
-  }) : type = InputFieldType.password;
+  const InputField.password(
+      {super.key,
+      required this.controller,
+      this.label,
+      this.hint,
+      this.errorText,
+      this.enabled = true,
+      this.onChanged,
+      this.textInputAction,
+      this.focusNode,
+      this.obscure,
+      this.showVisibilityToggle = false,
+      this.onToggleVisibility,
+      this.suffix,
+      this.maxLines,
+      this.borderColor,
+      this.hintStyle,
+      this.inputBorderRadius})
+      : type = InputFieldType.password;
+
+  const InputField.textArea(
+      {super.key,
+      required this.controller,
+      this.label,
+      this.hint,
+      this.errorText,
+      this.enabled = true,
+      this.onChanged,
+      this.textInputAction = TextInputAction.newline,
+      this.focusNode,
+      this.showVisibilityToggle = false,
+      this.onToggleVisibility,
+      this.suffix,
+      this.maxLines = 6,
+      this.borderColor,
+      this.hintStyle,
+      this.inputBorderRadius})
+      : obscure = false,
+        type = InputFieldType.textArea;
 
   /// --- Methods ---
 
   TextInputType get keyboardType => switch (type) {
         InputFieldType.phone => TextInputType.phone,
         InputFieldType.email => TextInputType.emailAddress,
+        InputFieldType.textArea => TextInputType.multiline,
         _ => TextInputType.text
       };
 
@@ -113,23 +154,22 @@ class InputField extends StatelessWidget {
     if (isPassword && showVisibilityToggle) {
       return IconButton(
           onPressed: onToggleVisibility,
-          icon: Icon(
-              obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+          icon: Icon(obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
               color: context.cs.onTertiary));
     }
     return null;
   }
 
   InputBorder border(BuildContext context, Color color) => OutlineInputBorder(
-      borderRadius: Style.border12, borderSide: BorderSide(color: color, width: 1.4));
+      borderRadius:inputBorderRadius?? Style.border12, borderSide: BorderSide(color: color, width: 1.4));
 
   InputDecoration decoration(BuildContext context) {
     final baseColor = context.cs.onTertiary.withValues(alpha: 0.4);
-    final borderColor = hasError ? context.cs.error : baseColor;
+    Color localBorderColor = hasError ? context.cs.error : borderColor ?? baseColor;
     final focusColor = hasError ? context.cs.error : context.cs.onTertiary;
     return InputDecoration(
         hintText: type == InputFieldType.phone ? phoneHint : hint,
-        hintStyle: Style.small3w4(context, color: TextColorRole.greyColor),
+        hintStyle: hintStyle ?? Style.small3w4(context, color: TextColorRole.greyColor),
         prefixIcon: type == InputFieldType.phone
             ? Padding(
                 padding: const EdgeInsets.only(left: 12, right: 2),
@@ -141,7 +181,7 @@ class InputField extends StatelessWidget {
         filled: true,
         fillColor: context.cs.surface,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        enabledBorder: border(context, borderColor),
+        enabledBorder: border(context, localBorderColor),
         focusedBorder: border(context, focusColor),
         errorBorder: border(context, context.cs.error),
         focusedErrorBorder: border(context, context.cs.error));
@@ -162,8 +202,10 @@ class InputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(label, style: Style.small3w4(context)),
-        const SizedBox(height: 6),
+        if (label != null) ...[
+          Text(label!, style: Style.small3w4(context)),
+          const SizedBox(height: 6)
+        ],
         TextField(
             controller: controller,
             focusNode: focusNode,
@@ -174,6 +216,7 @@ class InputField extends StatelessWidget {
             obscureText: obscureText,
             inputFormatters: formatters,
             style: Style.small3w4(context),
+            maxLines: maxLines ?? (isPassword ? 1 : null),
             decoration: decoration(context),
             onChanged: onChanged),
         if (hasError) error(context)
