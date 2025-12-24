@@ -9,7 +9,7 @@ class PageIndicator extends StatelessWidget {
   final double itemHeight;
   final double spacing;
   final BorderRadius borderRadius;
-
+  final bool isExpanded;
   const PageIndicator({
     super.key,
     required this.currentIndex,
@@ -20,6 +20,7 @@ class PageIndicator extends StatelessWidget {
     this.itemHeight = 4,
     this.spacing = 4,
     BorderRadius? borderRadius,
+    this.isExpanded = false,
   }) : borderRadius = borderRadius ?? const BorderRadius.all(Radius.circular(12));
 
   Color _colorFor(int index) {
@@ -33,12 +34,13 @@ class PageIndicator extends StatelessWidget {
       margin: EdgeInsets.only(right: index == total - 1 ? 0 : spacing),
       height: itemHeight,
       width: itemWidth,
-      decoration: BoxDecoration(
-          color: _colorFor(index),
-          borderRadius: borderRadius));
+      decoration: BoxDecoration(color: _colorFor(index), borderRadius: borderRadius));
+
+  Widget checkIsExpandedIndicatior(int index) =>
+      isExpanded ? Expanded(child: itemAnimatedContainer(index)) : itemAnimatedContainer(index);
 
   @override
   Widget build(BuildContext context) => Row(
       mainAxisAlignment: MainAxisAlignment.start,
-      children: List.generate(total, (index) => itemAnimatedContainer(index)));
+      children: List.generate(total, (index) => checkIsExpandedIndicatior(index)));
 }

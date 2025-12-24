@@ -67,7 +67,7 @@ class Button extends StatelessWidget {
   Widget primaryButton(BuildContext context) => ElevatedButton(
         onPressed: isAvialable && !isLoading ? onTap : null,
         style: ElevatedButton.styleFrom(
-            minimumSize: Size(double.infinity, (height ?? 53).toDouble()),
+            minimumSize: Size(double.infinity, (height ?? 52).toDouble()),
             shape: RoundedRectangleBorder(borderRadius: Style.border32),
             backgroundColor: isAvialable ? color ?? context.cs.primary : context.cs.tertiary),
         child: isLoading ? const ActivityIndicator() : content(context),
@@ -76,7 +76,7 @@ class Button extends StatelessWidget {
   OutlinedButton textButton(BuildContext context) => OutlinedButton(
       onPressed: isAvialable ? onTap : null,
       style: OutlinedButton.styleFrom(
-        minimumSize: Size(double.infinity, (height ?? 53).toDouble()),
+        minimumSize: Size(double.infinity, (height ?? 52).toDouble()),
         shape: RoundedRectangleBorder(borderRadius: Style.border32),
         side: BorderSide(color: borderColor ?? context.cs.tertiary, width: borderWidth ?? 1.5),
         backgroundColor: isAvialable ? color ?? AppColors.white : AppColors.gray8D,

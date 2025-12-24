@@ -23,6 +23,9 @@ class DioClient {
   }
 
   static void _log(String message) {
+    Dio dio = Dio(BaseOptions(baseUrl: "https://example.com"));
+
+    dio.get("/some");
     // Keep logging minimal; swap with a proper logger if needed.
     // ignore: avoid_print
     print('[DIO] $message');
