@@ -12,6 +12,7 @@ import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/word_match_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/writing_assessment_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/vocabulary_page.dart';
 import 'package:ustadia_user_app/features/splash/presentation/pages/splash_page.dart';
 
 const splashRoute = '/';
@@ -28,6 +29,7 @@ const wordMatchRoute = '/practice/word-match';
 const buildSentenceRoute = '/practice/build-sentence';
 const writingAssessmentRoute = '/practice/writing-assessment';
 const listenTapRoute = '/practice/listen-tap';
+const vocabularyRoute = '/practice/vocabulary';
 
 final appRouter = GoRouter(initialLocation: splashRoute, routes: [
   GoRoute(path: splashRoute, builder: (context, state) => const SplashPage()),
@@ -49,4 +51,5 @@ final appRouter = GoRouter(initialLocation: splashRoute, routes: [
   GoRoute(path: buildSentenceRoute, builder: (context, state) => const BuildSentencePage()),
   GoRoute(path: writingAssessmentRoute, builder: (context, state) => const WritingAssessmentPage()),
   GoRoute(path: listenTapRoute, builder: (context, state) => const ListenTapPage()),
+  GoRoute(path: vocabularyRoute, builder: (context, state) => const VocabularyPage()),
 ]);

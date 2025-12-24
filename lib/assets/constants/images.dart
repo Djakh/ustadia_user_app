@@ -22,6 +22,9 @@ class AppImages {
   static const flashcardBackrgound = 'assets/images/flashcard_background.png';
   static const clap = 'assets/images/clap.png';
   static const listenButton = 'assets/images/listen_button.png';
+  static const vocabulary = 'assets/images/vocabulary.png';
+
+  /// --- JPG ---
 
   /// --- Icons PNG ---
 
