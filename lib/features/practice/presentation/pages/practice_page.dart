@@ -20,7 +20,7 @@ class PracticePage extends StatelessWidget {
             image: AppImages.flashcardSprint,
             route: flashcardSprintRoute),
         ActivityModel(
-            title: 'World match',
+            title: 'Word match',
             description: 'Match words & meanings',
             image: AppImages.worldMatch,
             route: wordMatchRoute),
@@ -43,7 +43,12 @@ class PracticePage extends StatelessWidget {
             title: 'Speed Mix',
             description: 'A fast mix of tasks for 2 minutes',
             image: AppImages.speedMix,
-            route: flashcardSprintRoute),
+            route: vocabularyRoute),
+        ActivityModel(
+            title: 'Vocabulary',
+            description: 'Choose right answer',
+            image: AppImages.vocabulary,
+            route: vocabularyRoute),
       ];
 
   /// --- Methods ---

@@ -20,7 +20,6 @@ class ListenQuizView extends StatefulWidget {
 }
 
 class _ListenQuizViewState extends State<ListenQuizView> {
-  int totalListenings = 3;
   int listeningIndex = 0;
   int? selectedIndex;
   bool answered = false;
@@ -128,7 +127,7 @@ class _ListenQuizViewState extends State<ListenQuizView> {
 
   Widget get indicator => PageIndicator(
       currentIndex: listeningIndex,
-      total: 3,
+      total: questions.length,
       activeColor: context.cs.primary,
       inactiveColor: context.cs.onTertiary.withAlpha(89),
       isExpanded: true);
@@ -139,7 +138,7 @@ class _ListenQuizViewState extends State<ListenQuizView> {
       );
 
   Widget get totalListeningWidget => Text(
-        "Total: $totalListenings ${wordOrSentence}s",
+        "Total: ${questions.length} ${wordOrSentence}s",
         style: Style.small2w4(context),
       );
 
