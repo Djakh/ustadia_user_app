@@ -21,6 +21,7 @@ class AppImages {
   static const dailyChallangeBackground = 'assets/images/daily_challange_background.png';
   static const flashcardBackrgound = 'assets/images/flashcard_background.png';
   static const clap = 'assets/images/clap.png';
+  static const listenButton = 'assets/images/listen_button.png';
 
   /// --- Icons PNG ---
 

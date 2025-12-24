@@ -10,14 +10,15 @@ class PrimaryBackground extends StatefulWidget {
   final EdgeInsets? padding;
   final String? title;
   final bool isHeader;
-
+  final bool isScrollable;
   const PrimaryBackground(
       {super.key,
       required this.child,
       this.padding,
       this.title,
       this.isHeader = true,
-      this.header});
+      this.header,
+      this.isScrollable = false});
 
   @override
   State<PrimaryBackground> createState() => _PrimaryBackgroundState();
@@ -97,6 +98,11 @@ class _PrimaryBackgroundState extends State<PrimaryBackground> {
         Padding(padding: const EdgeInsets.symmetric(horizontal: 56), child: centerWidget(context))
       ]));
 
+  Widget get scrollableChild => SingleChildScrollView(child: widget.child);
+
+  Widget get checkScrollabilityChild =>
+      widget.isScrollable ? SingleChildScrollView(child: widget.child) : widget.child;
+
   Widget view(BuildContext context) => SafeArea(
       child: Container(
           margin: const EdgeInsets.all(8),
@@ -108,7 +114,7 @@ class _PrimaryBackgroundState extends State<PrimaryBackground> {
 
               children: [
                 if (widget.isHeader) backButtonAndCenterWidget(context),
-                Expanded(child: widget.child)
+                Expanded(child: checkScrollabilityChild)
               ])));
 
   @override

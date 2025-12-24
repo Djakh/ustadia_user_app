@@ -20,3 +20,41 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
         .toList();
   }
 }
+
+
+class Task {
+  final String name;
+  final int priority;
+
+  Task(this.name, this.priority);
+}
+
+void main() {
+  final tasks = [
+    Task('task1', 1),
+    Task('task2', 2),
+    Task('task3', 3),
+  ];
+
+  tasks.executeInOrder(
+    (t) => t.priority,
+    (t) {
+      print(t.name);
+      return t.name == 'task2';
+    },
+  );
+}
+
+extension ExecuteInOrder<T> on List<T> {
+  void executeInOrder(
+    int Function(T) order,
+    bool Function(T) process,
+  ) {
+    final sorted = [...this]..sort((a, b) => order(a).compareTo(order(b)));
+
+    for (final item in sorted) {
+      final shouldStop = process(item);
+      if (shouldStop) break;
+    }
+  }
+}
