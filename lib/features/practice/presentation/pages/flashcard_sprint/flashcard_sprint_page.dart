@@ -5,7 +5,7 @@ import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/practice/data/models/flashcard_model.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint_result_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint/flashcard_sprint_result_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/flashcard_view.dart';
 import 'package:ustadia_user_app/router.dart';
 

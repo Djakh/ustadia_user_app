@@ -6,10 +6,13 @@ import 'package:ustadia_user_app/features/intro_survey/presentation/pages/intro_
 import 'package:ustadia_user_app/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:ustadia_user_app/features/posts/presentation/pages/post_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/build_sentence_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint_result_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint/flashcard_sprint_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint/flashcard_sprint_result_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/listen_tap_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/speed_mix_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/speed_mix_result_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/speed_mix_start_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/word_match_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/writing_assessment_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/vocabulary_page.dart';
@@ -30,6 +33,9 @@ const buildSentenceRoute = '/practice/build-sentence';
 const writingAssessmentRoute = '/practice/writing-assessment';
 const listenTapRoute = '/practice/listen-tap';
 const vocabularyRoute = '/practice/vocabulary';
+const speedMixRoute = '/practice/speed-mix';
+const speedMixPracticeRoute = '/practice/speed-mix/play';
+const speedMixResultRoute = '/practice/speed-mix/result';
 
 final appRouter = GoRouter(initialLocation: splashRoute, routes: [
   GoRoute(path: splashRoute, builder: (context, state) => const SplashPage()),
@@ -52,4 +58,10 @@ final appRouter = GoRouter(initialLocation: splashRoute, routes: [
   GoRoute(path: writingAssessmentRoute, builder: (context, state) => const WritingAssessmentPage()),
   GoRoute(path: listenTapRoute, builder: (context, state) => const ListenTapPage()),
   GoRoute(path: vocabularyRoute, builder: (context, state) => const VocabularyPage()),
+  GoRoute(path: speedMixRoute, builder: (context, state) => const SpeedMixStartPage()),
+  GoRoute(path: speedMixPracticeRoute, builder: (context, state) => const SpeedMixPage()),
+  GoRoute(
+      path: speedMixResultRoute,
+      builder: (context, state) =>
+          SpeedMixResultPage(stats: state.extra as SpeedMixResultStats)),
 ]);

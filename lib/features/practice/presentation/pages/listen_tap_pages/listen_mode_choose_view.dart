@@ -3,9 +3,9 @@ import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/listen_tap_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/listen_mode_card.dart';
 
-class ListenModeChooseContent extends StatelessWidget {
+class ListenModeChooseView extends StatelessWidget {
   final Function(ListenTapMode value) selectMode;
-  const ListenModeChooseContent({super.key, required this.selectMode});
+  const ListenModeChooseView({super.key, required this.selectMode});
 
   Widget modeSelection(BuildContext context) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

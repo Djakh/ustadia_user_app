@@ -1,48 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
+import 'package:ustadia_user_app/features/practice/cubit/next_practice_bloc.dart';
+import 'package:ustadia_user_app/features/practice/data/models/listen_tap_question_model.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/listen_tap_page.dart';
-import 'package:ustadia_user_app/size_config.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/listen_quiz_view_content.dart';
 
 class ListenQuizView extends StatefulWidget {
-  final FlutterTts tts;
   final ListenTapMode mode;
-  final Function(ListenTapMode value) selectMode;
-  const ListenQuizView(
-      {super.key, required this.selectMode, required this.tts, required this.mode});
+
+  const ListenQuizView({super.key, required this.mode});
 
   @override
   State<ListenQuizView> createState() => _ListenQuizViewState();
 }
 
 class _ListenQuizViewState extends State<ListenQuizView> {
+  final FlutterTts _tts = FlutterTts();
+
   int listeningIndex = 0;
-  int? selectedIndex;
-  bool answered = false;
 
   /// --- Getters ---
 
-  List<ListenTapQuestion> get wordQuestions => const [
-        ListenTapQuestion(
+  List<ListenTapQuestionModel> get wordQuestions => const [
+        ListenTapQuestionModel(
             prompt: 'skewer',
             options: ['Fountain', 'Mountain', 'Skewer', 'Casino', 'Capable'],
             answerIndex: 0),
-        ListenTapQuestion(
+        ListenTapQuestionModel(
             prompt: 'deliver',
             options: ['Defiance', 'Delicious', 'Deliver', 'Decide', 'Decision'],
             answerIndex: 1),
-        ListenTapQuestion(
+        ListenTapQuestionModel(
             prompt: 'liberty',
             options: ['Liberty', 'Library', 'Lightly', 'Likely'],
             answerIndex: 2),
       ];
 
-  List<ListenTapQuestion> get sentenceQuestions => const [
-        ListenTapQuestion(
+  List<ListenTapQuestionModel> get sentenceQuestions => const [
+        ListenTapQuestionModel(
             prompt: 'Where is the station?',
             options: [
               'Where is the station?',
@@ -50,24 +50,22 @@ class _ListenQuizViewState extends State<ListenQuizView> {
               'Where is the bus station?'
             ],
             answerIndex: 0),
-        ListenTapQuestion(
+        ListenTapQuestionModel(
             prompt: 'I like coffee',
             options: ['I like coffee', "I'd like coffee", 'See you tomorrow'],
             answerIndex: 1),
-        ListenTapQuestion(
+        ListenTapQuestionModel(
             prompt: 'See you tomorrow',
             options: ['See you tomorrow', 'See you borrow', 'See you next summer'],
             answerIndex: 2),
       ];
 
-  List<ListenTapQuestion> get questions =>
+  List<ListenTapQuestionModel> get questions =>
       widget.mode == ListenTapMode.sentences ? sentenceQuestions : wordQuestions;
 
-  ListenTapQuestion get current => questions[listeningIndex];
+  ListenTapQuestionModel get current => questions[listeningIndex];
 
   double get progress => (listeningIndex + 1) / questions.length;
-
-  bool get isCorrect => selectedIndex != null && selectedIndex == current.answerIndex;
 
   String getNumberInWords(int number) {
     switch (number) {
@@ -85,42 +83,43 @@ class _ListenQuizViewState extends State<ListenQuizView> {
 
   String get wordOrSentence => widget.mode == ListenTapMode.words ? "word" : "sentence";
 
-  /// --- Methods ---
+  /// --- Life cycle ---
 
-  Future<void> onPlay({double rate = 0.95}) async {
+  @override
+  void initState() {
+    super.initState();
+    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+  }
+
+  @override
+  void dispose() {
+    _safeStopTts();
+
+    super.dispose();
+  }
+
+  Future<void> _safeStopTts() async {
     try {
-      await widget.tts.stop();
-      await widget.tts.setLanguage('en-US');
-      await widget.tts.setSpeechRate(rate);
-      await widget.tts.speak(current.prompt);
-    } catch (e) {
-      print("My exception is $e");
-      // Ignore missing plugin edge cases (e.g., when TTS channel is not available)
+      await _tts.stop();
+    } catch (_) {
+      // Ignore missing plugin when widget is disposed during hot-reload/navigation.
     }
   }
 
-  void onSelectOption(int index) {
-    if (answered) return;
-    setState(() {
-      selectedIndex = index;
-      answered = true;
-    });
-  }
+  /// --- Methods ---
 
   void onNext() {
     if (listeningIndex == questions.length - 1) {
       setState(() {
         listeningIndex = 0;
-        selectedIndex = null;
-        answered = false;
       });
+      context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
       return;
     }
     setState(() {
       listeningIndex++;
-      selectedIndex = null;
-      answered = false;
     });
+    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
   }
 
   /// --- Widgets ---
@@ -147,52 +146,8 @@ class _ListenQuizViewState extends State<ListenQuizView> {
         children: [currentListening, totalListeningWidget],
       );
 
-  Widget get inkImage => Ink.image(
-      image: const AssetImage(AppImages.listenButton), width: 120, height: 120, fit: BoxFit.cover);
-
-  Widget get audioButton => Material(
-      color: Colors.transparent,
-      shape: const CircleBorder(),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-          onTap: onPlay,
-          customBorder: const CircleBorder(),
-          splashColor: Colors.white24, // чтобы точно было видно
-          highlightColor: Colors.white10, // опционально
-          child: inkImage));
-
-  Widget get controlRow => Row(children: [
-        Expanded(child: Button.border(onTap: () => onPlay(rate: 0.75), text: 'Slower')),
-        const SizedBox(width: 8),
-        Expanded(child: Button.border(onTap: () => onPlay(rate: 0.95), text: 'Again'))
-      ]);
-
-  Color optionColor(int index) {
-    if (!answered) return context.cs.surface;
-    if (index == current.answerIndex) return context.cs.primary;
-    if (selectedIndex == index && !isCorrect) return context.cs.error;
-    return context.cs.surface;
-  }
-
-  Color optionTextColor(int index) {
-    final fill = optionColor(index);
-    if (fill == context.cs.primary || fill == context.cs.error) return context.cs.onPrimary;
-    return context.cs.onSurface;
-  }
-
-  Widget optionButton(int index) => Button.primary(
-      onTap: () => onSelectOption(index),
-      color: optionColor(index),
-      text: current.options[index],
-      textColor: optionTextColor(index));
-
-  List<Widget> get optionsList => List.generate(
-      current.options.length,
-      (index) =>
-          Padding(padding: const EdgeInsets.symmetric(vertical: 5), child: optionButton(index)));
-
-  Widget get nextButton =>
-      answered ? Button.primary(onTap: onNext, text: 'Next') : const SizedBox(height: 52);
+  Widget nextButton(bool isEnabled) =>
+      Button.primary(onTap: onNext, text: 'Next', isAvialable: isEnabled);
 
   Widget get quizView => Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -201,17 +156,10 @@ class _ListenQuizViewState extends State<ListenQuizView> {
           indicator,
           const SizedBox(height: 4),
           listeningInfo,
-          SizedBox(height: SizeConfig.screenHeight / 14),
-          audioButton,
-          const SizedBox(height: 16),
-          Text('Listen and tap what your hear',
-              style: Style.small3w4(context, color: TextColorRole.greyColor)),
-          const SizedBox(height: 24),
-          controlRow,
-          SizedBox(height: SizeConfig.screenHeight / 15),
-          ...optionsList,
+          ListenQuizViewContent(question: current, tts: _tts),
           const SizedBox(height: 10),
-          nextButton,
+          BlocBuilder<NextPracticeBloc, NextPracticeState>(
+              builder: (context, state) => nextButton(state.isCurrentTaskCompleted)),
         ],
       );
 
