@@ -40,15 +40,15 @@ class PracticePage extends StatelessWidget {
             image: AppImages.listenTap,
             route: listenTapRoute),
         ActivityModel(
-            title: 'Speed Mix',
-            description: 'A fast mix of tasks for 2 minutes',
-            image: AppImages.speedMix,
-            route: vocabularyRoute),
-        ActivityModel(
             title: 'Vocabulary',
             description: 'Choose right answer',
             image: AppImages.vocabulary,
             route: vocabularyRoute),
+        ActivityModel(
+            title: 'Speed Mix',
+            description: 'A fast mix of tasks for 2 minutes',
+            image: AppImages.speedMix,
+            route: speedMixRoute),
       ];
 
   /// --- Methods ---
@@ -77,6 +77,8 @@ class PracticePage extends StatelessWidget {
       ));
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(backgroundColor: context.cs.surface, body: SafeArea(child: body(context)));
+  Widget build(BuildContext context) => Scaffold(
+        backgroundColor: context.cs.surface,
+        body: SafeArea(child: body(context)),
+      );
 }

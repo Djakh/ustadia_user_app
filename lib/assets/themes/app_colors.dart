@@ -67,4 +67,8 @@ class AppColors {
   static const Color pinkF7 = Color(0xFFFFE7F7);
   static const Color pink72 = Color(0xFFB70072);
   static const Color pinkB7 = Color(0xFFD100B7);
+
+  // ───────────────────── Reds (light variants) ─────────────────────
+  static const Color redE2 = Color(0xFFFEE4E2);
+  static const Color redA9 = Color(0xFFFDA29B);
 }

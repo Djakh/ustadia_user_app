@@ -1,23 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
-import 'package:ustadia_user_app/size_config.dart';
-
-class VocabularyQuestion {
-  final String category;
-  final String prompt;
-  final List<String> options;
-  final int answerIndex;
-
-  const VocabularyQuestion(
-      {required this.category,
-      required this.prompt,
-      required this.options,
-      required this.answerIndex});
-}
+import 'package:ustadia_user_app/features/practice/cubit/next_practice_bloc.dart';
+import 'package:ustadia_user_app/features/practice/data/models/vocabulary_question.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/vocabulary_content.dart';
 
 class VocabularyPage extends StatefulWidget {
   const VocabularyPage({super.key});
@@ -28,162 +18,103 @@ class VocabularyPage extends StatefulWidget {
 
 class _VocabularyPageState extends State<VocabularyPage> {
   int questionIndex = 0;
-  int? selectedIndex;
-  bool answered = false;
 
-  /// --- Getters ---
+  /// --- Data ---
 
-  List<VocabularyQuestion> get questions => const [
-        VocabularyQuestion(
+  List<VocabularyModel> get vocabularyModels => const [
+        VocabularyModel(
             category: 'Vocabulary',
             prompt: 'Synonym for “Fast”',
             options: ['Quick', 'Slow', 'Calm'],
             answerIndex: 0),
-        VocabularyQuestion(
+        VocabularyModel(
             category: 'Vocabulary',
             prompt: 'Synonym for “Happy”',
             options: ['Sad', 'Joyful', 'Angry'],
             answerIndex: 1),
-        VocabularyQuestion(
+        VocabularyModel(
             category: 'Vocabulary',
             prompt: 'Synonym for “Smart”',
             options: ['Bright', 'Lazy', 'Dull'],
             answerIndex: 0),
       ];
 
-  VocabularyQuestion get current => questions[questionIndex];
+  VocabularyModel get currentVocabularyModel => vocabularyModels[questionIndex];
 
-  double get progress => (questionIndex + 1) / questions.length;
+  /// --- Life cycle ---
 
-  bool get isCorrect => selectedIndex != null && selectedIndex == current.answerIndex;
+  @override
+  void initState() {
+    super.initState();
+    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false);
+  }
 
-  String getNumberInVocabulary(int number) {
-    switch (number) {
+  /// --- Methods ---
+
+  String ordinalLabel(int index) {
+    switch (index) {
       case 0:
         return 'First';
       case 1:
         return 'Second';
       case 2:
         return 'Third';
-
       default:
-        return '';
+        return '${index + 1}th';
     }
-  }
-
-  /// --- Methods ---
-
-  void onSelect(int index) {
-    if (answered) return;
-    setState(() {
-      selectedIndex = index;
-      answered = true;
-    });
   }
 
   void onNext() {
-    if (questionIndex == questions.length - 1) {
-      setState(() {
-        questionIndex = 0;
-        selectedIndex = null;
-        answered = false;
-      });
-      return;
-    }
     setState(() {
-      questionIndex++;
-      selectedIndex = null;
-      answered = false;
+      if (questionIndex == vocabularyModels.length - 1) {
+        questionIndex = 0;
+      } else {
+        questionIndex++;
+      }
     });
+    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false);
   }
 
   /// --- Widgets ---
 
-  Color optionColor(int index) {
-    if (!answered) return context.cs.surface;
-    if (index == current.answerIndex) return context.cs.primary;
-    if (selectedIndex == index && !isCorrect) return context.cs.error;
-    return context.cs.surface;
-  }
-
-  Color optionTextColor(int index) {
-    final fill = optionColor(index);
-    if (fill == context.cs.primary || fill == context.cs.error) return context.cs.onPrimary;
-    return context.cs.onSurface;
-  }
-
-  Widget optionButton(int index) => Button.primary(
-      onTap: () => onSelect(index),
-      color: optionColor(index),
-      text: current.options[index],
-      textColor: optionTextColor(index));
-
-  List<Widget> get optionsList => List.generate(
-      current.options.length,
-      (index) =>
-          Padding(padding: const EdgeInsets.symmetric(vertical: 5), child: optionButton(index)));
-
-  Widget get indicator => PageIndicator(
+  Widget indicator(BuildContext context) => PageIndicator(
       currentIndex: questionIndex,
-      total: questions.length,
+      total: vocabularyModels.length,
       activeColor: context.cs.primary,
-      inactiveColor: context.cs.onTertiary.withAlpha(89),
+      inactiveColor: context.cs.onTertiary.withValues(alpha: 0.3),
       isExpanded: true);
 
-  Widget get currentListening => Text(
-        "${getNumberInVocabulary(questionIndex)} vocabulary",
-        style: Style.small2w4(context, color: TextColorRole.greyColor),
-      );
-
-  Widget get totalListeningWidget => Text(
-        "Total: ${questions.length} vocabularies",
-        style: Style.small2w4(context),
-      );
-
-  Widget get vocabularyQuestionsInfo => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [currentListening, totalListeningWidget],
-      );
-
-  Column promptCardBody() => Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(current.category, style: Style.small3w4(context, color: TextColorRole.greyColor)),
-        const SizedBox(height: 12),
-        Text(current.prompt, style: Style.headline5w7(context))
+  Widget info(BuildContext context) =>
+      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Text('${ordinalLabel(questionIndex)} word',
+            style: Style.small2w4(context, color: TextColorRole.greyColor)),
+        Text('Total: ${vocabularyModels.length} words',
+            style: Style.small2w4(context, color: TextColorRole.greyColor))
       ]);
 
-  Widget get promptCard => Container(
-      height: SizeConfig.screenHeight / 2.2,
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: context.cs.surface, borderRadius: Style.border20),
-      child: promptCardBody());
+  Widget nextButton(BuildContext context, bool isEnabled) =>
+      Button.primary(onTap: onNext, text: 'Next', isAvialable: isEnabled);
 
-  Widget get nextButton =>
-      answered ? Button.primary(onTap: onNext, text: 'Next') : const SizedBox(height: 52);
-
-  Widget get view => PrimaryBackground(
-        title: 'Vocabulary',
-        isScrollable: true,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 24),
-            indicator,
-            const SizedBox(height: 4),
-            vocabularyQuestionsInfo,
-            const SizedBox(height: 24),
-            promptCard,
-            const SizedBox(height: 24),
-            Text('Answer as many as you can!',
-                style: Style.small3w4(context, color: TextColorRole.greyColor)),
-            const SizedBox(height: 12),
-            ...optionsList,
-            const SizedBox(height: 10),
-            nextButton
-          ],
-        ),
-      );
+  Widget view(BuildContext context, NextPracticeState state) =>
+      Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+        const SizedBox(height: 16),
+        indicator(context),
+        const SizedBox(height: 4),
+        info(context),
+        const SizedBox(height: 24),
+        VocabularyContent(vocabularyModel: currentVocabularyModel),
+        const SizedBox(height: 10),
+        nextButton(context, state.isCurrentTaskCompleted)
+      ]);
 
   @override
-  Widget build(BuildContext context) => Scaffold(backgroundColor: context.cs.surface, body: view);
+  Widget build(BuildContext context) => Scaffold(
+      backgroundColor: context.cs.surface,
+      body: BlocBuilder<NextPracticeBloc, NextPracticeState>(
+          builder: (context, state) => PrimaryBackground(
+              title: 'Vocabulary',
+              isScrollable: true,
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: view(context, state)))));
 }
