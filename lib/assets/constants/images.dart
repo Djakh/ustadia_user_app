@@ -33,6 +33,18 @@ class AppImages {
   static const practiceCardBack = 'assets/images/practice_card_back.png';
   static const leaderboardCardBack = 'assets/images/leaderboard_card_back.png';
 
+  static const xpLighting = 'assets/images/xp_lighting.png';
+
+  static const profileWordsCardIcon = 'assets/images/profile_words_card_icon.png';
+  static const profileTimeCardIcon = 'assets/images/profile_time_card_icon.png';
+  static const profileStreakCardIcon = 'assets/images/profile_streak_card_icon.png';
+  static const profileLevelCardIcon = 'assets/images/profile_level_card_icon.png';
+  static const profileFirstLessonIcon = 'assets/images/profile_first_lesson_icon.png';
+  static const profileEarlyBirdIcon = 'assets/images/profile_early_bird_icon.png';
+  static const profileDaysStreakIcon = 'assets/images/profile_days_streak_icon.png';
+  static const profileCupIcon = 'assets/images/profile_cup_icon.png';
+  static const profile50WordsIcon = 'assets/images/profile_50_words_icon.png';
+
   /// --- JPG ---
 
   /// --- Icons PNG ---

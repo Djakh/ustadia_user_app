@@ -19,6 +19,7 @@ import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/
 import 'package:ustadia_user_app/features/practice/presentation/pages/vocabulary_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/word_match_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/writing_assessment_page.dart';
+import 'package:ustadia_user_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:ustadia_user_app/features/splash/presentation/pages/splash_page.dart';
 
 /// --------------------
@@ -168,7 +169,7 @@ final appRouter = GoRouter(initialLocation: splashRoute, routes: [
           GoRoute(
               path: profileRoute,
               pageBuilder: (context, state) =>
-                  const NoTransitionPage(child: Scaffold(body: Center(child: Text('Profile')))))
+                  const NoTransitionPage(child: ProfilePage()))
         ])
       ])
 ]);

@@ -70,6 +70,7 @@ class _PrimaryBackgroundState extends State<PrimaryBackground> {
   }
 
   /// --- Widgets ---
+
   Widget get backButtonIcon => Image.asset(AppImages.arrowLeft);
 
   Widget backButton(BuildContext context) => context.canPop()
@@ -85,19 +86,21 @@ class _PrimaryBackgroundState extends State<PrimaryBackground> {
                   child: Center(child: backButtonIcon))))
       : const SizedBox(width: 40, height: 40);
 
-  Widget titleWidget(BuildContext context) => Center(
-      child: Text(widget.title ?? '',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.center,
-          style: Style.body3w7(context)));
+  Widget titleWidget(BuildContext context) => Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 56),
+      child: Center(
+          child: Text(widget.title ?? '',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: Style.body3w7(context))));
 
   Widget centerWidget(BuildContext context) => widget.header ?? titleWidget(context);
 
   Widget backButtonAndCenterWidget(BuildContext context) => IntrinsicHeight(
           child: Stack(alignment: Alignment.center, children: [
         Align(alignment: Alignment.centerLeft, child: backButton(context)),
-        Padding(padding: const EdgeInsets.symmetric(horizontal: 56), child: centerWidget(context))
+        centerWidget(context)
       ]));
 
   Widget get scrollableChild => SingleChildScrollView(child: widget.child);
