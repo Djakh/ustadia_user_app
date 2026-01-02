@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
+import 'package:ustadia_user_app/router.dart';
 
 class LeaderBoardCard extends StatelessWidget {
   const LeaderBoardCard({super.key});
@@ -32,7 +34,8 @@ class LeaderBoardCard extends StatelessWidget {
             style: Style.small3w4(context, color: TextColorRole.greyColor))
       ]));
 
-  Widget get leadboardButton => Button.primary(onTap: () {}, text: 'View full leaderboard');
+  Widget leadboardButton(BuildContext context) =>
+      Button.primary(onTap: () => context.push(leaderboardRoute), text: 'View full leaderboard');
 
   Widget view(BuildContext context) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -40,7 +43,7 @@ class LeaderBoardCard extends StatelessWidget {
         const SizedBox(height: 20),
         rankBox(context),
         const SizedBox(height: 20),
-        leadboardButton
+        leadboardButton(context)
       ]);
 
   @override

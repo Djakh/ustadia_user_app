@@ -33,7 +33,7 @@ class AppImages {
   static const practiceCardBack = 'assets/images/practice_card_back.png';
   static const leaderboardCardBack = 'assets/images/leaderboard_card_back.png';
 
-  static const xpLighting = 'assets/images/xp_lighting.png';
+  static const xpLightningOrange = 'assets/images/xp_ lightning_orange.png';
 
   static const profileWordsCardIcon = 'assets/images/profile_words_card_icon.png';
   static const profileTimeCardIcon = 'assets/images/profile_time_card_icon.png';
@@ -51,4 +51,10 @@ class AppImages {
 
   static const flapIcon = 'assets/icons/flip_icon.png';
   static const arrowLeft = 'assets/icons/arrow_left.png';
+
+  /// --- SVG ---
+  static const leaderboardFirstPlace = 'assets/svg/leaderboard_first_place.svg';
+  static const leaderboardSecondPlace = 'assets/svg/leaderboard_second_place.svg';
+  static const leaderboardThirdPlace = 'assets/svg/leaderboard_third_place.svg';
+  static const xpLightningWhite = 'assets/svg/xp_lightning_white.svg';
 }
