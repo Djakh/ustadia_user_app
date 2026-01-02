@@ -9,7 +9,7 @@ class ProfileUserCard extends StatelessWidget {
   const ProfileUserCard({super.key});
 
   Row xpWidget(BuildContext context) => Row(children: [
-        Image.asset(AppImages.xpLighting),
+        Image.asset(AppImages.xpLightningOrange),
         const SizedBox(width: 2),
         Text('160 XP', style: Style.smallw6(context).copyWith(color: AppColors.orange033)),
         const SizedBox(width: 8),
