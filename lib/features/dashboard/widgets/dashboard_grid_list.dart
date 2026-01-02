@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
+import 'package:ustadia_user_app/core/inherited_widgets/navigation_shell_scope.dart';
 import 'package:ustadia_user_app/features/dashboard/widgets/cards/dashboard_grid_card.dart';
 
 class DashboardQuickGridList extends StatelessWidget {
@@ -11,6 +12,11 @@ class DashboardQuickGridList extends StatelessWidget {
   static const double shortHeight = 118;
   static const double tallHeight = 140;
 
+  /// --- Methods ---
+
+  void goToPractice(BuildContext context) => NavigationShellScope.of(context).goBranch(2);
+
+  /// --- Widgets ---
   Widget get lessonAndChat => Column(children: [
         DashboardGridCard(
             title: 'Continue Lesson',
@@ -29,14 +35,14 @@ class DashboardQuickGridList extends StatelessWidget {
             onTap: () {})
       ]);
 
-  Widget get chatAndLideBoard => Column(children: [
+  Widget chatAndLideBoard(BuildContext context) => Column(children: [
         DashboardGridCard(
             title: 'Practice',
             subtitle: 'Games & Quizzes',
             cardColor: AppColors.pinkFF,
             height: 140,
             backImage: AppImages.practiceCardBack,
-            onTap: () {}),
+            onTap: () => goToPractice(context)),
         const SizedBox(height: 12),
         DashboardGridCard(
             title: 'Leaderboard',
@@ -51,6 +57,6 @@ class DashboardQuickGridList extends StatelessWidget {
   Widget build(BuildContext context) => Row(children: [
         Expanded(child: lessonAndChat),
         const SizedBox(width: 10),
-        Expanded(child: chatAndLideBoard)
+        Expanded(child: chatAndLideBoard(context))
       ]);
 }

@@ -162,6 +162,8 @@ class Style {
       _text(context, size: 20, weight: FontWeight.w400, color: color);
 
   // ---------- Body (18) ----------
+  static TextStyle body2w7(BuildContext context, {TextColorRole? color}) =>
+      _text(context, size: 18, weight: FontWeight.w700, color: color);
 
   static TextStyle body2w6(BuildContext context, {TextColorRole? color}) =>
       _text(context, size: 18, weight: FontWeight.w600, color: color);
@@ -192,6 +194,9 @@ class Style {
       _text(context, size: 16, weight: FontWeight.w300, color: color);
 
   // ---------- Small ----------
+  static TextStyle small3w7(BuildContext context, {TextColorRole? color}) =>
+      _text(context, size: 14, weight: FontWeight.w700, color: color ?? TextColorRole.onSurface);
+
   static TextStyle small3w5(BuildContext context, {TextColorRole? color}) =>
       _text(context, size: 14, weight: FontWeight.w500, color: color ?? TextColorRole.onSurface);
 
@@ -209,4 +214,7 @@ class Style {
 
   static TextStyle small2w3(BuildContext context, {TextColorRole? color}) =>
       _text(context, size: 12, weight: FontWeight.w300, color: color ?? TextColorRole.onSurface);
+
+  static TextStyle smallw6(BuildContext context, {TextColorRole? color}) =>
+      _text(context, size: 10, weight: FontWeight.w600, color: color ?? TextColorRole.onSurface);
 }

@@ -9,7 +9,7 @@ class AppColors {
   // ───────────────────── Neutrals ─────────────────────
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF000000);
-
+  static const Color shadow = Color(0x0F000000);
   // ───────────────────── Status (оставляем семантику) ─────────────────────
   static const Color success = Color(0xFF16A34A);
   static const Color warning = Color(0xFFF59E0B);
@@ -18,7 +18,7 @@ class AppColors {
   // ───────────────────── Transparent ─────────────────────
 
   static const Color transparent = Color(0x00000000);
-  
+
   // Grays
   static const Color gray50 = Color(0xFFF9FAFB);
   static const Color gray100 = Color(0xFFF3F4F6);
@@ -34,7 +34,7 @@ class AppColors {
   static const Color grayBB = Color(0xFFBBBBBB);
   static const Color gray8C = Color(0xFF8C8C8C);
   static const Color grayC43 = Color(0x993C3C43);
-
+  static const Color grayFB = Color(0xFFF9F9FB);
   // ───────────────────── Greens ─────────────────────
   static const Color green36 = Color(0xFF008236);
   static const Color green49 = Color(0xFF01B549);
@@ -48,7 +48,7 @@ class AppColors {
   static const Color green00 = Color(0xFF71B000);
   static const Color green7C = Color(0xFF4E7C00);
   static const Color greenE0 = Color(0xFFD7FFE0);
-
+  static const Color green6B = Color(0xFF30B36B);
   // ───────────────────── Oranges ─────────────────────
   static const Color orange09 = Color(0xFFF79009);
   static const Color orange12 = Color(0xFFD85D12);
@@ -61,6 +61,7 @@ class AppColors {
   static const Color orangeD4 = Color(0xFFFFEDD4);
   static const Color orange549 = Color(0xFFF54900);
   static const Color orangeBE = Color(0xFFFFEEBE);
+  static const Color orange033 = Color(0xFFFF7033);
 
   // ───────────────────── Blues ─────────────────────
   static const Color blueFF = Color(0xFFE7F3FF);
@@ -84,6 +85,5 @@ class AppColors {
 
   // ───────────────────── Yellow (light variants) ─────────────────────
 
-static const Color yellowE10 = Color(0x80FFE100);
-
+  static const Color yellowE10 = Color(0x80FFE100);
 }

@@ -45,11 +45,11 @@ class TodayPlanCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
-              colors: [Color(0x80FFE100), Color(0xFF30B36B)],
-              stops: [0.0, 0.9]),
+              colors: [AppColors.yellowE10.withValues(alpha: 0.5), AppColors.green6B],
+              stops: const [0.0, 0.9]),
           borderRadius: Style.border24),
       child: view(context));
 }
