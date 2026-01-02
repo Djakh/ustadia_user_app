@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
@@ -8,6 +9,7 @@ import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/bad
 import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/leaderboard_card.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/profile_stats_card.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/profile_user_card.dart';
+import 'package:ustadia_user_app/router.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -34,10 +36,12 @@ class ProfilePage extends StatelessWidget {
 
   Widget header(BuildContext context) => IntrinsicHeight(
           child: Stack(alignment: Alignment.center, children: [
-        Text('Notifications', style: Style.body2w6(context)),
+        Text('Profile', style: Style.body2w6(context)),
         Align(
             alignment: Alignment.centerRight,
-            child: IconButton(onPressed: () {}, icon: const Icon(Icons.settings, size: 22))),
+            child: IconButton(
+                onPressed: () => context.push(settingsRoute),
+                icon: const Icon(Icons.settings, size: 22))),
       ]));
 
   Widget statsGrid(BuildContext context) => GridView.builder(

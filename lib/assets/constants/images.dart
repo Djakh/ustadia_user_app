@@ -57,4 +57,17 @@ class AppImages {
   static const leaderboardSecondPlace = 'assets/svg/leaderboard_second_place.svg';
   static const leaderboardThirdPlace = 'assets/svg/leaderboard_third_place.svg';
   static const xpLightningWhite = 'assets/svg/xp_lightning_white.svg';
+  static const settingsUzbek = 'assets/svg/settings_uzbek.svg';
+  static const settingsSmallLogout = 'assets/svg/settings_small_logout.svg';
+  static const settingsRussian = 'assets/svg/settings_russian.svg';
+  static const settingsRemove = 'assets/svg/settings_remove.svg';
+  static const settingsPreferences = 'assets/svg/settings_preferences.svg';
+  static const settingsNotifications = 'assets/svg/settings_notifications.svg';
+  static const settingsLegal = 'assets/svg/settings_legal.svg';
+  static const settingsLargerLogout = 'assets/svg/settings_larger_logout.svg';
+  static const settingsInfo = 'assets/svg/settings_info.svg';
+  static const settingsEnglish = 'assets/svg/settings_english.svg';
+  static const settingsAccount = 'assets/svg/settings_account.svg';
+    static const chevronRight = 'assets/svg/chevron_right.svg';
+
 }

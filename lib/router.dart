@@ -21,6 +21,9 @@ import 'package:ustadia_user_app/features/practice/presentation/pages/word_match
 import 'package:ustadia_user_app/features/practice/presentation/pages/writing_assessment_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/leaderboard_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/profile_page.dart';
+import 'package:ustadia_user_app/features/profile/presentation/pages/settings_language_page.dart';
+import 'package:ustadia_user_app/features/profile/presentation/pages/settings_notifications_page.dart';
+import 'package:ustadia_user_app/features/profile/presentation/pages/settings_page.dart';
 import 'package:ustadia_user_app/features/splash/presentation/pages/splash_page.dart';
 
 /// --------------------
@@ -45,6 +48,9 @@ const practiceRoute = '$homeRoute/practice';
 const askAiRoute = '$homeRoute/ask-ai';
 const profileRoute = '$homeRoute/profile';
 const leaderboardRoute = '$profileRoute/leaderboard';
+const settingsRoute = '$profileRoute/settings';
+const settingsNotificationsRoute = '$settingsRoute/notifications';
+const settingsLanguageRoute = '$settingsRoute/language';
 
 /// --------------------
 /// Practice routes
@@ -175,6 +181,20 @@ final appRouter = GoRouter(initialLocation: splashRoute, routes: [
                 GoRoute(
                   path: 'leaderboard',
                   builder: (context, state) => const LeaderboardPage(),
+                ),
+                GoRoute(
+                  path: 'settings',
+                  builder: (context, state) => const SettingsPage(),
+                  routes: [
+                    GoRoute(
+                      path: 'notifications',
+                      builder: (context, state) => const SettingsNotificationsPage(),
+                    ),
+                    GoRoute(
+                      path: 'language',
+                      builder: (context, state) => const SettingsLanguagePage(),
+                    ),
+                  ],
                 ),
               ])
         ])
