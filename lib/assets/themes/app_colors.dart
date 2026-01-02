@@ -32,6 +32,8 @@ class AppColors {
 
   static const Color grayF4 = Color(0xFFF4F4F4); // secondaryContainer
   static const Color grayBB = Color(0xFFBBBBBB);
+  static const Color gray8C = Color(0xFF8C8C8C);
+  static const Color grayC43 = Color(0x993C3C43);
 
   // ───────────────────── Greens ─────────────────────
   static const Color green36 = Color(0xFF008236);
@@ -45,6 +47,7 @@ class AppColors {
   static const Color greenD8 = Color(0xFFF0F9D8);
   static const Color green00 = Color(0xFF71B000);
   static const Color green7C = Color(0xFF4E7C00);
+  static const Color greenE0 = Color(0xFFD7FFE0);
 
   // ───────────────────── Oranges ─────────────────────
   static const Color orange09 = Color(0xFFF79009);
@@ -53,11 +56,17 @@ class AppColors {
   static const Color orangeE6 = Color(0xFFFFEFE6);
   static const Color orange00 = Color(0xFFFF8A00);
   static const Color orange5A = Color(0xFFCC5A00);
+  static const Color orange9200 = Color(0xFFF89200);
+  static const Color orangeEB = Color(0xFFFFFBEB);
+  static const Color orangeD4 = Color(0xFFFFEDD4);
+  static const Color orange549 = Color(0xFFF54900);
+  static const Color orangeBE = Color(0xFFFFEEBE);
 
   // ───────────────────── Blues ─────────────────────
   static const Color blueFF = Color(0xFFE7F3FF);
   static const Color blueD3 = Color(0xFF0B6BD3);
   static const Color blueB3 = Color(0xFF0086B3);
+  static const Color blueFB = Color(0xFFD9F2FB);
 
   // ───────────────────── Purples / Pinks ─────────────────────
   static const Color purpleC3 = Color(0xFF8839C3);
@@ -67,8 +76,14 @@ class AppColors {
   static const Color pinkF7 = Color(0xFFFFE7F7);
   static const Color pink72 = Color(0xFFB70072);
   static const Color pinkB7 = Color(0xFFD100B7);
+  static const Color pinkFF = Color(0xFFE6DBFF);
 
   // ───────────────────── Reds (light variants) ─────────────────────
   static const Color redE2 = Color(0xFFFEE4E2);
   static const Color redA9 = Color(0xFFFDA29B);
+
+  // ───────────────────── Yellow (light variants) ─────────────────────
+
+static const Color yellowE10 = Color(0x80FFE100);
+
 }

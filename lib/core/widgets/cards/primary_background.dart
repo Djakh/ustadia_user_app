@@ -11,6 +11,7 @@ class PrimaryBackground extends StatefulWidget {
   final String? title;
   final bool isHeader;
   final bool isScrollable;
+  final Color? backgroundColor;
   const PrimaryBackground(
       {super.key,
       required this.child,
@@ -18,7 +19,8 @@ class PrimaryBackground extends StatefulWidget {
       this.title,
       this.isHeader = true,
       this.header,
-      this.isScrollable = false});
+      this.isScrollable = false,
+      this.backgroundColor});
 
   @override
   State<PrimaryBackground> createState() => _PrimaryBackgroundState();
@@ -107,8 +109,9 @@ class _PrimaryBackgroundState extends State<PrimaryBackground> {
       child: Container(
           margin: const EdgeInsets.all(8),
           padding: widget.padding ?? const EdgeInsets.all(12),
-          decoration:
-              BoxDecoration(color: context.cs.secondaryContainer, borderRadius: Style.border24),
+          decoration: BoxDecoration(
+              color: widget.backgroundColor ?? context.cs.secondaryContainer,
+              borderRadius: Style.border24),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch, // ✅ THIS FIXES IT
 

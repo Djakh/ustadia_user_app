@@ -24,8 +24,14 @@ class AppImages {
   static const listenButton = 'assets/images/listen_button.png';
   static const vocabulary = 'assets/images/vocabulary.png';
   static const speedMixLightning = 'assets/images/speed_mix_lightning.png';
-  
+
   static const speedMixClock = 'assets/images/speed_mix_clock.png';
+  static const firePoint = 'assets/images/fire_point.png';
+  static const strakFire = 'assets/images/strak_fire.png';
+  static const lessonCardBack = 'assets/images/lesson_card_back.png';
+  static const chatCardBack = 'assets/images/chat_card_back.png';
+  static const practiceCardBack = 'assets/images/practice_card_back.png';
+  static const leaderboardCardBack = 'assets/images/leaderboard_card_back.png';
 
   /// --- JPG ---
 
