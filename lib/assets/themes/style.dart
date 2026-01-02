@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum TextColorRole { onSurface, whiteColor, greyColor }
+enum TextColorRole { onSurface, whiteColor, primaryColor, greyColor }
 
 class Style {
   Style._();
@@ -104,6 +104,8 @@ class Style {
         return cs.onSurface;
       case TextColorRole.whiteColor:
         return cs.onPrimary;
+      case TextColorRole.primaryColor:
+        return cs.primary;
       case TextColorRole.greyColor:
         return cs.onTertiary;
       case null:
@@ -136,8 +138,11 @@ class Style {
   static TextStyle headline7w7(BuildContext context, {TextColorRole? color}) =>
       _text(context, size: 36, weight: FontWeight.w700, color: color);
 
- static TextStyle headline5w7(BuildContext context, {TextColorRole? color}) =>
+  static TextStyle headline5w7(BuildContext context, {TextColorRole? color}) =>
       _text(context, size: 32, weight: FontWeight.w700, color: color);
+
+  static TextStyle headline3w7(BuildContext context, {TextColorRole? color}) =>
+      _text(context, size: 28, weight: FontWeight.w700, color: color);
 
   static TextStyle headline2w7(BuildContext context, {TextColorRole? color}) =>
       _text(context, size: 26, weight: FontWeight.w700, color: color);
