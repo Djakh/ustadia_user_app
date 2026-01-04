@@ -20,14 +20,14 @@ import 'package:ustadia_user_app/features/practice/presentation/widgets/contents
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/word_match_content.dart';
 import 'package:ustadia_user_app/router.dart';
 
-class SpeedMixPage extends StatefulWidget {
-  const SpeedMixPage({super.key});
+class SpeedMixPlayPage extends StatefulWidget {
+  const SpeedMixPlayPage({super.key});
 
   @override
-  State<SpeedMixPage> createState() => _SpeedMixPageState();
+  State<SpeedMixPlayPage> createState() => _SpeedMixPlayPageState();
 }
 
-class _SpeedMixPageState extends State<SpeedMixPage> {
+class _SpeedMixPlayPageState extends State<SpeedMixPlayPage> {
   static const totalSeconds = 120;
   final FlutterTts _tts = FlutterTts();
 
@@ -236,7 +236,5 @@ class _SpeedMixPageState extends State<SpeedMixPage> {
           body: PrimaryBackground(
               title: 'Speed Mix',
               isScrollable: !isSentenceTask,
-              child: isSentenceTask
-                  ? SizedBox.expand(child: view)
-                  : view)));
+              child: isSentenceTask ? SizedBox.expand(child: view) : view)));
 }
