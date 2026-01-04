@@ -214,7 +214,8 @@ class Style {
 
   static TextStyle small2w3(BuildContext context, {TextColorRole? color}) =>
       _text(context, size: 12, weight: FontWeight.w300, color: color ?? TextColorRole.onSurface);
-
+  static TextStyle smallw7(BuildContext context, {TextColorRole? color}) =>
+      _text(context, size: 10, weight: FontWeight.w700, color: color ?? TextColorRole.onSurface);
   static TextStyle smallw6(BuildContext context, {TextColorRole? color}) =>
       _text(context, size: 10, weight: FontWeight.w600, color: color ?? TextColorRole.onSurface);
 }
