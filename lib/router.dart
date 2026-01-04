@@ -7,6 +7,7 @@ import 'package:ustadia_user_app/features/dashboard/presentation/pages/dashboard
 import 'package:ustadia_user_app/features/home/presentation/home_page.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/pages/intro_survey_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_page.dart';
+import 'package:ustadia_user_app/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:ustadia_user_app/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/build_sentence_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint/flashcard_sprint_page.dart';
@@ -48,6 +49,7 @@ const practiceRoute = '$homeRoute/practice';
 const askAiRoute = '$homeRoute/ask-ai';
 const profileRoute = '$homeRoute/profile';
 const leaderboardRoute = '$profileRoute/leaderboard';
+const notificationsRoute = '$profileRoute/notifications';
 const settingsRoute = '$profileRoute/settings';
 const settingsNotificationsRoute = '$settingsRoute/notifications';
 const settingsLanguageRoute = '$settingsRoute/language';
@@ -181,6 +183,10 @@ final appRouter = GoRouter(initialLocation: splashRoute, routes: [
                 GoRoute(
                   path: 'leaderboard',
                   builder: (context, state) => const LeaderboardPage(),
+                ),
+                GoRoute(
+                  path: 'notifications',
+                  builder: (context, state) => const NotificationsPage(),
                 ),
                 GoRoute(
                   path: 'settings',

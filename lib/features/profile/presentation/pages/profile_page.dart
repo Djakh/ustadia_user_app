@@ -32,16 +32,18 @@ class ProfilePage extends StatelessWidget {
         ProfileBadgeModel(asset: AppImages.profileEarlyBirdIcon, label: 'Early bird')
       ];
 
+  /// --- Methods ---
+
   /// --- Widgets ---
+  Widget headerIcon(IconData icon, AlignmentGeometry alignment, Function() onPressed) => Align(
+      alignment: alignment, child: IconButton(onPressed: onPressed, icon: Icon(icon, size: 22)));
 
   Widget header(BuildContext context) => IntrinsicHeight(
           child: Stack(alignment: Alignment.center, children: [
+        headerIcon(
+            Icons.notifications, Alignment.centerLeft, () => context.push(notificationsRoute)),
         Text('Profile', style: Style.body2w6(context)),
-        Align(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-                onPressed: () => context.push(settingsRoute),
-                icon: const Icon(Icons.settings, size: 22))),
+        headerIcon(Icons.settings, Alignment.centerRight, () => context.push(settingsRoute))
       ]));
 
   Widget statsGrid(BuildContext context) => GridView.builder(
