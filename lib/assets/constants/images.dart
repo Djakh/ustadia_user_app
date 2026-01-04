@@ -74,4 +74,8 @@ class AppImages {
   static const notificationFeaturesAndTips = 'assets/svg/notification_new_features_and_tips.svg';
   static const notificationDailyRemainder = 'assets/svg/notification_daily_remainder.svg';
   static const checkSquare = 'assets/svg/check_square.svg';
+  static const learnHeadphones = 'assets/svg/learn_headphones.svg';
+  static const learnMicrophone = 'assets/svg/learn_microphone.svg';
+  static const learnNotebook = 'assets/svg/learn_notebook.svg';
+  static const learnPen = 'assets/svg/learn_pen.svg';
 }
