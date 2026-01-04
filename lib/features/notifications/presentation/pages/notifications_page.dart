@@ -61,7 +61,7 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
     final widgets = <Widget>[];
 
     for (var i = 0; i < list.length; i++) {
-      widgets.add(sectionList(context, list[i]));
+      widgets.add(sectionListComponents(context, list[i]));
       if (i != list.length - 1) {
         widgets.add(const SizedBox(height: 20));
       }
@@ -72,29 +72,28 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
 
   /// --- Widgets ---
 
-  Widget emptyState(BuildContext context) => Center(
-      child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            SvgPicture.asset(AppImages.notificationBell, width: 120, height: 120),
-            const SizedBox(height: 20),
-            Text("You don't have any notifications yet", style: Style.bodyw7(context)),
-            const SizedBox(height: 8),
-            Text('New lessons, reminders, and learning updates will appear here.',
-                textAlign: TextAlign.center,
-                style: Style.small3w4(context, color: TextColorRole.greyColor))
-          ])));
+  Widget emptyState(BuildContext context) =>
+      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Image.asset(AppImages.notificationBell, height: 160, width: 160),
+        Text("You don't have any notifications yet", style: Style.body3w7(context)),
+        const SizedBox(height: 4),
+        Text('New lessons, reminders, and learning updates will appear here.',
+            textAlign: TextAlign.center,
+            style: Style.bodyw4(context, color: TextColorRole.greyColor))
+      ]);
 
-  Widget sectionList(BuildContext context, NotificationSection section) =>
+  PrimaryListView sectionList(NotificationSection section) => PrimaryListView(
+      items: section.items,
+      shrinkWrap: true,
+      itemBuilder: (item) =>
+          NotificationListItem(notification: item, onTap: () => toggleRead(item.id)));
+
+  Widget sectionListComponents(BuildContext context, NotificationSection section) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(formatDateLabel(section.date, DateTime.now()),
             style: Style.small3w4(context, color: TextColorRole.greyColor)),
         const SizedBox(height: 12),
-        PrimaryListView(
-            items: section.items,
-            shrinkWrap: true,
-            itemBuilder: (item) =>
-                NotificationListItem(notification: item, onTap: () => toggleRead(item.id))),
+        sectionList(section),
       ]);
 
   Widget listView(BuildContext context) => Column(
@@ -123,6 +122,6 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
   Widget build(BuildContext context) => Scaffold(
       body: PrimaryBackground(
           header: header(context),
-          isScrollable: true,
+          isScrollable: notifications.isEmpty ? false : true,
           child: notifications.isEmpty ? emptyState(context) : listView(context)));
 }

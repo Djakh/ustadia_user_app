@@ -44,6 +44,7 @@ class AppImages {
   static const profileDaysStreakIcon = 'assets/images/profile_days_streak_icon.png';
   static const profileCupIcon = 'assets/images/profile_cup_icon.png';
   static const profile50WordsIcon = 'assets/images/profile_50_words_icon.png';
+  static const notificationBell = 'assets/images/notification_bell.png';
 
   /// --- JPG ---
 
@@ -72,6 +73,5 @@ class AppImages {
   static const notificationStreakRemainders = 'assets/svg/notification_streak_remainders.svg';
   static const notificationFeaturesAndTips = 'assets/svg/notification_new_features_and_tips.svg';
   static const notificationDailyRemainder = 'assets/svg/notification_daily_remainder.svg';
-  static const notificationBell = 'assets/svg/notification_bell.svg';
   static const checkSquare = 'assets/svg/check_square.svg';
 }

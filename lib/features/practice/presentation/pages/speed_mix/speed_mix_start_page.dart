@@ -13,7 +13,7 @@ class SpeedMixStartPage extends StatelessWidget {
   /// --- Widgets ---
 
   Widget startButton(BuildContext context) =>
-      Button.primary(onTap: () => context.pushReplacement(speedMixPracticeRoute), text: 'Start (2:00)');
+      Button.primary(onTap: () => context.pushReplacement(speedMixPlayRoute), text: 'Start (2:00)');
 
   Widget startCard(BuildContext context) => Column(
         mainAxisAlignment: MainAxisAlignment.center,

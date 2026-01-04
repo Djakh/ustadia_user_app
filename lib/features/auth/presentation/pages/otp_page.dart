@@ -49,7 +49,7 @@ class OtpPageState extends State<OtpPage> {
 
   bool get isComplete => codeValue.length == codeLength;
 
-  void goToHome() => context.go(postsRoute);
+  void goToHome() => context.go(homeRoute);
 
   void goToIntroSurvey() => context.go(introSurveyRoute);
 
@@ -144,7 +144,8 @@ class OtpPageState extends State<OtpPage> {
               .copyWith(color: secondsLeft == 0 ? context.cs.primary : context.cs.onSurface)));
 
   Widget get resend => Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text('Didn’t receive the OTP?', style: Style.small3w4(context, color: TextColorRole.greyColor)),
+        Text('Didn’t receive the OTP?',
+            style: Style.small3w4(context, color: TextColorRole.greyColor)),
         resendButton
       ]);
 
