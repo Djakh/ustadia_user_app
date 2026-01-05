@@ -6,7 +6,9 @@ import 'package:ustadia_user_app/features/auth/presentation/pages/sign_up_page.d
 import 'package:ustadia_user_app/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:ustadia_user_app/features/home/presentation/home_page.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/pages/intro_survey_page.dart';
-import 'package:ustadia_user_app/features/learn/presentation/pages/learn_page.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
+import 'package:ustadia_user_app/features/learn/presentation/pages/learn_lessons_page.dart';
+import 'package:ustadia_user_app/features/learn/presentation/pages/learn_units_page.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:ustadia_user_app/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/build_sentence_page.dart';
@@ -42,7 +44,9 @@ const signUpRoute = '/sign-up';
 /// --------------------
 const homeRoute = '/home';
 const dashboardRoute = '$homeRoute/dashboard';
-const learnRoute = '$homeRoute/learn';
+const learnUnitsRoute = '$homeRoute/learn_units';
+const learnLessonsPath = 'lesson';
+const learnLessonsRoute = '$learnUnitsRoute/$learnLessonsPath';
 const practiceRoute = '$homeRoute/practice';
 const askAiRoute = '$homeRoute/ask-ai';
 const profileRoute = '$homeRoute/profile';
@@ -140,9 +144,16 @@ final appRouter = GoRouter(
           navigatorKey: _learnKey,
           routes: [
             GoRoute(
-              path: learnRoute,
-              pageBuilder: (_, __) => const NoTransitionPage(child: LearnPage()),
-            ),
+                path: learnUnitsRoute,
+                pageBuilder: (_, __) => const NoTransitionPage(child: LearnUnitsPage()),
+                routes: [
+                  GoRoute(
+                      path: learnLessonsPath,
+                      parentNavigatorKey: _rootKey,
+                      builder: (context, state) => LearnLessonsPage(
+                          unit:
+                              (state.extra as LearnUnitModel?) ?? LearnUnitModel.sampleUnits.first))
+                ]),
           ],
         ),
 

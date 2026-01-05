@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/widgets/cached_images/cached_images_primary/cached_image_primary.dart';
 import 'package:ustadia_user_app/core/widgets/progress_bars/circle_progress_badge.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
 
 class LearnUnitCard extends StatelessWidget {
   final LearnUnitModel unit;
+  final VoidCallback onTap;
 
-  const LearnUnitCard({super.key, required this.unit});
+  const LearnUnitCard({super.key, required this.unit, required this.onTap});
 
   /// --- Getters ---
   Color get progressColor =>
@@ -43,13 +45,13 @@ class LearnUnitCard extends StatelessWidget {
 
   Widget get imagePreview => Align(
       alignment: Alignment.bottomRight,
-      child: Image.network(unit.imageUrl, height: 110, width: 110, fit: BoxFit.contain));
+      child: CachedImagePrimary(imageUrl: unit.imageUrl, height: 110, width: 110));
 
   Widget view(BuildContext context) => Stack(children: [
         Positioned(bottom: 0, right: 0, child: imagePreview),
         Positioned.fill(
             child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+                padding: const EdgeInsets.all(16),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   unitLabelAndProgressBadge(context),
                   title(context),
@@ -58,12 +60,17 @@ class LearnUnitCard extends StatelessWidget {
       ]);
 
   @override
-  Widget build(BuildContext context) => Container(
-      decoration: BoxDecoration(
-          color: context.cs.surface,
+  Widget build(BuildContext context) => Material(
+      color: Colors.transparent,
+      child: InkWell(
+          onTap: onTap,
           borderRadius: Style.border20,
-          boxShadow: const [
-            BoxShadow(color: AppColors.shadow, blurRadius: 12, offset: Offset(0, 6))
-          ]),
-      child: view(context));
+          child: Ink(
+              decoration: BoxDecoration(
+                  color: context.cs.surface,
+                  borderRadius: Style.border20,
+                  boxShadow: const [
+                    BoxShadow(color: AppColors.shadow, blurRadius: 12, offset: Offset(0, 6))
+                  ]),
+              child: view(context))));
 }
