@@ -55,15 +55,12 @@ class AudioCardState extends State<AudioCard> {
 
   /// --- Widgets ---
   Widget playButton() => Container(
-      height: 36,
-      width: 36,
-      decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+          color: isPlaying ? AppColors.primary : AppColors.grayF4, shape: BoxShape.circle),
       child: Center(
           child: SvgPicture.asset(
-              isPlaying ? AppImages.learnListeningStop : AppImages.learnListeningPlay,
-              height: 16,
-              width: 16,
-              colorFilter: const ColorFilter.mode(AppColors.white, BlendMode.srcIn))));
+              isPlaying ? AppImages.learnListeningStop : AppImages.learnListeningPlay)));
 
   Widget view(BuildContext context) => Row(children: [
         SvgPicture.asset(AppImages.learnListeningAudio, height: 32, width: 32),

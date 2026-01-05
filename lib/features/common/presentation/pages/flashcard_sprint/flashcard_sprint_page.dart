@@ -4,13 +4,14 @@ import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_result_page.dart';
 import 'package:ustadia_user_app/features/practice/data/models/flashcard_model.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint/practice_flashcard_sprint_result_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_flashcard_view.dart';
 import 'package:ustadia_user_app/router.dart';
 
 class PracticeFlashcardSprintPage extends StatefulWidget {
-  const PracticeFlashcardSprintPage({super.key});
+  final String title;
+  const PracticeFlashcardSprintPage({super.key, required this.title});
 
   @override
   State<PracticeFlashcardSprintPage> createState() => PracticeFlashcardSprintPageState();
@@ -71,8 +72,8 @@ class PracticeFlashcardSprintPageState extends State<PracticeFlashcardSprintPage
   }
 
   void _finish() {
-    final stats =
-        PracticeFlashcardSprintResultStats(known: knownCount, learning: learningCount, total: cards.length);
+    final stats = PracticeFlashcardSprintResultStats(
+        known: knownCount, learning: learningCount, total: cards.length);
     if (!mounted) return;
     context.pushReplacement(flashcardSprintResultRoute, extra: stats);
     setState(() {
@@ -87,7 +88,7 @@ class PracticeFlashcardSprintPageState extends State<PracticeFlashcardSprintPage
   /// --- Widgets ---
 
   Widget get header => Column(children: [
-        Text('Flashcard sprint', style: Style.body3w7(context)),
+        Text(widget.title, style: Style.body3w7(context)),
         const SizedBox(height: 4),
         Text(progress, style: Style.small3w4(context, color: TextColorRole.greyColor))
       ]);
@@ -98,16 +99,16 @@ class PracticeFlashcardSprintPageState extends State<PracticeFlashcardSprintPage
   Widget controls(BuildContext context) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(children: [
-        Expanded(child: Button.border(onTap: onKnowIt, text: hasSeenMeaning ? "Next" : "I know it")),
+        Expanded(
+            child: Button.border(onTap: onKnowIt, text: hasSeenMeaning ? "Next" : "I know it")),
         const SizedBox(width: 12),
         Expanded(child: Button.border(onTap: onStudyAgain, text: "Study again")),
       ]));
 
   Widget get view => PrimaryBackground(
-          child: Column(children: [
-        const SizedBox(height: 12),
-        header,
-        const SizedBox(height: 16),
+      header: header,
+      child: Column(children: [
+        const SizedBox(height: 24),
         card,
         const SizedBox(height: 20),
         controls(context)

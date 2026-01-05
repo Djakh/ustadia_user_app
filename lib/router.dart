@@ -3,19 +3,20 @@ import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/features/auth/presentation/pages/login_page.dart';
 import 'package:ustadia_user_app/features/auth/presentation/pages/otp_page.dart';
 import 'package:ustadia_user_app/features/auth/presentation/pages/sign_up_page.dart';
+import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_page.dart';
+import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_result_page.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:ustadia_user_app/features/home/presentation/home_page.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/pages/intro_survey_page.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
+import 'package:ustadia_user_app/features/learn/presentation/pages/learn_grammar/learn_grammar_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_lessons_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_listening/learn_listening_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_reading/learn_reading_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_units_page.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:ustadia_user_app/features/onboarding/presentation/pages/onboarding_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint/practice_flashcard_sprint_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint/practice_flashcard_sprint_result_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/practice_listen_tap_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_build_sentence_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_page.dart';
@@ -58,6 +59,9 @@ const learnReadingRoute = '$learnUnitsRoute/$learnReadingPath';
 
 const learnGrammarPath = 'grammar';
 const learnGrammarRoute = '$learnUnitsRoute/$learnGrammarPath';
+
+const flashcardSprintPath = 'flashcard-sprint';
+
 const practiceRoute = '$homeRoute/practice';
 const askAiRoute = '$homeRoute/ask-ai';
 const profileRoute = '$homeRoute/profile';
@@ -67,7 +71,6 @@ const profileRoute = '$homeRoute/profile';
 /// --------------------
 
 // Practice
-const flashcardSprintPath = 'flashcard-sprint';
 const flashcardSprintResultPath = 'result';
 const wordMatchPath = 'word-match';
 const buildSentencePath = 'build-sentence';
@@ -90,7 +93,7 @@ const settingsLanguagePath = 'language';
 /// --------------------
 /// Absolute helpers for pushing from anywhere (always start with '/')
 /// --------------------
-const flashcardSprintRoute = '$practiceRoute/$flashcardSprintPath';
+const flashcardSprintRoute = '/$flashcardSprintPath';
 const flashcardSprintResultRoute = '$flashcardSprintRoute/$flashcardSprintResultPath';
 const wordMatchRoute = '$practiceRoute/$wordMatchPath';
 const buildSentenceRoute = '$practiceRoute/$buildSentencePath';
@@ -133,6 +136,25 @@ final appRouter = GoRouter(
       builder: (context, state) => OtpPage(contact: (state.extra as String?) ?? ''),
     ),
     GoRoute(path: signUpRoute, builder: (_, __) => const SignUpPage()),
+    GoRoute(
+        path: flashcardSprintRoute,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) {
+          final extra = state.extra;
+          final title = extra is LearnLessonModel
+              ? extra.title
+              : extra is String
+                  ? extra
+                  : 'Flashcard sprint';
+          return PracticeFlashcardSprintPage(title: title);
+        },
+        routes: [
+          GoRoute(
+              path: flashcardSprintResultPath,
+              parentNavigatorKey: _rootKey,
+              builder: (context, state) => PracticeFlashcardSprintResultPage(
+                  stats: state.extra as PracticeFlashcardSprintResultStats?))
+        ]),
 
     /// ----------- SHELL (BOTTOM NAV) -----------
     StatefulShellRoute.indexedStack(
@@ -175,7 +197,13 @@ final appRouter = GoRouter(
                       parentNavigatorKey: _rootKey,
                       builder: (context, state) => LearnReadingPage(
                           lesson: (state.extra as LearnLessonModel?) ??
-                              LearnLessonModel.sampleLessons.first))
+                              LearnLessonModel.sampleLessons.first)),
+                  GoRoute(
+                      path: learnGrammarPath,
+                      parentNavigatorKey: _rootKey,
+                      builder: (context, state) => LearnGrammarPage(
+                          lesson: (state.extra as LearnLessonModel?) ??
+                              LearnLessonModel.sampleLessons.first)),
                 ]),
           ],
         ),
@@ -188,20 +216,6 @@ final appRouter = GoRouter(
               path: practiceRoute,
               pageBuilder: (_, __) => const NoTransitionPage(child: PracticePage()),
               routes: [
-                GoRoute(
-                  path: flashcardSprintPath,
-                  parentNavigatorKey: _rootKey,
-                  builder: (_, __) => const PracticeFlashcardSprintPage(),
-                  routes: [
-                    GoRoute(
-                      path: flashcardSprintResultPath,
-                      parentNavigatorKey: _rootKey,
-                      builder: (context, state) => PracticeFlashcardSprintResultPage(
-                        stats: state.extra as PracticeFlashcardSprintResultStats?,
-                      ),
-                    ),
-                  ],
-                ),
                 GoRoute(
                   path: wordMatchPath,
                   parentNavigatorKey: _rootKey,
