@@ -16,9 +16,10 @@ class LearnLessonsPage extends StatelessWidget {
   List<LearnLessonModel> get lessons => LearnLessonModel.sampleLessons;
 
   void onLessonTap(BuildContext context, LearnLessonModel lesson) {
-    if (lesson.lessonType == LearnLessonType.listening) {
+    if (lesson.lessonType == LearnLessonType.listening)
       context.push(learnListeningRoute, extra: lesson);
-    }
+    if (lesson.lessonType == LearnLessonType.reading)
+      context.push(learnReadingRoute, extra: lesson);
   }
 
   PrimaryListView lessonsList(BuildContext context) => PrimaryListView(

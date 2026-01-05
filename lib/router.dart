@@ -6,24 +6,25 @@ import 'package:ustadia_user_app/features/auth/presentation/pages/sign_up_page.d
 import 'package:ustadia_user_app/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:ustadia_user_app/features/home/presentation/home_page.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/pages/intro_survey_page.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_lessons_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_listening/learn_listening_page.dart';
+import 'package:ustadia_user_app/features/learn/presentation/pages/learn_reading/learn_reading_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_units_page.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:ustadia_user_app/features/onboarding/presentation/pages/onboarding_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/practice_build_sentence_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint/practice_flashcard_sprint_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint/practice_flashcard_sprint_result_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/practice_listen_tap_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/practice_build_sentence_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_result_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_start_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_vocabulary_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_word_match_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_writing_assessment_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_result_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_start_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/leaderboard_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/settings_language_page.dart';
@@ -50,7 +51,13 @@ const learnUnitsRoute = '$homeRoute/learn_units';
 const learnLessonsPath = 'lesson';
 const learnLessonsRoute = '$learnUnitsRoute/$learnLessonsPath';
 const learnListeningPath = 'listening';
+
 const learnListeningRoute = '$learnUnitsRoute/$learnListeningPath';
+const learnReadingPath = 'reading';
+const learnReadingRoute = '$learnUnitsRoute/$learnReadingPath';
+
+const learnGrammarPath = 'grammar';
+const learnGrammarRoute = '$learnUnitsRoute/$learnGrammarPath';
 const practiceRoute = '$homeRoute/practice';
 const askAiRoute = '$homeRoute/ask-ai';
 const profileRoute = '$homeRoute/profile';
@@ -155,12 +162,18 @@ final appRouter = GoRouter(
                       path: learnLessonsPath,
                       parentNavigatorKey: _rootKey,
                       builder: (context, state) => LearnLessonsPage(
-                          unit:
-                              (state.extra as LearnUnitModel?) ?? LearnUnitModel.sampleUnits.first)),
+                          unit: (state.extra as LearnUnitModel?) ??
+                              LearnUnitModel.sampleUnits.first)),
                   GoRoute(
                       path: learnListeningPath,
                       parentNavigatorKey: _rootKey,
                       builder: (context, state) => LearnListeningPage(
+                          lesson: (state.extra as LearnLessonModel?) ??
+                              LearnLessonModel.sampleLessons.first)),
+                  GoRoute(
+                      path: learnReadingPath,
+                      parentNavigatorKey: _rootKey,
+                      builder: (context, state) => LearnReadingPage(
                           lesson: (state.extra as LearnLessonModel?) ??
                               LearnLessonModel.sampleLessons.first))
                 ]),
@@ -229,8 +242,8 @@ final appRouter = GoRouter(
                     GoRoute(
                       path: speedMixResultPath,
                       parentNavigatorKey: _rootKey,
-                      builder: (context, state) =>
-                          PracticeSpeedMixResultPage(stats: state.extra as PracticeSpeedMixResultStats),
+                      builder: (context, state) => PracticeSpeedMixResultPage(
+                          stats: state.extra as PracticeSpeedMixResultStats),
                     ),
                   ],
                 ),
