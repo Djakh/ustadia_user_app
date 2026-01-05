@@ -7,16 +7,16 @@ import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
 import 'package:ustadia_user_app/features/practice/data/models/vocabulary_question.dart';
 import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
-import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/vocabulary_content.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_vocabulary_content.dart';
 
-class VocabularyPage extends StatefulWidget {
-  const VocabularyPage({super.key});
+class PracticeVocabularyPage extends StatefulWidget {
+  const PracticeVocabularyPage({super.key});
 
   @override
-  State<VocabularyPage> createState() => _VocabularyPageState();
+  State<PracticeVocabularyPage> createState() => PracticeVocabularyPageState();
 }
 
-class _VocabularyPageState extends State<VocabularyPage> {
+class PracticeVocabularyPageState extends State<PracticeVocabularyPage> {
   int questionIndex = 0;
 
   /// --- Data ---
@@ -98,7 +98,7 @@ class _VocabularyPageState extends State<VocabularyPage> {
         const SizedBox(height: 4),
         info(context),
         const SizedBox(height: 24),
-        VocabularyContent(vocabularyModel: currentVocabularyModel),
+        PracticeVocabularyContent(vocabularyModel: currentVocabularyModel),
         const SizedBox(height: 10),
         nextButton(context, state.isCurrentTaskCompleted)
       ]);

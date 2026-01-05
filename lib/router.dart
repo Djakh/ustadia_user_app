@@ -13,17 +13,17 @@ import 'package:ustadia_user_app/features/learn/presentation/pages/learn_listeni
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_units_page.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:ustadia_user_app/features/onboarding/presentation/pages/onboarding_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/build_sentence_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint/flashcard_sprint_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint/flashcard_sprint_result_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/listen_tap_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/practice_build_sentence_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint/practice_flashcard_sprint_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint/practice_flashcard_sprint_result_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/practice_listen_tap_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/speed_mix_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/speed_mix_result_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/speed_mix_start_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/vocabulary_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/word_match_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/writing_assessment_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_result_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_start_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/practice_vocabulary_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/practice_word_match_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/practice_writing_assessment_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/leaderboard_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/settings_language_page.dart';
@@ -178,13 +178,13 @@ final appRouter = GoRouter(
                 GoRoute(
                   path: flashcardSprintPath,
                   parentNavigatorKey: _rootKey,
-                  builder: (_, __) => const FlashcardSprintPage(),
+                  builder: (_, __) => const PracticeFlashcardSprintPage(),
                   routes: [
                     GoRoute(
                       path: flashcardSprintResultPath,
                       parentNavigatorKey: _rootKey,
-                      builder: (context, state) => FlashcardSprintResultPage(
-                        stats: state.extra as FlashcardSprintResultStats?,
+                      builder: (context, state) => PracticeFlashcardSprintResultPage(
+                        stats: state.extra as PracticeFlashcardSprintResultStats?,
                       ),
                     ),
                   ],
@@ -192,45 +192,45 @@ final appRouter = GoRouter(
                 GoRoute(
                   path: wordMatchPath,
                   parentNavigatorKey: _rootKey,
-                  builder: (_, __) => const WordMatchPage(),
+                  builder: (_, __) => const PracticeWordMatchPage(),
                 ),
                 GoRoute(
                   path: buildSentencePath,
                   parentNavigatorKey: _rootKey,
-                  builder: (_, __) => const BuildSentencePage(),
+                  builder: (_, __) => const PracticeBuildSentencePage(),
                 ),
                 GoRoute(
                   path: writingAssessmentPath,
                   parentNavigatorKey: _rootKey,
-                  builder: (_, __) => const WritingAssessmentPage(),
+                  builder: (_, __) => const PracticeWritingAssessmentPage(),
                 ),
                 GoRoute(
                   path: listenTapPath,
                   parentNavigatorKey: _rootKey,
-                  builder: (_, __) => const ListenTapPage(),
+                  builder: (_, __) => const PracticeListenTapPage(),
                 ),
                 GoRoute(
                   path: vocabularyPath,
                   parentNavigatorKey: _rootKey,
-                  builder: (_, __) => const VocabularyPage(),
+                  builder: (_, __) => const PracticeVocabularyPage(),
                 ),
 
                 /// SpeedMix: start -> play/result
                 GoRoute(
                   path: speedMixPath,
                   parentNavigatorKey: _rootKey,
-                  builder: (_, __) => const SpeedMixStartPage(),
+                  builder: (_, __) => const PracticeSpeedMixStartPage(),
                   routes: [
                     GoRoute(
                       path: speedMixPlayPath,
                       parentNavigatorKey: _rootKey,
-                      builder: (_, __) => const SpeedMixPlayPage(),
+                      builder: (_, __) => const PracticeSpeedMixPlayPage(),
                     ),
                     GoRoute(
                       path: speedMixResultPath,
                       parentNavigatorKey: _rootKey,
                       builder: (context, state) =>
-                          SpeedMixResultPage(stats: state.extra as SpeedMixResultStats),
+                          PracticeSpeedMixResultPage(stats: state.extra as PracticeSpeedMixResultStats),
                     ),
                   ],
                 ),

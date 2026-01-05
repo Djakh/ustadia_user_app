@@ -4,9 +4,9 @@ import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/features/practice/data/models/activity_model.dart';
 
-class ItemTileCard extends StatelessWidget {
+class PracticeItemTileCard extends StatelessWidget {
   final ActivityModel activityModel;
-  const ItemTileCard({super.key, required this.activityModel});
+  const PracticeItemTileCard({super.key, required this.activityModel});
 
   /// --- Methods ---
   void goToPracticeActivityPage(BuildContext context) => context.push(activityModel.route);

@@ -5,12 +5,12 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/features/practice/data/models/flashcard_model.dart';
 
-class FlashcardView extends StatelessWidget {
+class PracticeFlashcardView extends StatelessWidget {
   final FlashcardModel flashcard;
   final bool showMeaning;
   final VoidCallback onToggle;
 
-  const FlashcardView(
+  const PracticeFlashcardView(
       {super.key, required this.flashcard, required this.showMeaning, required this.onToggle});
 
   /// --- Widgets ---

@@ -5,18 +5,18 @@ import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/practice/data/models/flashcard_model.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint/flashcard_sprint_result_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/flashcard_view.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/flashcard_sprint/practice_flashcard_sprint_result_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_flashcard_view.dart';
 import 'package:ustadia_user_app/router.dart';
 
-class FlashcardSprintPage extends StatefulWidget {
-  const FlashcardSprintPage({super.key});
+class PracticeFlashcardSprintPage extends StatefulWidget {
+  const PracticeFlashcardSprintPage({super.key});
 
   @override
-  State<FlashcardSprintPage> createState() => _FlashcardSprintPageState();
+  State<PracticeFlashcardSprintPage> createState() => PracticeFlashcardSprintPageState();
 }
 
-class _FlashcardSprintPageState extends State<FlashcardSprintPage> {
+class PracticeFlashcardSprintPageState extends State<PracticeFlashcardSprintPage> {
   int index = 0;
   bool showMeaning = false;
   int knownCount = 0;
@@ -72,7 +72,7 @@ class _FlashcardSprintPageState extends State<FlashcardSprintPage> {
 
   void _finish() {
     final stats =
-        FlashcardSprintResultStats(known: knownCount, learning: learningCount, total: cards.length);
+        PracticeFlashcardSprintResultStats(known: knownCount, learning: learningCount, total: cards.length);
     if (!mounted) return;
     context.pushReplacement(flashcardSprintResultRoute, extra: stats);
     setState(() {
@@ -93,7 +93,7 @@ class _FlashcardSprintPageState extends State<FlashcardSprintPage> {
       ]);
 
   Widget get card =>
-      FlashcardView(flashcard: current, showMeaning: showMeaning, onToggle: toggleFace);
+      PracticeFlashcardView(flashcard: current, showMeaning: showMeaning, onToggle: toggleFace);
 
   Widget controls(BuildContext context) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),

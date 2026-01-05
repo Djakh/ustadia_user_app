@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
-import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/word_match_card.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_word_match_card.dart';
 
-class WordMatchContent extends StatefulWidget {
+class PracticeWordMatchContent extends StatefulWidget {
   final List<(String, String)> wordMatchPairs;
-  const WordMatchContent({super.key, required this.wordMatchPairs});
+  const PracticeWordMatchContent({super.key, required this.wordMatchPairs});
 
   @override
-  State<WordMatchContent> createState() => _WordMatchContentState();
+  State<PracticeWordMatchContent> createState() => PracticeWordMatchContentState();
 }
 
-class _WordMatchContentState extends State<WordMatchContent> {
-  late final List<WordMatchCardData> cards;
+class PracticeWordMatchContentState extends State<PracticeWordMatchContent> {
+  late final List<PracticeWordMatchCardData> cards;
   late List<WordMatchCardState> states;
   final List<int> _selected = [];
   bool _lock = false;
@@ -33,11 +33,11 @@ class _WordMatchContentState extends State<WordMatchContent> {
 
   /// --- Methods ---
 
-  List<WordMatchCardData> _buildCards() {
-    final list = <WordMatchCardData>[];
+  List<PracticeWordMatchCardData> _buildCards() {
+    final list = <PracticeWordMatchCardData>[];
     for (var i = 0; i < widget.wordMatchPairs.length; i++) {
-      list.add(WordMatchCardData(pairId: i, text: widget.wordMatchPairs[i].$1));
-      list.add(WordMatchCardData(pairId: i, text: widget.wordMatchPairs[i].$2));
+      list.add(PracticeWordMatchCardData(pairId: i, text: widget.wordMatchPairs[i].$1));
+      list.add(PracticeWordMatchCardData(pairId: i, text: widget.wordMatchPairs[i].$2));
     }
     list.shuffle(Random());
     return list;
@@ -98,7 +98,7 @@ class _WordMatchContentState extends State<WordMatchContent> {
           crossAxisCount: 2, crossAxisSpacing: 12, mainAxisSpacing: 12, childAspectRatio: 1.5),
       itemCount: cards.length,
       itemBuilder: (context, index) =>
-          WordMatchCard(data: cards[index], state: states[index], onTap: () => onTapCard(index)));
+          PracticeWordMatchCard(data: cards[index], state: states[index], onTap: () => onTapCard(index)));
 
   Widget get instruction => Text('Tap a pair that belongs together.',
       style: Style.small3w4(context, color: TextColorRole.greyColor));

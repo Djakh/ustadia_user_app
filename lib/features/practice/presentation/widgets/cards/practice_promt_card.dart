@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 
-class PromtCard extends StatelessWidget {
+class PracticePromtCard extends StatelessWidget {
   final String prompt;
   final Function(String prompt) selectPrompt;
-  const PromtCard({super.key, required this.prompt, required this.selectPrompt});
+  const PracticePromtCard({super.key, required this.prompt, required this.selectPrompt});
 
   /// --- Widgets ---
 

@@ -7,15 +7,15 @@ import 'package:ustadia_user_app/features/practice/data/models/vocabulary_questi
 import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
 import 'package:ustadia_user_app/size_config.dart';
 
-class VocabularyContent extends StatefulWidget {
+class PracticeVocabularyContent extends StatefulWidget {
   final VocabularyModel vocabularyModel;
-  const VocabularyContent({super.key, required this.vocabularyModel});
+  const PracticeVocabularyContent({super.key, required this.vocabularyModel});
 
   @override
-  State<VocabularyContent> createState() => _VocabularyContentState();
+  State<PracticeVocabularyContent> createState() => PracticeVocabularyContentState();
 }
 
-class _VocabularyContentState extends State<VocabularyContent> {
+class PracticeVocabularyContentState extends State<PracticeVocabularyContent> {
   int? selectedIndex;
   late VocabularyModel vocabularyModel;
 
@@ -28,7 +28,7 @@ class _VocabularyContentState extends State<VocabularyContent> {
   }
 
   @override
-  void didUpdateWidget(covariant VocabularyContent oldWidget) {
+  void didUpdateWidget(covariant PracticeVocabularyContent oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.vocabularyModel != widget.vocabularyModel) {
       selectedIndex = null;

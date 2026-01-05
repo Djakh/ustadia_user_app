@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
@@ -9,17 +10,48 @@ class AudioCard extends StatefulWidget {
   const AudioCard({super.key});
 
   @override
-  State<AudioCard> createState() => _AudioCardState();
+  State<AudioCard> createState() => AudioCardState();
 }
 
-class _AudioCardState extends State<AudioCard> {
+class AudioCardState extends State<AudioCard> {
+  final FlutterTts tts = FlutterTts();
   bool isPlaying = false;
+  String get sampleText => 'Welcome to the listening lesson. Tap continue when ready.';
 
   /// --- Methods ---
-  
-  void toggleAudio() => setState(() {
-        isPlaying = !isPlaying;
-      });
+  Future<void> configureTts() async {
+    await tts.setLanguage('en-US');
+    await tts.setSpeechRate(0.55);
+    await tts.setPitch(1.0);
+    await tts.setVolume(1.0);
+    await tts.awaitSpeakCompletion(true);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    configureTts();
+    tts.setCompletionHandler(() => setState(() => isPlaying = false));
+    tts.setCancelHandler(() => setState(() => isPlaying = false));
+  }
+
+  @override
+  void dispose() {
+    tts.stop();
+    super.dispose();
+  }
+
+  Future<void> toggleAudio() async {
+    if (isPlaying) {
+      await tts.stop();
+      if (!mounted) return;
+      setState(() => isPlaying = false);
+      return;
+    }
+    setState(() => isPlaying = true);
+    await tts.setSpeechRate(0.55);
+    await tts.speak(sampleText);
+  }
 
   /// --- Widgets ---
   Widget playButton() => Container(

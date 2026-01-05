@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
-import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/word_match_content.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_word_match_content.dart';
 
-class WordMatchPage extends StatelessWidget {
-  const WordMatchPage({super.key});
+class PracticeWordMatchPage extends StatelessWidget {
+  const PracticeWordMatchPage({super.key});
 
   /// --- Data ---
 
@@ -21,7 +21,7 @@ class WordMatchPage extends StatelessWidget {
       title: 'Word match',
       child: Column(children: [
         const SizedBox(height: 24),
-        WordMatchContent(wordMatchPairs: pairs),
+        PracticeWordMatchContent(wordMatchPairs: pairs),
       ]));
 
   @override

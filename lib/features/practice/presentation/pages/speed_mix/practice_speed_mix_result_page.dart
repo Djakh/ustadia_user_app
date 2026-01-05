@@ -7,19 +7,19 @@ import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/router.dart';
 
-class SpeedMixResultStats {
+class PracticeSpeedMixResultStats {
   final int total;
   final int completed;
   final int correct;
   final bool timeUp;
 
-  const SpeedMixResultStats(
+  const PracticeSpeedMixResultStats(
       {required this.total, required this.completed, required this.correct, required this.timeUp});
 }
 
-class SpeedMixResultPage extends StatelessWidget {
-  final SpeedMixResultStats stats;
-  const SpeedMixResultPage({super.key, required this.stats});
+class PracticeSpeedMixResultPage extends StatelessWidget {
+  final PracticeSpeedMixResultStats stats;
+  const PracticeSpeedMixResultPage({super.key, required this.stats});
 
   /// --- Methods ---
 

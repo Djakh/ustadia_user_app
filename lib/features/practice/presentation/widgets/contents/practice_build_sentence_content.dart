@@ -6,15 +6,15 @@ import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
 
-class BuildSentenceContent extends StatefulWidget {
+class PracticeBuildSentenceContent extends StatefulWidget {
   final List<String> correctOrder;
-  const BuildSentenceContent({super.key, required this.correctOrder});
+  const PracticeBuildSentenceContent({super.key, required this.correctOrder});
 
   @override
-  State<BuildSentenceContent> createState() => _BuildSentenceContentState();
+  State<PracticeBuildSentenceContent> createState() => PracticeBuildSentenceContentState();
 }
 
-class _BuildSentenceContentState extends State<BuildSentenceContent> {
+class PracticeBuildSentenceContentState extends State<PracticeBuildSentenceContent> {
   late List<String> pool;
   final List<String> selected = [];
   bool showError = false;

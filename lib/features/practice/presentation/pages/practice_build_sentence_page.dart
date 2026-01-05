@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
-import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/build_sentence_content.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_build_sentence_content.dart';
 
-class BuildSentencePage extends StatelessWidget {
-  const BuildSentencePage({super.key});
+class PracticeBuildSentencePage extends StatelessWidget {
+  const PracticeBuildSentencePage({super.key});
 
   /// --- Data ---
 
@@ -14,7 +14,7 @@ class BuildSentencePage extends StatelessWidget {
 
   Widget get view => PrimaryBackground(
       title: 'Build the sentence',
-      child: Center(child: BuildSentenceContent(correctOrder: correctOrder)));
+      child: Center(child: PracticeBuildSentenceContent(correctOrder: correctOrder)));
 
   @override
   Widget build(BuildContext context) =>

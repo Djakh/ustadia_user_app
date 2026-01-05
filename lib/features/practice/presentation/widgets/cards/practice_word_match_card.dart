@@ -4,19 +4,19 @@ import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 
 enum WordMatchCardState { idle, selected, matched, wrong }
 
-class WordMatchCardData {
+class PracticeWordMatchCardData {
   final int pairId;
   final String text;
 
-  const WordMatchCardData({required this.pairId, required this.text});
+  const PracticeWordMatchCardData({required this.pairId, required this.text});
 }
 
-class WordMatchCard extends StatelessWidget {
-  final WordMatchCardData data;
+class PracticeWordMatchCard extends StatelessWidget {
+  final PracticeWordMatchCardData data;
   final WordMatchCardState state;
   final VoidCallback onTap;
 
-  const WordMatchCard({super.key, required this.data, required this.state, required this.onTap});
+  const PracticeWordMatchCard({super.key, required this.data, required this.state, required this.onTap});
 
   /// --- Widgets ---
   
