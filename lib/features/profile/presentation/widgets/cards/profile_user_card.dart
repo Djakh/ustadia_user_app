@@ -3,7 +3,7 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
-import 'package:ustadia_user_app/core/widgets/avatars/user_avatar.dart';
+import 'package:ustadia_user_app/core/widgets/cached_images/avatars/user_avatar.dart';
 
 class ProfileUserCard extends StatelessWidget {
   const ProfileUserCard({super.key});

@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
-import 'package:ustadia_user_app/core/widgets/avatars/user_avatar.dart';
+import 'package:ustadia_user_app/core/widgets/cached_images/avatars/user_avatar.dart';
 import 'package:ustadia_user_app/features/profile/data/models/leaderboard_podium_model.dart';
 
 class LeaderboardPodiumItem extends StatelessWidget {

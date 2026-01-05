@@ -45,6 +45,10 @@ class AppImages {
   static const profileCupIcon = 'assets/images/profile_cup_icon.png';
   static const profile50WordsIcon = 'assets/images/profile_50_words_icon.png';
   static const notificationBell = 'assets/images/notification_bell.png';
+  static const learnHeadphones = 'assets/images/lessons_headphones.png';
+  static const learnMicrophone = 'assets/images/lessons_microphone.png';
+  static const learnNotebook = 'assets/images/lessons_notebook.png';
+  static const learnPen = 'assets/images/lessons_pen.png';
 
   /// --- JPG ---
 
@@ -74,8 +78,4 @@ class AppImages {
   static const notificationFeaturesAndTips = 'assets/svg/notification_new_features_and_tips.svg';
   static const notificationDailyRemainder = 'assets/svg/notification_daily_remainder.svg';
   static const checkSquare = 'assets/svg/check_square.svg';
-  static const learnHeadphones = 'assets/svg/learn_headphones.svg';
-  static const learnMicrophone = 'assets/svg/learn_microphone.svg';
-  static const learnNotebook = 'assets/svg/learn_notebook.svg';
-  static const learnPen = 'assets/svg/learn_pen.svg';
 }
