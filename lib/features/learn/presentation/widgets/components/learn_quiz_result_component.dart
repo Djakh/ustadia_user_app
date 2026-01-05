@@ -4,11 +4,10 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 
-class LearnListeningResultView extends StatelessWidget {
+class LearnQuizResultComponent extends StatelessWidget {
   final int correctCount;
-  final int questionsLength;
-  const LearnListeningResultView(
-      {super.key, required this.correctCount, required this.questionsLength});
+  final int quizLength;
+  const LearnQuizResultComponent({super.key, required this.correctCount, required this.quizLength});
 
   /// --- Methods ---
 
@@ -16,9 +15,8 @@ class LearnListeningResultView extends StatelessWidget {
 
   /// --- Widgets ---
 
-  Text resultInfo(BuildContext context) =>
-      Text('You got $correctCount out of $questionsLength correct.',
-          style: Style.bodyw4(context, color: TextColorRole.greyColor));
+  Text resultInfo(BuildContext context) => Text('You got $correctCount out of $quizLength correct.',
+      style: Style.bodyw4(context, color: TextColorRole.greyColor));
 
   Widget view(BuildContext context) => Column(children: [
         const Spacer(),

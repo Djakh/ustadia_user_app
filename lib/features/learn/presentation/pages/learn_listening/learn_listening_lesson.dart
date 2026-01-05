@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/cards/audio_card.dart';
 
-class LearnListeningAudioView extends StatelessWidget {
+class LearnListeningLesson extends StatelessWidget {
   final Function() changeStage;
-  const LearnListeningAudioView({super.key, required this.changeStage});
+  const LearnListeningLesson({super.key, required this.changeStage});
 
   /// --- Widgets ---
 
