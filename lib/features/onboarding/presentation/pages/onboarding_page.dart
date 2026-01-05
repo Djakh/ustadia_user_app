@@ -66,7 +66,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
   /// --- Widgets ---
 
   Widget get header => Row(children: [
-        Expanded(child: PageIndicator(currentIndex: _pageIndex, total: slides.length)),
+        Expanded(child: PageIndicator(currentIndex: _pageIndex, total: slides.length,
+        activeColor: Colors.white.withAlpha(230),
+        inactiveColor: Colors.white.withAlpha(140),
+        isFilledIndicators: false,
+        )),
         skipButton()
       ]);
 

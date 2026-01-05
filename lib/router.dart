@@ -7,7 +7,9 @@ import 'package:ustadia_user_app/features/dashboard/presentation/pages/dashboard
 import 'package:ustadia_user_app/features/home/presentation/home_page.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/pages/intro_survey_page.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_lessons_page.dart';
+import 'package:ustadia_user_app/features/learn/presentation/pages/learn_listening/learn_listening_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_units_page.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:ustadia_user_app/features/onboarding/presentation/pages/onboarding_page.dart';
@@ -47,6 +49,8 @@ const dashboardRoute = '$homeRoute/dashboard';
 const learnUnitsRoute = '$homeRoute/learn_units';
 const learnLessonsPath = 'lesson';
 const learnLessonsRoute = '$learnUnitsRoute/$learnLessonsPath';
+const learnListeningPath = 'listening';
+const learnListeningRoute = '$learnUnitsRoute/$learnListeningPath';
 const practiceRoute = '$homeRoute/practice';
 const askAiRoute = '$homeRoute/ask-ai';
 const profileRoute = '$homeRoute/profile';
@@ -152,7 +156,13 @@ final appRouter = GoRouter(
                       parentNavigatorKey: _rootKey,
                       builder: (context, state) => LearnLessonsPage(
                           unit:
-                              (state.extra as LearnUnitModel?) ?? LearnUnitModel.sampleUnits.first))
+                              (state.extra as LearnUnitModel?) ?? LearnUnitModel.sampleUnits.first)),
+                  GoRoute(
+                      path: learnListeningPath,
+                      parentNavigatorKey: _rootKey,
+                      builder: (context, state) => LearnListeningPage(
+                          lesson: (state.extra as LearnLessonModel?) ??
+                              LearnLessonModel.sampleLessons.first))
                 ]),
           ],
         ),

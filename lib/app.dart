@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/theme.dart';
+import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
 import 'package:ustadia_user_app/features/posts/presentation/bloc/post_bloc.dart';
-import 'package:ustadia_user_app/features/practice/cubit/next_practice_bloc.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 import 'package:ustadia_user_app/size_config.dart';
@@ -16,7 +16,7 @@ class UstadiaUserApp extends StatelessWidget {
         SizeConfig().init(context, constraints);
         return MultiBlocProvider(
             providers: [
-              BlocProvider(create: (context) => NextPracticeBloc()),
+              BlocProvider(create: (context) => NextTaskBloc()),
             ],
             child: MaterialApp.router(
                 title: 'Ustadia User',

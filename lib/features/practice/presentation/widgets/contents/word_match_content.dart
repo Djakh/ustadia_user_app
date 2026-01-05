@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
-import 'package:ustadia_user_app/features/practice/cubit/next_practice_bloc.dart';
+import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/word_match_card.dart';
 
 class WordMatchContent extends StatefulWidget {
@@ -28,7 +28,7 @@ class _WordMatchContentState extends State<WordMatchContent> {
     super.initState();
     cards = _buildCards();
     states = List<WordMatchCardState>.filled(cards.length, WordMatchCardState.idle);
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
   }
 
   /// --- Methods ---
@@ -67,7 +67,7 @@ class _WordMatchContentState extends State<WordMatchContent> {
         matchedCount += 2;
       });
       if (matchedCount == cards.length) {
-        context.read<NextPracticeBloc>().setCurrentTaskCompleted(true, isAnswerCorrect: true);
+        context.read<NextTaskBloc>().setCurrentTaskCompleted(true, isAnswerCorrect: true);
       }
       return;
     }

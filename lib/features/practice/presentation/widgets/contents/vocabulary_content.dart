@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
-import 'package:ustadia_user_app/features/practice/cubit/next_practice_bloc.dart';
 import 'package:ustadia_user_app/features/practice/data/models/vocabulary_question.dart';
+import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
 import 'package:ustadia_user_app/size_config.dart';
 
 class VocabularyContent extends StatefulWidget {
@@ -39,7 +39,7 @@ class _VocabularyContentState extends State<VocabularyContent> {
   /// --- Methods ---
 
   void onSelect(int index) {
-    final bloc = context.read<NextPracticeBloc>();
+    final bloc = context.read<NextTaskBloc>();
     if (bloc.state.isCurrentTaskCompleted) return;
     selectedIndex = index;
     bloc.setCurrentTaskCompleted(true, isAnswerCorrect: index == vocabularyModel.answerIndex);
@@ -87,15 +87,15 @@ class _VocabularyContentState extends State<VocabularyContent> {
                 text: vocabularyModel.options[index]),
           ));
 
+  Widget get view => Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+        promptCard,
+        const SizedBox(height: 16),
+        Text('Answer as many as you can!',
+            style: Style.small3w4(context, color: TextColorRole.greyColor)),
+        const SizedBox(height: 16),
+        ...optionsList
+      ]);
+
   @override
-  Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      promptCard,
-      const SizedBox(height: 16),
-      Text('Answer as many as you can!',
-          style: Style.small3w4(context, color: TextColorRole.greyColor)),
-      const SizedBox(height: 16),
-      ...optionsList
-    ]);
-  }
+  Widget build(BuildContext context) => view;
 }

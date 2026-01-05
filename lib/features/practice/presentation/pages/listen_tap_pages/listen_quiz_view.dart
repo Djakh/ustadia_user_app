@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
-import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
-import 'package:ustadia_user_app/features/practice/cubit/next_practice_bloc.dart';
 import 'package:ustadia_user_app/features/practice/data/models/listen_tap_question_model.dart';
+import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/listen_tap_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/listen_quiz_view_content.dart';
 
@@ -88,7 +87,7 @@ class _ListenQuizViewState extends State<ListenQuizView> {
   @override
   void initState() {
     super.initState();
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
   }
 
   @override
@@ -113,23 +112,19 @@ class _ListenQuizViewState extends State<ListenQuizView> {
       setState(() {
         listeningIndex = 0;
       });
-      context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+      context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
       return;
     }
     setState(() {
       listeningIndex++;
     });
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
   }
 
   /// --- Widgets ---
 
-  Widget get indicator => PageIndicator(
-      currentIndex: listeningIndex,
-      total: questions.length,
-      activeColor: context.cs.primary,
-      inactiveColor: context.cs.onTertiary.withAlpha(89),
-      isExpanded: true);
+  Widget get indicator =>
+      PageIndicator(currentIndex: listeningIndex, total: questions.length, isExpanded: true);
 
   Widget get currentListening => Text(
         "${getNumberInWords(listeningIndex)} $wordOrSentence",
@@ -158,7 +153,7 @@ class _ListenQuizViewState extends State<ListenQuizView> {
           listeningInfo,
           ListenQuizViewContent(question: current, tts: _tts),
           const SizedBox(height: 10),
-          BlocBuilder<NextPracticeBloc, NextPracticeState>(
+          BlocBuilder<NextTaskBloc, NextTaskState>(
               builder: (context, state) => nextButton(state.isCurrentTaskCompleted)),
         ],
       );

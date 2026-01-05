@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
-import 'package:ustadia_user_app/features/practice/cubit/next_practice_bloc.dart';
+import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
 
 class BuildSentenceContent extends StatefulWidget {
   final List<String> correctOrder;
@@ -26,7 +26,7 @@ class _BuildSentenceContentState extends State<BuildSentenceContent> {
   void initState() {
     super.initState();
     pool = List<String>.from(widget.correctOrder)..shuffle();
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
   }
 
   /// --- Methods ---
@@ -48,7 +48,7 @@ class _BuildSentenceContentState extends State<BuildSentenceContent> {
       showError = false;
       showSuccess = false;
     });
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
   }
 
   void _checkAnswer() {
@@ -58,7 +58,7 @@ class _BuildSentenceContentState extends State<BuildSentenceContent> {
       showError = !isCorrect;
       showSuccess = isCorrect;
     });
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(true, isAnswerCorrect: isCorrect);
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(true, isAnswerCorrect: isCorrect);
   }
 
   /// --- Widgets ---

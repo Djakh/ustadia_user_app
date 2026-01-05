@@ -5,8 +5,8 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
-import 'package:ustadia_user_app/features/practice/cubit/next_practice_bloc.dart';
 import 'package:ustadia_user_app/features/practice/data/models/listen_tap_question_model.dart';
+import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
 import 'package:ustadia_user_app/size_config.dart';
 
 class ListenQuizViewContent extends StatefulWidget {
@@ -28,7 +28,7 @@ class _ListenQuizViewContentState extends State<ListenQuizViewContent> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.question != widget.question) {
       selectedIndex = null;
-      context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+      context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
     }
   }
 
@@ -42,7 +42,7 @@ class _ListenQuizViewContentState extends State<ListenQuizViewContent> {
   }
 
   void onSelect(int index) {
-    final bloc = context.read<NextPracticeBloc>();
+    final bloc = context.read<NextTaskBloc>();
     if (bloc.state.isCurrentTaskCompleted) return;
     setState(() => selectedIndex = index);
     bloc.setCurrentTaskCompleted(true, isAnswerCorrect: index == widget.question.answerIndex);

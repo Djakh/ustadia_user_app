@@ -9,10 +9,10 @@ import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
-import 'package:ustadia_user_app/features/practice/cubit/next_practice_bloc.dart';
 import 'package:ustadia_user_app/features/practice/data/models/listen_tap_question_model.dart';
 import 'package:ustadia_user_app/features/practice/data/models/speed_mix_task_model.dart';
 import 'package:ustadia_user_app/features/practice/data/models/vocabulary_question.dart';
+import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/speed_mix_result_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/build_sentence_content.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/listen_quiz_view_content.dart';
@@ -94,7 +94,7 @@ class _SpeedMixPlayPageState extends State<SpeedMixPlayPage> {
   @override
   void initState() {
     super.initState();
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
     tasks = _buildTasks()..shuffle(Random());
     _startTimer();
   }
@@ -108,7 +108,7 @@ class _SpeedMixPlayPageState extends State<SpeedMixPlayPage> {
 
   /// --- Listeners ---
 
-  void nextPracticeListener(_, NextPracticeState state) {
+  void nextPracticeListener(_, NextTaskState state) {
     if (!state.isCurrentTaskCompleted || finished) return;
     setState(() {
       completedCount++;
@@ -121,7 +121,7 @@ class _SpeedMixPlayPageState extends State<SpeedMixPlayPage> {
         currentIndex++;
       }
     });
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false);
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(false);
   }
 
   /// --- Methods ---
@@ -229,7 +229,7 @@ class _SpeedMixPlayPageState extends State<SpeedMixPlayPage> {
       );
 
   @override
-  Widget build(BuildContext context) => BlocListener<NextPracticeBloc, NextPracticeState>(
+  Widget build(BuildContext context) => BlocListener<NextTaskBloc, NextTaskState>(
       listener: nextPracticeListener,
       child: Scaffold(
           backgroundColor: context.cs.surface,

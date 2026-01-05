@@ -23,8 +23,7 @@ class IntroSurveyHeaderCard extends StatelessWidget {
   Widget indicator(BuildContext context) => PageIndicator(
       currentIndex: stepIndex,
       total: totalSteps,
-      activeColor: context.cs.primary,
-      inactiveColor: context.cs.onTertiary.withAlpha(89),
+
       itemWidth: 44);
 
   Widget stepText(BuildContext context) => Text('Step ${stepIndex + 1} of $totalSteps',
