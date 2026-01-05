@@ -7,8 +7,8 @@ import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/router.dart';
 
-class SpeedMixStartPage extends StatelessWidget {
-  const SpeedMixStartPage({super.key});
+class PracticeSpeedMixStartPage extends StatelessWidget {
+  const PracticeSpeedMixStartPage({super.key});
 
   /// --- Widgets ---
 

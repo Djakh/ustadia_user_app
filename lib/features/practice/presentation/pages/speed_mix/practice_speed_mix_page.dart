@@ -9,25 +9,25 @@ import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
-import 'package:ustadia_user_app/features/practice/cubit/next_practice_bloc.dart';
 import 'package:ustadia_user_app/features/practice/data/models/listen_tap_question_model.dart';
 import 'package:ustadia_user_app/features/practice/data/models/speed_mix_task_model.dart';
 import 'package:ustadia_user_app/features/practice/data/models/vocabulary_question.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/speed_mix_result_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/build_sentence_content.dart';
-import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/listen_quiz_view_content.dart';
-import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/vocabulary_content.dart';
-import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/word_match_content.dart';
+import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_result_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_build_sentence_content.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_listen_quiz_view_content.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_vocabulary_content.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_word_match_content.dart';
 import 'package:ustadia_user_app/router.dart';
 
-class SpeedMixPlayPage extends StatefulWidget {
-  const SpeedMixPlayPage({super.key});
+class PracticeSpeedMixPlayPage extends StatefulWidget {
+  const PracticeSpeedMixPlayPage({super.key});
 
   @override
-  State<SpeedMixPlayPage> createState() => _SpeedMixPlayPageState();
+  State<PracticeSpeedMixPlayPage> createState() => PracticeSpeedMixPlayPageState();
 }
 
-class _SpeedMixPlayPageState extends State<SpeedMixPlayPage> {
+class PracticeSpeedMixPlayPageState extends State<PracticeSpeedMixPlayPage> {
   static const totalSeconds = 120;
   final FlutterTts _tts = FlutterTts();
 
@@ -94,7 +94,8 @@ class _SpeedMixPlayPageState extends State<SpeedMixPlayPage> {
   @override
   void initState() {
     super.initState();
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+    configureTts();
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
     tasks = _buildTasks()..shuffle(Random());
     _startTimer();
   }
@@ -108,7 +109,7 @@ class _SpeedMixPlayPageState extends State<SpeedMixPlayPage> {
 
   /// --- Listeners ---
 
-  void nextPracticeListener(_, NextPracticeState state) {
+  void nextPracticeListener(_, NextTaskState state) {
     if (!state.isCurrentTaskCompleted || finished) return;
     setState(() {
       completedCount++;
@@ -121,7 +122,7 @@ class _SpeedMixPlayPageState extends State<SpeedMixPlayPage> {
         currentIndex++;
       }
     });
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false);
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(false);
   }
 
   /// --- Methods ---
@@ -146,7 +147,7 @@ class _SpeedMixPlayPageState extends State<SpeedMixPlayPage> {
   void _openResultPage() {
     if (_resultOpened || !mounted) return;
     _resultOpened = true;
-    final stats = SpeedMixResultStats(
+    final stats = PracticeSpeedMixResultStats(
         total: tasks.length,
         completed: completedCount,
         correct: correctCount,
@@ -155,6 +156,14 @@ class _SpeedMixPlayPageState extends State<SpeedMixPlayPage> {
       if (!mounted) return;
       context.pushReplacement(speedMixResultRoute, extra: stats);
     });
+  }
+
+  Future<void> configureTts() async {
+    await _tts.setLanguage('en-US');
+    await _tts.setSpeechRate(0.6);
+    await _tts.setPitch(1.0);
+    await _tts.setVolume(1.0);
+    await _tts.awaitSpeakCompletion(true);
   }
 
   /// --- Widgets ---
@@ -183,7 +192,7 @@ class _SpeedMixPlayPageState extends State<SpeedMixPlayPage> {
   Widget get currentTaskBody {
     switch (currentTaskModel.type) {
       case SpeedMixTaskType.vocabulary:
-        return VocabularyContent(
+        return PracticeVocabularyContent(
             key: ValueKey('vocab-$currentIndex'),
             vocabularyModel: VocabularyModel(
                 category: 'Vocabulary',
@@ -191,7 +200,7 @@ class _SpeedMixPlayPageState extends State<SpeedMixPlayPage> {
                 options: currentTaskModel.options,
                 answerIndex: currentTaskModel.answerIndex));
       case SpeedMixTaskType.listen:
-        return ListenQuizViewContent(
+        return PracticeListenQuizViewContent(
             key: ValueKey('listen-$currentIndex'),
             question: ListenTapQuestionModel(
                 prompt: currentTaskModel.prompt,
@@ -199,10 +208,10 @@ class _SpeedMixPlayPageState extends State<SpeedMixPlayPage> {
                 answerIndex: currentTaskModel.answerIndex),
             tts: _tts);
       case SpeedMixTaskType.sentence:
-        return BuildSentenceContent(
+        return PracticeBuildSentenceContent(
             key: ValueKey('sentence-$currentIndex'), correctOrder: currentTaskModel.options);
       case SpeedMixTaskType.wordMatch:
-        return WordMatchContent(
+        return PracticeWordMatchContent(
             key: ValueKey('wordmatch-$currentIndex'),
             wordMatchPairs: _pairsFromOptions(currentTaskModel.options));
     }
@@ -229,7 +238,7 @@ class _SpeedMixPlayPageState extends State<SpeedMixPlayPage> {
       );
 
   @override
-  Widget build(BuildContext context) => BlocListener<NextPracticeBloc, NextPracticeState>(
+  Widget build(BuildContext context) => BlocListener<NextTaskBloc, NextTaskState>(
       listener: nextPracticeListener,
       child: Scaffold(
           backgroundColor: context.cs.surface,

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/listviews/primary_list_view.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/cards/learn_lesson_card.dart';
+import 'package:ustadia_user_app/router.dart';
 
 class LearnLessonsPage extends StatelessWidget {
   final LearnUnitModel unit;
@@ -13,7 +15,11 @@ class LearnLessonsPage extends StatelessWidget {
 
   List<LearnLessonModel> get lessons => LearnLessonModel.sampleLessons;
 
-  void onLessonTap(BuildContext context, LearnLessonModel lesson) {}
+  void onLessonTap(BuildContext context, LearnLessonModel lesson) {
+    if (lesson.lessonType == LearnLessonType.listening) {
+      context.push(learnListeningRoute, extra: lesson);
+    }
+  }
 
   PrimaryListView lessonsList(BuildContext context) => PrimaryListView(
       items: lessons,

@@ -4,17 +4,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
-import 'package:ustadia_user_app/features/practice/cubit/next_practice_bloc.dart';
+import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
 
-class BuildSentenceContent extends StatefulWidget {
+class PracticeBuildSentenceContent extends StatefulWidget {
   final List<String> correctOrder;
-  const BuildSentenceContent({super.key, required this.correctOrder});
+  const PracticeBuildSentenceContent({super.key, required this.correctOrder});
 
   @override
-  State<BuildSentenceContent> createState() => _BuildSentenceContentState();
+  State<PracticeBuildSentenceContent> createState() => PracticeBuildSentenceContentState();
 }
 
-class _BuildSentenceContentState extends State<BuildSentenceContent> {
+class PracticeBuildSentenceContentState extends State<PracticeBuildSentenceContent> {
   late List<String> pool;
   final List<String> selected = [];
   bool showError = false;
@@ -26,7 +26,7 @@ class _BuildSentenceContentState extends State<BuildSentenceContent> {
   void initState() {
     super.initState();
     pool = List<String>.from(widget.correctOrder)..shuffle();
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
   }
 
   /// --- Methods ---
@@ -48,7 +48,7 @@ class _BuildSentenceContentState extends State<BuildSentenceContent> {
       showError = false;
       showSuccess = false;
     });
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
   }
 
   void _checkAnswer() {
@@ -58,7 +58,7 @@ class _BuildSentenceContentState extends State<BuildSentenceContent> {
       showError = !isCorrect;
       showSuccess = isCorrect;
     });
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(true, isAnswerCorrect: isCorrect);
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(true, isAnswerCorrect: isCorrect);
   }
 
   /// --- Widgets ---

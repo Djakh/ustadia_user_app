@@ -4,7 +4,7 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/practice/data/models/activity_model.dart';
-import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/item_tile_card.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_item_tile_card.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_daily_card.dart';
 import 'package:ustadia_user_app/router.dart';
 
@@ -63,7 +63,7 @@ class PracticePage extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       separatorBuilder: (_, __) => const SizedBox(height: 10),
-      itemBuilder: (context, index) => ItemTileCard(activityModel: activities[index]));
+      itemBuilder: (context, index) => PracticeItemTileCard(activityModel: activities[index]));
 
   Widget body(BuildContext context) => PrimaryBackground(
       title: 'Practice',

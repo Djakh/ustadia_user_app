@@ -5,44 +5,47 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
-import 'package:ustadia_user_app/features/practice/cubit/next_practice_bloc.dart';
 import 'package:ustadia_user_app/features/practice/data/models/listen_tap_question_model.dart';
+import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
 import 'package:ustadia_user_app/size_config.dart';
 
-class ListenQuizViewContent extends StatefulWidget {
+class PracticeListenQuizViewContent extends StatefulWidget {
   final ListenTapQuestionModel question;
   final FlutterTts tts;
-  const ListenQuizViewContent({super.key, required this.question, required this.tts});
+  const PracticeListenQuizViewContent({super.key, required this.question, required this.tts});
 
   @override
-  State<ListenQuizViewContent> createState() => _ListenQuizViewContentState();
+  State<PracticeListenQuizViewContent> createState() => PracticeListenQuizViewContentState();
 }
 
-class _ListenQuizViewContentState extends State<ListenQuizViewContent> {
+class PracticeListenQuizViewContentState extends State<PracticeListenQuizViewContent> {
   int? selectedIndex;
 
   /// --- Life cycle ---
 
   @override
-  void didUpdateWidget(covariant ListenQuizViewContent oldWidget) {
+  void didUpdateWidget(covariant PracticeListenQuizViewContent oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.question != widget.question) {
       selectedIndex = null;
-      context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+      context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
     }
   }
 
   /// --- Methods ---
 
-  Future<void> onPlay({double rate = 0.95}) async {
+  Future<void> onPlay({double rate = 0.6}) async {
     await widget.tts.stop();
     await widget.tts.setLanguage('en-US');
     await widget.tts.setSpeechRate(rate);
+    await widget.tts.setPitch(1.0);
+    await widget.tts.setVolume(1.0);
+    await widget.tts.awaitSpeakCompletion(true);
     await widget.tts.speak(widget.question.prompt);
   }
 
   void onSelect(int index) {
-    final bloc = context.read<NextPracticeBloc>();
+    final bloc = context.read<NextTaskBloc>();
     if (bloc.state.isCurrentTaskCompleted) return;
     setState(() => selectedIndex = index);
     bloc.setCurrentTaskCompleted(true, isAnswerCorrect: index == widget.question.answerIndex);
@@ -65,9 +68,9 @@ class _ListenQuizViewContentState extends State<ListenQuizViewContent> {
           child: inkImage));
 
   Widget get controlRow => Row(children: [
-        Expanded(child: Button.border(onTap: () => onPlay(rate: 0.75), text: 'Slower')),
+        Expanded(child: Button.border(onTap: () => onPlay(rate: 0.45), text: 'Slower')),
         const SizedBox(width: 8),
-        Expanded(child: Button.border(onTap: () => onPlay(rate: 0.95), text: 'Again'))
+        Expanded(child: Button.border(onTap: () => onPlay(rate: 0.6), text: 'Again'))
       ]);
 
   Color optionColor(BuildContext context, int index) {

@@ -2,24 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
-import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
-import 'package:ustadia_user_app/features/practice/cubit/next_practice_bloc.dart';
 import 'package:ustadia_user_app/features/practice/data/models/listen_tap_question_model.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/listen_tap_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/listen_quiz_view_content.dart';
+import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/practice_listen_tap_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_listen_quiz_view_content.dart';
 
-class ListenQuizView extends StatefulWidget {
-  final ListenTapMode mode;
+class PracticeListenQuizView extends StatefulWidget {
+  final PracticeListenTapMode mode;
 
-  const ListenQuizView({super.key, required this.mode});
+  const PracticeListenQuizView({super.key, required this.mode});
 
   @override
-  State<ListenQuizView> createState() => _ListenQuizViewState();
+  State<PracticeListenQuizView> createState() => PracticeListenQuizViewState();
 }
 
-class _ListenQuizViewState extends State<ListenQuizView> {
+class PracticeListenQuizViewState extends State<PracticeListenQuizView> {
   final FlutterTts _tts = FlutterTts();
 
   int listeningIndex = 0;
@@ -61,7 +60,7 @@ class _ListenQuizViewState extends State<ListenQuizView> {
       ];
 
   List<ListenTapQuestionModel> get questions =>
-      widget.mode == ListenTapMode.sentences ? sentenceQuestions : wordQuestions;
+      widget.mode == PracticeListenTapMode.sentences ? sentenceQuestions : wordQuestions;
 
   ListenTapQuestionModel get current => questions[listeningIndex];
 
@@ -81,14 +80,15 @@ class _ListenQuizViewState extends State<ListenQuizView> {
     }
   }
 
-  String get wordOrSentence => widget.mode == ListenTapMode.words ? "word" : "sentence";
+  String get wordOrSentence => widget.mode == PracticeListenTapMode.words ? "word" : "sentence";
 
   /// --- Life cycle ---
 
   @override
   void initState() {
     super.initState();
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+    configureTts();
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
   }
 
   @override
@@ -106,6 +106,14 @@ class _ListenQuizViewState extends State<ListenQuizView> {
     }
   }
 
+  Future<void> configureTts() async {
+    await _tts.setLanguage('en-US');
+    await _tts.setSpeechRate(0.6);
+    await _tts.setPitch(1.0);
+    await _tts.setVolume(1.0);
+    await _tts.awaitSpeakCompletion(true);
+  }
+
   /// --- Methods ---
 
   void onNext() {
@@ -113,23 +121,19 @@ class _ListenQuizViewState extends State<ListenQuizView> {
       setState(() {
         listeningIndex = 0;
       });
-      context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+      context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
       return;
     }
     setState(() {
       listeningIndex++;
     });
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
   }
 
   /// --- Widgets ---
 
-  Widget get indicator => PageIndicator(
-      currentIndex: listeningIndex,
-      total: questions.length,
-      activeColor: context.cs.primary,
-      inactiveColor: context.cs.onTertiary.withAlpha(89),
-      isExpanded: true);
+  Widget get indicator =>
+      PageIndicator(currentIndex: listeningIndex, total: questions.length, isExpanded: true);
 
   Widget get currentListening => Text(
         "${getNumberInWords(listeningIndex)} $wordOrSentence",
@@ -156,9 +160,9 @@ class _ListenQuizViewState extends State<ListenQuizView> {
           indicator,
           const SizedBox(height: 4),
           listeningInfo,
-          ListenQuizViewContent(question: current, tts: _tts),
+          PracticeListenQuizViewContent(question: current, tts: _tts),
           const SizedBox(height: 10),
-          BlocBuilder<NextPracticeBloc, NextPracticeState>(
+          BlocBuilder<NextTaskBloc, NextTaskState>(
               builder: (context, state) => nextButton(state.isCurrentTaskCompleted)),
         ],
       );

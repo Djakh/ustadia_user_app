@@ -60,17 +60,14 @@ class LearnUnitCard extends StatelessWidget {
       ]);
 
   @override
-  Widget build(BuildContext context) => Material(
-      color: Colors.transparent,
-      child: InkWell(
-          onTap: onTap,
-          borderRadius: Style.border20,
-          child: Ink(
-              decoration: BoxDecoration(
-                  color: context.cs.surface,
-                  borderRadius: Style.border20,
-                  boxShadow: const [
-                    BoxShadow(color: AppColors.shadow, blurRadius: 12, offset: Offset(0, 6))
-                  ]),
-              child: view(context))));
+  Widget build(BuildContext context) => GestureDetector(
+      onTap: onTap,
+      child: Container(
+          decoration: BoxDecoration(
+              color: context.cs.surface,
+              borderRadius: Style.border20,
+              boxShadow: const [
+                BoxShadow(color: AppColors.shadow, blurRadius: 12, offset: Offset(0, 6))
+              ]),
+          child: view(context)));
 }

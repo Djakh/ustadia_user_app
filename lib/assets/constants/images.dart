@@ -49,6 +49,7 @@ class AppImages {
   static const learnMicrophone = 'assets/images/lessons_microphone.png';
   static const learnNotebook = 'assets/images/lessons_notebook.png';
   static const learnPen = 'assets/images/lessons_pen.png';
+  static const learnListeningCheck = 'assets/images/learn_listening_check.png';
 
   /// --- JPG ---
 
@@ -78,4 +79,7 @@ class AppImages {
   static const notificationFeaturesAndTips = 'assets/svg/notification_new_features_and_tips.svg';
   static const notificationDailyRemainder = 'assets/svg/notification_daily_remainder.svg';
   static const checkSquare = 'assets/svg/check_square.svg';
+  static const learnListeningAudio = 'assets/svg/learn_listening_audio.svg';
+  static const learnListeningPlay = 'assets/svg/learn_listening_play.svg';
+  static const learnListeningStop = 'assets/svg/learn_listening_stop.svg';
 }

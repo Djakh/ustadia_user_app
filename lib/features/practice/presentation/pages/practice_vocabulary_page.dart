@@ -5,18 +5,18 @@ import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
-import 'package:ustadia_user_app/features/practice/cubit/next_practice_bloc.dart';
 import 'package:ustadia_user_app/features/practice/data/models/vocabulary_question.dart';
-import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/vocabulary_content.dart';
+import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_vocabulary_content.dart';
 
-class VocabularyPage extends StatefulWidget {
-  const VocabularyPage({super.key});
+class PracticeVocabularyPage extends StatefulWidget {
+  const PracticeVocabularyPage({super.key});
 
   @override
-  State<VocabularyPage> createState() => _VocabularyPageState();
+  State<PracticeVocabularyPage> createState() => PracticeVocabularyPageState();
 }
 
-class _VocabularyPageState extends State<VocabularyPage> {
+class PracticeVocabularyPageState extends State<PracticeVocabularyPage> {
   int questionIndex = 0;
 
   /// --- Data ---
@@ -46,7 +46,7 @@ class _VocabularyPageState extends State<VocabularyPage> {
   @override
   void initState() {
     super.initState();
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false);
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(false);
   }
 
   /// --- Methods ---
@@ -72,17 +72,13 @@ class _VocabularyPageState extends State<VocabularyPage> {
         questionIndex++;
       }
     });
-    context.read<NextPracticeBloc>().setCurrentTaskCompleted(false);
+    context.read<NextTaskBloc>().setCurrentTaskCompleted(false);
   }
 
   /// --- Widgets ---
 
-  Widget indicator(BuildContext context) => PageIndicator(
-      currentIndex: questionIndex,
-      total: vocabularyModels.length,
-      activeColor: context.cs.primary,
-      inactiveColor: context.cs.onTertiary.withValues(alpha: 0.3),
-      isExpanded: true);
+  Widget indicator(BuildContext context) =>
+      PageIndicator(currentIndex: questionIndex, total: vocabularyModels.length, isExpanded: true);
 
   Widget info(BuildContext context) =>
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -95,14 +91,14 @@ class _VocabularyPageState extends State<VocabularyPage> {
   Widget nextButton(BuildContext context, bool isEnabled) =>
       Button.primary(onTap: onNext, text: 'Next', isAvialable: isEnabled);
 
-  Widget view(BuildContext context, NextPracticeState state) =>
+  Widget view(BuildContext context, NextTaskState state) =>
       Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         const SizedBox(height: 16),
         indicator(context),
         const SizedBox(height: 4),
         info(context),
         const SizedBox(height: 24),
-        VocabularyContent(vocabularyModel: currentVocabularyModel),
+        PracticeVocabularyContent(vocabularyModel: currentVocabularyModel),
         const SizedBox(height: 10),
         nextButton(context, state.isCurrentTaskCompleted)
       ]);
@@ -110,7 +106,7 @@ class _VocabularyPageState extends State<VocabularyPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.cs.surface,
-      body: BlocBuilder<NextPracticeBloc, NextPracticeState>(
+      body: BlocBuilder<NextTaskBloc, NextTaskState>(
           builder: (context, state) => PrimaryBackground(
               title: 'Vocabulary',
               isScrollable: true,

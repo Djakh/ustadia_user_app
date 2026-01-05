@@ -5,16 +5,16 @@ import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/inputs/input_field.dart';
-import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/promt_card.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_promt_card.dart';
 
-class WritingAssessmentPage extends StatefulWidget {
-  const WritingAssessmentPage({super.key});
+class PracticeWritingAssessmentPage extends StatefulWidget {
+  const PracticeWritingAssessmentPage({super.key});
 
   @override
-  State<WritingAssessmentPage> createState() => _WritingAssessmentPageState();
+  State<PracticeWritingAssessmentPage> createState() => PracticeWritingAssessmentPageState();
 }
 
-class _WritingAssessmentPageState extends State<WritingAssessmentPage> {
+class PracticeWritingAssessmentPageState extends State<PracticeWritingAssessmentPage> {
   final prompts = const [
     'Describe your daily routine',
     'Write about a teacher who helped you',
@@ -52,7 +52,7 @@ class _WritingAssessmentPageState extends State<WritingAssessmentPage> {
   List<Widget> get promptsList => prompts
       .map((prompt) => Padding(
           padding: const EdgeInsets.only(bottom: 10),
-          child: PromtCard(prompt: prompt, selectPrompt: selectPrompt)))
+          child: PracticePromtCard(prompt: prompt, selectPrompt: selectPrompt)))
       .toList();
 
   Widget promptContent(BuildContext context) =>

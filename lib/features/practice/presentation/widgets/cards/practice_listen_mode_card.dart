@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 
-class ListenModeCard extends StatelessWidget {
+class PracticeListenModeCard extends StatelessWidget {
   final Function() selectMode;
   final String title;
   final String subtitle;
 
-  const ListenModeCard({
+  const PracticeListenModeCard({
     super.key,
     required this.selectMode,
     required this.title,
