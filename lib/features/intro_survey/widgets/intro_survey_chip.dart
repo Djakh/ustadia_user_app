@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
+import 'package:ustadia_user_app/core/boxes/border_box.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_models.dart';
 
 class IntroSurveyChip extends StatelessWidget {
@@ -21,15 +22,12 @@ class IntroSurveyChip extends StatelessWidget {
   Widget label(BuildContext context) =>
       Text(topic.label, style: Style.small2w5(context).copyWith(color: textColor));
 
-  Widget view(BuildContext context) => Material(
-      color: Colors.transparent,
-      child: InkWell(
-          onTap: onTap,
-          borderRadius: Style.border95,
-          child: Ink(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              decoration: BoxDecoration(color: background, borderRadius: Style.border95),
-              child: label(context))));
+  Widget view(BuildContext context) => PrimaryBox(
+      onTap: onTap,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      borderRadius: Style.border95,
+      backgroundColor: background,
+      child: label(context));
 
   @override
   Widget build(BuildContext context) => view(context);

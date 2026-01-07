@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
+import 'package:ustadia_user_app/core/boxes/border_box.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_models.dart';
 
@@ -49,18 +50,15 @@ class IntroSurveyOptionTile extends StatelessWidget {
         ]))
       ]);
 
-  Widget view(BuildContext context) => Material(
-      color: Colors.transparent,
-      child: InkWell(
-          onTap: onTap,
-          borderRadius: Style.border14,
-          child: Ink(
-              padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
-              decoration: BoxDecoration(
-                  color: fillColor(context),
-                  borderRadius: Style.border14,
-                  border: Border.all(color: borderColor(context), width: selected ? 1.5 : 1)),
-              child: content(context))));
+  Widget view(BuildContext context) =>
+   PrimaryBox(
+      onTap: onTap,
+      padding: const EdgeInsets.all( 14),
+      borderRadius: Style.border14,
+      backgroundColor: fillColor(context),
+      border: Border.all(color: borderColor(context), width: selected ? 1.5 : 1),
+      child: content(context));
+  
 
   @override
   Widget build(BuildContext context) => view(context);

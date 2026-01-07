@@ -24,6 +24,8 @@ class LearnLessonsPage extends StatelessWidget {
       context.push(learnGrammarRoute, extra: lesson);
     if (lesson.lessonType == LearnLessonType.flashcardSprint)
       context.push(flashcardSprintRoute, extra: lesson);
+    if (lesson.lessonType == LearnLessonType.writing)
+      context.push(learnWritingRoute, extra: lesson);
   }
 
   PrimaryListView lessonsList(BuildContext context) => PrimaryListView(

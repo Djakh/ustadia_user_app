@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
+import 'package:ustadia_user_app/core/boxes/border_box.dart';
 
 class PracticePromtCard extends StatelessWidget {
   final String prompt;
@@ -15,16 +16,14 @@ class PracticePromtCard extends StatelessWidget {
             color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))
       ]);
 
-  Widget view(BuildContext context) => Material(
-      color: Colors.transparent,
-      child: InkWell(
-          onTap: () => selectPrompt(prompt),
-          borderRadius: Style.border20,
-          child: Ink(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: boxDecoration(),
-              child: Text(prompt, style: Style.bodyw5(context)))));
+  Widget view(BuildContext context) => PrimaryBox(
+      onTap: () => selectPrompt(prompt),
+      width: double.infinity,
+      boxShadow: [
+        BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))
+      ],
+      child: Text(prompt, style: Style.bodyw5(context)));
 
   @override
   Widget build(BuildContext context) => view(context);
