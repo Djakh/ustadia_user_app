@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
-import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/boxes/border_box.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
 
 class LearnLessonCard extends StatelessWidget {
@@ -48,18 +48,10 @@ class LearnLessonCard extends StatelessWidget {
       ]);
 
   @override
-  Widget build(BuildContext context) => Material(
-      color: Colors.transparent,
-      child: InkWell(
-          onTap: onTap,
-          borderRadius: Style.border20,
-          child: Ink(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                  color: context.cs.surface,
-                  borderRadius: Style.border20,
-                  boxShadow: const [
-                    BoxShadow(color: AppColors.shadow, blurRadius: 12, offset: Offset(0, 6))
-                  ]),
-              child: view(context))));
+  Widget build(BuildContext context) => PrimaryBox(
+      onTap: onTap,
+
+
+      boxShadow: const [BoxShadow(color: AppColors.shadow, blurRadius: 12, offset: Offset(0, 6))],
+      child: view(context));
 }

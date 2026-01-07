@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
-import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/boxes/border_box.dart';
 import 'package:ustadia_user_app/features/practice/data/models/activity_model.dart';
 
 class PracticeItemTileCard extends StatelessWidget {
@@ -32,13 +32,6 @@ class PracticeItemTileCard extends StatelessWidget {
       ]);
 
   @override
-  Widget build(BuildContext context) => Material(
-      color: Colors.transparent,
-      child: InkWell(
-          onTap: () => goToPracticeActivityPage(context),
-          borderRadius: Style.border20,
-          child: Ink(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: context.cs.surface, borderRadius: Style.border16),
-              child: view(context))));
+  Widget build(BuildContext context) =>
+      PrimaryBox(onTap: () => goToPracticeActivityPage(context), child: view(context));
 }

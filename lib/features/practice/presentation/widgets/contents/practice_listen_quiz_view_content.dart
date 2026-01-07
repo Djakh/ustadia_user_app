@@ -56,7 +56,10 @@ class PracticeListenQuizViewContentState extends State<PracticeListenQuizViewCon
   Widget get inkImage => Ink.image(
       image: const AssetImage(AppImages.listenButton), width: 120, height: 120, fit: BoxFit.cover);
 
-  Widget get audioButton => Material(
+  Widget get audioButton =>
+  
+  
+   Material(
       color: Colors.transparent,
       shape: const CircleBorder(),
       clipBehavior: Clip.antiAlias,
