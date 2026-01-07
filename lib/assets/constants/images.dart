@@ -50,7 +50,8 @@ class AppImages {
   static const learnNotebook = 'assets/images/lessons_notebook.png';
   static const learnPen = 'assets/images/lessons_pen.png';
   static const learnListeningCheck = 'assets/images/learn_listening_check.png';
-static const learnGrammar = 'assets/images/learn_grammar.png';
+  static const learnGrammar = 'assets/images/learn_grammar.png';
+
   /// --- JPG ---
 
   /// --- Icons PNG ---
@@ -82,4 +83,6 @@ static const learnGrammar = 'assets/images/learn_grammar.png';
   static const learnListeningAudio = 'assets/svg/learn_listening_audio.svg';
   static const learnListeningPlay = 'assets/svg/learn_listening_play.svg';
   static const learnListeningStop = 'assets/svg/learn_listening_stop.svg';
+  static const learnWritingUploadMethod = 'assets/svg/learn_writing_upload_method.svg';
+  static const learnWritingInappMethod = 'assets/svg/learn_writing_inapp_method.svg';
 }

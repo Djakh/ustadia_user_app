@@ -161,7 +161,8 @@ class InputField extends StatelessWidget {
   }
 
   InputBorder border(BuildContext context, Color color) => OutlineInputBorder(
-      borderRadius:inputBorderRadius?? Style.border12, borderSide: BorderSide(color: color, width: 1.4));
+      borderRadius: inputBorderRadius ?? Style.border12,
+      borderSide: BorderSide(color: color, width: type == InputFieldType.textArea ? 0 : 1.4));
 
   InputDecoration decoration(BuildContext context) {
     final baseColor = context.cs.onTertiary.withValues(alpha: 0.4);
