@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
-import 'package:ustadia_user_app/core/boxes/border_box.dart';
+import 'package:ustadia_user_app/core/boxes/primary_box.dart';
 
 class LearnWritingMethodCard extends StatelessWidget {
   final String title;
