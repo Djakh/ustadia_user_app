@@ -85,4 +85,6 @@ class AppImages {
   static const learnListeningStop = 'assets/svg/learn_listening_stop.svg';
   static const learnWritingUploadMethod = 'assets/svg/learn_writing_upload_method.svg';
   static const learnWritingInappMethod = 'assets/svg/learn_writing_inapp_method.svg';
+  static const learnSpeakingDefault = 'assets/svg/learn_speaking_default.svg';
+  static const learnSpeakingListening = 'assets/svg/learn_speaking_listening.svg';
 }

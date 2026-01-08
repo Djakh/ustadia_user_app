@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
-import 'package:ustadia_user_app/core/boxes/primary_box.dart';
+import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
 import 'package:ustadia_user_app/features/practice/data/models/activity_model.dart';
 
 class PracticeItemTileCard extends StatelessWidget {

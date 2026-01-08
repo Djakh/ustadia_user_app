@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
-import 'package:ustadia_user_app/core/boxes/primary_box.dart';
+import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 
 class PracticeListenModeCard extends StatelessWidget {

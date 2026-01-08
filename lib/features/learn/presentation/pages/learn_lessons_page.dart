@@ -20,6 +20,8 @@ class LearnLessonsPage extends StatelessWidget {
       context.push(learnListeningRoute, extra: lesson);
     if (lesson.lessonType == LearnLessonType.reading)
       context.push(learnReadingRoute, extra: lesson);
+    if (lesson.lessonType == LearnLessonType.speaking)
+      context.push(learnSpeakingRoute, extra: lesson);
     if (lesson.lessonType == LearnLessonType.grammar)
       context.push(learnGrammarRoute, extra: lesson);
     if (lesson.lessonType == LearnLessonType.flashcardSprint)
