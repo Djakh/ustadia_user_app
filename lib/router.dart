@@ -14,6 +14,7 @@ import 'package:ustadia_user_app/features/learn/presentation/pages/learn_grammar
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_lessons_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_listening/learn_listening_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_reading/learn_reading_page.dart';
+import 'package:ustadia_user_app/features/learn/presentation/pages/learn_speaking/learn_speaking_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_units_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_writing/learn_writing_page.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/pages/notifications_page.dart';
@@ -57,6 +58,8 @@ const learnListeningPath = 'listening';
 const learnListeningRoute = '$learnUnitsRoute/$learnListeningPath';
 const learnReadingPath = 'reading';
 const learnReadingRoute = '$learnUnitsRoute/$learnReadingPath';
+const learnSpeakingPath = 'speaking';
+const learnSpeakingRoute = '$learnUnitsRoute/$learnSpeakingPath';
 
 const learnGrammarPath = 'grammar';
 const learnGrammarRoute = '$learnUnitsRoute/$learnGrammarPath';
@@ -200,6 +203,12 @@ final appRouter = GoRouter(
                       path: learnReadingPath,
                       parentNavigatorKey: _rootKey,
                       builder: (context, state) => LearnReadingPage(
+                          lesson: (state.extra as LearnLessonModel?) ??
+                              LearnLessonModel.sampleLessons.first)),
+                  GoRoute(
+                      path: learnSpeakingPath,
+                      parentNavigatorKey: _rootKey,
+                      builder: (context, state) => LearnSpeakingPage(
                           lesson: (state.extra as LearnLessonModel?) ??
                               LearnLessonModel.sampleLessons.first)),
                   GoRoute(
