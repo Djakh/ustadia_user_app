@@ -5,8 +5,10 @@ import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
+import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:ustadia_user_app/features/onboarding/data/models/slide_model.dart';
 import 'package:ustadia_user_app/features/onboarding/widgets/onboarding_slide_view.dart';
+import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -53,7 +55,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   /// --- Methods ---
 
-  void goToLogin() => context.go(loginRoute);
+  Future<void> goToLogin() async {
+    await sl<AuthLocalDataSource>().setIntroSeen(true);
+    if (!mounted) return;
+    context.go(loginRoute);
+  }
 
   void onContinue() {
     if (_pageIndex < slides.length - 1) {
@@ -75,7 +81,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       ]);
 
   TextButton skipButton() => TextButton(
-        onPressed: goToLogin,
+        onPressed: () => goToLogin(),
         child: Text('Skip', style: Style.small3w4(context, color: TextColorRole.whiteColor)),
       );
 
