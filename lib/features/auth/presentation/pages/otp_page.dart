@@ -6,22 +6,30 @@ import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_bloc.dart';
+import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_event.dart';
+import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_state.dart';
+import 'package:ustadia_user_app/features/auth/presentation/models/otp_verification_params.dart';
+import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
 class OtpPage extends StatefulWidget {
   final String contact;
-  const OtpPage({super.key, required this.contact});
+  final OtpVerificationParams? verificationParams;
+  const OtpPage({super.key, required this.contact, this.verificationParams});
 
   @override
   State<OtpPage> createState() => OtpPageState();
 }
 
 class OtpPageState extends State<OtpPage> {
-  static const codeLength = 4;
+  static const codeLength = 6;
   final codes = List.generate(codeLength, (_) => TextEditingController());
   final nodes = List.generate(codeLength, (_) => FocusNode());
   Timer? countdown;
   int secondsLeft = 30;
+  final AuthVerifyBloc authVerifyBloc = sl<AuthVerifyBloc>();
 
   /// --- Life cycle ---
 
@@ -40,6 +48,7 @@ class OtpPageState extends State<OtpPage> {
     for (final node in nodes) {
       node.dispose();
     }
+    authVerifyBloc.close();
     super.dispose();
   }
 
@@ -49,7 +58,7 @@ class OtpPageState extends State<OtpPage> {
 
   bool get isComplete => codeValue.length == codeLength;
 
-  void goToHome() => context.go(homeRoute);
+  void goToHome() => context.go(dashboardRoute);
 
   void goToIntroSurvey() => context.go(introSurveyRoute);
 
@@ -74,7 +83,14 @@ class OtpPageState extends State<OtpPage> {
   }
 
   void onConfirm() {
-    if (isComplete) goToIntroSurvey();
+    if (!isComplete) return;
+    if (widget.verificationParams == null) {
+      goToIntroSurvey();
+      return;
+    }
+    if (authVerifyBloc.state.status == AuthVerifyStatus.loading) return;
+    authVerifyBloc.add(AuthVerifyOtpRequested(
+        tempId: widget.verificationParams!.tempId, otp: codeValue));
   }
 
   void onDigitChanged(int index, String value) {
@@ -101,7 +117,7 @@ class OtpPageState extends State<OtpPage> {
 
   Widget get contactText => Text.rich(TextSpan(children: [
         TextSpan(
-          text: 'Enter the 4-digit OTP sent to your email to complete sign-up verification, ',
+          text: 'Enter the 6-digit OTP sent to your email to complete sign-up verification, ',
           style: Style.small3w4(context, color: TextColorRole.greyColor),
         ),
         TextSpan(
@@ -114,7 +130,7 @@ class OtpPageState extends State<OtpPage> {
       borderRadius: Style.border10, borderSide: BorderSide(color: color, width: 1.4));
 
   Widget otpBox(int index) => SizedBox(
-      width: 82.25,
+      width: 60,
       height: 54,
       child: TextField(
           controller: codes[index],
@@ -150,7 +166,15 @@ class OtpPageState extends State<OtpPage> {
       ]);
 
   Widget get confirmButton =>
-      SafeArea(child: Button.primary(onTap: onConfirm, isAvialable: isComplete, text: 'Confirm'));
+      SafeArea(
+          child: BlocBuilder<AuthVerifyBloc, AuthVerifyState>(
+              bloc: authVerifyBloc,
+              builder: (context, state) => Button.primary(
+                  onTap: onConfirm,
+                  isAvialable:
+                      isComplete && state.status != AuthVerifyStatus.loading,
+                  isLoading: state.status == AuthVerifyStatus.loading,
+                  text: 'Confirm')));
 
   Widget get view => PrimaryBackground(
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -166,8 +190,17 @@ class OtpPageState extends State<OtpPage> {
       ]));
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        backgroundColor: context.cs.surface,
-        body: view,
-      );
+  Widget build(BuildContext context) => BlocListener<AuthVerifyBloc, AuthVerifyState>(
+      bloc: authVerifyBloc,
+      listener: (context, state) {
+        if (state.status == AuthVerifyStatus.success) {
+          goToHome();
+          return;
+        }
+        if (state.status == AuthVerifyStatus.failure && state.errorMessage != null) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+        }
+      },
+      child: Scaffold(backgroundColor: context.cs.surface, body: view));
 }

@@ -1,7 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:ustadia_user_app/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_login_bloc.dart';
+import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_password_bloc.dart';
+import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_register_bloc.dart';
+import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_bloc.dart';
 import 'package:ustadia_user_app/features/posts/data/datasources/post_remote_data_source.dart';
 import 'package:ustadia_user_app/features/posts/data/repositories/post_repository_impl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/network/dio_client.dart';
 import 'features/posts/domain/repositories/post_repository.dart';
@@ -12,7 +19,23 @@ final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
   // Core
-  sl.registerLazySingleton<Dio>(() => DioClient.create());
+  final prefs = await SharedPreferences.getInstance();
+  sl.registerLazySingleton<SharedPreferences>(() => prefs);
+  sl.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSource(prefs: sl()));
+  sl.registerLazySingleton<Dio>(
+      () => DioClient.create(accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken()));
+
+  // Features - Auth
+  sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSource(
+      dio: DioClient.create(
+          baseUrl: 'https://backend.ustadia.findecor.io',
+          accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken())));
+  sl.registerFactory(
+      () => AuthLoginBloc(authRemoteDataSource: sl(), authLocalDataSource: sl()));
+  sl.registerFactory(() => AuthPasswordBloc(authRemoteDataSource: sl()));
+  sl.registerFactory(() => AuthRegisterBloc(authRemoteDataSource: sl()));
+  sl.registerFactory(
+      () => AuthVerifyBloc(authRemoteDataSource: sl(), authLocalDataSource: sl()));
 
   // Features - Posts
   sl.registerLazySingleton<PostRemoteDataSource>(

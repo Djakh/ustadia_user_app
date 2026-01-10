@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
 class SplashPage extends StatefulWidget {
@@ -25,13 +27,25 @@ class _SplashPageState extends State<SplashPage> {
   /// --- Methods ---
 
   void goToOnboarding() => context.go(onboardingRoute);
+  void goToLogin() => context.go(loginRoute);
+
   void goToIntroSurvey() => context.go(introSurveyRoute);
   void goToPractice() => context.go(practiceRoute);
   void goToDashboard() => context.go(dashboardRoute);
 
   void start() => Future.delayed(const Duration(seconds: 2), () {
         if (!mounted) return;
-        goToDashboard();
+        final authLocal = sl<AuthLocalDataSource>();
+        final hasToken = authLocal.hasAccessToken();
+        if (hasToken) {
+          goToDashboard();
+          return;
+        }
+        if (!authLocal.isIntroSeen()) {
+          goToOnboarding();
+          return;
+        }
+        goToLogin();
       });
 
   /// --- Widgets ---
