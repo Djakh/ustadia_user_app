@@ -12,14 +12,12 @@ class DioClient {
     );
 
     final dio = Dio(options);
-    final accessToken = accessTokenGetter?.call() ?? '';
-    if (accessToken.isNotEmpty) {
-      // ignore: avoid_print
-      print('[DIO] accessToken: $accessToken');
-    }
     dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
+      final accessToken = accessTokenGetter?.call() ?? '';
       if (accessToken.isNotEmpty) {
         options.headers['Authorization'] = 'Bearer $accessToken';
+        // ignore: avoid_print
+        print('[DIO] accessToken: $accessToken');
       }
       return handler.next(options);
     }));

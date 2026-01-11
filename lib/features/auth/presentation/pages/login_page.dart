@@ -20,6 +20,9 @@ import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_
 import 'package:ustadia_user_app/features/auth/presentation/widgets/dialogs/auth_contact_type.dart';
 import 'package:ustadia_user_app/features/auth/presentation/widgets/dialogs/forgot_password_dialog.dart';
 import 'package:ustadia_user_app/features/auth/presentation/widgets/dialogs/reset_password_dialog.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_event.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_state.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
@@ -49,12 +52,14 @@ class LoginPageState extends State<LoginPage> {
   final AuthLoginBloc authLoginBloc = sl<AuthLoginBloc>();
   final AuthPasswordBloc authPasswordBloc = sl<AuthPasswordBloc>();
   final AuthLocalDataSource authLocalDataSource = sl<AuthLocalDataSource>();
+  final UserBloc userBloc = sl<UserBloc>();
   bool isForgotDialogOpen = false;
   bool isResetDialogOpen = false;
   String resetEmail = '';
   String resetPhone = '';
   String pendingForgotEmail = '';
   String pendingForgotPhone = '';
+  bool isAwaitingUser = false;
 
   /// --- Life cycle ---
 
@@ -92,6 +97,7 @@ class LoginPageState extends State<LoginPage> {
       extra: isEmailLogin ? emailController.text.trim() : '+998 ${phoneController.text}');
 
   void goToHome() => context.go(dashboardRoute);
+  void goToIntroSurvey() => context.go(introSurveyRoute);
 
   void goToSignup() => context.go(signUpRoute);
 
@@ -170,7 +176,7 @@ class LoginPageState extends State<LoginPage> {
     await authLocalDataSource.setLastPassword(passwordController.text.trim());
   }
 
-/// --- Showed Widgets ---
+  /// --- Showed Widgets ---
 
   Future<void> showForgotPasswordDialog(AuthContactType type) async {
     final controller = type == AuthContactType.email ? forgotEmailController : forgotPhoneController;
@@ -341,10 +347,30 @@ class LoginPageState extends State<LoginPage> {
             listener: (context, state) {
               if (state.status == AuthLoginStatus.success) {
                 saveRememberedCredentials();
-                goToHome();
+                isAwaitingUser = true;
+                userBloc.add(const UserProfileRequested());
                 return;
               }
               if (state.status == AuthLoginStatus.failure && state.errorMessage != null) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+              }
+            }),
+        BlocListener<UserBloc, UserState>(
+            bloc: userBloc,
+            listener: (context, state) {
+              if (!isAwaitingUser) return;
+              if (state.status == UserStatus.success) {
+                isAwaitingUser = false;
+                final profile = state.profile;
+                if (profile != null && profile.introCompleted) {
+                  goToHome();
+                  return;
+                }
+                goToIntroSurvey();
+              }
+              if (state.status == UserStatus.failure && state.errorMessage != null) {
+                isAwaitingUser = false;
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
               }

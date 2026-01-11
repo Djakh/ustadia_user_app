@@ -5,6 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_event.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
@@ -16,6 +20,8 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  final UserBloc userBloc = sl<UserBloc>();
+  bool isCheckingUser = false;
   /// --- Life cycle ---
 
   @override
@@ -38,7 +44,8 @@ class _SplashPageState extends State<SplashPage> {
         final authLocal = sl<AuthLocalDataSource>();
         final hasToken = authLocal.hasAccessToken();
         if (hasToken) {
-          goToDashboard();
+          isCheckingUser = true;
+          userBloc.add(const UserProfileRequested());
           return;
         }
         if (!authLocal.isIntroSeen()) {
@@ -79,6 +86,24 @@ class _SplashPageState extends State<SplashPage> {
       );
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(backgroundColor: context.theme.scaffoldBackgroundColor, body: SafeArea(child: view));
+  Widget build(BuildContext context) => BlocListener<UserBloc, UserState>(
+      bloc: userBloc,
+      listener: (context, state) {
+        if (!isCheckingUser) return;
+        if (state.status == UserStatus.success) {
+          isCheckingUser = false;
+          final profile = state.profile;
+          if (profile != null && profile.introCompleted) {
+            goToDashboard();
+            return;
+          }
+          goToIntroSurvey();
+        }
+        if (state.status == UserStatus.failure) {
+          isCheckingUser = false;
+          goToLogin();
+        }
+      },
+      child: Scaffold(
+          backgroundColor: context.theme.scaffoldBackgroundColor, body: SafeArea(child: view)));
 }

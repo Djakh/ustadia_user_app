@@ -5,12 +5,12 @@ import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_models.dart';
 
 class IntroSurveyOptionTile extends StatelessWidget {
-  final IntroSurveyOptionModel option;
+  final IntroSurveyAnswerModel answer;
   final bool selected;
   final VoidCallback onTap;
 
   const IntroSurveyOptionTile(
-      {super.key, required this.option, required this.selected, required this.onTap});
+      {super.key, required this.answer, required this.selected, required this.onTap});
 
   /// --- Methods ---
 
@@ -34,10 +34,7 @@ class IntroSurveyOptionTile extends StatelessWidget {
               border: Border.all(color: context.cs.onTertiary.withAlpha(140), width: 1.4),
               shape: BoxShape.circle));
 
-  Widget titleText(BuildContext context) => Text(option.title, style: Style.small3w5(context));
-
-  Widget descriptionText(BuildContext context) =>
-      Text(option.description, style: Style.small2w4(context, color: TextColorRole.greyColor));
+  Widget titleText(BuildContext context) => Text(answer.text, style: Style.small3w5(context));
 
   Widget content(BuildContext context) => Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
         leading(context),
@@ -45,22 +42,17 @@ class IntroSurveyOptionTile extends StatelessWidget {
         Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           titleText(context),
-          const SizedBox(height: 2),
-          descriptionText(context),
         ]))
       ]);
 
-  Widget view(BuildContext context) =>
-   PrimaryBox(
+  Widget view(BuildContext context) => PrimaryBox(
       onTap: onTap,
-      padding: const EdgeInsets.all( 14),
+      padding: const EdgeInsets.all(14),
       borderRadius: Style.border14,
       backgroundColor: fillColor(context),
       border: Border.all(color: borderColor(context), width: selected ? 1.5 : 1),
       child: content(context));
-  
 
   @override
   Widget build(BuildContext context) => view(context);
 }
-

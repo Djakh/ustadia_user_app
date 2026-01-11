@@ -1,147 +1,228 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_event.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_state.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_models.dart';
-import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_static_data.dart';
-import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_step_header_data.dart';
+import 'package:ustadia_user_app/features/intro_survey/presentation/bloc/intro_survey_bloc.dart';
+import 'package:ustadia_user_app/features/intro_survey/presentation/bloc/intro_survey_event.dart';
+import 'package:ustadia_user_app/features/intro_survey/presentation/bloc/intro_survey_state.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/widgets/intro_survey_header_card.dart';
-import 'package:ustadia_user_app/features/intro_survey/presentation/widgets/steps/intro_survey_daily_goal_step.dart';
-import 'package:ustadia_user_app/features/intro_survey/presentation/widgets/steps/intro_survey_english_level_step.dart';
-import 'package:ustadia_user_app/features/intro_survey/presentation/widgets/steps/intro_survey_topics_step.dart';
+import 'package:ustadia_user_app/features/intro_survey/presentation/widgets/steps/intro_survey_multiple_choice.dart';
+import 'package:ustadia_user_app/features/intro_survey/presentation/widgets/steps/intro_survey_single_choice.dart';
+import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
 class IntroSurveyPage extends StatefulWidget {
   const IntroSurveyPage({super.key});
 
   @override
-  State<IntroSurveyPage> createState() => _IntroSurveyPageState();
+  State<IntroSurveyPage> createState() => IntroSurveyPageState();
 }
 
-class _IntroSurveyPageState extends State<IntroSurveyPage> {
-  final _controller = PageController();
-  int _pageIndex = 0;
-  int _lastAllowedIndex = 0;
+class IntroSurveyPageState extends State<IntroSurveyPage> {
+  final PageController controller = PageController();
+  int pageIndex = 0;
+  int lastAllowedIndex = 0;
+  bool isSubmitting = false;
+  bool isSubmittingAnswer = false;
 
-  final Set<String> _selectedTopics = {};
-  int? _selectedEnglishLevelIndex;
-  int? _selectedDailyGoalIndex;
+  final Map<String, Set<String>> selectedAnswerIdsByQuestion = {};
 
-  static const _totalSteps = 3;
-  static const _headers = IntroSurveyStaticData.headers;
-  static const List<IntroSurveyTopicModel> _topics = IntroSurveyStaticData.topics;
-  static const List<IntroSurveyOptionModel> _englishLevels = IntroSurveyStaticData.englishLevels;
-  static const List<IntroSurveyOptionModel> _dailyGoals = IntroSurveyStaticData.dailyGoals;
+  final UserBloc userBloc = sl<UserBloc>();
+  final IntroSurveyBloc introSurveyBloc = sl<IntroSurveyBloc>();
 
   /// --- Life cycle ---
 
   @override
+  void initState() {
+    super.initState();
+    introSurveyBloc.add(const IntroSurveyRequested());
+  }
+
+  @override
   void dispose() {
-    _controller.dispose();
+    controller.dispose();
+    introSurveyBloc.close();
     super.dispose();
   }
 
-  /// --- Methods ---
+  /// --- Listeners ---
 
-  bool canContinueFor(int stepIndex) => switch (stepIndex) {
-        0 => _selectedTopics.isNotEmpty,
-        1 => _selectedEnglishLevelIndex != null,
-        2 => _selectedDailyGoalIndex != null,
-        _ => false,
-      };
-
-  bool get _canContinue => canContinueFor(_pageIndex);
-
-  void _goToNext() {
-    if (!_canContinue) return;
-
-    if (_pageIndex < 2) {
-      _controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeOutCubic);
-      return;
+  void userListener(BuildContext context, UserState state) {
+    if (!isSubmitting) return;
+    if (state.status == UserStatus.success) {
+      setState(() => isSubmitting = false);
+      final profile = state.profile;
+      if (profile != null && profile.introCompleted) {
+        context.go(dashboardRoute);
+        return;
+      }
+      context.go(loginRoute);
     }
-
-    context.go(loginRoute);
+    if (state.status == UserStatus.failure && state.errorMessage != null) {
+      setState(() => isSubmitting = false);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+    }
   }
 
-  void _onPageChanged(int index) {
-    final isForward = index > _lastAllowedIndex;
-    if (isForward && !canContinueFor(_lastAllowedIndex)) {
-      _controller.animateToPage(_lastAllowedIndex,
+  void introSurveyListener(BuildContext context, IntroSurveyState state) {
+    if (!isSubmittingAnswer) return;
+    if (state.submissionStatus == IntroSurveySubmissionStatus.failure) {
+      setState(() => isSubmittingAnswer = false);
+      final message = state.submissionErrorMessage ?? 'Submission failed';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    }
+    if (state.submissionStatus == IntroSurveySubmissionStatus.success) {
+      setState(() => isSubmittingAnswer = false);
+      final questions = state.questions;
+      if (questions.isEmpty) return;
+      if (pageIndex < questions.length - 1) {
+        controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeOutCubic);
+        return;
+      }
+      setState(() => isSubmitting = true);
+      userBloc.add(const UserProfileRequested());
+    }
+  }
+
+  /// --- Methods ---
+  bool canContinueFor(int index, List<IntroSurveyQuestionModel> questions) {
+    if (index < 0 || index >= questions.length) return false;
+    final question = questions[index];
+    final selected = selectedAnswerIdsByQuestion[question.id];
+    return selected != null && selected.isNotEmpty;
+  }
+
+  bool canContinue(List<IntroSurveyQuestionModel> questions) =>
+      canContinueFor(pageIndex, questions);
+
+  void goToNext(List<IntroSurveyQuestionModel> questions) {
+    if (!canContinue(questions)) return;
+    final question = questions[pageIndex];
+    final selectedIds = selectedAnswerIdsByQuestion[question.id] ?? <String>{};
+    if (selectedIds.isEmpty) return;
+    setState(() => isSubmittingAnswer = true);
+    introSurveyBloc.add(
+        IntroSurveyAnswerSubmitted(questionId: question.id, answerIds: selectedIds.toList()));
+  }
+
+  void onPageChanged(int index, List<IntroSurveyQuestionModel> questions) {
+    final isForward = index > lastAllowedIndex;
+    if (isForward && !canContinueFor(lastAllowedIndex, questions)) {
+      controller.animateToPage(lastAllowedIndex,
           duration: const Duration(milliseconds: 220), curve: Curves.easeOutCubic);
       return;
     }
 
     setState(() {
-      _pageIndex = index;
-      _lastAllowedIndex = index;
+      pageIndex = index;
+      lastAllowedIndex = index;
     });
   }
 
-  void _toggleTopic(String label) {
-    setState(() {
-      if (_selectedTopics.contains(label)) {
-        _selectedTopics.remove(label);
-      } else {
-        _selectedTopics.add(label);
-      }
-    });
+  void toggleAnswer(String questionId, String answerId) {
+    final current = selectedAnswerIdsByQuestion[questionId] ?? <String>{};
+    if (current.contains(answerId)) {
+      current.remove(answerId);
+    } else {
+      current.add(answerId);
+    }
+    setState(() => selectedAnswerIdsByQuestion[questionId] = current);
   }
+
+  void selectAnswer(String questionId, String answerId) =>
+      setState(() => selectedAnswerIdsByQuestion[questionId] = {answerId});
+
+  String? selectedAnswerIdFor(String questionId) {
+    final selected = selectedAnswerIdsByQuestion[questionId];
+    if (selected == null || selected.isEmpty) return null;
+    return selected.first;
+  }
+
+  String headerSubtitleFor(IntroSurveyQuestionType type) =>
+      type == IntroSurveyQuestionType.multiple ? 'Select all that apply' : 'Select one';
 
   /// --- Widgets ---
 
-  IntroSurveyStepHeaderData get _currentHeader => _headers[_pageIndex];
+  Widget buildHeader(List<IntroSurveyQuestionModel> questions) {
+    final question = questions[pageIndex];
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+        child: IntroSurveyHeaderCard(
+            stepIndex: pageIndex,
+            totalSteps: questions.length,
+            title: question.description,
+            subtitle: headerSubtitleFor(question.type)));
+  }
 
-  Widget get _header => Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-      child: IntroSurveyHeaderCard(
-          stepIndex: _pageIndex,
-          totalSteps: _totalSteps,
-          title: _currentHeader.title,
-          subtitle: _currentHeader.subtitle));
-
-  Widget get _pageView => Expanded(
+  Widget buildQuestions(List<IntroSurveyQuestionModel> questions) => Expanded(
         child: PageView(
-          controller: _controller,
-          onPageChanged: _onPageChanged,
-          physics: const PageScrollPhysics(),
-          children: [
-            IntroSurveyTopicsStep(
-              topics: _topics, selectedTopics: _selectedTopics, onToggleTopic: _toggleTopic,
-            ),
-            IntroSurveyEnglishLevelStep(
-              options: _englishLevels,
-              selectedIndex: _selectedEnglishLevelIndex,
-              onSelectIndex: (index) => setState(() => _selectedEnglishLevelIndex = index),
-            ),
-            IntroSurveyDailyGoalStep(
-              options: _dailyGoals,
-              selectedIndex: _selectedDailyGoalIndex,
-              onSelectIndex: (index) => setState(() => _selectedDailyGoalIndex = index),
-            ),
-          ],
-        ),
+            controller: controller,
+            onPageChanged: (index) => onPageChanged(index, questions),
+            physics: const PageScrollPhysics(),
+            children: questions
+                .map((question) => question.type == IntroSurveyQuestionType.multiple
+                    ? IntroSurveyMultipleChoice(
+                        answers: question.answers,
+                        selectedAnswerIds: selectedAnswerIdsByQuestion[question.id] ?? {},
+                        onToggleAnswer: (answerId) => toggleAnswer(question.id, answerId))
+                    : IntroSurveySingleChoice(
+                        answers: question.answers,
+                        selectedAnswerId: selectedAnswerIdFor(question.id),
+                        onSelectAnswer: (answerId) => selectAnswer(question.id, answerId)))
+                .toList()),
       );
 
-  Widget get _continueButton => Padding(
+  Widget buildContinueButton(List<IntroSurveyQuestionModel> questions) => Padding(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
         child: Button.primary(
-          onTap: _goToNext,
-          text: 'Continue',
-          isAvialable: _canContinue,
-        ),
+            onTap: () => goToNext(questions),
+            text: 'Continue',
+            isAvialable: canContinue(questions) && !isSubmitting && !isSubmittingAnswer,
+            isLoading: isSubmitting || isSubmittingAnswer),
       );
 
+  Widget buildErrorState(String message) => Center(
+      child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text(message, textAlign: TextAlign.center),
+            const SizedBox(height: 16),
+            Button.primary(
+                onTap: () => introSurveyBloc.add(const IntroSurveyRequested()), text: 'Retry')
+          ])));
+
+  Widget buildContent(IntroSurveyState state) {
+    if (state.status == IntroSurveyStatus.loading || state.status == IntroSurveyStatus.initial) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.status == IntroSurveyStatus.failure) {
+      return buildErrorState(state.errorMessage ?? 'Failed to load questions');
+    }
+    if (state.questions.isEmpty) {
+      return buildErrorState('No questions found');
+    }
+    return Column(children: [
+      buildHeader(state.questions),
+      buildQuestions(state.questions),
+      SafeArea(top: false, child: buildContinueButton(state.questions))
+    ]);
+  }
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-        backgroundColor: context.cs.surface,
-        body: SafeArea(
-          child: Column(
-            children: [
-              _header,
-              _pageView,
-              SafeArea(top: false, child: _continueButton),
-            ],
-          ),
-        ),
-      );
+  Widget build(BuildContext context) => MultiBlocListener(
+      listeners: [
+        BlocListener<UserBloc, UserState>(bloc: userBloc, listener: userListener),
+        BlocListener<IntroSurveyBloc, IntroSurveyState>(
+            bloc: introSurveyBloc, listener: introSurveyListener)
+      ],
+      child: Scaffold(
+          backgroundColor: context.cs.surface,
+          body: SafeArea(
+              child: BlocBuilder<IntroSurveyBloc, IntroSurveyState>(
+                  bloc: introSurveyBloc, builder: (context, state) => buildContent(state)))));
 }
