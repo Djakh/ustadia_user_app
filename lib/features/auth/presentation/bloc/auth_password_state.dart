@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 enum AuthPasswordStatus { initial, loading, success, failure }
 
-enum AuthPasswordAction { forgotPassword, resetPassword }
+enum AuthPasswordAction { forgotPasswordEmail, resetPasswordEmail, forgotPasswordPhone, resetPasswordPhone }
 
 class AuthPasswordState extends Equatable {
   final AuthPasswordStatus status;

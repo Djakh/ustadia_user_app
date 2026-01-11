@@ -29,6 +29,18 @@ class AuthRemoteDataSource {
     return AuthLoginResponse.fromJson(response.data as Map<String, dynamic>);
   }
 
+  Future<AuthLoginResponse> loginWithPhone({required String phoneNumber, required String password}) async {
+    final response = await dio.post('/auth/login',
+        data: {
+          'identifier': phoneNumber,
+          'phoneNumber': phoneNumber,
+          'password': password
+        },
+        options: requestOptions);
+    checkResponse(response);
+    return AuthLoginResponse.fromJson(response.data as Map<String, dynamic>);
+  }
+
   Future<String> forgotPassword({required String email}) async {
     final response = await dio.post('/auth/forgot-password',
         data: {'email': email}, options: requestOptions);
@@ -47,6 +59,24 @@ class AuthRemoteDataSource {
     return data['message']?.toString() ?? '';
   }
 
+  Future<String> forgotPasswordPhone({required String phoneNumber}) async {
+    final response = await dio.post('/auth/forgot-password-phone',
+        data: {'phoneNumber': phoneNumber}, options: requestOptions);
+    checkResponse(response);
+    final data = response.data as Map<String, dynamic>;
+    return data['message']?.toString() ?? '';
+  }
+
+  Future<String> resetPasswordPhone(
+      {required String phoneNumber, required String otp, required String newPassword}) async {
+    final response = await dio.post('/auth/reset-password-phone',
+        data: {'phoneNumber': phoneNumber, 'otp': otp, 'newPassword': newPassword},
+        options: requestOptions);
+    checkResponse(response);
+    final data = response.data as Map<String, dynamic>;
+    return data['message']?.toString() ?? '';
+  }
+
   Future<String> registerWithEmail(
       {required String firstName,
       required String lastName,
@@ -57,6 +87,25 @@ class AuthRemoteDataSource {
           'firstName': firstName,
           'lastName': lastName,
           'email': email,
+          'password': password,
+          'role': 'user'
+        },
+        options: requestOptions);
+    checkResponse(response);
+    final data = response.data as Map<String, dynamic>;
+    return data['tempId']?.toString() ?? '';
+  }
+
+  Future<String> registerWithPhone(
+      {required String firstName,
+      required String lastName,
+      required String phoneNumber,
+      required String password}) async {
+    final response = await dio.post('/auth/register-phone',
+        data: {
+          'firstName': firstName,
+          'lastName': lastName,
+          'phoneNumber': phoneNumber,
           'password': password,
           'role': 'user'
         },

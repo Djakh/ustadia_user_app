@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_bloc.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_event.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_state.dart';
-import 'package:ustadia_user_app/features/auth/presentation/models/otp_verification_params.dart';
+import 'package:ustadia_user_app/features/auth/data/models/otp_verification_params.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 

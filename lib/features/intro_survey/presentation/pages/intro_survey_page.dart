@@ -5,10 +5,10 @@ import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_models.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_static_data.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_step_header_data.dart';
-import 'package:ustadia_user_app/features/intro_survey/widgets/intro_survey_header_card.dart';
-import 'package:ustadia_user_app/features/intro_survey/widgets/steps/intro_survey_daily_goal_step.dart';
-import 'package:ustadia_user_app/features/intro_survey/widgets/steps/intro_survey_english_level_step.dart';
-import 'package:ustadia_user_app/features/intro_survey/widgets/steps/intro_survey_topics_step.dart';
+import 'package:ustadia_user_app/features/intro_survey/presentation/widgets/intro_survey_header_card.dart';
+import 'package:ustadia_user_app/features/intro_survey/presentation/widgets/steps/intro_survey_daily_goal_step.dart';
+import 'package:ustadia_user_app/features/intro_survey/presentation/widgets/steps/intro_survey_english_level_step.dart';
+import 'package:ustadia_user_app/features/intro_survey/presentation/widgets/steps/intro_survey_topics_step.dart';
 import 'package:ustadia_user_app/router.dart';
 
 class IntroSurveyPage extends StatefulWidget {

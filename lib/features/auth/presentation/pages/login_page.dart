@@ -16,6 +16,10 @@ import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_login_stat
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_password_bloc.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_password_event.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_password_state.dart';
+import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:ustadia_user_app/features/auth/presentation/widgets/dialogs/auth_contact_type.dart';
+import 'package:ustadia_user_app/features/auth/presentation/widgets/dialogs/forgot_password_dialog.dart';
+import 'package:ustadia_user_app/features/auth/presentation/widgets/dialogs/reset_password_dialog.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
@@ -30,7 +34,9 @@ class LoginPageState extends State<LoginPage> {
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final forgotPhoneController = TextEditingController();
   final forgotEmailController = TextEditingController();
+  final resetPhoneController = TextEditingController();
   final resetEmailController = TextEditingController();
   final resetOtpController = TextEditingController();
   final resetPasswordController = TextEditingController();
@@ -42,19 +48,30 @@ class LoginPageState extends State<LoginPage> {
   bool passwordVisible = false;
   final AuthLoginBloc authLoginBloc = sl<AuthLoginBloc>();
   final AuthPasswordBloc authPasswordBloc = sl<AuthPasswordBloc>();
+  final AuthLocalDataSource authLocalDataSource = sl<AuthLocalDataSource>();
   bool isForgotDialogOpen = false;
   bool isResetDialogOpen = false;
   String resetEmail = '';
+  String resetPhone = '';
   String pendingForgotEmail = '';
+  String pendingForgotPhone = '';
 
   /// --- Life cycle ---
+
+  @override
+  void initState() {
+    super.initState();
+    loadRememberedCredentials();
+  }
 
   @override
   void dispose() {
     phoneController.dispose();
     emailController.dispose();
     passwordController.dispose();
+    forgotPhoneController.dispose();
     forgotEmailController.dispose();
+    resetPhoneController.dispose();
     resetEmailController.dispose();
     resetOtpController.dispose();
     resetPasswordController.dispose();
@@ -69,6 +86,7 @@ class LoginPageState extends State<LoginPage> {
   bool get isEmailValid =>
       RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(emailController.text.trim());
   bool get isPasswordValid => passwordController.text.trim().isNotEmpty;
+  String get fullPhoneNumber => '+998${phoneController.text.replaceAll(RegExp(r'\D'), '')}';
 
   void goToOtp() => context.push(otpRoute,
       extra: isEmailLogin ? emailController.text.trim() : '+998 ${phoneController.text}');
@@ -77,7 +95,10 @@ class LoginPageState extends State<LoginPage> {
 
   void goToSignup() => context.go(signUpRoute);
 
-  void toggleRemember(bool value) => setState(() => rememberMe = value);
+  void toggleRemember(bool value) {
+    setState(() => rememberMe = value);
+    if (!value) authLocalDataSource.clearRememberedCredentials();
+  }
 
   void onLogin() {
     if (isEmailLogin) {
@@ -91,14 +112,24 @@ class LoginPageState extends State<LoginPage> {
       return;
     }
     final phoneValid = isPhoneValid;
-    setState(() => showError = !phoneValid);
-    if (phoneValid) goToOtp();
+    final passwordValid = isPasswordValid;
+    setState(() {
+      showError = !phoneValid;
+      showPasswordError = !passwordValid;
+    });
+    if (phoneValid && passwordValid) loginWithPhone();
   }
 
   void loginWithEmail() {
     if (authLoginBloc.state.status == AuthLoginStatus.loading) return;
     authLoginBloc.add(AuthLoginWithEmailRequested(
         email: emailController.text.trim(), password: passwordController.text.trim()));
+  }
+
+  void loginWithPhone() {
+    if (authLoginBloc.state.status == AuthLoginStatus.loading) return;
+    authLoginBloc.add(AuthLoginWithPhoneRequested(
+        phoneNumber: fullPhoneNumber, password: passwordController.text.trim()));
   }
 
   void toggleLoginMethod() => setState(() {
@@ -108,106 +139,95 @@ class LoginPageState extends State<LoginPage> {
         showPasswordError = false;
       });
 
-  Future<void> showForgotPasswordDialog() async {
-    bool showDialogEmailError = false;
-    forgotEmailController.text = emailController.text.trim();
+  void loadRememberedCredentials() {
+    final shouldRemember = authLocalDataSource.isRememberMeEnabled();
+    if (!shouldRemember) return;
+    final method = authLocalDataSource.getLastLoginMethod();
+    final lastEmail = authLocalDataSource.getLastEmail();
+    final lastPhone = authLocalDataSource.getLastPhone();
+    final lastPassword = authLocalDataSource.getLastPassword();
+    setState(() {
+      rememberMe = true;
+      isEmailLogin = method == 'email';
+      if (isEmailLogin) {
+        emailController.text = lastEmail;
+      } else {
+        phoneController.text = lastPhone;
+      }
+      passwordController.text = lastPassword;
+    });
+  }
+
+  Future<void> saveRememberedCredentials() async {
+    if (!rememberMe) {
+      await authLocalDataSource.clearRememberedCredentials();
+      return;
+    }
+    await authLocalDataSource.setRememberMeEnabled(true);
+    await authLocalDataSource.setLastLoginMethod(isEmailLogin ? 'email' : 'phone');
+    await authLocalDataSource.setLastEmail(emailController.text.trim());
+    await authLocalDataSource.setLastPhone(phoneController.text.trim());
+    await authLocalDataSource.setLastPassword(passwordController.text.trim());
+  }
+
+/// --- Showed Widgets ---
+
+  Future<void> showForgotPasswordDialog(AuthContactType type) async {
+    final controller = type == AuthContactType.email ? forgotEmailController : forgotPhoneController;
+    controller.text = type == AuthContactType.email
+        ? emailController.text.trim()
+        : phoneController.text.trim();
     isForgotDialogOpen = true;
     await showDialog(
         context: context,
-        builder: (dialogContext) => StatefulBuilder(
-            builder: (context, setState) => AlertDialog(
-                    title: const Text('Forgot password'),
-                    content: Column(mainAxisSize: MainAxisSize.min, children: [
-                      InputField.email(
-                          controller: forgotEmailController,
-                          label: 'Email',
-                          hint: 'e.g. name@email.com',
-                          errorText: showDialogEmailError ? 'Email is invalid.' : null,
-                          onChanged: (value) => setState(() => showDialogEmailError = false))
-                    ]),
-                    actions: [
-                      BlocBuilder<AuthPasswordBloc, AuthPasswordState>(
-                          bloc: authPasswordBloc,
-                          builder: (context, state) => Button.primary(
-                              onTap: () {
-                                final isValid = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
-                                    .hasMatch(forgotEmailController.text.trim());
-                                if (!isValid) {
-                                  setState(() => showDialogEmailError = true);
-                                  return;
-                                }
-                                pendingForgotEmail = forgotEmailController.text.trim();
-                                resetEmail = '';
-                                authPasswordBloc
-                                    .add(AuthForgotPasswordRequested(email: pendingForgotEmail));
-                              },
-                              text: 'Send OTP',
-                              isLoading: state.status == AuthPasswordStatus.loading &&
-                                  state.action == AuthPasswordAction.forgotPassword))
-                    ])));
+        builder: (dialogContext) => ForgotPasswordDialog(
+            contactType: type,
+            controller: controller,
+            authPasswordBloc: authPasswordBloc,
+            loadingAction: type == AuthContactType.email
+                ? AuthPasswordAction.forgotPasswordEmail
+                : AuthPasswordAction.forgotPasswordPhone,
+            onSubmit: (value) {
+              if (type == AuthContactType.email) {
+                pendingForgotEmail = value;
+                resetEmail = '';
+                authPasswordBloc.add(AuthForgotPasswordRequested(email: value));
+                return;
+              }
+              pendingForgotPhone = value;
+              resetPhone = '';
+              authPasswordBloc.add(AuthForgotPasswordPhoneRequested(phoneNumber: value));
+            }));
     isForgotDialogOpen = false;
   }
 
-  Future<void> showResetPasswordDialog(String email) async {
-    bool showDialogEmailError = false;
-    bool showOtpError = false;
-    bool showPasswordError = false;
-    resetEmailController.text = email;
+
+  Future<void> showResetPasswordDialog(AuthContactType type, String contact) async {
+    final contactController = type == AuthContactType.email ? resetEmailController : resetPhoneController;
+    contactController.text = contact;
     resetOtpController.clear();
     resetPasswordController.clear();
     isResetDialogOpen = true;
     await showDialog(
         context: context,
-        builder: (dialogContext) => StatefulBuilder(
-            builder: (context, setState) => AlertDialog(
-                    title: const Text('Reset password'),
-                    content: Column(mainAxisSize: MainAxisSize.min, children: [
-                      InputField.email(
-                          controller: resetEmailController,
-                          label: 'Email',
-                          hint: 'e.g. name@email.com',
-                          errorText: showDialogEmailError ? 'Email is invalid.' : null,
-                          onChanged: (value) => setState(() => showDialogEmailError = false)),
-                      const SizedBox(height: 12),
-                      InputField.primary(
-                          controller: resetOtpController,
-                          label: 'OTP',
-                          hint: 'Enter 6-digit OTP',
-                          errorText: showOtpError ? 'OTP is required.' : null,
-                          onChanged: (value) => setState(() => showOtpError = false)),
-                      const SizedBox(height: 12),
-                      InputField.password(
-                          controller: resetPasswordController,
-                          label: 'New password',
-                          hint: 'Enter new password',
-                          obscure: true,
-                          errorText: showPasswordError ? 'Password is required.' : null,
-                          onChanged: (value) => setState(() => showPasswordError = false))
-                    ]),
-                    actions: [
-                      BlocBuilder<AuthPasswordBloc, AuthPasswordState>(
-                          bloc: authPasswordBloc,
-                          builder: (context, state) => Button.primary(
-                              onTap: () {
-                            final isEmailValid = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
-                                .hasMatch(resetEmailController.text.trim());
-                            final otpValid = resetOtpController.text.trim().isNotEmpty;
-                            final passwordValid = resetPasswordController.text.trim().isNotEmpty;
-                                setState(() {
-                                  showDialogEmailError = !isEmailValid;
-                                  showOtpError = !otpValid;
-                                  showPasswordError = !passwordValid;
-                                });
-                            if (!isEmailValid || !otpValid || !passwordValid) return;
-                            authPasswordBloc.add(AuthResetPasswordRequested(
-                                email: resetEmailController.text.trim(),
-                                otp: resetOtpController.text.trim(),
-                                newPassword: resetPasswordController.text.trim()));
-                          },
-                              text: 'Reset password',
-                              isLoading: state.status == AuthPasswordStatus.loading &&
-                                  state.action == AuthPasswordAction.resetPassword))
-                    ])));
+        builder: (dialogContext) => ResetPasswordDialog(
+            contactType: type,
+            contactController: contactController,
+            otpController: resetOtpController,
+            passwordController: resetPasswordController,
+            authPasswordBloc: authPasswordBloc,
+            loadingAction: type == AuthContactType.email
+                ? AuthPasswordAction.resetPasswordEmail
+                : AuthPasswordAction.resetPasswordPhone,
+            onSubmit: (contactValue, otp, newPassword) {
+              if (type == AuthContactType.email) {
+                authPasswordBloc.add(AuthResetPasswordRequested(
+                    email: contactValue, otp: otp, newPassword: newPassword));
+                return;
+              }
+              authPasswordBloc.add(AuthResetPasswordPhoneRequested(
+                  phoneNumber: contactValue, otp: otp, newPassword: newPassword));
+            }));
     isResetDialogOpen = false;
   }
 
@@ -232,7 +252,8 @@ class LoginPageState extends State<LoginPage> {
         Text('Remember me', style: Style.small2w4(context, color: TextColorRole.greyColor)),
         const Spacer(),
         TextButton(
-            onPressed: showForgotPasswordDialog,
+            onPressed: () => showForgotPasswordDialog(
+                isEmailLogin ? AuthContactType.email : AuthContactType.phone),
             child: Text('Forgot Password?', style: Style.small2w5(context)))
       ]);
 
@@ -275,8 +296,9 @@ class LoginPageState extends State<LoginPage> {
             child: Text('Sign up', style: Style.small3w5(context, color: TextColorRole.onSurface)))
       ]);
 
-  List<Widget> get fields =>
-      isEmailLogin ? [emailTextField, const SizedBox(height: 12), passwordField] : [phoneTextField];
+  List<Widget> get fields => isEmailLogin
+      ? [emailTextField, const SizedBox(height: 12), passwordField]
+      : [phoneTextField, const SizedBox(height: 12), passwordField];
 
   Widget get view => PrimaryBackground(
       isHeader: false,
@@ -291,8 +313,7 @@ class LoginPageState extends State<LoginPage> {
         const SizedBox(height: 40),
         ...fields,
         const SizedBox(height: 6),
-        if (isEmailLogin) rememberForgotRow,
-        if (!isEmailLogin) rememberRow,
+        rememberForgotRow,
         const SizedBox(height: 12),
         BlocBuilder<AuthLoginBloc, AuthLoginState>(
             bloc: authLoginBloc,
@@ -319,6 +340,7 @@ class LoginPageState extends State<LoginPage> {
             bloc: authLoginBloc,
             listener: (context, state) {
               if (state.status == AuthLoginStatus.success) {
+                saveRememberedCredentials();
                 goToHome();
                 return;
               }
@@ -331,7 +353,7 @@ class LoginPageState extends State<LoginPage> {
             bloc: authPasswordBloc,
             listener: (context, state) {
               if (state.status == AuthPasswordStatus.success) {
-                if (state.action == AuthPasswordAction.forgotPassword) {
+                if (state.action == AuthPasswordAction.forgotPasswordEmail) {
                   if (isForgotDialogOpen && Navigator.of(context).canPop()) {
                     Navigator.of(context).pop();
                   }
@@ -344,10 +366,35 @@ class LoginPageState extends State<LoginPage> {
                     pendingForgotEmail = '';
                   }
                   if (isForgotDialogOpen && resetEmail.isNotEmpty) {
-                    showResetPasswordDialog(resetEmail);
+                    showResetPasswordDialog(AuthContactType.email, resetEmail);
                   }
                 }
-                if (state.action == AuthPasswordAction.resetPassword) {
+                if (state.action == AuthPasswordAction.resetPasswordEmail) {
+                  if (isResetDialogOpen && Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  }
+                  if (state.message != null && state.message!.isNotEmpty) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(state.message!)));
+                  }
+                }
+                if (state.action == AuthPasswordAction.forgotPasswordPhone) {
+                  if (isForgotDialogOpen && Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  }
+                  if (state.message != null && state.message!.isNotEmpty) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(state.message!)));
+                  }
+                  if (pendingForgotPhone.isNotEmpty) {
+                    resetPhone = pendingForgotPhone;
+                    pendingForgotPhone = '';
+                  }
+                  if (isForgotDialogOpen && resetPhone.isNotEmpty) {
+                    showResetPasswordDialog(AuthContactType.phone, resetPhone);
+                  }
+                }
+                if (state.action == AuthPasswordAction.resetPasswordPhone) {
                   if (isResetDialogOpen && Navigator.of(context).canPop()) {
                     Navigator.of(context).pop();
                   }
@@ -360,6 +407,7 @@ class LoginPageState extends State<LoginPage> {
               }
               if (state.status == AuthPasswordStatus.failure && state.errorMessage != null) {
                 pendingForgotEmail = '';
+                pendingForgotPhone = '';
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
               }

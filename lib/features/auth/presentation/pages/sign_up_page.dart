@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
@@ -8,11 +9,11 @@ import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/inputs/input_field.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ustadia_user_app/core/validators/password_rules.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_register_bloc.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_register_event.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_register_state.dart';
-import 'package:ustadia_user_app/features/auth/presentation/models/otp_verification_params.dart';
+import 'package:ustadia_user_app/features/auth/data/models/otp_verification_params.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
@@ -59,12 +60,10 @@ class SignUpPageState extends State<SignUpPage> {
 
   void goBack() => context.pop();
 
-  void goToOtp() => context.push(
-      otpRoute,
+  void goToOtp() => context.push(otpRoute,
       extra: isEmailSignUp ? emailController.text.trim() : '+998 ${phoneController.text}');
 
-  void goToOtpWithTempId(String tempId) => context.push(
-      otpRoute,
+  void goToOtpWithTempId(String tempId) => context.push(otpRoute,
       extra: OtpVerificationParams(tempId: tempId, email: emailController.text.trim()));
 
   bool get isFullNameValid => fullNameController.text.trim().isNotEmpty;
@@ -74,14 +73,15 @@ class SignUpPageState extends State<SignUpPage> {
   bool get isPhoneValid => phoneController.text.replaceAll(RegExp(r'\D'), '').length == 9;
   bool get isEmailValid =>
       RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(emailController.text.trim());
+  String get fullPhoneNumber => '+998${phoneController.text.replaceAll(RegExp(r'\D'), '')}';
 
-  bool get hasMinLength => passwordController.text.length >= 11;
-  bool get hasUpper => RegExp(r'[A-Z]').hasMatch(passwordController.text);
-  bool get hasLower => RegExp(r'[a-z]').hasMatch(passwordController.text);
-  bool get hasNumber => RegExp(r'[0-9]').hasMatch(passwordController.text);
-  bool get hasSymbol => RegExp(r'[^A-Za-z0-9]').hasMatch(passwordController.text);
+  bool get hasMinLength => PasswordRules.hasMinLength(passwordController.text);
+  bool get hasUpper => PasswordRules.hasUpper(passwordController.text);
+  bool get hasLower => PasswordRules.hasLower(passwordController.text);
+  bool get hasNumber => PasswordRules.hasNumber(passwordController.text);
+  bool get hasSymbol => PasswordRules.hasSymbol(passwordController.text);
 
-  bool get isPasswordStrong => hasMinLength && hasUpper && hasLower && hasNumber && hasSymbol;
+  bool get isPasswordStrong => PasswordRules.isStrong(passwordController.text);
 
   bool get passwordsMatch =>
       passwordController.text.isNotEmpty && passwordController.text == confirmController.text;
@@ -91,8 +91,8 @@ class SignUpPageState extends State<SignUpPage> {
     final usernameValid = isUsernameValid;
     final phoneValid = isEmailSignUp ? true : isPhoneValid;
     final emailValid = isEmailSignUp ? isEmailValid : true;
-    final strong = isEmailSignUp ? isPasswordStrong : true;
-    final match = isEmailSignUp ? passwordsMatch : true;
+    final strong = isPasswordStrong;
+    final match = passwordsMatch;
     setState(() {
       showFullNameError = !fullNameValid;
       showUsernameError = !usernameValid;
@@ -110,7 +110,11 @@ class SignUpPageState extends State<SignUpPage> {
             password: passwordController.text.trim()));
         return;
       }
-      goToOtp();
+      authRegisterBloc.add(AuthRegisterWithPhoneRequested(
+          firstName: fullNameController.text.trim(),
+          lastName: usernameController.text.trim(),
+          phoneNumber: fullPhoneNumber,
+          password: passwordController.text.trim()));
     }
   }
 
@@ -126,8 +130,8 @@ class SignUpPageState extends State<SignUpPage> {
 
   bool get isEmailFormValid =>
       isFullNameValid && isUsernameValid && isEmailValid && isPasswordStrong && passwordsMatch;
-  bool get isPhoneFormValid => isFullNameValid && isUsernameValid && isPhoneValid;
-  bool get isSubmitEnabled => isEmailSignUp ? isEmailFormValid : isPhoneFormValid;
+  bool get isPhoneFormValid =>
+      isFullNameValid && isUsernameValid && isPhoneValid && isPasswordStrong && passwordsMatch;
 
   /// --- Widgets ---
 
@@ -143,15 +147,7 @@ class SignUpPageState extends State<SignUpPage> {
                     .copyWith(color: met ? context.cs.onSurface : context.cs.onTertiary)))
       ]);
 
-  List<String> get passwordIssues {
-    final issues = <String>[];
-    if (!hasMinLength) issues.add('Use at least 12 characters.');
-    if (!hasUpper) issues.add('Add at least one uppercase letter.');
-    if (!hasLower) issues.add('Add at least one lowercase letter.');
-    if (!hasNumber) issues.add('Add at least one number.');
-    if (!hasSymbol) issues.add('Add at least one symbol.');
-    return issues;
-  }
+  List<String> get passwordIssues => PasswordRules.issues(passwordController.text);
 
   Widget get passwordChecklist => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,33 +193,31 @@ class SignUpPageState extends State<SignUpPage> {
               errorText: showEmailError ? 'Email is invalid.' : null,
               onChanged: (value) => setState(() => showEmailError = false)),
         const SizedBox(height: 12),
-        if (isEmailSignUp)
-          InputField.password(
-              controller: passwordController,
-              label: 'Password',
-              hint: 'Must contain at least 12 characters',
-              obscure: !passwordVisible,
-              showVisibilityToggle: true,
-              onToggleVisibility: () => setState(() => passwordVisible = !passwordVisible),
-              errorText: showPasswordError ? 'Password is not strong enough.' : null,
-              onChanged: (value) => setState(() {
-                    showPasswordError = false;
-                    showConfirmError = false;
-                  })),
-        if (isEmailSignUp && showPasswordError) ...[const SizedBox(height: 8), passwordChecklist],
-        if (isEmailSignUp) const SizedBox(height: 12),
-        if (isEmailSignUp)
-          InputField.password(
-              controller: confirmController,
-              label: 'Confirm Password',
-              hint: 'Must contain at least 12 characters',
-              obscure: !confirmVisible,
-              showVisibilityToggle: true,
-              onToggleVisibility: () => setState(() => confirmVisible = !confirmVisible),
-              errorText: showConfirmError && confirmController.text.isNotEmpty
-                  ? 'Passwords do not match.'
-                  : null,
-              onChanged: (value) => setState(() => showConfirmError = false)),
+        InputField.password(
+            controller: passwordController,
+            label: 'Password',
+            hint: 'Must contain at least 11 characters',
+            obscure: !passwordVisible,
+            showVisibilityToggle: true,
+            onToggleVisibility: () => setState(() => passwordVisible = !passwordVisible),
+            errorText: showPasswordError ? 'Password is not strong enough.' : null,
+            onChanged: (value) => setState(() {
+                  showPasswordError = false;
+                  showConfirmError = false;
+                })),
+        if (showPasswordError) ...[const SizedBox(height: 8), passwordChecklist],
+        const SizedBox(height: 12),
+        InputField.password(
+            controller: confirmController,
+            label: 'Confirm Password',
+            hint: 'Must contain at least 11 characters',
+            obscure: !confirmVisible,
+            showVisibilityToggle: true,
+            onToggleVisibility: () => setState(() => confirmVisible = !confirmVisible),
+            errorText: showConfirmError && confirmController.text.isNotEmpty
+                ? 'Passwords do not match.'
+                : null,
+            onChanged: (value) => setState(() => showConfirmError = false)),
       ]);
 
   Widget get footer => Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -233,6 +227,15 @@ class SignUpPageState extends State<SignUpPage> {
             onTap: goToLogin,
             child: Text('Log in', style: Style.small3w5(context, color: TextColorRole.onSurface)))
       ]);
+
+  BlocBuilder<AuthRegisterBloc, AuthRegisterState> signUpButton() =>
+      BlocBuilder<AuthRegisterBloc, AuthRegisterState>(
+          bloc: authRegisterBloc,
+          builder: (context, state) => Button.primary(
+              onTap: onSignUp,
+              text: 'Sign up',
+              isAvialable: state.status != AuthRegisterStatus.loading,
+              isLoading: state.status == AuthRegisterStatus.loading));
 
   Widget get signUpMethodButton => Button.border(
       onTap: toggleSignUpMethod,
@@ -251,13 +254,7 @@ class SignUpPageState extends State<SignUpPage> {
         const SizedBox(height: 28),
         form,
         const SizedBox(height: 20),
-        BlocBuilder<AuthRegisterBloc, AuthRegisterState>(
-            bloc: authRegisterBloc,
-            builder: (context, state) => Button.primary(
-                onTap: onSignUp,
-                text: 'Sign up',
-                isAvialable: isSubmitEnabled && state.status != AuthRegisterStatus.loading,
-                isLoading: state.status == AuthRegisterStatus.loading)),
+        signUpButton(),
         const SizedBox(height: 16),
         signUpMethodButton,
         const SizedBox(height: 16),
@@ -273,8 +270,7 @@ class SignUpPageState extends State<SignUpPage> {
           return;
         }
         if (state.status == AuthRegisterStatus.failure && state.errorMessage != null) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
         }
       },
       child: Scaffold(backgroundColor: context.cs.surface, body: view));

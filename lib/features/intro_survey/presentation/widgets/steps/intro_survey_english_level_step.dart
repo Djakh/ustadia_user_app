@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_models.dart';
-import 'package:ustadia_user_app/features/intro_survey/widgets/intro_survey_option_tile.dart';
+import 'package:ustadia_user_app/features/intro_survey/presentation/widgets/intro_survey_option_tile.dart';
 
 class IntroSurveyEnglishLevelStep extends StatelessWidget {
   final List<IntroSurveyOptionModel> options;

@@ -9,6 +9,8 @@ import 'package:ustadia_user_app/features/profile/presentation/widgets/dividers/
 import 'package:ustadia_user_app/features/profile/presentation/widgets/settings/item_list_box.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/settings/settings_action_dialog.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/settings/settings_list_item.dart';
+import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -38,8 +40,15 @@ class SettingsPage extends StatelessWidget {
           actionText: 'Yes, Logout',
           onConfirm: () {
             Navigator.of(dialogContext).pop();
+            logout(dialogContext);
           }),
     );
+  }
+
+  Future<void> logout(BuildContext context) async {
+    await sl<AuthLocalDataSource>().clearAccessToken();
+    if (!context.mounted) return;
+    context.go(loginRoute);
   }
 
   void goToNotifications(BuildContext context) => context.push(settingsNotificationsRoute);
