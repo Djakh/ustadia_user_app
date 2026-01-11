@@ -10,6 +10,7 @@ class AuthRegisterBloc extends Bloc<AuthRegisterEvent, AuthRegisterState> {
 
   AuthRegisterBloc({required this.authRemoteDataSource}) : super(const AuthRegisterState()) {
     on<AuthRegisterWithEmailRequested>(handleRegisterWithEmail);
+    on<AuthRegisterWithPhoneRequested>(handleRegisterWithPhone);
   }
 
   Future<void> handleRegisterWithEmail(
@@ -20,6 +21,25 @@ class AuthRegisterBloc extends Bloc<AuthRegisterEvent, AuthRegisterState> {
           firstName: event.firstName,
           lastName: event.lastName,
           email: event.email,
+          password: event.password);
+      emit(state.copyWith(status: AuthRegisterStatus.success, tempId: tempId, errorMessage: null));
+    } on DioException catch (error) {
+      emit(state.copyWith(
+          status: AuthRegisterStatus.failure, errorMessage: DioErrorMessage.from(error)));
+    } catch (error) {
+      emit(state.copyWith(
+          status: AuthRegisterStatus.failure, errorMessage: 'Request failed. Please try again.'));
+    }
+  }
+
+  Future<void> handleRegisterWithPhone(
+      AuthRegisterWithPhoneRequested event, Emitter<AuthRegisterState> emit) async {
+    emit(state.copyWith(status: AuthRegisterStatus.loading, errorMessage: null));
+    try {
+      final tempId = await authRemoteDataSource.registerWithPhone(
+          firstName: event.firstName,
+          lastName: event.lastName,
+          phoneNumber: event.phoneNumber,
           password: event.password);
       emit(state.copyWith(status: AuthRegisterStatus.success, tempId: tempId, errorMessage: null));
     } on DioException catch (error) {

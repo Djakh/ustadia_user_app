@@ -16,3 +16,13 @@ class AuthLoginWithEmailRequested extends AuthLoginEvent {
   @override
   List<Object?> get props => [email, password];
 }
+
+class AuthLoginWithPhoneRequested extends AuthLoginEvent {
+  final String phoneNumber;
+  final String password;
+
+  const AuthLoginWithPhoneRequested({required this.phoneNumber, required this.password});
+
+  @override
+  List<Object?> get props => [phoneNumber, password];
+}

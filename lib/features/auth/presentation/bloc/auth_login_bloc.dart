@@ -13,6 +13,7 @@ class AuthLoginBloc extends Bloc<AuthLoginEvent, AuthLoginState> {
   AuthLoginBloc({required this.authRemoteDataSource, required this.authLocalDataSource})
       : super(const AuthLoginState()) {
     on<AuthLoginWithEmailRequested>(handleLoginWithEmail);
+    on<AuthLoginWithPhoneRequested>(handleLoginWithPhone);
   }
 
   Future<void> handleLoginWithEmail(
@@ -21,6 +22,26 @@ class AuthLoginBloc extends Bloc<AuthLoginEvent, AuthLoginState> {
     try {
       final response = await authRemoteDataSource.loginWithEmail(
           email: event.email, password: event.password);
+      await authLocalDataSource.setAccessToken(response.accessToken);
+      emit(state.copyWith(
+          status: AuthLoginStatus.success,
+          accessToken: response.accessToken,
+          errorMessage: null));
+    } on DioException catch (error) {
+      emit(state.copyWith(
+          status: AuthLoginStatus.failure, errorMessage: DioErrorMessage.from(error)));
+    } catch (error) {
+      emit(state.copyWith(
+          status: AuthLoginStatus.failure, errorMessage: 'Login failed. Please try again.'));
+    }
+  }
+
+  Future<void> handleLoginWithPhone(
+      AuthLoginWithPhoneRequested event, Emitter<AuthLoginState> emit) async {
+    emit(state.copyWith(status: AuthLoginStatus.loading, errorMessage: null));
+    try {
+      final response = await authRemoteDataSource.loginWithPhone(
+          phoneNumber: event.phoneNumber, password: event.password);
       await authLocalDataSource.setAccessToken(response.accessToken);
       emit(state.copyWith(
           status: AuthLoginStatus.success,

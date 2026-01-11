@@ -23,6 +23,7 @@ class InputField extends StatelessWidget {
   final Color? borderColor;
   final TextStyle? hintStyle;
   final BorderRadius? inputBorderRadius;
+  final bool readOnly;
 
   const InputField.primary(
       {super.key,
@@ -41,7 +42,8 @@ class InputField extends StatelessWidget {
       this.maxLines,
       this.borderColor,
       this.hintStyle,
-      this.inputBorderRadius})
+      this.inputBorderRadius,
+      this.readOnly = false})
       : type = InputFieldType.primary;
 
   const InputField.phone(
@@ -61,7 +63,8 @@ class InputField extends StatelessWidget {
       this.maxLines,
       this.borderColor,
       this.hintStyle,
-      this.inputBorderRadius})
+      this.inputBorderRadius,
+      this.readOnly = false})
       : type = InputFieldType.phone;
 
   const InputField.email(
@@ -81,7 +84,8 @@ class InputField extends StatelessWidget {
       this.maxLines,
       this.borderColor,
       this.hintStyle,
-      this.inputBorderRadius})
+      this.inputBorderRadius,
+      this.readOnly = false})
       : type = InputFieldType.email;
 
   const InputField.password(
@@ -101,7 +105,8 @@ class InputField extends StatelessWidget {
       this.maxLines,
       this.borderColor,
       this.hintStyle,
-      this.inputBorderRadius})
+      this.inputBorderRadius,
+      this.readOnly = false})
       : type = InputFieldType.password;
 
   const InputField.textArea(
@@ -120,7 +125,8 @@ class InputField extends StatelessWidget {
       this.maxLines = 6,
       this.borderColor,
       this.hintStyle,
-      this.inputBorderRadius})
+      this.inputBorderRadius,
+      this.readOnly = false})
       : obscure = false,
         type = InputFieldType.textArea;
 
@@ -211,6 +217,7 @@ class InputField extends StatelessWidget {
             controller: controller,
             focusNode: focusNode,
             enabled: enabled,
+            readOnly: readOnly,
             cursorColor: context.cs.primary,
             keyboardType: keyboardType,
             textInputAction: textInputAction,

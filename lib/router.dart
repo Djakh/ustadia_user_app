@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/features/auth/presentation/pages/login_page.dart';
 import 'package:ustadia_user_app/features/auth/presentation/pages/otp_page.dart';
 import 'package:ustadia_user_app/features/auth/presentation/pages/sign_up_page.dart';
-import 'package:ustadia_user_app/features/auth/presentation/models/otp_verification_params.dart';
+import 'package:ustadia_user_app/features/auth/data/models/otp_verification_params.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_page.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_result_page.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/pages/dashboard_page.dart';
