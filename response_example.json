@@ -1,0 +1,333 @@
+{
+  "data": [
+    {
+      "id": "39f86cba-68c6-47a0-976f-11d8f4ceee63",
+      "description": "What is your current English proficiency level?",
+      "type": "single",
+      "created_at": "2026-01-09T16:39:23.977Z",
+      "sort_order": 1,
+      "answers": [
+        {
+          "id": "6f2931bb-059f-4dff-afce-f5ede9487f77",
+          "answer_text": "Beginner - I am just starting to learn English",
+          "sort_order": 1
+        },
+        {
+          "id": "8330f271-cb43-4b08-8adc-31f24be00c66",
+          "answer_text": "Elementary - I know basic words and phrases",
+          "sort_order": 2
+        },
+        {
+          "id": "39520eba-31d1-44ec-863d-33817fa494ca",
+          "answer_text": "Intermediate - I can have simple conversations",
+          "sort_order": 3
+        },
+        {
+          "id": "60da1e3f-dbc6-4932-8576-02d8f2d83b41",
+          "answer_text": "Advanced - I am fluent in English",
+          "sort_order": 4
+        }
+      ]
+    },
+    {
+      "id": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "description": "What are your main goals for learning English? (Select all that apply)",
+      "type": "multiple",
+      "created_at": "2026-01-09T16:39:24.003Z",
+      "sort_order": 2,
+      "answers": [
+        {
+          "id": "f05b349b-a2a5-423a-9bdf-8061a82a852d",
+          "answer_text": "Improve my speaking and conversation skills",
+          "sort_order": 1
+        },
+        {
+          "id": "08b83f39-1164-46f7-a565-4f21e44f15fb",
+          "answer_text": "Enhance my writing and grammar",
+          "sort_order": 2
+        },
+        {
+          "id": "47f4dfce-aef6-4389-a3ef-ff9ff0aec144",
+          "answer_text": "Prepare for exams (IELTS, TOEFL, etc.)",
+          "sort_order": 3
+        },
+        {
+          "id": "d6857797-e764-48b5-a11e-844f0dd788fb",
+          "answer_text": "Learn English for work or business",
+          "sort_order": 4
+        },
+        {
+          "id": "b7a1a4dd-8e3f-44b8-aaa6-0f333f3f6d6f",
+          "answer_text": "Study abroad or travel",
+          "sort_order": 5
+        },
+        {
+          "id": "a8a24029-052a-4f76-a51b-12803e4e3109",
+          "answer_text": "General knowledge and personal growth",
+          "sort_order": 6
+        }
+      ]
+    },
+    {
+      "id": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "description": "How much time can you dedicate to learning English per day?",
+      "type": "single",
+      "created_at": "2026-01-09T16:39:24.015Z",
+      "sort_order": 3,
+      "answers": [
+        {
+          "id": "1febf2d5-34b1-4552-8af2-341fcd4357f6",
+          "answer_text": "5-15 minutes",
+          "sort_order": 1
+        },
+        {
+          "id": "82de44ec-96ad-44ab-8f12-f49cb02e88f3",
+          "answer_text": "15-30 minutes",
+          "sort_order": 2
+        },
+        {
+          "id": "c94b4a3b-88e7-4fb8-8f2e-4813b038c63d",
+          "answer_text": "30-60 minutes",
+          "sort_order": 3
+        },
+        {
+          "id": "35e86f56-c031-4394-bfe7-85ecf6a8b571",
+          "answer_text": "More than 1 hour",
+          "sort_order": 4
+        }
+      ]
+    },
+    {
+      "id": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "description": "Which learning methods do you prefer? (Select all that apply)",
+      "type": "multiple",
+      "created_at": "2026-01-09T16:39:24.023Z",
+      "sort_order": 4,
+      "answers": [
+        {
+          "id": "ffd06581-d686-46a5-bb42-e15c2340bce4",
+          "answer_text": "Reading texts and articles",
+          "sort_order": 1
+        },
+        {
+          "id": "1288eeb1-f838-494e-9dd4-bd7eb164b20a",
+          "answer_text": "Listening to audio and podcasts",
+          "sort_order": 2
+        },
+        {
+          "id": "4af91535-c54a-4073-8c6b-b8049799cf24",
+          "answer_text": "Watching videos and movies",
+          "sort_order": 3
+        },
+        {
+          "id": "32112e07-6827-4d31-b9c7-487da01516fa",
+          "answer_text": "Interactive exercises and quizzes",
+          "sort_order": 4
+        },
+        {
+          "id": "40ed77cc-0bb8-4ccc-91bd-1b5fbd746155",
+          "answer_text": "Speaking practice with others",
+          "sort_order": 5
+        }
+      ]
+    },
+    {
+      "id": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "description": "Have you learned English before?",
+      "type": "single",
+      "created_at": "2026-01-09T16:39:24.033Z",
+      "sort_order": 5,
+      "answers": [
+        {
+          "id": "c58790dd-e8aa-4ebd-954f-c0e44a332b3b",
+          "answer_text": "No, this is my first time",
+          "sort_order": 1
+        },
+        {
+          "id": "a73e05fd-5a9d-4446-92b2-b390fd46ca4e",
+          "answer_text": "Yes, in school",
+          "sort_order": 2
+        },
+        {
+          "id": "f00c13e4-aa62-4c5f-92aa-2b28973f7c0d",
+          "answer_text": "Yes, with a tutor or language course",
+          "sort_order": 3
+        },
+        {
+          "id": "b082ae8e-0e49-4452-abfb-1104c4b3a108",
+          "answer_text": "Yes, through self-study (apps, books, etc.)",
+          "sort_order": 4
+        }
+      ]
+    },
+    {
+      "id": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "description": "What is your age group?",
+      "type": "single",
+      "created_at": "2026-01-09T16:39:24.041Z",
+      "sort_order": 6,
+      "answers": [
+        {
+          "id": "92882e97-b8f3-4b3d-b442-3a87305b8dc3",
+          "answer_text": "Under 18",
+          "sort_order": 1
+        },
+        {
+          "id": "ff49539f-f41a-4ed6-b1f2-5630ba602e0b",
+          "answer_text": "18-25",
+          "sort_order": 2
+        },
+        {
+          "id": "1a503d71-7250-46fc-a04f-dce1d7008536",
+          "answer_text": "26-35",
+          "sort_order": 3
+        },
+        {
+          "id": "aa8751ad-ce60-4c65-a389-ab7356cf9ad1",
+          "answer_text": "36-50",
+          "sort_order": 4
+        },
+        {
+          "id": "180913f4-5b5c-4701-9aa5-867ede9fa7ad",
+          "answer_text": "Over 50",
+          "sort_order": 5
+        }
+      ]
+    },
+    {
+      "id": "8a80d611-4922-467b-ae0f-86432c58614a",
+      "description": "Which English skills do you want to focus on most? (Select up to 3)",
+      "type": "multiple",
+      "created_at": "2026-01-09T16:39:24.049Z",
+      "sort_order": 7,
+      "answers": [
+        {
+          "id": "d49ced50-25bc-4fad-9603-381b31e7995c",
+          "answer_text": "Speaking and pronunciation",
+          "sort_order": 1
+        },
+        {
+          "id": "48c2bbcf-fda5-49e2-9395-e9a6a906a98d",
+          "answer_text": "Listening comprehension",
+          "sort_order": 2
+        },
+        {
+          "id": "e4c7616d-3659-499f-89e8-dd5a475ffa5c",
+          "answer_text": "Reading and vocabulary",
+          "sort_order": 3
+        },
+        {
+          "id": "4a96d1dc-63ff-4d5e-8919-92bd76779dfa",
+          "answer_text": "Writing and composition",
+          "sort_order": 4
+        },
+        {
+          "id": "ac8b07ad-fe8f-4372-9b7c-7210e324564c",
+          "answer_text": "Grammar and sentence structure",
+          "sort_order": 5
+        }
+      ]
+    },
+    {
+      "id": "00ecb626-b5c8-4bff-bcd7-19bdf0bb0d9e",
+      "description": "What is your current English proficiency level?",
+      "type": "single",
+      "created_at": "2026-01-09T16:46:07.333Z",
+      "sort_order": 1,
+      "answers": [
+        {
+          "id": "2acae332-44fb-4e30-93a2-ef8809d0b7b2",
+          "answer_text": "Beginner - I am just starting to learn English",
+          "sort_order": 1
+        },
+        {
+          "id": "1bdc7d7e-39cd-4133-b738-ad84e99ee0b2",
+          "answer_text": "Elementary - I know basic words and phrases",
+          "sort_order": 2
+        },
+        {
+          "id": "4a3f5f62-654b-49e5-b5d0-af6453ff7f7a",
+          "answer_text": "Intermediate - I can have simple conversations",
+          "sort_order": 3
+        },
+        {
+          "id": "be6983c8-aa5c-4c04-a6eb-467a653dff72",
+          "answer_text": "Advanced - I am fluent in English",
+          "sort_order": 4
+        }
+      ]
+    },
+    {
+      "id": "9f05e983-a9bf-4b0e-8352-f151e3ebc7bd",
+      "description": "What are your main goals for learning English? (Select all that apply)",
+      "type": "multiple",
+      "created_at": "2026-01-09T16:46:07.358Z",
+      "sort_order": 2,
+      "answers": [
+        {
+          "id": "0bf20d30-de3a-4738-959b-345ca196e28d",
+          "answer_text": "Improve my speaking and conversation skills",
+          "sort_order": 1
+        },
+        {
+          "id": "4a1e031f-10e4-4859-92ca-91d09ab6ec11",
+          "answer_text": "Enhance my writing and grammar",
+          "sort_order": 2
+        },
+        {
+          "id": "d653e833-d6cf-476e-a266-23ae1913bafd",
+          "answer_text": "Prepare for exams (IELTS, TOEFL, etc.)",
+          "sort_order": 3
+        },
+        {
+          "id": "50f02f90-f8eb-4a97-8be2-aa27603a8356",
+          "answer_text": "Learn English for work or business",
+          "sort_order": 4
+        },
+        {
+          "id": "00992fbe-6bda-43d3-a9ea-7fa44acc5042",
+          "answer_text": "Study abroad or travel",
+          "sort_order": 5
+        },
+        {
+          "id": "08bd977a-24f0-48c3-89f6-582a473a9c62",
+          "answer_text": "General knowledge and personal growth",
+          "sort_order": 6
+        }
+      ]
+    },
+    {
+      "id": "b3c46541-e6fe-4c0f-be91-66ed8427833c",
+      "description": "How much time can you dedicate to learning English per day?",
+      "type": "single",
+      "created_at": "2026-01-09T16:46:07.370Z",
+      "sort_order": 3,
+      "answers": [
+        {
+          "id": "2f6ec364-15bd-482b-9eda-cab76180bd71",
+          "answer_text": "5-15 minutes",
+          "sort_order": 1
+        },
+        {
+          "id": "a15199f0-09d1-4968-bf29-b88e8b2002c8",
+          "answer_text": "15-30 minutes",
+          "sort_order": 2
+        },
+        {
+          "id": "37ee6247-0b65-4fae-a46b-16c4d6b17d47",
+          "answer_text": "30-60 minutes",
+          "sort_order": 3
+        },
+        {
+          "id": "4748c6fe-db82-4f2b-a64a-45f60773de37",
+          "answer_text": "More than 1 hour",
+          "sort_order": 4
+        }
+      ]
+    }
+  ],
+  "total": 14,
+  "page": 1,
+  "limit": 10,
+  "totalPages": 2
+}

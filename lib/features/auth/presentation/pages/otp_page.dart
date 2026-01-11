@@ -11,6 +11,9 @@ import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_blo
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_event.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_state.dart';
 import 'package:ustadia_user_app/features/auth/data/models/otp_verification_params.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_event.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_state.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
@@ -30,6 +33,8 @@ class OtpPageState extends State<OtpPage> {
   Timer? countdown;
   int secondsLeft = 30;
   final AuthVerifyBloc authVerifyBloc = sl<AuthVerifyBloc>();
+  final UserBloc userBloc = sl<UserBloc>();
+  bool isAwaitingUser = false;
 
   /// --- Life cycle ---
 
@@ -190,17 +195,40 @@ class OtpPageState extends State<OtpPage> {
       ]));
 
   @override
-  Widget build(BuildContext context) => BlocListener<AuthVerifyBloc, AuthVerifyState>(
-      bloc: authVerifyBloc,
-      listener: (context, state) {
-        if (state.status == AuthVerifyStatus.success) {
-          goToHome();
-          return;
-        }
-        if (state.status == AuthVerifyStatus.failure && state.errorMessage != null) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-        }
-      },
+  Widget build(BuildContext context) => MultiBlocListener(
+      listeners: [
+        BlocListener<AuthVerifyBloc, AuthVerifyState>(
+            bloc: authVerifyBloc,
+            listener: (context, state) {
+              if (state.status == AuthVerifyStatus.success) {
+                isAwaitingUser = true;
+                userBloc.add(const UserProfileRequested());
+                return;
+              }
+              if (state.status == AuthVerifyStatus.failure && state.errorMessage != null) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+              }
+            }),
+        BlocListener<UserBloc, UserState>(
+            bloc: userBloc,
+            listener: (context, state) {
+              if (!isAwaitingUser) return;
+              if (state.status == UserStatus.success) {
+                isAwaitingUser = false;
+                final profile = state.profile;
+                if (profile != null && profile.introCompleted) {
+                  goToHome();
+                  return;
+                }
+                goToIntroSurvey();
+              }
+              if (state.status == UserStatus.failure && state.errorMessage != null) {
+                isAwaitingUser = false;
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+              }
+            })
+      ],
       child: Scaffold(backgroundColor: context.cs.surface, body: view));
 }

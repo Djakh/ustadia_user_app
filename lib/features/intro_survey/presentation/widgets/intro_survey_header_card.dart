@@ -21,10 +21,10 @@ class IntroSurveyHeaderCard extends StatelessWidget {
   /// --- Widgets ---
 
   Widget indicator(BuildContext context) => PageIndicator(
-      currentIndex: stepIndex,
-      total: totalSteps,
-
-      itemWidth: 44);
+        currentIndex: stepIndex,
+        total: totalSteps,
+        isExpanded: true,
+      );
 
   Widget stepText(BuildContext context) => Text('Step ${stepIndex + 1} of $totalSteps',
       style: Style.small2w4(context, color: TextColorRole.greyColor));
@@ -39,19 +39,19 @@ class IntroSurveyHeaderCard extends StatelessWidget {
   Widget get spacerBelowTitle => const SizedBox(height: 6);
 
   Widget view(BuildContext context) => Container(
-          padding: const EdgeInsets.all(16),
-          decoration:
-              BoxDecoration(color: context.cs.secondaryContainer, borderRadius: Style.border20),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: [
-              Expanded(child: indicator(context)),
-              stepText(context)
-            ]),
-            spacerBelowTopRow,
-            titleText(context),
-            spacerBelowTitle,
-            subtitleText(context)
-          ]));
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: context.cs.secondaryContainer, borderRadius: Style.border20),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Expanded(child: indicator(context)),
+          const SizedBox(width: 4),
+          stepText(context),
+        ]),
+        spacerBelowTopRow,
+        titleText(context),
+        spacerBelowTitle,
+        subtitleText(context)
+      ]));
 
   @override
   Widget build(BuildContext context) => view(context);
