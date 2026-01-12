@@ -8,7 +8,8 @@ class UserProfileModel {
   final String language;
   final String createdAt;
   final String xp;
-  final String? profilePicture;
+  final String? profilePictureId;
+  final String? profilePictureUrl;
   final String? currentTeacher;
   final bool introCompleted;
 
@@ -22,11 +23,21 @@ class UserProfileModel {
       required this.language,
       required this.createdAt,
       required this.xp,
-      required this.profilePicture,
+      required this.profilePictureId,
+      required this.profilePictureUrl,
       required this.currentTeacher,
       required this.introCompleted});
 
-  factory UserProfileModel.fromJson(Map<String, dynamic> json) => UserProfileModel(
+  factory UserProfileModel.fromJson(Map<String, dynamic> json) {
+    final profilePictureJson = json['profilePicture'];
+    final profilePictureId = profilePictureJson is Map
+        ? profilePictureJson['id']?.toString()
+        : null;
+    final profilePictureUrl = profilePictureJson is Map
+        ? profilePictureJson['url']?.toString()
+        : profilePictureJson?.toString();
+
+    return UserProfileModel(
       id: json['id']?.toString() ?? '',
       firstName: json['firstName']?.toString() ?? '',
       lastName: json['lastName']?.toString() ?? '',
@@ -36,7 +47,9 @@ class UserProfileModel {
       language: json['language']?.toString() ?? 'en',
       createdAt: json['created_at']?.toString() ?? '',
       xp: json['xp']?.toString() ?? '0',
-      profilePicture: json['profilePicture'] as String?,
+      profilePictureId: profilePictureId,
+      profilePictureUrl: profilePictureUrl,
       currentTeacher: json['currentTeacher'] as String?,
       introCompleted: json['introCompleted'] as bool? ?? false);
+  }
 }

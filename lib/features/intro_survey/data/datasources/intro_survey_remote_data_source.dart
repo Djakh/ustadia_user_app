@@ -6,8 +6,8 @@ class IntroSurveyRemoteDataSource {
 
   IntroSurveyRemoteDataSource({required this.dio});
 
-  Future<List<IntroSurveyQuestionModel>> fetchQuestions({int page = 1, int limit = 10}) async {
-    final response = await dio.get('/intro/questions', queryParameters: {'page': page, 'limit': limit});
+  Future<List<IntroSurveyQuestionModel>> fetchQuestions() async {
+    final response = await dio.get('/intro/questions');
     final data = response.data as Map<String, dynamic>;
     final items = data['data'] as List<dynamic>? ?? [];
     final questions = items

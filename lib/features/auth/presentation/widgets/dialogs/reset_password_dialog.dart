@@ -6,6 +6,7 @@ import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/inputs/input_field.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_password_bloc.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_password_state.dart';
+import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/features/auth/presentation/widgets/dialogs/auth_contact_type.dart';
 
 class ResetPasswordDialog extends StatefulWidget {
@@ -108,7 +109,7 @@ class ResetPasswordDialogState extends State<ResetPasswordDialog> {
                 builder: (context, state) => Button.primary(
                     onTap: submit,
                     text: 'Reset password',
-                    isLoading: state.status == AuthPasswordStatus.loading &&
+                    isLoading: state.status == Status.loading &&
                         state.action == widget.loadingAction))
           ]);
 }

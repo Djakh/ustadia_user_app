@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
+import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
@@ -234,8 +235,8 @@ class SignUpPageState extends State<SignUpPage> {
           builder: (context, state) => Button.primary(
               onTap: onSignUp,
               text: 'Sign up',
-              isAvialable: state.status != AuthRegisterStatus.loading,
-              isLoading: state.status == AuthRegisterStatus.loading));
+              isAvialable: state.status != Status.loading,
+              isLoading: state.status == Status.loading));
 
   Widget get signUpMethodButton => Button.border(
       onTap: toggleSignUpMethod,
@@ -265,11 +266,11 @@ class SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) => BlocListener<AuthRegisterBloc, AuthRegisterState>(
       bloc: authRegisterBloc,
       listener: (context, state) {
-        if (state.status == AuthRegisterStatus.success && state.tempId != null) {
+        if (state.status == Status.success && state.tempId != null) {
           goToOtpWithTempId(state.tempId!);
           return;
         }
-        if (state.status == AuthRegisterStatus.failure && state.errorMessage != null) {
+        if (state.status == Status.error && state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
         }
       },

@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:ustadia_user_app/features/common/data/models/user_profile_model.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
 import 'package:ustadia_user_app/features/profile/data/models/settings_item_model.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/dividers/primary_divider.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/settings/item_list_box.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/settings/settings_action_dialog.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/settings/settings_list_item.dart';
-import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
@@ -53,21 +57,28 @@ class SettingsPage extends StatelessWidget {
 
   void goToNotifications(BuildContext context) => context.push(settingsNotificationsRoute);
 
-  void goToLanguage(BuildContext context) => context.push(settingsLanguageRoute);
+  void goToLanguage(BuildContext context, UserProfileModel? userProfileModel) {
+    if (userProfileModel == null) return;
+    context.push(settingsLanguageRoute, extra: userProfileModel);
+  }
 
-  Widget itemsList(BuildContext context) => Column(
-        children: [
-          SettingsListItem(item: mainItems[0], onTap: () {}),
-          const PrimaryDivider(),
-          SettingsListItem(item: mainItems[1], onTap: () => goToLanguage(context)),
-          const PrimaryDivider(),
-          SettingsListItem(item: mainItems[2], onTap: () => goToNotifications(context)),
-          const PrimaryDivider(),
-          SettingsListItem(item: mainItems[3], onTap: () {}),
-          const PrimaryDivider(),
-          SettingsListItem(item: mainItems[4], onTap: () {}),
-        ],
-      );
+  void goToEditAccount(BuildContext context) => context.push(editAccountRoute);
+
+  Widget itemsList(BuildContext context) => BlocBuilder<UserBloc, UserState>(
+      builder: (context, state) => Column(
+            children: [
+              SettingsListItem(item: mainItems[0], onTap: () => goToEditAccount(context)),
+              const PrimaryDivider(),
+              SettingsListItem(
+                  item: mainItems[1], onTap: () => goToLanguage(context, state.profile)),
+              const PrimaryDivider(),
+              SettingsListItem(item: mainItems[2], onTap: () => goToNotifications(context)),
+              const PrimaryDivider(),
+              SettingsListItem(item: mainItems[3], onTap: () {}),
+              const PrimaryDivider(),
+              SettingsListItem(item: mainItems[4], onTap: () {}),
+            ],
+          ));
 
   Widget removeSettingsItem(BuildContext context) => Container(
       decoration: BoxDecoration(color: context.cs.surface, borderRadius: Style.border20),

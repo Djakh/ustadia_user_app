@@ -4,6 +4,7 @@ import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/inputs/input_field.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_password_bloc.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_password_state.dart';
+import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/features/auth/presentation/widgets/dialogs/auth_contact_type.dart';
 
 class ForgotPasswordDialog extends StatefulWidget {
@@ -76,6 +77,6 @@ class ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
                 onTap: submit,
                 text: 'Send OTP',
                 isLoading:
-                    state.status == AuthPasswordStatus.loading && state.action == widget.loadingAction))
+                    state.status == Status.loading && state.action == widget.loadingAction))
       ]);
 }

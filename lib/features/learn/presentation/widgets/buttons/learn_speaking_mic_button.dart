@@ -4,6 +4,7 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
+import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_speaking/learn_speaking_page.dart';
 
 class LearnSpeakingMicButton extends StatelessWidget {
@@ -16,13 +17,12 @@ class LearnSpeakingMicButton extends StatelessWidget {
 
   Color backgroundColor(BuildContext context) => isActive ? context.cs.primary : context.cs.surface;
 
-  SizedBox loadingWidget(BuildContext context) => SizedBox(
+  Widget loadingWidget(BuildContext context) => PrimaryCircularProgressIndicator(
       width: 80,
       height: 80,
-      child: CircularProgressIndicator(
-          strokeWidth: 4,
-          valueColor: AlwaysStoppedAnimation(context.cs.onPrimary),
-          backgroundColor: context.cs.onPrimary.withValues(alpha: 0.2)));
+      strokeWidth: 4,
+      valueColor: AlwaysStoppedAnimation(context.cs.onPrimary),
+      backgroundColor: context.cs.onPrimary.withValues(alpha: 0.2));
 
   SvgPicture microphoneImage() => SvgPicture.asset(
       isActive ? AppImages.learnSpeakingListening : AppImages.learnSpeakingDefault);

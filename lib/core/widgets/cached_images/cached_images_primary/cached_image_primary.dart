@@ -2,17 +2,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 
 class CachedImagePrimary extends StatelessWidget {
-  final double height;
-  final double width;
+  final double? height;
+  final double? width;
   final String? imageUrl;
   final double? fallBackIconSize;
   final BoxFit? fit;
   const CachedImagePrimary(
       {super.key,
-      required this.height,
-      required this.width,
+       this.height,
+       this.width,
       this.imageUrl,
       this.fallBackIconSize,
       this.fit});
@@ -26,8 +27,7 @@ class CachedImagePrimary extends StatelessWidget {
             size: fallBackIconSize, color: Theme.of(context).colorScheme.onSurfaceVariant),
       ));
 
-  Widget _loading(BuildContext context) =>
-      const Center(child: CircularProgressIndicator.adaptive(strokeWidth: 2));
+  Widget _loading(BuildContext context) => const PrimaryCircularProgressIndicator();
 
   CachedNetworkImage cachedImage(BuildContext context) => CachedNetworkImage(
       height: height,

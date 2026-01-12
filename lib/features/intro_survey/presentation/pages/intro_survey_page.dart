@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_event.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_state.dart';
+import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_event.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_models.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/bloc/intro_survey_bloc.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/bloc/intro_survey_event.dart';
@@ -54,7 +56,7 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
 
   void userListener(BuildContext context, UserState state) {
     if (!isSubmitting) return;
-    if (state.status == UserStatus.success) {
+        if (state.status == Status.success) {
       setState(() => isSubmitting = false);
       final profile = state.profile;
       if (profile != null && profile.introCompleted) {
@@ -63,7 +65,7 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
       }
       context.go(loginRoute);
     }
-    if (state.status == UserStatus.failure && state.errorMessage != null) {
+        if (state.status == Status.error && state.errorMessage != null) {
       setState(() => isSubmitting = false);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
     }
@@ -71,17 +73,18 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
 
   void introSurveyListener(BuildContext context, IntroSurveyState state) {
     if (!isSubmittingAnswer) return;
-    if (state.submissionStatus == IntroSurveySubmissionStatus.failure) {
+    if (state.submissionStatus == Status.error) {
       setState(() => isSubmittingAnswer = false);
       final message = state.submissionErrorMessage ?? 'Submission failed';
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
     }
-    if (state.submissionStatus == IntroSurveySubmissionStatus.success) {
+    if (state.submissionStatus == Status.success) {
       setState(() => isSubmittingAnswer = false);
       final questions = state.questions;
       if (questions.isEmpty) return;
       if (pageIndex < questions.length - 1) {
-        controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeOutCubic);
+        controller.nextPage(
+            duration: const Duration(milliseconds: 300), curve: Curves.easeOutCubic);
         return;
       }
       setState(() => isSubmitting = true);
@@ -106,8 +109,8 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
     final selectedIds = selectedAnswerIdsByQuestion[question.id] ?? <String>{};
     if (selectedIds.isEmpty) return;
     setState(() => isSubmittingAnswer = true);
-    introSurveyBloc.add(
-        IntroSurveyAnswerSubmitted(questionId: question.id, answerIds: selectedIds.toList()));
+    introSurveyBloc
+        .add(IntroSurveyAnswerSubmitted(questionId: question.id, answerIds: selectedIds.toList()));
   }
 
   void onPageChanged(int index, List<IntroSurveyQuestionModel> questions) {
@@ -197,10 +200,10 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
           ])));
 
   Widget buildContent(IntroSurveyState state) {
-    if (state.status == IntroSurveyStatus.loading || state.status == IntroSurveyStatus.initial) {
-      return const Center(child: CircularProgressIndicator());
+    if (state.status == Status.loading || state.status == Status.initial) {
+      return const PrimaryCircularProgressIndicator();
     }
-    if (state.status == IntroSurveyStatus.failure) {
+    if (state.status == Status.error) {
       return buildErrorState(state.errorMessage ?? 'Failed to load questions');
     }
     if (state.questions.isEmpty) {
@@ -215,14 +218,14 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
 
   @override
   Widget build(BuildContext context) => MultiBlocListener(
-      listeners: [
-        BlocListener<UserBloc, UserState>(bloc: userBloc, listener: userListener),
-        BlocListener<IntroSurveyBloc, IntroSurveyState>(
-            bloc: introSurveyBloc, listener: introSurveyListener)
-      ],
-      child: Scaffold(
-          backgroundColor: context.cs.surface,
-          body: SafeArea(
-              child: BlocBuilder<IntroSurveyBloc, IntroSurveyState>(
-                  bloc: introSurveyBloc, builder: (context, state) => buildContent(state)))));
+          listeners: [
+            BlocListener<UserBloc, UserState>(bloc: userBloc, listener: userListener),
+            BlocListener<IntroSurveyBloc, IntroSurveyState>(
+                bloc: introSurveyBloc, listener: introSurveyListener)
+          ],
+          child: Scaffold(
+              backgroundColor: context.cs.surface,
+              body: SafeArea(
+                  child: BlocBuilder<IntroSurveyBloc, IntroSurveyState>(
+                      bloc: introSurveyBloc, builder: (context, state) => buildContent(state)))));
 }

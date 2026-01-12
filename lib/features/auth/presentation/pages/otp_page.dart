@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
+import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
@@ -11,9 +12,9 @@ import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_blo
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_event.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_state.dart';
 import 'package:ustadia_user_app/features/auth/data/models/otp_verification_params.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_event.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_state.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_event.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
@@ -93,7 +94,7 @@ class OtpPageState extends State<OtpPage> {
       goToIntroSurvey();
       return;
     }
-    if (authVerifyBloc.state.status == AuthVerifyStatus.loading) return;
+    if (authVerifyBloc.state.status == Status.loading) return;
     authVerifyBloc.add(AuthVerifyOtpRequested(
         tempId: widget.verificationParams!.tempId, otp: codeValue));
   }
@@ -177,8 +178,8 @@ class OtpPageState extends State<OtpPage> {
               builder: (context, state) => Button.primary(
                   onTap: onConfirm,
                   isAvialable:
-                      isComplete && state.status != AuthVerifyStatus.loading,
-                  isLoading: state.status == AuthVerifyStatus.loading,
+                      isComplete && state.status != Status.loading,
+                  isLoading: state.status == Status.loading,
                   text: 'Confirm')));
 
   Widget get view => PrimaryBackground(
@@ -200,12 +201,12 @@ class OtpPageState extends State<OtpPage> {
         BlocListener<AuthVerifyBloc, AuthVerifyState>(
             bloc: authVerifyBloc,
             listener: (context, state) {
-              if (state.status == AuthVerifyStatus.success) {
+              if (state.status == Status.success) {
                 isAwaitingUser = true;
                 userBloc.add(const UserProfileRequested());
                 return;
               }
-              if (state.status == AuthVerifyStatus.failure && state.errorMessage != null) {
+              if (state.status == Status.error && state.errorMessage != null) {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
               }
@@ -214,7 +215,7 @@ class OtpPageState extends State<OtpPage> {
             bloc: userBloc,
             listener: (context, state) {
               if (!isAwaitingUser) return;
-              if (state.status == UserStatus.success) {
+              if (state.status == Status.success) {
                 isAwaitingUser = false;
                 final profile = state.profile;
                 if (profile != null && profile.introCompleted) {
@@ -223,7 +224,7 @@ class OtpPageState extends State<OtpPage> {
                 }
                 goToIntroSurvey();
               }
-              if (state.status == UserStatus.failure && state.errorMessage != null) {
+              if (state.status == Status.error && state.errorMessage != null) {
                 isAwaitingUser = false;
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
