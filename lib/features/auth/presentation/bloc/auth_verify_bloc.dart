@@ -5,6 +5,7 @@ import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_event.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_state.dart';
+import 'package:ustadia_user_app/core/enums/status.dart';
 
 class AuthVerifyBloc extends Bloc<AuthVerifyEvent, AuthVerifyState> {
   final AuthRemoteDataSource authRemoteDataSource;
@@ -17,19 +18,19 @@ class AuthVerifyBloc extends Bloc<AuthVerifyEvent, AuthVerifyState> {
 
   Future<void> handleVerifyOtp(
       AuthVerifyOtpRequested event, Emitter<AuthVerifyState> emit) async {
-    emit(state.copyWith(status: AuthVerifyStatus.loading, errorMessage: null));
+    emit(state.copyWith(status: Status.loading, errorMessage: null));
     try {
       final accessToken =
           await authRemoteDataSource.verifyOtp(tempId: event.tempId, otp: event.otp);
       await authLocalDataSource.setAccessToken(accessToken);
       emit(state.copyWith(
-          status: AuthVerifyStatus.success, accessToken: accessToken, errorMessage: null));
+          status: Status.success, accessToken: accessToken, errorMessage: null));
     } on DioException catch (error) {
       emit(state.copyWith(
-          status: AuthVerifyStatus.failure, errorMessage: DioErrorMessage.from(error)));
+          status: Status.error, errorMessage: DioErrorMessage.from(error)));
     } catch (error) {
       emit(state.copyWith(
-          status: AuthVerifyStatus.failure, errorMessage: 'Request failed. Please try again.'));
+          status: Status.error, errorMessage: 'Request failed. Please try again.'));
     }
   }
 }

@@ -1,16 +1,14 @@
 import 'package:equatable/equatable.dart';
-
-enum AuthRegisterStatus { initial, loading, success, failure }
+import 'package:ustadia_user_app/core/enums/status.dart';
 
 class AuthRegisterState extends Equatable {
-  final AuthRegisterStatus status;
+  final Status status;
   final String? tempId;
   final String? errorMessage;
 
-  const AuthRegisterState({this.status = AuthRegisterStatus.initial, this.tempId, this.errorMessage});
+  const AuthRegisterState({this.status = Status.initial, this.tempId, this.errorMessage});
 
-  AuthRegisterState copyWith(
-      {AuthRegisterStatus? status, String? tempId, String? errorMessage}) {
+  AuthRegisterState copyWith({Status? status, String? tempId, String? errorMessage}) {
     return AuthRegisterState(
         status: status ?? this.status, tempId: tempId ?? this.tempId, errorMessage: errorMessage);
   }

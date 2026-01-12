@@ -6,7 +6,7 @@ import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
 import 'package:ustadia_user_app/features/practice/data/models/vocabulary_question.dart';
-import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/next_task_bloc/next_task_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_vocabulary_content.dart';
 
 class PracticeVocabularyPage extends StatefulWidget {

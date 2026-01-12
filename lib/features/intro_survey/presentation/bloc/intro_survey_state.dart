@@ -1,30 +1,28 @@
+import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/intro_survey_models.dart';
 
-enum IntroSurveyStatus { initial, loading, success, failure }
-enum IntroSurveySubmissionStatus { idle, submitting, success, failure }
-
 class IntroSurveyState {
-  final IntroSurveyStatus status;
+  final Status status;
   final List<IntroSurveyQuestionModel> questions;
   final String? errorMessage;
-  final IntroSurveySubmissionStatus submissionStatus;
+  final Status submissionStatus;
   final String? submissionQuestionId;
   final String? submissionErrorMessage;
 
   const IntroSurveyState({
-    this.status = IntroSurveyStatus.initial,
+    this.status = Status.initial,
     this.questions = const [],
     this.errorMessage,
-    this.submissionStatus = IntroSurveySubmissionStatus.idle,
+    this.submissionStatus = Status.initial,
     this.submissionQuestionId,
     this.submissionErrorMessage
   });
 
   IntroSurveyState copyWith({
-    IntroSurveyStatus? status,
+    Status? status,
     List<IntroSurveyQuestionModel>? questions,
     String? errorMessage,
-    IntroSurveySubmissionStatus? submissionStatus,
+    Status? submissionStatus,
     String? submissionQuestionId,
     String? submissionErrorMessage
   }) =>

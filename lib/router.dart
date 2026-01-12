@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ustadia_user_app/features/auth/data/models/otp_verification_params.dart';
 import 'package:ustadia_user_app/features/auth/presentation/pages/login_page.dart';
 import 'package:ustadia_user_app/features/auth/presentation/pages/otp_page.dart';
 import 'package:ustadia_user_app/features/auth/presentation/pages/sign_up_page.dart';
-import 'package:ustadia_user_app/features/auth/data/models/otp_verification_params.dart';
+import 'package:ustadia_user_app/features/common/data/models/user_profile_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_page.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_result_page.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/pages/dashboard_page.dart';
@@ -29,7 +30,9 @@ import 'package:ustadia_user_app/features/practice/presentation/pages/practice_w
 import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_result_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_start_page.dart';
+import 'package:ustadia_user_app/features/profile/presentation/pages/edit_account_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/leaderboard_page.dart';
+import 'package:ustadia_user_app/features/profile/presentation/pages/profile_image_view_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/settings_language_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/settings_notifications_page.dart';
@@ -97,6 +100,7 @@ const notificationsPath = 'notifications';
 const settingsPath = 'settings';
 const settingsNotificationsPath = 'notifications';
 const settingsLanguagePath = 'language';
+const editAccountPath = 'edit-account';
 
 /// --------------------
 /// Absolute helpers for pushing from anywhere (always start with '/')
@@ -118,6 +122,8 @@ const notificationsRoute = '$profileRoute/$notificationsPath';
 const settingsRoute = '$profileRoute/$settingsPath';
 const settingsNotificationsRoute = '$settingsRoute/$settingsNotificationsPath';
 const settingsLanguageRoute = '$settingsRoute/$settingsLanguagePath';
+const editAccountRoute = '$settingsRoute/$editAccountPath';
+const profileImageViewRoute = '/profile-image-view';
 
 /// --------------------
 /// Navigator keys
@@ -150,6 +156,14 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(path: signUpRoute, builder: (_, __) => const SignUpPage()),
+    GoRoute(
+        path: profileImageViewRoute,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) {
+          final extra = state.extra;
+          final params = extra is ProfileImageViewParams ? extra : const ProfileImageViewParams();
+          return ProfileImageViewPage(params: params);
+        }),
     GoRoute(
         path: flashcardSprintRoute,
         parentNavigatorKey: _rootKey,
@@ -329,6 +343,11 @@ final appRouter = GoRouter(
                   builder: (_, __) => const SettingsPage(),
                   routes: [
                     GoRoute(
+                      path: editAccountPath,
+                      parentNavigatorKey: _rootKey,
+                      builder: (_, __) => const EditAccountPage(),
+                    ),
+                    GoRoute(
                       path: settingsNotificationsPath,
                       parentNavigatorKey: _rootKey,
                       builder: (_, __) => const SettingsNotificationsPage(),
@@ -336,7 +355,8 @@ final appRouter = GoRouter(
                     GoRoute(
                       path: settingsLanguagePath,
                       parentNavigatorKey: _rootKey,
-                      builder: (_, __) => const SettingsLanguagePage(),
+                      builder: (_, state) =>  SettingsLanguagePage(
+                          userProfileModel: state.extra as UserProfileModel),
                     ),
                   ],
                 ),

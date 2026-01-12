@@ -6,13 +6,15 @@ import 'package:ustadia_user_app/features/profile/data/models/settings_language_
 
 class SettingsLanguageItem extends StatelessWidget {
   final SettingsLanguageModel item;
-  final VoidCallback onTap;
 
-  const SettingsLanguageItem({super.key, required this.item, required this.onTap});
+  final bool isSelected;
+  final Function(String key) onTap;
+  const SettingsLanguageItem(
+      {super.key, required this.item, required this.isSelected, required this.onTap});
 
   Widget trailingIcon() => Icon(
-        item.isSelected ? Icons.check_circle : Icons.circle_outlined,
-        color: item.isSelected ? AppColors.primary : AppColors.gray300,
+        isSelected ? Icons.check_circle : Icons.circle_outlined,
+        color: isSelected ? AppColors.primary : AppColors.gray300,
         size: 24,
       );
 
@@ -24,7 +26,7 @@ class SettingsLanguageItem extends StatelessWidget {
       ]);
 
   Widget inkwell(BuildContext context) => InkWell(
-      onTap: onTap,
+      onTap: () => onTap(item.key),
       borderRadius: Style.border16,
       child: Ink(padding: const EdgeInsets.all(16), child: view(context)));
 

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/theme.dart';
-import 'package:ustadia_user_app/core/cubit/next_task_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/image_upload_bloc/image_upload_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/next_task_bloc/next_task_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/posts/presentation/bloc/post_bloc.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
@@ -16,7 +18,10 @@ class UstadiaUserApp extends StatelessWidget {
         SizeConfig().init(context, constraints);
         return MultiBlocProvider(
             providers: [
-              BlocProvider(create: (context) => NextTaskBloc()),
+              BlocProvider(create: (_) => sl<PostBloc>()),
+              BlocProvider(create: (_) => NextTaskBloc()),
+              BlocProvider(create: (_) => sl<UserBloc>()),
+              BlocProvider(create: (_) => sl<ImageUploadBloc>()),
             ],
             child: MaterialApp.router(
                 title: 'Ustadia User',
@@ -26,8 +31,5 @@ class UstadiaUserApp extends StatelessWidget {
                 routerConfig: appRouter));
       });
   @override
-  Widget build(BuildContext context) => MultiBlocProvider(
-        providers: [BlocProvider<PostBloc>(create: (_) => sl<PostBloc>())],
-        child: materialApp,
-      );
+  Widget build(BuildContext context) => materialApp;
 }

@@ -1,29 +1,27 @@
 import 'package:equatable/equatable.dart';
-
+import 'package:ustadia_user_app/core/enums/status.dart';
 import '../../domain/entities/post.dart';
-
-enum PostStatus { initial, loading, success, failure }
 
 class PostState extends Equatable {
   const PostState({
-    this.status = PostStatus.initial,
+    this.status = Status.initial,
     this.posts = const [],
-    this.errorMessage,
+    this.errorMessage
   });
 
-  final PostStatus status;
+  final Status status;
   final List<Post> posts;
   final String? errorMessage;
 
   PostState copyWith({
-    PostStatus? status,
+    Status? status,
     List<Post>? posts,
-    String? errorMessage,
+    String? errorMessage
   }) {
     return PostState(
       status: status ?? this.status,
       posts: posts ?? this.posts,
-      errorMessage: errorMessage,
+      errorMessage: errorMessage
     );
   }
 

@@ -1,14 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
+import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_event.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_event.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
@@ -22,6 +24,7 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   final UserBloc userBloc = sl<UserBloc>();
   bool isCheckingUser = false;
+
   /// --- Life cycle ---
 
   @override
@@ -60,13 +63,10 @@ class _SplashPageState extends State<SplashPage> {
   Widget get title =>
       Text('Ustadia', style: Style.headline9w7(context).copyWith(color: context.cs.primary));
 
-  Widget get loader => SizedBox(
-      width: 20,
-      height: 20,
-      child: CircularProgressIndicator(
-          strokeWidth: 3,
-          valueColor: AlwaysStoppedAnimation(context.cs.primary),
-          backgroundColor: context.cs.primary.withValues(alpha: 0.18)));
+  Widget get loader => PrimaryCircularProgressIndicator(
+      strokeWidth: 3,
+      valueColor: AlwaysStoppedAnimation(context.cs.primary),
+      backgroundColor: context.cs.primary.withValues(alpha: 0.18));
 
   Widget get footer => Text('Ustadia Mobile v1.0',
       textAlign: TextAlign.center, style: Style.bodyw6(context, color: TextColorRole.greyColor));
@@ -90,7 +90,7 @@ class _SplashPageState extends State<SplashPage> {
       bloc: userBloc,
       listener: (context, state) {
         if (!isCheckingUser) return;
-        if (state.status == UserStatus.success) {
+        if (state.status == Status.success) {
           isCheckingUser = false;
           final profile = state.profile;
           if (profile != null && profile.introCompleted) {
@@ -99,7 +99,7 @@ class _SplashPageState extends State<SplashPage> {
           }
           goToIntroSurvey();
         }
-        if (state.status == UserStatus.failure) {
+        if (state.status == Status.error) {
           isCheckingUser = false;
           goToLogin();
         }

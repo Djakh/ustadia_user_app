@@ -6,8 +6,10 @@ import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_login_bloc
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_password_bloc.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_register_bloc.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_bloc.dart';
+import 'package:ustadia_user_app/features/common/data/datasources/upload_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/data/datasources/user_remote_data_source.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/image_upload_bloc/image_upload_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/datasources/intro_survey_remote_data_source.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/bloc/intro_survey_bloc.dart';
 import 'package:ustadia_user_app/features/posts/data/datasources/post_remote_data_source.dart';
@@ -45,6 +47,9 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<UserRemoteDataSource>(() =>
       UserRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
   sl.registerLazySingleton<UserBloc>(() => UserBloc(userRemoteDataSource: sl()));
+  sl.registerLazySingleton<UploadRemoteDataSource>(
+      () => UploadRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
+  sl.registerFactory(() => ImageUploadBloc(uploadRemoteDataSource: sl()));
 
   // Features - Intro Survey
   sl.registerLazySingleton<IntroSurveyRemoteDataSource>(() =>

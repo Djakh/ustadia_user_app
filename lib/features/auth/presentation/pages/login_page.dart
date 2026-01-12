@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
+import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
@@ -20,9 +21,9 @@ import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_
 import 'package:ustadia_user_app/features/auth/presentation/widgets/dialogs/auth_contact_type.dart';
 import 'package:ustadia_user_app/features/auth/presentation/widgets/dialogs/forgot_password_dialog.dart';
 import 'package:ustadia_user_app/features/auth/presentation/widgets/dialogs/reset_password_dialog.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_event.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_state.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_event.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
@@ -127,13 +128,13 @@ class LoginPageState extends State<LoginPage> {
   }
 
   void loginWithEmail() {
-    if (authLoginBloc.state.status == AuthLoginStatus.loading) return;
+    if (authLoginBloc.state.status == Status.loading) return;
     authLoginBloc.add(AuthLoginWithEmailRequested(
         email: emailController.text.trim(), password: passwordController.text.trim()));
   }
 
   void loginWithPhone() {
-    if (authLoginBloc.state.status == AuthLoginStatus.loading) return;
+    if (authLoginBloc.state.status == Status.loading) return;
     authLoginBloc.add(AuthLoginWithPhoneRequested(
         phoneNumber: fullPhoneNumber, password: passwordController.text.trim()));
   }
@@ -326,7 +327,7 @@ class LoginPageState extends State<LoginPage> {
             builder: (context, state) => Button.primary(
                 onTap: onLogin,
                 text: 'Log in',
-                isLoading: state.status == AuthLoginStatus.loading)),
+                isLoading: state.status == Status.loading)),
         const SizedBox(height: 16),
         divider,
         const SizedBox(height: 16),
@@ -335,7 +336,7 @@ class LoginPageState extends State<LoginPage> {
             builder: (context, state) => Button.border(
                 onTap: toggleLoginMethod,
                 text: isEmailLogin ? 'Log in with Phone' : 'Log in with Email',
-                isAvialable: state.status != AuthLoginStatus.loading)),
+                isAvialable: state.status != Status.loading)),
         const SizedBox(height: 16),
         signup
       ]));
@@ -345,13 +346,13 @@ class LoginPageState extends State<LoginPage> {
         BlocListener<AuthLoginBloc, AuthLoginState>(
             bloc: authLoginBloc,
             listener: (context, state) {
-              if (state.status == AuthLoginStatus.success) {
+              if (state.status == Status.success) {
                 saveRememberedCredentials();
                 isAwaitingUser = true;
                 userBloc.add(const UserProfileRequested());
                 return;
               }
-              if (state.status == AuthLoginStatus.failure && state.errorMessage != null) {
+              if (state.status == Status.error && state.errorMessage != null) {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
               }
@@ -360,7 +361,7 @@ class LoginPageState extends State<LoginPage> {
             bloc: userBloc,
             listener: (context, state) {
               if (!isAwaitingUser) return;
-              if (state.status == UserStatus.success) {
+              if (state.status == Status.success) {
                 isAwaitingUser = false;
                 final profile = state.profile;
                 if (profile != null && profile.introCompleted) {
@@ -369,7 +370,7 @@ class LoginPageState extends State<LoginPage> {
                 }
                 goToIntroSurvey();
               }
-              if (state.status == UserStatus.failure && state.errorMessage != null) {
+              if (state.status == Status.error && state.errorMessage != null) {
                 isAwaitingUser = false;
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
@@ -378,7 +379,7 @@ class LoginPageState extends State<LoginPage> {
         BlocListener<AuthPasswordBloc, AuthPasswordState>(
             bloc: authPasswordBloc,
             listener: (context, state) {
-              if (state.status == AuthPasswordStatus.success) {
+              if (state.status == Status.success) {
                 if (state.action == AuthPasswordAction.forgotPasswordEmail) {
                   if (isForgotDialogOpen && Navigator.of(context).canPop()) {
                     Navigator.of(context).pop();
@@ -431,7 +432,7 @@ class LoginPageState extends State<LoginPage> {
                 }
                 return;
               }
-              if (state.status == AuthPasswordStatus.failure && state.errorMessage != null) {
+              if (state.status == Status.error && state.errorMessage != null) {
                 pendingForgotEmail = '';
                 pendingForgotPhone = '';
                 ScaffoldMessenger.of(context)

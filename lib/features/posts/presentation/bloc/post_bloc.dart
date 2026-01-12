@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ustadia_user_app/core/enums/status.dart';
 
 import '../../domain/usecases/fetch_posts.dart';
 import 'post_event.dart';
@@ -17,12 +18,12 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     PostRequested event,
     Emitter<PostState> emit,
   ) async {
-    emit(state.copyWith(status: PostStatus.loading));
+    emit(state.copyWith(status: Status.loading));
     try {
       final posts = await _fetchPosts();
       emit(
         state.copyWith(
-          status: PostStatus.success,
+          status: Status.success,
           posts: posts,
           errorMessage: null,
         ),
@@ -30,7 +31,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     } catch (error) {
       emit(
         state.copyWith(
-          status: PostStatus.failure,
+          status: Status.error,
           errorMessage: error.toString(),
         ),
       );

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 
 class UserAvatar extends StatelessWidget {
   final double radius;
@@ -26,7 +27,7 @@ class UserAvatar extends StatelessWidget {
       child: SizedBox(
           width: radius * 0.6,
           height: radius * 0.6,
-          child: const CircularProgressIndicator(strokeWidth: 2)));
+          child: const PrimaryCircularProgressIndicator()));
 
   CachedNetworkImage cachedImage(BuildContext context) => CachedNetworkImage(
       imageUrl: imageUrl!,

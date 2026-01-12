@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ustadia_user_app/core/enums/status.dart';
+import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 
 import '../../domain/entities/post.dart';
 import '../bloc/post_bloc.dart';
@@ -17,26 +19,24 @@ class PostPage extends StatelessWidget {
       ),
       body: BlocConsumer<PostBloc, PostState>(
         listener: (context, state) {
-          if (state.status == PostStatus.failure &&
-              state.errorMessage != null) {
+          if (state.status == Status.error && state.errorMessage != null) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.errorMessage!)),
             );
           }
         },
         builder: (context, state) {
-          if (state.status == PostStatus.loading) {
-            return const Center(child: CircularProgressIndicator());
+          if (state.status == Status.loading) {
+            return const PrimaryCircularProgressIndicator();
           }
 
-          if (state.status == PostStatus.success) {
+          if (state.status == Status.success) {
             return _PostsList(posts: state.posts);
           }
 
           return Center(
             child: ElevatedButton(
-              onPressed: () =>
-                  context.read<PostBloc>().add(const PostRequested()),
+              onPressed: () => context.read<PostBloc>().add(const PostRequested()),
               child: const Text('Load Posts'),
             ),
           );
