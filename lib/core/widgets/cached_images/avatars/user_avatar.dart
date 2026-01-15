@@ -25,9 +25,7 @@ class UserAvatar extends StatelessWidget {
       decoration: BoxDecoration(
           shape: BoxShape.circle, color: Theme.of(context).colorScheme.surfaceContainerHighest),
       child: SizedBox(
-          width: radius * 0.6,
-          height: radius * 0.6,
-          child: const PrimaryCircularProgressIndicator()));
+          width: radius * 0.6, height: radius * 0.6, child: const PrimaryLoadingIndicator()));
 
   CachedNetworkImage cachedImage(BuildContext context) => CachedNetworkImage(
       imageUrl: imageUrl!,

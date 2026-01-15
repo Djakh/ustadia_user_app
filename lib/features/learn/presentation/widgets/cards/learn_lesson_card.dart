@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
+import 'package:ustadia_user_app/core/widgets/cached_images/cached_images_primary/cached_image_primary.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
 
 class LearnLessonCard extends StatelessWidget {
@@ -10,48 +12,68 @@ class LearnLessonCard extends StatelessWidget {
 
   const LearnLessonCard({super.key, required this.lesson, required this.onTap});
 
-  Color get statusColor => lesson.progressState == LearnLessonProgressState.locked
-      ? AppColors.gray300
-      : AppColors.primary;
-
-  String get statusText {
-    if (lesson.progressState == LearnLessonProgressState.completed) return 'Completed';
-    if (lesson.progressState == LearnLessonProgressState.inProgress) return 'In progress';
-    return 'Locked';
+  String get fullImageUrl {
+    final url = lesson.imageUrl;
+    if (url == null || url.isEmpty) return '';
+    if (url.startsWith('http')) return url;
+    return 'https://backend.ustadia.findecor.io$url';
   }
 
-  Widget iconContainer(BuildContext context) =>
-      Image.asset(lesson.iconAsset, height: 56, width: 56);
+  String get progressText {
+    final value = lesson.completionPercentage;
+    if (value >= 100) return 'Completed';
+    if (value > 0) return 'In progress';
+    return 'Not started';
+  }
 
-  Widget title(BuildContext context) => Text(lesson.title, style: Style.body2w5(context));
+  Color get progressColor {
+    final value = lesson.completionPercentage;
+    if (value >= 100) return AppColors.primary;
+    if (value > 0) return AppColors.orange9200;
+    return AppColors.gray300;
+  }
 
-  Widget statusBadge(BuildContext context) => Row(children: [
-        Icon(Icons.check_circle, size: 16, color: statusColor),
+  Widget title(BuildContext context) => Text(lesson.name,
+      maxLines: 2, overflow: TextOverflow.ellipsis, style: Style.body2w5(context));
+
+  Widget subtitle(BuildContext context) => Text(lesson.description,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: Style.small3w5(context, color: TextColorRole.greyColor));
+
+  Widget progressBadge(BuildContext context) => Row(children: [
+        Icon(Icons.check_circle, size: 16, color: progressColor),
         const SizedBox(width: 4),
-        Text(statusText, style: Style.small2w5(context).copyWith(color: statusColor))
+        Text(progressText, style: Style.small2w5(context).copyWith(color: progressColor))
       ]);
-  Widget titleAndStatus(BuildContext context) => Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [title(context), statusBadge(context)]);
 
-  Widget subtitle(BuildContext context) =>
-      Text(lesson.subtitle, style: Style.small3w5(context, color: TextColorRole.greyColor));
+  Widget titleAndStatus(BuildContext context) => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: title(context)),
+            const SizedBox(width: 8),
+            progressBadge(context)
+          ]);
 
   Widget cardInfo(BuildContext context) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [titleAndStatus(context), const SizedBox(height: 2), subtitle(context)]);
+      children: [titleAndStatus(context), const SizedBox(height: 6), subtitle(context)]);
 
-  Widget view(BuildContext context) => Row(children: [
-        iconContainer(context),
-        const SizedBox(width: 12),
-        Expanded(child: cardInfo(context)),
-      ]);
+  Widget imagePreview() {
+    if (fullImageUrl.isEmpty) {
+      return Image.asset(AppImages.vocabulary, height: 80, width: 80, fit: BoxFit.cover);
+    }
+    return CachedImagePrimary(imageUrl: fullImageUrl, fit: BoxFit.cover);
+  }
+
+  Widget view(BuildContext context) =>
+      Row(children: [imagePreview(), const SizedBox(width: 8), Expanded(child: cardInfo(context))]);
 
   @override
   Widget build(BuildContext context) => PrimaryBox(
+      padding: const EdgeInsets.all(16),
       onTap: onTap,
-
-
       boxShadow: const [BoxShadow(color: AppColors.shadow, blurRadius: 12, offset: Offset(0, 6))],
       child: view(context));
 }

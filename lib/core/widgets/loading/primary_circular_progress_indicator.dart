@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class PrimaryCircularProgressIndicator extends StatelessWidget {
+class PrimaryLoadingIndicator extends StatelessWidget {
   final double height;
   final double width;
   final bool isCenter;
   final double strokeWidth;
   final Animation<Color?>? valueColor;
   final Color? backgroundColor;
-  const PrimaryCircularProgressIndicator(
+  const PrimaryLoadingIndicator(
       {super.key,
       this.isCenter = true,
       this.height = 20,

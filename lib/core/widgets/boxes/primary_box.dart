@@ -12,6 +12,7 @@ class PrimaryBox extends StatelessWidget {
   final bool isTappable;
   final Color? backgroundColor;
   final List<BoxShadow>? boxShadow;
+  final double? height;
   final double? width;
   final BoxShape shape;
   final VoidCallback? onTap;
@@ -27,6 +28,7 @@ class PrimaryBox extends StatelessWidget {
     this.onTap,
     this.backgroundColor,
     this.boxShadow,
+    this.height,
     this.width,
     this.shape = BoxShape.rectangle,
   });
@@ -51,11 +53,12 @@ class PrimaryBox extends StatelessWidget {
   Widget build(BuildContext context) => Material(
         color: Colors.transparent,
         shape: tapShape,
-        clipBehavior: Clip.antiAlias, 
+        clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: isTappable ? onTap : null,
-          customBorder: tapShape, 
+          customBorder: tapShape,
           child: Ink(
+            height: height,
             width: width,
             padding: padding ?? const EdgeInsets.all(16),
             decoration: decoration(context),

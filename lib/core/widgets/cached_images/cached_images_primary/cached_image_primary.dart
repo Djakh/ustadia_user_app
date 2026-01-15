@@ -11,12 +11,7 @@ class CachedImagePrimary extends StatelessWidget {
   final double? fallBackIconSize;
   final BoxFit? fit;
   const CachedImagePrimary(
-      {super.key,
-       this.height,
-       this.width,
-      this.imageUrl,
-      this.fallBackIconSize,
-      this.fit});
+      {super.key, this.height, this.width, this.imageUrl, this.fallBackIconSize, this.fit});
 
   Widget _fallbackIcon(BuildContext context) => Container(
       height: height,
@@ -27,7 +22,7 @@ class CachedImagePrimary extends StatelessWidget {
             size: fallBackIconSize, color: Theme.of(context).colorScheme.onSurfaceVariant),
       ));
 
-  Widget _loading(BuildContext context) => const PrimaryCircularProgressIndicator();
+  Widget _loading(BuildContext context) => const PrimaryLoadingIndicator();
 
   CachedNetworkImage cachedImage(BuildContext context) => CachedNetworkImage(
       height: height,

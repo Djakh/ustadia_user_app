@@ -11,11 +11,13 @@ import 'package:ustadia_user_app/features/dashboard/presentation/pages/dashboard
 import 'package:ustadia_user_app/features/home/presentation/home_page.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/pages/intro_survey_page.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_section_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_grammar/learn_grammar_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_lessons_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_listening/learn_listening_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_reading/learn_reading_page.dart';
+import 'package:ustadia_user_app/features/learn/presentation/pages/learn_sections_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_speaking/learn_speaking_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_units_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_writing/learn_writing_page.dart';
@@ -54,9 +56,12 @@ const signUpRoute = '/sign-up';
 /// --------------------
 const homeRoute = '/home';
 const dashboardRoute = '$homeRoute/dashboard';
-const learnUnitsRoute = '$homeRoute/learn_units';
-const learnLessonsPath = 'lesson';
-const learnLessonsRoute = '$learnUnitsRoute/$learnLessonsPath';
+const learnLessonsRoute = '$homeRoute/learn_lessons';
+
+const learnUnitsPath = 'learn_units';
+const learnUnitsRoute = '$learnLessonsRoute/$learnUnitsPath';
+const learnSectionsPath = 'sections';
+const learnSectionsRoute = '$learnUnitsRoute/$learnSectionsPath';
 const learnListeningPath = 'listening';
 
 const learnListeningRoute = '$learnUnitsRoute/$learnListeningPath';
@@ -169,7 +174,7 @@ final appRouter = GoRouter(
         parentNavigatorKey: _rootKey,
         builder: (context, state) {
           final extra = state.extra;
-          final title = extra is LearnLessonModel
+          final title = extra is LearnSectionModel
               ? extra.title
               : extra is String
                   ? extra
@@ -205,45 +210,51 @@ final appRouter = GoRouter(
           navigatorKey: _learnKey,
           routes: [
             GoRoute(
-                path: learnUnitsRoute,
-                pageBuilder: (_, __) => const NoTransitionPage(child: LearnUnitsPage()),
+                path: learnLessonsRoute,
+                pageBuilder: (_, __) => const NoTransitionPage(child: LearnLessonsPage()),
                 routes: [
                   GoRoute(
-                      path: learnLessonsPath,
+                      path: learnUnitsPath,
                       parentNavigatorKey: _rootKey,
-                      builder: (context, state) => LearnLessonsPage(
-                          unit: (state.extra as LearnUnitModel?) ??
-                              LearnUnitModel.sampleUnits.first)),
+                      builder: (context, state) {
+                        final extra = state.extra;
+                        final lesson =
+                            extra is LearnLessonModel ? extra : const LearnLessonModel.empty();
+                        return LearnUnitsPage(learnLessonModel: lesson);
+                      },
+                      routes: [
+                        GoRoute(
+                            path: learnSectionsPath,
+                            parentNavigatorKey: _rootKey,
+                            builder: (context, state) => LearnSectionsPage(
+                                unit: (state.extra as LearnUnitModel?) ??
+                                    const LearnUnitModel.empty())),
+                      ]),
                   GoRoute(
                       path: learnListeningPath,
                       parentNavigatorKey: _rootKey,
-                      builder: (context, state) => LearnListeningPage(
-                          lesson: (state.extra as LearnLessonModel?) ??
-                              LearnLessonModel.sampleLessons.first)),
+                      builder: (context, state) =>
+                          LearnListeningPage(lesson: state.extra as LearnSectionModel)),
                   GoRoute(
                       path: learnReadingPath,
                       parentNavigatorKey: _rootKey,
-                      builder: (context, state) => LearnReadingPage(
-                          lesson: (state.extra as LearnLessonModel?) ??
-                              LearnLessonModel.sampleLessons.first)),
+                      builder: (context, state) =>
+                          LearnReadingPage(lesson: state.extra as LearnSectionModel)),
                   GoRoute(
                       path: learnSpeakingPath,
                       parentNavigatorKey: _rootKey,
-                      builder: (context, state) => LearnSpeakingPage(
-                          lesson: (state.extra as LearnLessonModel?) ??
-                              LearnLessonModel.sampleLessons.first)),
+                      builder: (context, state) =>
+                          LearnSpeakingPage(lesson: state.extra as LearnSectionModel)),
                   GoRoute(
                       path: learnGrammarPath,
                       parentNavigatorKey: _rootKey,
-                      builder: (context, state) => LearnGrammarPage(
-                          lesson: (state.extra as LearnLessonModel?) ??
-                              LearnLessonModel.sampleLessons.first)),
+                      builder: (context, state) =>
+                          LearnGrammarPage(lesson: state.extra as LearnSectionModel)),
                   GoRoute(
                       path: learnWritingPath,
                       parentNavigatorKey: _rootKey,
-                      builder: (context, state) => LearnWritingPage(
-                          lesson: (state.extra as LearnLessonModel?) ??
-                              LearnLessonModel.sampleLessons.first)),
+                      builder: (context, state) =>
+                          LearnWritingPage(lesson: state.extra as LearnSectionModel)),
                 ]),
           ],
         ),
@@ -355,8 +366,8 @@ final appRouter = GoRouter(
                     GoRoute(
                       path: settingsLanguagePath,
                       parentNavigatorKey: _rootKey,
-                      builder: (_, state) =>  SettingsLanguagePage(
-                          userProfileModel: state.extra as UserProfileModel),
+                      builder: (_, state) =>
+                          SettingsLanguagePage(userProfileModel: state.extra as UserProfileModel),
                     ),
                   ],
                 ),

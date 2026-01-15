@@ -87,7 +87,7 @@ class Style {
   static const EdgeInsets paddingV16 = EdgeInsets.symmetric(vertical: 16);
   static const EdgeInsets paddingV20 = EdgeInsets.symmetric(vertical: 20);
   static const EdgeInsets paddingV24 = EdgeInsets.symmetric(vertical: 24);
-
+  static const EdgeInsets paddingPrimary = const EdgeInsets.fromLTRB(0, 24, 0, 80);
   static const EdgeInsets paddingZero = EdgeInsets.zero;
 
   // =============================================================

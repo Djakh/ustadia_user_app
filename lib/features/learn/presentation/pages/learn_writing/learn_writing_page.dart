@@ -6,7 +6,7 @@ import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/inputs/input_field.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_section_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_writing_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_writing/learn_writing_lesson.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/bottom_sheets/learn_writing_bottom_sheet.dart';
@@ -15,7 +15,7 @@ import 'package:ustadia_user_app/features/learn/presentation/widgets/components/
 enum LearnWritingStage { lesson, input, result }
 
 class LearnWritingPage extends StatefulWidget {
-  final LearnLessonModel lesson;
+  final LearnSectionModel lesson;
 
   const LearnWritingPage({super.key, required this.lesson});
 
