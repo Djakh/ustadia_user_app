@@ -17,7 +17,7 @@ class LearnSpeakingMicButton extends StatelessWidget {
 
   Color backgroundColor(BuildContext context) => isActive ? context.cs.primary : context.cs.surface;
 
-  Widget loadingWidget(BuildContext context) => PrimaryCircularProgressIndicator(
+  Widget loadingWidget(BuildContext context) => PrimaryLoadingIndicator(
       width: 80,
       height: 80,
       strokeWidth: 4,

@@ -7,7 +7,7 @@ import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_section_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/banners/learn_speaking_status_banner.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/buttons/learn_speaking_mic_button.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/cards/learn_speaking_prompt_card.dart';
@@ -16,7 +16,7 @@ import 'package:ustadia_user_app/features/learn/presentation/widgets/components/
 enum LearnSpeakingStage { ready, listening, checking, result }
 
 class LearnSpeakingPage extends StatefulWidget {
-  final LearnLessonModel lesson;
+  final LearnSectionModel lesson;
 
   const LearnSpeakingPage({super.key, required this.lesson});
 

@@ -63,7 +63,7 @@ class _SplashPageState extends State<SplashPage> {
   Widget get title =>
       Text('Ustadia', style: Style.headline9w7(context).copyWith(color: context.cs.primary));
 
-  Widget get loader => PrimaryCircularProgressIndicator(
+  Widget get loader => PrimaryLoadingIndicator(
       strokeWidth: 3,
       valueColor: AlwaysStoppedAnimation(context.cs.primary),
       backgroundColor: context.cs.primary.withValues(alpha: 0.18));

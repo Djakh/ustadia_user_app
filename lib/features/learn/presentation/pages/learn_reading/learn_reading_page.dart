@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_section_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_quiz_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_reading/learn_reading_lesson.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/components/learn_quiz_component.dart';
@@ -11,7 +11,7 @@ import 'package:ustadia_user_app/features/learn/presentation/widgets/components/
 enum LearnReadingStage { lesson, quiz, result }
 
 class LearnReadingPage extends StatefulWidget {
-  final LearnLessonModel lesson;
+  final LearnSectionModel lesson;
 
   const LearnReadingPage({super.key, required this.lesson});
 

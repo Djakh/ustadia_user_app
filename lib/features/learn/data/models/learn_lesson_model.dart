@@ -1,67 +1,55 @@
-import 'package:ustadia_user_app/assets/constants/images.dart';
-
-enum LearnLessonProgressState { completed, inProgress, locked }
-
-enum LearnLessonType { listening, reading, writing, speaking, grammar, flashcardSprint }
-
 class LearnLessonModel {
-  final int lessonNumber;
-  final String title;
-  final String subtitle;
-  final String iconAsset;
-  final LearnLessonProgressState progressState;
-  final LearnLessonType lessonType;
+  final String id;
+  final String name;
+  final String description;
+  final int orderIndex;
+  final int totalUnits;
+  final int totalSections;
+  final int completedSections;
+  final double completionPercentage;
+  final String? imageUrl;
+  final bool isPublic;
+  final bool isPublished;
 
-  const LearnLessonModel(
-      {required this.lessonNumber,
-      required this.title,
-      required this.subtitle,
-      required this.iconAsset,
-      required this.progressState,
-      required this.lessonType});
+  const LearnLessonModel({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.orderIndex,
+    required this.totalUnits,
+    required this.totalSections,
+    required this.completedSections,
+    required this.completionPercentage,
+    required this.imageUrl,
+    required this.isPublic,
+    required this.isPublished
+  });
 
-  static const List<LearnLessonModel> sampleLessons = [
-    LearnLessonModel(
-        lessonNumber: 1,
-        title: 'Lesson 1',
-        subtitle: 'Short texts & stories',
-        iconAsset: AppImages.learnHeadphones,
-        progressState: LearnLessonProgressState.completed,
-        lessonType: LearnLessonType.listening),
-    LearnLessonModel(
-        lessonNumber: 2,
-        title: 'Lesson 2',
-        subtitle: 'Audio & video clips',
-        iconAsset: AppImages.learnNotebook,
-        progressState: LearnLessonProgressState.completed,
-        lessonType: LearnLessonType.reading),
-    LearnLessonModel(
-        lessonNumber: 3,
-        title: 'Lesson 3',
-        subtitle: 'Writing tasks & feedback',
-        iconAsset: AppImages.learnPen,
-        progressState: LearnLessonProgressState.completed,
-        lessonType: LearnLessonType.writing),
-    LearnLessonModel(
-        lessonNumber: 4,
-        title: 'Lesson 4',
-        subtitle: 'Guided prompts',
-        iconAsset: AppImages.learnMicrophone,
-        progressState: LearnLessonProgressState.completed,
-        lessonType: LearnLessonType.speaking),
-    LearnLessonModel(
-        lessonNumber: 5,
-        title: 'Lesson 5',
-        subtitle: 'Checking grammar',
-        iconAsset: AppImages.learnGrammar,
-        progressState: LearnLessonProgressState.completed,
-        lessonType: LearnLessonType.grammar),
-    LearnLessonModel(
-        lessonNumber: 6,
-        title: 'Lesson 6',
-        subtitle: 'Learn new words',
-        iconAsset: AppImages.flashcardSprint,
-        progressState: LearnLessonProgressState.completed,
-        lessonType: LearnLessonType.flashcardSprint)
-  ];
+  factory LearnLessonModel.fromJson(Map<String, dynamic> json) => LearnLessonModel(
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      description: json['description']?.toString() ?? '',
+      orderIndex: json['order_index'] is int ? json['order_index'] as int : 0,
+      totalUnits: json['totalUnits'] is int ? json['totalUnits'] as int : 0,
+      totalSections: json['totalSections'] is int ? json['totalSections'] as int : 0,
+      completedSections: json['completedSections'] is int ? json['completedSections'] as int : 0,
+      completionPercentage: (json['completionPercentage'] is num)
+          ? (json['completionPercentage'] as num).toDouble()
+          : 0,
+      imageUrl: json['image'] is Map ? json['image']['url']?.toString() : json['image']?.toString(),
+      isPublic: json['isPublic'] == true,
+      isPublished: json['isPublished'] == true);
+
+  const LearnLessonModel.empty()
+      : id = '',
+        name = 'Lessons',
+        description = '',
+        orderIndex = 0,
+        totalUnits = 0,
+        totalSections = 0,
+        completedSections = 0,
+        completionPercentage = 0,
+        imageUrl = null,
+        isPublic = true,
+        isPublished = true;
 }

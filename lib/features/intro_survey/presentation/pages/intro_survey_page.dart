@@ -56,7 +56,7 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
 
   void userListener(BuildContext context, UserState state) {
     if (!isSubmitting) return;
-        if (state.status == Status.success) {
+    if (state.status == Status.success) {
       setState(() => isSubmitting = false);
       final profile = state.profile;
       if (profile != null && profile.introCompleted) {
@@ -65,7 +65,7 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
       }
       context.go(loginRoute);
     }
-        if (state.status == Status.error && state.errorMessage != null) {
+    if (state.status == Status.error && state.errorMessage != null) {
       setState(() => isSubmitting = false);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
     }
@@ -201,7 +201,7 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
 
   Widget buildContent(IntroSurveyState state) {
     if (state.status == Status.loading || state.status == Status.initial) {
-      return const PrimaryCircularProgressIndicator();
+      return const PrimaryLoadingIndicator();
     }
     if (state.status == Status.error) {
       return buildErrorState(state.errorMessage ?? 'Failed to load questions');

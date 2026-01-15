@@ -12,6 +12,10 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/image_upload_
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/datasources/intro_survey_remote_data_source.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/bloc/intro_survey_bloc.dart';
+import 'package:ustadia_user_app/features/learn/data/datasources/learn_remote_data_source.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_lessons_bloc.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections_bloc.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_units_bloc.dart';
 import 'package:ustadia_user_app/features/posts/data/datasources/post_remote_data_source.dart';
 import 'package:ustadia_user_app/features/posts/data/repositories/post_repository_impl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,6 +59,13 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<IntroSurveyRemoteDataSource>(() =>
       IntroSurveyRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
   sl.registerFactory(() => IntroSurveyBloc(introSurveyRemoteDataSource: sl()));
+
+  // Features - Learn
+  sl.registerLazySingleton<LearnRemoteDataSource>(() =>
+      LearnRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
+  sl.registerFactory(() => LearnLessonsBloc(learnRemoteDataSource: sl()));
+  sl.registerFactory(() => LearnUnitsBloc(learnRemoteDataSource: sl()));
+  sl.registerFactory(() => LearnSectionsBloc(learnRemoteDataSource: sl()));
 
   // Features - Posts
   sl.registerLazySingleton<PostRemoteDataSource>(

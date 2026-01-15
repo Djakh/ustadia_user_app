@@ -63,7 +63,7 @@ class ProfileEditableAvatar extends StatelessWidget {
   Widget get view => BlocBuilder<ImageUploadBloc, ImageUploadState>(
       builder: (context, state) => Stack(alignment: Alignment.center, children: [
             avatar,
-            if (state.status.isLoading) const PrimaryCircularProgressIndicator(isCenter: false),
+            if (state.status.isLoading) const PrimaryLoadingIndicator(isCenter: false),
             editIcon(context)
           ]));
 

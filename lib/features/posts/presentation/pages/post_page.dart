@@ -27,7 +27,7 @@ class PostPage extends StatelessWidget {
         },
         builder: (context, state) {
           if (state.status == Status.loading) {
-            return const PrimaryCircularProgressIndicator();
+            return const PrimaryLoadingIndicator();
           }
 
           if (state.status == Status.success) {
