@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/theme.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/image_upload_bloc/image_upload_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/next_task_bloc/next_task_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/posts/presentation/bloc/post_bloc.dart';
 import 'package:ustadia_user_app/injection_container.dart';
@@ -22,6 +24,7 @@ class UstadiaUserApp extends StatelessWidget {
               BlocProvider(create: (_) => NextTaskBloc()),
               BlocProvider(create: (_) => sl<UserBloc>()),
               BlocProvider(create: (_) => sl<ImageUploadBloc>()),
+              BlocProvider(create: (_) => sl<TeacherBloc>()..add(const TeachersRequested())),
             ],
             child: MaterialApp.router(
                 title: 'Ustadia User',
