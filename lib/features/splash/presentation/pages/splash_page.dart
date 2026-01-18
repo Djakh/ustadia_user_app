@@ -33,6 +33,25 @@ class _SplashPageState extends State<SplashPage> {
     start();
   }
 
+  /// --- Listeners ---
+
+  void userListener(context, state) {
+    if (!isCheckingUser) return;
+    if (state.status == Status.success) {
+      isCheckingUser = false;
+      final profile = state.profile;
+      if (profile != null && profile.introCompleted) {
+        goToDashboard();
+        return;
+      }
+      goToIntroSurvey();
+    }
+    if (state.status == Status.error) {
+      isCheckingUser = false;
+      goToLogin();
+    }
+  }
+
   /// --- Methods ---
 
   void goToOnboarding() => context.go(onboardingRoute);
@@ -88,22 +107,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) => BlocListener<UserBloc, UserState>(
       bloc: userBloc,
-      listener: (context, state) {
-        if (!isCheckingUser) return;
-        if (state.status == Status.success) {
-          isCheckingUser = false;
-          final profile = state.profile;
-          if (profile != null && profile.introCompleted) {
-            goToDashboard();
-            return;
-          }
-          goToIntroSurvey();
-        }
-        if (state.status == Status.error) {
-          isCheckingUser = false;
-          goToLogin();
-        }
-      },
+      listener: userListener,
       child: Scaffold(
           backgroundColor: context.theme.scaffoldBackgroundColor, body: SafeArea(child: view)));
 }

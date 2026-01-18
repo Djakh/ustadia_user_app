@@ -10,6 +10,7 @@ import 'package:ustadia_user_app/features/common/data/models/user_profile_model.
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
 import 'package:ustadia_user_app/features/profile/data/models/settings_item_model.dart';
+import 'package:ustadia_user_app/features/profile/presentation/widgets/bottom_sheets/teacher_picker_sheet.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/dividers/primary_divider.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/settings/item_list_box.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/settings/settings_action_dialog.dart';
@@ -23,6 +24,7 @@ class SettingsPage extends StatelessWidget {
   List<SettingsItemModel> get mainItems => const [
         SettingsItemModel(title: 'Account', iconAsset: AppImages.settingsAccount),
         SettingsItemModel(title: 'Learning preferences', iconAsset: AppImages.settingsPreferences),
+        SettingsItemModel(title: 'Choose teacher', iconAsset: AppImages.settingsAccount),
         SettingsItemModel(title: 'Notifications', iconAsset: AppImages.settingsNotifications),
         SettingsItemModel(title: 'Info', iconAsset: AppImages.settingsInfo),
         SettingsItemModel(title: 'Legal', iconAsset: AppImages.settingsLegal),
@@ -64,6 +66,19 @@ class SettingsPage extends StatelessWidget {
 
   void goToEditAccount(BuildContext context) => context.push(editAccountRoute);
 
+  Future<void> showTeacherPicker(BuildContext context) async {
+    final didSwap = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: context.cs.surface,
+      shape: RoundedRectangleBorder(borderRadius: Style.borderVer24),
+      builder: (sheetContext) => const TeacherPickerSheet(),
+    );
+    if (didSwap == true && context.mounted) {
+      context.go(splashRoute);
+    }
+  }
+
   Widget itemsList(BuildContext context) => BlocBuilder<UserBloc, UserState>(
       builder: (context, state) => Column(
             children: [
@@ -72,11 +87,13 @@ class SettingsPage extends StatelessWidget {
               SettingsListItem(
                   item: mainItems[1], onTap: () => goToLanguage(context, state.profile)),
               const PrimaryDivider(),
-              SettingsListItem(item: mainItems[2], onTap: () => goToNotifications(context)),
+              SettingsListItem(item: mainItems[2], onTap: () => showTeacherPicker(context)),
               const PrimaryDivider(),
-              SettingsListItem(item: mainItems[3], onTap: () {}),
+              SettingsListItem(item: mainItems[3], onTap: () => goToNotifications(context)),
               const PrimaryDivider(),
               SettingsListItem(item: mainItems[4], onTap: () {}),
+              const PrimaryDivider(),
+              SettingsListItem(item: mainItems[5], onTap: () {}),
             ],
           ));
 

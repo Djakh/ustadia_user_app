@@ -1,0 +1,146 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ustadia_user_app/assets/themes/app_colors.dart';
+import 'package:ustadia_user_app/assets/themes/style.dart';
+import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/widgets/connection/reload_conntection_button.dart';
+import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
+import 'package:ustadia_user_app/core/widgets/headers/primary_bottom_sheet_header.dart';
+import 'package:ustadia_user_app/core/widgets/listviews/primary_list_view.dart';
+import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
+import 'package:ustadia_user_app/features/common/data/models/teacher_model.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_event.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_state.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_event.dart';
+import 'package:ustadia_user_app/features/profile/presentation/widgets/dividers/primary_divider.dart';
+import 'package:ustadia_user_app/injection_container.dart';
+
+class TeacherPickerSheet extends StatefulWidget {
+  const TeacherPickerSheet({super.key});
+
+  @override
+  State<TeacherPickerSheet> createState() => _TeacherPickerSheetState();
+}
+
+class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
+  TeacherModel? selectedTeacherModel;
+
+  /// --- Life cycle ---
+
+  @override
+  void initState() {
+    selectedTeacherModel = getSelectedTeacher(context.read<TeacherBloc>().state.teachers);
+    super.initState();
+  }
+
+  /// --- Getters ---
+
+  TeacherModel? getSelectedTeacher(List<TeacherModel> teachers) =>
+      teachers.isNotEmpty ? teachers.firstWhere((item) => item.isActive) : null;
+
+  /// --- Listeners ---
+
+  void teacherListener(context, TeacherState state) {
+    if (state.status.isSuccess) {
+      selectedTeacherModel = getSelectedTeacher(state.teachers);
+    }
+    if (state.swapStatus.isError && state.swapErrorMessage != null) {
+      context.showSnackBar(SnackBar(content: Text(state.swapErrorMessage!)));
+    }
+    if (state.swapStatus.isSuccess) {
+      sl<UserBloc>().add(const UserProfileRequested());
+      Navigator.of(context).pop(true);
+    }
+  }
+
+  /// --- Methods ---
+
+  void onSelectTeacherTile(TeacherModel teacher) {
+        selectedTeacherModel = teacher;
+
+    context.read<TeacherBloc>().add(TeacherSwapRequested(teacherId: teacher.teacherId));
+  }
+
+  /// --- Widgets ---
+
+  Widget teacherTitle(TeacherModel teacher) {
+    final fullName = teacher.fullName;
+    final title = fullName.isNotEmpty ? fullName : teacher.email;
+    return Text(title, style: Style.bodyw5(context));
+  }
+
+  Widget teacherSubtitle(TeacherModel teacher) {
+    final className = teacher.teacherClass?.name ?? '';
+    if (className.isEmpty) return const SizedBox.shrink();
+    return Text(className, style: Style.small3w5(context, color: TextColorRole.greyColor));
+  }
+
+  Widget titleAndSubtitle(TeacherModel teacher) =>
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        teacherTitle(teacher),
+        const SizedBox(height: 4),
+        teacherSubtitle(teacher),
+        const SizedBox(height: 8),
+        const PrimaryDivider()
+      ]);
+
+  Widget trailingIcon(bool isSelected) => Icon(
+        isSelected ? Icons.check_circle : Icons.circle_outlined,
+        color: isSelected ? AppColors.primary : AppColors.gray300,
+        size: 24,
+      );
+
+  Widget teacherTileBiew(TeacherModel teacher) => Row(children: [
+        Expanded(child: titleAndSubtitle(teacher)),
+        trailingIcon(selectedTeacherModel?.teacherId == teacher.teacherId),
+      ]);
+
+  Widget teacherTile(TeacherModel teacher) => InkWell(
+      onTap: () => onSelectTeacherTile(teacher),
+      borderRadius: Style.border16,
+      child: Ink(child: teacherTileBiew(teacher)));
+
+  PrimaryListView teacherList(List<TeacherModel> teachers) => PrimaryListView(
+      items: teachers,
+      padding: Style.paddingPrimary,
+      shrinkWrap: true,
+      separatorHeight: 4,
+      itemBuilder: (item) => teacherTile(item));
+
+  Widget get contentChecker => BlocStatusView<TeacherBloc, TeacherState, List<TeacherModel>>(
+        bloc: context.read<TeacherBloc>(),
+        statusOf: (s) => s.status,
+        errorOf: (s) => s.errorMessage,
+        data: (s) => s.teachers,
+        isEmpty: (units) => units.isEmpty,
+        empty: const Center(child: Text('No lessons found')),
+        builder: (context, lessons) => teacherList(lessons),
+      );
+
+  Widget view(TeacherState state) => Column(mainAxisSize: MainAxisSize.min, children: [
+        const PrimaryBottomSheetHeader(title: 'Choose teacher'),
+        Builder(builder: (context) {
+          if (state.status.isLoading) {
+            return PrimaryLoadingIndicator(valueColor: AlwaysStoppedAnimation(context.cs.primary));
+          }
+          if (state.status.isError) {
+            return ReloadConntectionButton(
+                onReloadConnection: () => sl<TeacherBloc>().add(const TeachersRequested()));
+          }
+          return contentChecker;
+        }),
+        const SizedBox(height: 20)
+      ]);
+
+  @override
+  Widget build(BuildContext context) => BlocConsumer<TeacherBloc, TeacherState>(
+      listener: teacherListener,
+      builder: (context, state) => Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+              color: context.cs.surface,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
+          child: view(state)));
+}

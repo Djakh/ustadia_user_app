@@ -49,7 +49,9 @@ class UserProfileModel {
       xp: json['xp']?.toString() ?? '0',
       profilePictureId: profilePictureId,
       profilePictureUrl: profilePictureUrl,
-      currentTeacher: json['currentTeacher'] as String?,
+      currentTeacher: json['currentTeacher'] is Map
+          ? (json['currentTeacher'] as Map)['id']?.toString()
+          : json['currentTeacher']?.toString(),
       introCompleted: json['introCompleted'] as bool? ?? false);
   }
 }

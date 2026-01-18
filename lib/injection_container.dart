@@ -9,6 +9,7 @@ import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_blo
 import 'package:ustadia_user_app/features/common/data/datasources/upload_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/data/datasources/user_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/image_upload_bloc/image_upload_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/datasources/intro_survey_remote_data_source.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/bloc/intro_survey_bloc.dart';
@@ -55,6 +56,8 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<UploadRemoteDataSource>(
       () => UploadRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
   sl.registerFactory(() => ImageUploadBloc(uploadRemoteDataSource: sl()));
+  sl.registerFactory(
+      () => TeacherBloc(userRemoteDataSource: sl(), authLocalDataSource: sl()));
 
   // Features - Intro Survey
   sl.registerLazySingleton<IntroSurveyRemoteDataSource>(() =>
