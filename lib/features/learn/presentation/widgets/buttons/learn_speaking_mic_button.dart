@@ -5,7 +5,7 @@ import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
 import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
-import 'package:ustadia_user_app/features/learn/presentation/pages/learn_speaking/learn_speaking_page.dart';
+import 'package:ustadia_user_app/features/learn/presentation/pages/learn_speaking_section/learn_speaking_section_page.dart';
 
 class LearnSpeakingMicButton extends StatelessWidget {
   final LearnSpeakingStage stage;

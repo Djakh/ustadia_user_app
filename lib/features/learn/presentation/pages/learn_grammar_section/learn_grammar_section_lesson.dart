@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_section_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/cards/audio_card.dart';
 
 class LearnGrammarLesson extends StatelessWidget {
+  final LearnSectionModel sectionModel;
   final Function() changeStage;
-  const LearnGrammarLesson({super.key, required this.changeStage});
+  const LearnGrammarLesson({super.key, required this.changeStage, required this.sectionModel});
 
   /// --- Widgets ---
 
@@ -24,6 +26,8 @@ class LearnGrammarLesson extends StatelessWidget {
 
   Widget view(BuildContext context) => Column(children: [
         const SizedBox(height: 24),
+        Text(sectionModel.subtitle, style: Style.small3w4(context, color: TextColorRole.greyColor)),
+        const SizedBox(height: 16),
         const AudioCard(),
         const SizedBox(height: 24),
         Expanded(child: grammarText(context)),

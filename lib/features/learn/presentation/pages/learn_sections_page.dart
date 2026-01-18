@@ -54,7 +54,7 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
       case LearnSectionType.grammar:
         context.push(learnGrammarRoute, extra: lesson);
         return;
-      case LearnSectionType.flashcard:
+      case LearnSectionType.flashcardSprint:
       case LearnSectionType.vocabulary:
         context.push(flashcardSprintRoute, extra: lesson);
         return;
@@ -78,7 +78,7 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
                 }
               : null,
           itemBuilder: (item) =>
-              LearnSectionCard(lesson: item, onTap: () => onLessonTap(context, item)));
+              LearnSectionCard(sectionModel: item, onTap: () => onLessonTap(context, item)));
 
   Widget get contentChecker =>
       BlocStatusView<LearnSectionsBloc, LearnSectionsState, List<LearnSectionModel>>(

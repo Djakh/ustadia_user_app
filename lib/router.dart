@@ -13,14 +13,14 @@ import 'package:ustadia_user_app/features/intro_survey/presentation/pages/intro_
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_section_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
-import 'package:ustadia_user_app/features/learn/presentation/pages/learn_grammar/learn_grammar_page.dart';
+import 'package:ustadia_user_app/features/learn/presentation/pages/learn_grammar_section/learn_grammar_section_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_lessons_page.dart';
-import 'package:ustadia_user_app/features/learn/presentation/pages/learn_listening/learn_listening_page.dart';
-import 'package:ustadia_user_app/features/learn/presentation/pages/learn_reading/learn_reading_page.dart';
+import 'package:ustadia_user_app/features/learn/presentation/pages/learn_listening_section/learn_listening_section_page.dart';
+import 'package:ustadia_user_app/features/learn/presentation/pages/learn_reading_section/learn_reading_section_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_sections_page.dart';
-import 'package:ustadia_user_app/features/learn/presentation/pages/learn_speaking/learn_speaking_page.dart';
+import 'package:ustadia_user_app/features/learn/presentation/pages/learn_speaking_section/learn_speaking_section_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_units_page.dart';
-import 'package:ustadia_user_app/features/learn/presentation/pages/learn_writing/learn_writing_page.dart';
+import 'package:ustadia_user_app/features/learn/presentation/pages/learn_writing_section/learn_writing_section_page.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:ustadia_user_app/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/practice_listen_tap_page.dart';
@@ -229,32 +229,32 @@ final appRouter = GoRouter(
                             builder: (context, state) => LearnSectionsPage(
                                 unit: (state.extra as LearnUnitModel?) ??
                                     const LearnUnitModel.empty())),
+                        GoRoute(
+                            path: learnListeningPath,
+                            parentNavigatorKey: _rootKey,
+                            builder: (context, state) =>
+                                LearnListeningPage(lesson: state.extra as LearnSectionModel)),
+                        GoRoute(
+                            path: learnReadingPath,
+                            parentNavigatorKey: _rootKey,
+                            builder: (context, state) =>
+                                LearnReadingPage(lesson: state.extra as LearnSectionModel)),
+                        GoRoute(
+                            path: learnSpeakingPath,
+                            parentNavigatorKey: _rootKey,
+                            builder: (context, state) =>
+                                LearnSpeakingPage(lesson: state.extra as LearnSectionModel)),
+                        GoRoute(
+                            path: learnGrammarPath,
+                            parentNavigatorKey: _rootKey,
+                            builder: (context, state) =>
+                                LearnGrammarPage(sectionModel: state.extra as LearnSectionModel)),
+                        GoRoute(
+                            path: learnWritingPath,
+                            parentNavigatorKey: _rootKey,
+                            builder: (context, state) =>
+                                LearnWritingPage(lesson: state.extra as LearnSectionModel)),
                       ]),
-                  GoRoute(
-                      path: learnListeningPath,
-                      parentNavigatorKey: _rootKey,
-                      builder: (context, state) =>
-                          LearnListeningPage(lesson: state.extra as LearnSectionModel)),
-                  GoRoute(
-                      path: learnReadingPath,
-                      parentNavigatorKey: _rootKey,
-                      builder: (context, state) =>
-                          LearnReadingPage(lesson: state.extra as LearnSectionModel)),
-                  GoRoute(
-                      path: learnSpeakingPath,
-                      parentNavigatorKey: _rootKey,
-                      builder: (context, state) =>
-                          LearnSpeakingPage(lesson: state.extra as LearnSectionModel)),
-                  GoRoute(
-                      path: learnGrammarPath,
-                      parentNavigatorKey: _rootKey,
-                      builder: (context, state) =>
-                          LearnGrammarPage(lesson: state.extra as LearnSectionModel)),
-                  GoRoute(
-                      path: learnWritingPath,
-                      parentNavigatorKey: _rootKey,
-                      builder: (context, state) =>
-                          LearnWritingPage(lesson: state.extra as LearnSectionModel)),
                 ]),
           ],
         ),
