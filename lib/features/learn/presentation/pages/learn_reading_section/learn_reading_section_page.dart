@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_section_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_quiz_model.dart';
-import 'package:ustadia_user_app/features/learn/presentation/pages/learn_reading/learn_reading_lesson.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_bloc.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_event.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_state.dart';
+import 'package:ustadia_user_app/features/learn/presentation/pages/learn_reading_section/learn_reading_section_lesson.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/components/learn_quiz_component.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/components/learn_quiz_result_component.dart';
+import 'package:ustadia_user_app/injection_container.dart';
 
 enum LearnReadingStage { lesson, quiz, result }
 
@@ -20,11 +25,31 @@ class LearnReadingPage extends StatefulWidget {
 }
 
 class LearnReadingPageState extends State<LearnReadingPage> {
+  final LearnSectionDetailBloc detailBloc = sl<LearnSectionDetailBloc>();
   LearnReadingStage stage = LearnReadingStage.lesson;
   int correctCount = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.lesson.id.isNotEmpty) {
+      detailBloc.add(LearnSectionDetailRequested(sectionId: widget.lesson.id));
+    }
+  }
+
+  @override
+  void dispose() {
+    detailBloc.close();
+    super.dispose();
+  }
+
   /// --- Getters ---
-  List<LearnQuizModel> get learnQuizModels => LearnQuizModel.readingSampleQuestions;
+  List<LearnQuizModel> get fallbackQuizModels => LearnQuizModel.readingSampleQuestions;
+
+  List<LearnQuizModel> quizModelsFor(LearnSectionDetailState state) {
+    final quizModels = state.detail?.quizModels ?? [];
+    return quizModels.isNotEmpty ? quizModels : fallbackQuizModels;
+  }
 
   /// --- Methods ---
 
@@ -47,13 +72,12 @@ class LearnReadingPageState extends State<LearnReadingPage> {
         Text('Reading • Beginner', style: Style.small3w4(context, color: TextColorRole.greyColor))
       ]);
 
-  Widget get body {
+  Widget body(BuildContext context, List<LearnQuizModel> quizModels) {
     if (stage == LearnReadingStage.lesson) return LearnReadingLesson(changeStage: changeStage);
     if (stage == LearnReadingStage.quiz)
-      return LearnQuizComponent(learnQuizModels: learnQuizModels, onFinish: finishQuiz);
+      return LearnQuizComponent(learnQuizModels: quizModels, onFinish: finishQuiz);
     if (stage == LearnReadingStage.result)
-      return LearnQuizResultComponent(
-          correctCount: correctCount, quizLength: learnQuizModels.length);
+      return LearnQuizResultComponent(correctCount: correctCount, quizLength: quizModels.length);
     return LearnReadingLesson(changeStage: changeStage);
   }
 
@@ -64,5 +88,7 @@ class LearnReadingPageState extends State<LearnReadingPage> {
           header: header,
           isHeader: stage != LearnReadingStage.result,
           isScrollable: stage == LearnReadingStage.quiz,
-          child: body));
+          child: BlocBuilder<LearnSectionDetailBloc, LearnSectionDetailState>(
+              bloc: detailBloc,
+              builder: (context, state) => body(context, quizModelsFor(state)))));
 }

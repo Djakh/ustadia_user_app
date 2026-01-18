@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_writing_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_writing_method.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/cards/learn_writing_method_card.dart';
 
 class LearnWritingBottomSheet extends StatelessWidget {

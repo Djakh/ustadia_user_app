@@ -2,7 +2,15 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 
 enum LearnSectionProgressState { completed, inProgress, locked }
 
-enum LearnSectionType { listening, reading, writing, speaking, grammar, flashcard, vocabulary }
+enum LearnSectionType {
+  listening,
+  reading,
+  writing,
+  speaking,
+  grammar,
+  flashcardSprint,
+  vocabulary
+}
 
 class LearnSectionModel {
   final String id;
@@ -14,6 +22,7 @@ class LearnSectionModel {
   final String? audioFileId;
   final String? audioFile;
   final String iconAsset;
+
   final LearnSectionProgressState progressState;
   final LearnSectionType lessonType;
 
@@ -38,9 +47,7 @@ class LearnSectionModel {
     final orderIndex = _toInt(json['order_index']);
     final totalQuestions = _toInt(json['totalQuestions']);
     final type = LearnSectionTypeX.fromApi(json['type']?.toString() ?? '');
-    final progressState = totalQuestions > 0
-        ? LearnSectionProgressState.inProgress
-        : LearnSectionProgressState.locked;
+
     return LearnSectionModel(
         id: json['id']?.toString() ?? '',
         unitId: json['unit_id']?.toString() ?? '',
@@ -51,7 +58,9 @@ class LearnSectionModel {
         audioFileId: json['audio_file_id']?.toString(),
         audioFile: json['audio_file']?.toString(),
         iconAsset: type.iconAsset,
-        progressState: progressState,
+        progressState: json['isCompleted']
+            ? LearnSectionProgressState.completed
+            : LearnSectionProgressState.inProgress,
         lessonType: type);
   }
 
@@ -76,7 +85,9 @@ extension LearnSectionTypeX on LearnSectionType {
       case 'grammar':
         return LearnSectionType.grammar;
       case 'flashcard':
-        return LearnSectionType.flashcard;
+      case 'flashcard-sprint':
+      case 'flashcard_sprint':
+        return LearnSectionType.flashcardSprint;
 
       case 'vocabulary':
         return LearnSectionType.vocabulary;
@@ -97,7 +108,7 @@ extension LearnSectionTypeX on LearnSectionType {
         return AppImages.learnMicrophone;
       case LearnSectionType.grammar:
         return AppImages.learnGrammar;
-      case LearnSectionType.flashcard:
+      case LearnSectionType.flashcardSprint:
         return AppImages.flashcardSprint;
       case LearnSectionType.vocabulary:
         return AppImages.vocabulary;

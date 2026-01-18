@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:ustadia_user_app/core/pagination/pagination_meta.dart';
 import 'package:ustadia_user_app/core/pagination/pagination_result.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_section_detail_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_section_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
 
@@ -48,5 +49,11 @@ class LearnRemoteDataSource {
       ..sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
     final meta = PaginationMeta.fromJson(data);
     return PaginationResult(items: sections, meta: meta);
+  }
+
+  Future<LearnSectionDetailModel> fetchSectionDetail({required String sectionId}) async {
+    final response = await dio.get('/students/sections/$sectionId');
+    final data = response.data as Map<String, dynamic>;
+    return LearnSectionDetailModel.fromJson(data);
   }
 }

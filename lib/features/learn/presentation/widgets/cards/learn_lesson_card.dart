@@ -4,48 +4,34 @@ import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
 import 'package:ustadia_user_app/core/widgets/cached_images/cached_images_primary/cached_image_primary.dart';
+import 'package:ustadia_user_app/core/widgets/progress_bars/circle_progress_badge.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
 
 class LearnLessonCard extends StatelessWidget {
-  final LearnLessonModel lesson;
+  final LearnLessonModel lessonModel;
   final VoidCallback onTap;
 
-  const LearnLessonCard({super.key, required this.lesson, required this.onTap});
+  const LearnLessonCard({super.key, required this.lessonModel, required this.onTap});
 
   String get fullImageUrl {
-    final url = lesson.imageUrl;
+    final url = lessonModel.imageUrl;
     if (url == null || url.isEmpty) return '';
     if (url.startsWith('http')) return url;
     return 'https://backend.ustadia.findecor.io$url';
   }
 
-  String get progressText {
-    final value = lesson.completionPercentage;
-    if (value >= 100) return 'Completed';
-    if (value > 0) return 'In progress';
-    return 'Not started';
-  }
+  /// --- Getters ---
 
-  Color get progressColor {
-    final value = lesson.completionPercentage;
-    if (value >= 100) return AppColors.primary;
-    if (value > 0) return AppColors.orange9200;
-    return AppColors.gray300;
-  }
+  String get percentProgress => '${(lessonModel.completionPercentage * 100).round()}%';
 
-  Widget title(BuildContext context) => Text(lesson.name,
+  /// --- Widgets ---
+  Widget progressBadge(BuildContext context) => CircleProgressBadge(
+      indicatorValue: lessonModel.completionPercentage,
+      percentProgress: percentProgress,
+      progressColor: AppColors.primary);
+
+  Widget title(BuildContext context) => Text(lessonModel.name,
       maxLines: 2, overflow: TextOverflow.ellipsis, style: Style.body2w5(context));
-
-  Widget subtitle(BuildContext context) => Text(lesson.description,
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-      style: Style.small3w5(context, color: TextColorRole.greyColor));
-
-  Widget progressBadge(BuildContext context) => Row(children: [
-        Icon(Icons.check_circle, size: 16, color: progressColor),
-        const SizedBox(width: 4),
-        Text(progressText, style: Style.small2w5(context).copyWith(color: progressColor))
-      ]);
 
   Widget titleAndStatus(BuildContext context) => Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -55,6 +41,11 @@ class LearnLessonCard extends StatelessWidget {
             const SizedBox(width: 8),
             progressBadge(context)
           ]);
+
+  Widget subtitle(BuildContext context) => Text(lessonModel.description,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: Style.small3w5(context, color: TextColorRole.greyColor));
 
   Widget cardInfo(BuildContext context) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,

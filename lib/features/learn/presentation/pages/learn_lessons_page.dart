@@ -45,7 +45,7 @@ class LearnLessonsPageState extends State<LearnLessonsPage> {
           shrinkWrap: true,
           separatorHeight: 12,
           itemBuilder: (item) =>
-              LearnLessonCard(lesson: item, onTap: () => openLesson(context, item)));
+              LearnLessonCard(lessonModel: item, onTap: () => openLesson(context, item)));
 
   Widget get contentChecker =>
       BlocStatusView<LearnLessonsBloc, LearnLessonsState, List<LearnLessonModel>>(
