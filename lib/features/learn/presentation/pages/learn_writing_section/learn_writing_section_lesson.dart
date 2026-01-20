@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_section_detail_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_question_model.dart';
 
 class LearnWritingLesson extends StatelessWidget {
-  final LearnSectionDetailModel sectionDetailModel;
+  final LearnSectionModel sectionDetailModel;
   final Function() onTapContinue;
   const LearnWritingLesson(
       {super.key, required this.sectionDetailModel, required this.onTapContinue});
@@ -22,7 +23,8 @@ class LearnWritingLesson extends StatelessWidget {
   Widget get lessonParagraph => Builder(
       builder: (context) => Padding(
           padding: const EdgeInsets.only(bottom: 16),
-          child: Text(question?.description?.trim() ?? "", style: Style.bodyw4(context))));
+          child: Text(question?.description?.trim() ?? "",
+              textAlign: TextAlign.justify, style: Style.bodyw4(context))));
 
   Widget lessonContent(BuildContext context) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,

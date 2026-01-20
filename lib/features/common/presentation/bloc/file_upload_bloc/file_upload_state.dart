@@ -1,18 +1,18 @@
 import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/features/common/data/models/uploaded_file_model.dart';
 
-class ImageUploadState {
+class FileUploadState {
   final Status status;
   final UploadedFileModel? uploadedFile;
   final String? errorMessage;
 
-  const ImageUploadState({this.status = Status.initial, this.uploadedFile, this.errorMessage});
+  const FileUploadState({this.status = Status.initial, this.uploadedFile, this.errorMessage});
 
   bool get isLoading => status == Status.loading;
 
-  ImageUploadState copyWith(
+  FileUploadState copyWith(
           {Status? status, UploadedFileModel? uploadedFile, String? errorMessage}) =>
-      ImageUploadState(
+      FileUploadState(
           status: status ?? this.status,
           uploadedFile: uploadedFile ?? this.uploadedFile,
           errorMessage: errorMessage);

@@ -1,3 +1,5 @@
+import 'package:ustadia_user_app/features/common/data/models/teacher_model.dart';
+
 class UserProfileModel {
   final String id;
   final String firstName;
@@ -10,7 +12,7 @@ class UserProfileModel {
   final String xp;
   final String? profilePictureId;
   final String? profilePictureUrl;
-  final String? currentTeacher;
+  final TeacherModel? currentTeacher;
   final bool introCompleted;
 
   const UserProfileModel(
@@ -30,28 +32,28 @@ class UserProfileModel {
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) {
     final profilePictureJson = json['profilePicture'];
-    final profilePictureId = profilePictureJson is Map
-        ? profilePictureJson['id']?.toString()
-        : null;
+    final profilePictureId =
+        profilePictureJson is Map ? profilePictureJson['id']?.toString() : null;
     final profilePictureUrl = profilePictureJson is Map
         ? profilePictureJson['url']?.toString()
         : profilePictureJson?.toString();
 
     return UserProfileModel(
-      id: json['id']?.toString() ?? '',
-      firstName: json['firstName']?.toString() ?? '',
-      lastName: json['lastName']?.toString() ?? '',
-      email: json['email'] as String?,
-      phoneNumber: json['phoneNumber'] as String?,
-      roles: (json['roles'] as List<dynamic>? ?? []).map((item) => item.toString()).toList(),
-      language: json['language']?.toString() ?? 'en',
-      createdAt: json['created_at']?.toString() ?? '',
-      xp: json['xp']?.toString() ?? '0',
-      profilePictureId: profilePictureId,
-      profilePictureUrl: profilePictureUrl,
-      currentTeacher: json['currentTeacher'] is Map
-          ? (json['currentTeacher'] as Map)['id']?.toString()
-          : json['currentTeacher']?.toString(),
-      introCompleted: json['introCompleted'] as bool? ?? false);
+        id: json['id']?.toString() ?? '',
+        firstName: json['firstName']?.toString() ?? '',
+        lastName: json['lastName']?.toString() ?? '',
+        email: json['email'] as String?,
+        phoneNumber: json['phoneNumber'] as String?,
+        roles: (json['roles'] as List<dynamic>? ?? []).map((item) => item.toString()).toList(),
+        language: json['language']?.toString() ?? 'en',
+        createdAt: json['created_at']?.toString() ?? '',
+        xp: json['xp']?.toString() ?? '0',
+        profilePictureId: profilePictureId,
+        profilePictureUrl: profilePictureUrl,
+        currentTeacher:
+            json['currentTeacher'] != null && json['currentTeacher'] is Map<String, dynamic>
+                ? TeacherModel.fromJson(json['currentTeacher'])
+                : null,
+        introCompleted: json['introCompleted'] as bool? ?? false);
   }
 }

@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/core/widgets/cached_images/avatars/user_avatar.dart';
 import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/image_upload_bloc/image_upload_bloc.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/image_upload_bloc/image_upload_state.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_state.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/profile_image_view_page.dart';
@@ -60,7 +60,7 @@ class ProfileEditableAvatar extends StatelessWidget {
                   ]),
               child: const Icon(Icons.edit, size: 16, color: Colors.white))));
 
-  Widget get view => BlocBuilder<ImageUploadBloc, ImageUploadState>(
+  Widget get view => BlocBuilder<FileUploadBloc, FileUploadState>(
       builder: (context, state) => Stack(alignment: Alignment.center, children: [
             avatar,
             if (state.status.isLoading) const PrimaryLoadingIndicator(isCenter: false),

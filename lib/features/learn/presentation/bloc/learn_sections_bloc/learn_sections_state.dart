@@ -1,6 +1,6 @@
 import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/core/pagination/pagination_meta.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_section_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_model.dart';
 
 class LearnSectionsState {
   final Status status;

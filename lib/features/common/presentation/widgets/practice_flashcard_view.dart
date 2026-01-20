@@ -3,15 +3,20 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
-import 'package:ustadia_user_app/features/practice/data/models/flashcard_model.dart';
+import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_model.dart';
 
 class PracticeFlashcardView extends StatelessWidget {
-  final FlashcardModel flashcard;
+  final LearnFlashcardModel flashcard;
   final bool showMeaning;
   final VoidCallback onToggle;
+  final bool isLoading;
 
   const PracticeFlashcardView(
-      {super.key, required this.flashcard, required this.showMeaning, required this.onToggle});
+      {super.key,
+      required this.flashcard,
+      required this.showMeaning,
+      required this.onToggle,
+      required this.isLoading});
 
   /// --- Widgets ---
 
@@ -28,7 +33,7 @@ class PracticeFlashcardView extends StatelessWidget {
       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Text('Word', style: Style.small3w4(context, color: TextColorRole.greyColor)),
         const SizedBox(height: 8),
-        Text(flashcard.word, style: Style.headline5w7(context)),
+        Text(flashcard.front, style: Style.headline5w7(context)),
         const SizedBox(height: 24),
         tapToFlipWidgets(context)
       ]);
@@ -40,7 +45,9 @@ class PracticeFlashcardView extends StatelessWidget {
         children: [
           Text('Meaning', style: Style.small3w4(context)),
           const SizedBox(height: 12),
-          Text(flashcard.meaning, textAlign: TextAlign.center, style: Style.body3w4(context))
+          Text(flashcard.back ?? 'No meaning yet',
+              textAlign: TextAlign.center,
+              style: Style.body3w4(context))
         ],
       ));
 
@@ -96,7 +103,7 @@ class PracticeFlashcardView extends StatelessWidget {
       child: showMeaning ? backCard : faceCard);
 
   Widget view(BuildContext context) => InkWell(
-      onTap: onToggle,
+      onTap: isLoading ? null : onToggle,
       borderRadius: Style.border20,
       child: Ink(
           height: 477,

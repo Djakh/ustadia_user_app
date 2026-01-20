@@ -12,6 +12,7 @@ class PrimaryBackground extends StatefulWidget {
   final bool isHeader;
   final bool isScrollable;
   final Color? backgroundColor;
+  final VoidCallback? onBack;
   const PrimaryBackground(
       {super.key,
       required this.child,
@@ -20,7 +21,8 @@ class PrimaryBackground extends StatefulWidget {
       this.isHeader = true,
       this.header,
       this.isScrollable = false,
-      this.backgroundColor});
+      this.backgroundColor,
+      this.onBack});
 
   @override
   State<PrimaryBackground> createState() => _PrimaryBackgroundState();
@@ -77,7 +79,7 @@ class _PrimaryBackgroundState extends State<PrimaryBackground> {
       ? Material(
           color: Colors.transparent,
           child: InkWell(
-              onTap: () => goBack(context),
+              onTap: widget.onBack ?? () => goBack(context),
               borderRadius: BorderRadius.circular(24),
               child: Ink(
                   width: 40,

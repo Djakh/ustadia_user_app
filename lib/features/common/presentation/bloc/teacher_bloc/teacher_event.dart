@@ -12,7 +12,7 @@ class TeachersRequested extends TeacherEvent {
 }
 
 class TeacherSwapRequested extends TeacherEvent {
-  final String teacherId;
+  final String? teacherId;
 
   const TeacherSwapRequested({required this.teacherId});
 

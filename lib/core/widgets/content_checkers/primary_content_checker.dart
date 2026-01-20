@@ -12,11 +12,17 @@ class BlocStatusView<B extends StateStreamable<S>, S, T> extends StatelessWidget
   final T Function(S state) data;
   final bool Function(T data) isEmpty;
   final Widget Function(BuildContext context, T data) builder;
-
+  final bool isCustomLoading;
   final Widget? loading;
   final Widget? empty;
   final Widget Function(String message)? errorBuilder;
   final Widget? invalid;
+
+  final void Function(BuildContext context, S state)? listener;
+
+  final bool Function(S previous, S current)? listenWhen;
+
+  final bool Function(S previous, S current)? buildWhen;
 
   const BlocStatusView({
     super.key,
@@ -26,22 +32,29 @@ class BlocStatusView<B extends StateStreamable<S>, S, T> extends StatelessWidget
     required this.data,
     required this.isEmpty,
     required this.builder,
+    this.isCustomLoading = false,
     this.loading,
     this.empty,
     this.errorBuilder,
     this.invalid,
+    this.listener,
+    this.listenWhen,
+    this.buildWhen,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<B, S>(
+    return BlocConsumer<B, S>(
       bloc: bloc,
+      listenWhen: listenWhen,
+      buildWhen: buildWhen,
+      listener: (context, state) => listener?.call(context, state),
       builder: (context, state) {
         if (invalid != null) return invalid!;
 
         final status = statusOf(state);
 
-        if (status.isInitial || status.isLoading) {
+        if (status.isInitial || status.isLoading || isCustomLoading) {
           return loading ?? const PrimaryLoadingIndicator(height: 30, width: 30);
         }
 

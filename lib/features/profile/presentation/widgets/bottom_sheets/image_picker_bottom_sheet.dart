@@ -6,8 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/image_upload_bloc/image_upload_bloc.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/image_upload_bloc/image_upload_event.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_event.dart';
 
 class ImagePickerBottomSheet extends StatelessWidget {
   final BuildContext sheetContext;
@@ -22,7 +22,7 @@ class ImagePickerBottomSheet extends StatelessWidget {
       final path = result.files.single.path;
       if (path == null || path.isEmpty) return;
       if (!sheetContext.mounted) return;
-      sheetContext.read<ImageUploadBloc>().add(ImageUploadRequested(filePath: path));
+      sheetContext.read<FileUploadBloc>().add(ImageUploadRequested(filePath: path));
     } on MissingPluginException {
       ScaffoldMessenger.of(sheetContext).showSnackBar(const SnackBar(
           content: Text('File picker is not available on this device. Try a real device.')));
@@ -36,7 +36,7 @@ class ImagePickerBottomSheet extends StatelessWidget {
     if (file == null) return;
     if (!sheetContext.mounted) return;
 
-    sheetContext.read<ImageUploadBloc>().add(ImageUploadRequested(filePath: file.path));
+    sheetContext.read<FileUploadBloc>().add(ImageUploadRequested(filePath: file.path));
     Navigator.of(sheetContext).pop();
   }
 

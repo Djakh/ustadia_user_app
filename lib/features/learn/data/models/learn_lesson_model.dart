@@ -10,20 +10,20 @@ class LearnLessonModel {
   final String? imageUrl;
   final bool isPublic;
   final bool isPublished;
-
-  const LearnLessonModel({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.orderIndex,
-    required this.totalUnits,
-    required this.totalSections,
-    required this.completedSections,
-    required this.completionPercentage,
-    required this.imageUrl,
-    required this.isPublic,
-    required this.isPublished
-  });
+  final bool isLocked;
+  const LearnLessonModel(
+      {required this.id,
+      required this.name,
+      required this.description,
+      required this.orderIndex,
+      required this.totalUnits,
+      required this.totalSections,
+      required this.completedSections,
+      required this.completionPercentage,
+      required this.imageUrl,
+      required this.isPublic,
+      required this.isPublished,
+      required this.isLocked});
 
   factory LearnLessonModel.fromJson(Map<String, dynamic> json) => LearnLessonModel(
       id: json['id']?.toString() ?? '',
@@ -38,7 +38,8 @@ class LearnLessonModel {
           : 0,
       imageUrl: json['image'] is Map ? json['image']['url']?.toString() : json['image']?.toString(),
       isPublic: json['isPublic'] == true,
-      isPublished: json['isPublished'] == true);
+      isPublished: json['isPublished'] == true,
+      isLocked: json['isLocked'] == true);
 
   const LearnLessonModel.empty()
       : id = '',
@@ -51,5 +52,6 @@ class LearnLessonModel {
         completionPercentage = 0,
         imageUrl = null,
         isPublic = true,
-        isPublished = true;
+        isPublished = true,
+        isLocked = false;
 }

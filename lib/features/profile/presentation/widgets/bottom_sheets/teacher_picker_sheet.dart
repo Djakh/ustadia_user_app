@@ -7,8 +7,8 @@ import 'package:ustadia_user_app/core/widgets/connection/reload_conntection_butt
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/headers/primary_bottom_sheet_header.dart';
 import 'package:ustadia_user_app/core/widgets/listviews/primary_list_view.dart';
-import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 import 'package:ustadia_user_app/features/common/data/models/teacher_model.dart';
+import 'package:ustadia_user_app/features/common/data/models/user_profile_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_state.dart';
@@ -18,7 +18,8 @@ import 'package:ustadia_user_app/features/profile/presentation/widgets/dividers/
 import 'package:ustadia_user_app/injection_container.dart';
 
 class TeacherPickerSheet extends StatefulWidget {
-  const TeacherPickerSheet({super.key});
+  final UserProfileModel userModel;
+  const TeacherPickerSheet({super.key, required this.userModel});
 
   @override
   State<TeacherPickerSheet> createState() => _TeacherPickerSheetState();
@@ -26,25 +27,34 @@ class TeacherPickerSheet extends StatefulWidget {
 
 class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
   TeacherModel? selectedTeacherModel;
+  bool isLoading = false;
+  List<TeacherModel> teachersList = [
+    const TeacherModel(
+        id: null,
+        teacherId: null,
+        firstName: "System",
+        lastName: "lessons",
+        teacherClass: TeacherClassModel(name: "Default"))
+  ];
 
   /// --- Life cycle ---
 
   @override
   void initState() {
-    selectedTeacherModel = getSelectedTeacher(context.read<TeacherBloc>().state.teachers);
+    selectedTeacherModel = getSelectedTeacher;
+    teachersList.addAll(context.read<TeacherBloc>().state.teachers);
     super.initState();
   }
 
   /// --- Getters ---
 
-  TeacherModel? getSelectedTeacher(List<TeacherModel> teachers) =>
-      teachers.isNotEmpty ? teachers.firstWhere((item) => item.isActive) : null;
+  TeacherModel? get getSelectedTeacher => widget.userModel.currentTeacher;
 
   /// --- Listeners ---
 
   void teacherListener(context, TeacherState state) {
-    if (state.status.isSuccess) {
-      selectedTeacherModel = getSelectedTeacher(state.teachers);
+    if (state.status.isSuccess && teachersList.length < 2) {
+      teachersList.addAll(state.teachers);
     }
     if (state.swapStatus.isError && state.swapErrorMessage != null) {
       context.showSnackBar(SnackBar(content: Text(state.swapErrorMessage!)));
@@ -58,9 +68,11 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
   /// --- Methods ---
 
   void onSelectTeacherTile(TeacherModel teacher) {
-        selectedTeacherModel = teacher;
+    isLoading = true;
+    setState(() {});
+    selectedTeacherModel = teacher;
 
-    context.read<TeacherBloc>().add(TeacherSwapRequested(teacherId: teacher.teacherId));
+    context.read<TeacherBloc>().add(TeacherSwapRequested(teacherId: teacher.id));
   }
 
   /// --- Widgets ---
@@ -68,7 +80,7 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
   Widget teacherTitle(TeacherModel teacher) {
     final fullName = teacher.fullName;
     final title = fullName.isNotEmpty ? fullName : teacher.email;
-    return Text(title, style: Style.bodyw5(context));
+    return Text(title ?? "", style: Style.bodyw5(context));
   }
 
   Widget teacherSubtitle(TeacherModel teacher) {
@@ -94,7 +106,7 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
 
   Widget teacherTileBiew(TeacherModel teacher) => Row(children: [
         Expanded(child: titleAndSubtitle(teacher)),
-        trailingIcon(selectedTeacherModel?.teacherId == teacher.teacherId),
+        trailingIcon(selectedTeacherModel?.id == teacher.id),
       ]);
 
   Widget teacherTile(TeacherModel teacher) => InkWell(
@@ -102,8 +114,8 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
       borderRadius: Style.border16,
       child: Ink(child: teacherTileBiew(teacher)));
 
-  PrimaryListView teacherList(List<TeacherModel> teachers) => PrimaryListView(
-      items: teachers,
+  PrimaryListView get teacherList => PrimaryListView(
+      items: teachersList,
       padding: Style.paddingPrimary,
       shrinkWrap: true,
       separatorHeight: 4,
@@ -111,36 +123,29 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
 
   Widget get contentChecker => BlocStatusView<TeacherBloc, TeacherState, List<TeacherModel>>(
         bloc: context.read<TeacherBloc>(),
+        listener: teacherListener,
         statusOf: (s) => s.status,
+        isCustomLoading: isLoading,
         errorOf: (s) => s.errorMessage,
+        errorBuilder: (String error) => ReloadConntectionButton(
+            onReloadConnection: () => sl<TeacherBloc>().add(const TeachersRequested())),
         data: (s) => s.teachers,
-        isEmpty: (units) => units.isEmpty,
+        isEmpty: (teachers) => teachers.isEmpty,
         empty: const Center(child: Text('No lessons found')),
-        builder: (context, lessons) => teacherList(lessons),
+        builder: (context, teachers) => teacherList,
       );
 
-  Widget view(TeacherState state) => Column(mainAxisSize: MainAxisSize.min, children: [
+  Widget get view => Column(mainAxisSize: MainAxisSize.min, children: [
         const PrimaryBottomSheetHeader(title: 'Choose teacher'),
-        Builder(builder: (context) {
-          if (state.status.isLoading) {
-            return PrimaryLoadingIndicator(valueColor: AlwaysStoppedAnimation(context.cs.primary));
-          }
-          if (state.status.isError) {
-            return ReloadConntectionButton(
-                onReloadConnection: () => sl<TeacherBloc>().add(const TeachersRequested()));
-          }
-          return contentChecker;
-        }),
-        const SizedBox(height: 20)
+        const SizedBox(height: 8),
+        contentChecker
       ]);
 
   @override
-  Widget build(BuildContext context) => BlocConsumer<TeacherBloc, TeacherState>(
-      listener: teacherListener,
-      builder: (context, state) => Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-              color: context.cs.surface,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
-          child: view(state)));
+  Widget build(BuildContext context) => Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+          color: context.cs.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
+      child: view);
 }

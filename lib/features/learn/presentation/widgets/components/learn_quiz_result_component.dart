@@ -5,25 +5,18 @@ import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 
 class LearnQuizResultComponent extends StatelessWidget {
-  final int correctCount;
-  final int quizLength;
-  const LearnQuizResultComponent({super.key, required this.correctCount, required this.quizLength});
+  const LearnQuizResultComponent({super.key});
 
   /// --- Methods ---
 
-  void backToTopic(BuildContext context) => context.pop();
+  void backToTopic(BuildContext context) => context.pop(true);
 
   /// --- Widgets ---
-
-  Text resultInfo(BuildContext context) => Text('You got $correctCount out of $quizLength correct.',
-      style: Style.bodyw4(context, color: TextColorRole.greyColor));
 
   Widget view(BuildContext context) => Column(children: [
         const Spacer(),
         Image.asset(AppImages.learnListeningCheck, height: 160, width: 160),
-        Text('Quiz completed!', style: Style.body3w7(context)),
-        const SizedBox(height: 4),
-        resultInfo(context),
+        Text('Task completed!', style: Style.body3w7(context)),
         const Spacer(),
         Button.primary(onTap: () => backToTopic(context), text: 'Back to topic')
       ]);

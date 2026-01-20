@@ -10,8 +10,8 @@ import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/inputs/input_field.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:ustadia_user_app/features/common/data/models/user_profile_model.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/image_upload_bloc/image_upload_bloc.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/image_upload_bloc/image_upload_state.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_state.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
@@ -31,7 +31,7 @@ class EditAccountPageState extends State<EditAccountPage> {
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   late final UserBloc userBloc;
-  late final ImageUploadBloc imageUploadBloc;
+  late final FileUploadBloc imageUploadBloc;
 
   String? uploadedImageId;
 
@@ -43,7 +43,7 @@ class EditAccountPageState extends State<EditAccountPage> {
   void initState() {
     super.initState();
     userBloc = context.read<UserBloc>();
-    imageUploadBloc = context.read<ImageUploadBloc>();
+    imageUploadBloc = context.read<FileUploadBloc>();
     if (userBloc.state.profile == null && userBloc.state.status != Status.loading) {
       userBloc.add(const UserProfileRequested());
     } else {
@@ -61,7 +61,7 @@ class EditAccountPageState extends State<EditAccountPage> {
 
   /// --- Listeners ---
 
-  void imageListener(_, ImageUploadState state) {
+  void imageListener(_, FileUploadState state) {
     if (state.status.isSuccess) {
       uploadedImageId = state.uploadedFile?.id;
       submitImageUpdate();
@@ -169,7 +169,7 @@ class EditAccountPageState extends State<EditAccountPage> {
   Widget build(BuildContext context) => MultiBlocListener(
           listeners: [
             BlocListener<UserBloc, UserState>(bloc: userBloc, listener: userListener),
-            BlocListener<ImageUploadBloc, ImageUploadState>(
+            BlocListener<FileUploadBloc, FileUploadState>(
                 bloc: imageUploadBloc, listener: imageListener)
           ],
           child: Scaffold(

@@ -22,16 +22,20 @@ class LearnLessonCard extends StatelessWidget {
 
   /// --- Getters ---
 
-  String get percentProgress => '${(lessonModel.completionPercentage * 100).round()}%';
+  String get percentProgress => '${(lessonModel.completionPercentage).round()}%';
 
   /// --- Widgets ---
   Widget progressBadge(BuildContext context) => CircleProgressBadge(
       indicatorValue: lessonModel.completionPercentage,
       percentProgress: percentProgress,
+      isLocked: lessonModel.isLocked,
       progressColor: AppColors.primary);
 
   Widget title(BuildContext context) => Text(lessonModel.name,
-      maxLines: 2, overflow: TextOverflow.ellipsis, style: Style.body2w5(context));
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: Style.body2w5(context,
+          color: lessonModel.isLocked ? TextColorRole.greyColor : TextColorRole.onSurface));
 
   Widget titleAndStatus(BuildContext context) => Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,7 +68,7 @@ class LearnLessonCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PrimaryBox(
       padding: const EdgeInsets.all(16),
-      onTap: onTap,
+      onTap: lessonModel.isLocked ? null : onTap,
       boxShadow: const [BoxShadow(color: AppColors.shadow, blurRadius: 12, offset: Offset(0, 6))],
       child: view(context));
 }

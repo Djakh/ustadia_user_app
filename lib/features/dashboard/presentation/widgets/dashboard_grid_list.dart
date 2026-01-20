@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/core/inherited_widgets/navigation_shell_scope.dart';
-import 'package:ustadia_user_app/features/dashboard/widgets/cards/dashboard_grid_card.dart';
+import 'package:ustadia_user_app/features/dashboard/presentation/widgets/cards/dashboard_grid_card.dart';
 
 class DashboardQuickGridList extends StatelessWidget {
   const DashboardQuickGridList({super.key});

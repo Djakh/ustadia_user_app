@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
-import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
-import 'package:ustadia_user_app/router.dart';
 
 class PracticeFlashcardSprintResultStats {
   final int known;
@@ -16,16 +14,19 @@ class PracticeFlashcardSprintResultStats {
       {required this.known, required this.learning, required this.total});
 }
 
-class PracticeFlashcardSprintResultPage extends StatelessWidget {
+class PracticeFlashcardSprintResultView extends StatelessWidget {
   final PracticeFlashcardSprintResultStats? stats;
 
-  const PracticeFlashcardSprintResultPage({super.key, this.stats});
+  const PracticeFlashcardSprintResultView({
+    super.key,
+    this.stats,
+  });
 
+  int get total => stats?.total ?? 0;
   int get known => stats?.known ?? 0;
   int get learning => stats?.learning ?? 0;
-  int get total => stats?.total ?? known + learning;
 
-  void onBackToGames(BuildContext context) => context.go(practiceRoute);
+  void goBack(BuildContext context) => context.pop(true);
 
   Widget emoji() => Image.asset(AppImages.clap, width: 160, height: 160);
 
@@ -60,10 +61,9 @@ class PracticeFlashcardSprintResultPage extends StatelessWidget {
         const SizedBox(height: 24),
         statsRow(context),
         const Spacer(),
-        Button.primary(onTap: () => onBackToGames(context), text: 'Back to games')
+        Button.primary(onTap: () => goBack(context), text: 'Back to topic')
       ]));
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(backgroundColor: context.cs.surface, body: view(context));
+  Widget build(BuildContext context) => view(context);
 }

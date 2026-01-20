@@ -7,9 +7,9 @@ import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
-import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_units_bloc.dart';
-import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_units_event.dart';
-import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_units_state.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_units_bloc/learn_units_bloc.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_units_bloc/learn_units_event.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_units_bloc/learn_units_state.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/cards/learn_unit_card.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
@@ -25,6 +25,7 @@ class LearnUnitsPage extends StatefulWidget {
 
 class LearnUnitsPageState extends State<LearnUnitsPage> {
   final LearnUnitsBloc unitsBloc = sl<LearnUnitsBloc>();
+  bool shouldRefreshParent = false;
 
   /// --- Life cycle ---
 
@@ -42,8 +43,14 @@ class LearnUnitsPageState extends State<LearnUnitsPage> {
     super.dispose();
   }
 
-  void openUnit(BuildContext context, LearnUnitModel unit) =>
-      context.push(learnSectionsRoute, extra: unit);
+  Future<void> openUnit(BuildContext context, LearnUnitModel unit) async {
+    final result = await context.push<bool?>(learnSectionsRoute, extra: unit);
+    if (!context.mounted) return;
+    if (result == true) {
+      shouldRefreshParent = true;
+      unitsBloc.add(LearnUnitsRequested(lessonId: widget.learnLessonModel.id));
+    }
+  }
 
   /// --- Widgets ---
 
@@ -84,9 +91,16 @@ class LearnUnitsPageState extends State<LearnUnitsPage> {
       );
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-      backgroundColor: context.cs.surface,
-      body: PrimaryBackground(
-          title: widget.learnLessonModel.name.isEmpty ? 'Learn' : widget.learnLessonModel.name,
-          child: contentChecker));
+  Widget build(BuildContext context) => WillPopScope(
+      onWillPop: () async {
+        if (!context.mounted) return false;
+        context.pop(shouldRefreshParent ? true : null);
+        return false;
+      },
+      child: Scaffold(
+          backgroundColor: context.cs.surface,
+          body: PrimaryBackground(
+              title: widget.learnLessonModel.name.isEmpty ? 'Learn' : widget.learnLessonModel.name,
+              onBack: () => context.pop(shouldRefreshParent ? true : null),
+              child: contentChecker)));
 }
