@@ -13,23 +13,19 @@ class LearnUnitCard extends StatelessWidget {
   const LearnUnitCard({super.key, required this.unit, required this.onTap});
 
   /// --- Getters ---
-  Color get progressColor =>
-      unit.progressState == LearnUnitProgressState.locked ? AppColors.gray200 : AppColors.primary;
+  bool get isLocked => unit.progressState == LearnUnitProgressState.locked;
 
-  Color titleColor(BuildContext context) => unit.progressState == LearnUnitProgressState.locked
-      ? context.cs.onTertiary
-      : context.cs.onSurface;
+  Color titleColor(BuildContext context) => isLocked ? context.cs.onTertiary : context.cs.onSurface;
 
-  double get indicatorValue =>
-      unit.progressState == LearnUnitProgressState.locked ? 0 : unit.progressPercent;
-
-  String get percentProgress => '${(unit.progressPercent * 100).round()}%';
+  String get percentProgress => '${(unit.progressPercent).round()}%';
 
   /// --- Widgets ---
+
   Widget progressBadge(BuildContext context) => CircleProgressBadge(
-      indicatorValue: indicatorValue,
+      indicatorValue: unit.progressPercent,
       percentProgress: percentProgress,
-      progressColor: progressColor);
+      size: isLocked ? 20 : 30,
+      isLocked: isLocked);
 
   Widget unitLabel(BuildContext context) => Text('Unit ${unit.unitNumber}',
       style: Style.small3w4(context, color: TextColorRole.primaryColor));
@@ -61,7 +57,7 @@ class LearnUnitCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-      onTap: onTap,
+      onTap: isLocked ? null : onTap,
       child: Container(
           decoration: BoxDecoration(
               color: context.cs.surface,

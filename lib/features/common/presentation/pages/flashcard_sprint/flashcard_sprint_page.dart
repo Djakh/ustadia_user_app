@@ -1,66 +1,94 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_model.dart';
+import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_set_model.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/flashcard_status_bloc/flashcard_status_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/flashcard_status_bloc/flashcard_status_event.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/flashcard_status_bloc/flashcard_status_state.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_result_page.dart';
-import 'package:ustadia_user_app/features/practice/data/models/flashcard_model.dart';
-import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_flashcard_view.dart';
-import 'package:ustadia_user_app/router.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/practice_flashcard_view.dart';
+import 'package:ustadia_user_app/injection_container.dart';
+
+enum FlashcardSprintStage { cards, result }
 
 class PracticeFlashcardSprintPage extends StatefulWidget {
-  final String title;
-  const PracticeFlashcardSprintPage({super.key, required this.title});
+  final LearnFlashcardSetModel flashcardSetModel;
+  const PracticeFlashcardSprintPage({super.key, required this.flashcardSetModel});
 
   @override
   State<PracticeFlashcardSprintPage> createState() => PracticeFlashcardSprintPageState();
 }
 
 class PracticeFlashcardSprintPageState extends State<PracticeFlashcardSprintPage> {
+  FlashcardSprintStage stage = FlashcardSprintStage.cards;
   int index = 0;
   bool showMeaning = false;
-  int knownCount = 0;
-  int learningCount = 0;
   final Set<int> _seenMeaning = {};
+  final Set<int> _knownCards = {};
+  final Set<int> _learningCards = {};
+  final FlashcardStatusBloc statusBloc = sl<FlashcardStatusBloc>();
+  PracticeFlashcardSprintResultStats? resultStats;
 
-  List<FlashcardModel> get cards => const [
-        FlashcardModel(
-            word: 'Resilient', meaning: 'Able to recover quickly from difficult conditions.'),
-        FlashcardModel(word: 'Eloquent', meaning: 'Speaking fluently, vividly, and persuasively.'),
-        FlashcardModel(word: 'Tenacious', meaning: 'Keeping a firm hold; not giving up easily.'),
-        FlashcardModel(
-            word: 'Meticulous',
-            meaning: 'Showing great attention to detail; very careful and precise.'),
-        FlashcardModel(word: 'Ingenuity', meaning: 'Cleverness, originality, and inventiveness.')
-      ];
-
-  FlashcardModel get current => cards[index];
+  List<LearnFlashcardModel> get cards => widget.flashcardSetModel.flashcards;
+  LearnFlashcardModel get current => cards[index];
   String get progress => 'Card ${index + 1}/${cards.length}';
   bool get hasSeenMeaning => _seenMeaning.contains(index);
+  bool get isSubmitting => statusBloc.state.status.isLoading;
+  bool get shouldShowMeaning => showMeaning || isSubmitting;
 
-  void toggleFace() => setState(() {
-        showMeaning = !showMeaning;
-        if (showMeaning && !hasSeenMeaning) {
-          learningCount++;
-          _seenMeaning.add(index);
-        }
-      });
+  @override
+  void dispose() {
+    statusBloc.close();
+    super.dispose();
+  }
+
+  void toggleFace() {
+    if (isSubmitting) return;
+    final nextShow = !showMeaning;
+    if (nextShow) {
+      if (!hasSeenMeaning) {
+        _submitStatus('revealed');
+      }
+    }
+    setState(() {
+      showMeaning = nextShow;
+      if (showMeaning && !hasSeenMeaning) {
+        _learningCards.add(index);
+        _seenMeaning.add(index);
+      }
+    });
+  }
 
   void onKnowIt() {
-    if (!hasSeenMeaning) knownCount++;
-    _nextCard(resetFace: true);
+    if (isSubmitting) return;
+    if (!showMeaning) {
+      setState(() => showMeaning = true);
+      if (!hasSeenMeaning) {
+        _learningCards.add(index);
+        _seenMeaning.add(index);
+      }
+    }
+    if (!_knownCards.contains(index)) {
+      _knownCards.add(index);
+      _learningCards.remove(index);
+    }
+    _submitStatus('not_revealed');
   }
 
   void onStudyAgain() => setState(() {
         showMeaning = false;
         index = 0;
-        knownCount = 0;
-        learningCount = 0;
+        _knownCards.clear();
+        _learningCards.clear();
         _seenMeaning.clear();
       });
 
   void _nextCard({required bool resetFace}) {
+    if (isSubmitting) return;
     if (index == cards.length - 1) {
       _finish();
       return;
@@ -73,36 +101,70 @@ class PracticeFlashcardSprintPageState extends State<PracticeFlashcardSprintPage
 
   void _finish() {
     final stats = PracticeFlashcardSprintResultStats(
-        known: knownCount, learning: learningCount, total: cards.length);
+        known: _knownCards.length, learning: _learningCards.length, total: cards.length);
     if (!mounted) return;
-    context.pushReplacement(flashcardSprintResultRoute, extra: stats);
     setState(() {
+      stage = FlashcardSprintStage.result;
+      resultStats = stats;
       index = 0;
-      knownCount = 0;
-      learningCount = 0;
+      _knownCards.clear();
+      _learningCards.clear();
       showMeaning = false;
       _seenMeaning.clear();
     });
   }
 
+  void _submitStatus(String status) {
+    statusBloc.add(FlashcardStatusRequested(flashcardId: current.id, status: status));
+  }
+
+  void _handleStatusUpdate(FlashcardStatusState state) {
+    if (state.status.isError && state.errorMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+      return;
+    }
+    if (state.status.isSuccess && state.flashcardId == current.id) {
+      final updatedBack = state.back;
+      final updatedStatus = state.cardStatus;
+      if (updatedBack != null || updatedStatus != null) {
+        final updated = LearnFlashcardModel(
+          id: current.id,
+          front: current.front,
+          back: updatedBack ?? current.back,
+          order: current.order,
+          status: updatedStatus ?? current.status,
+        );
+        cards[index] = updated;
+      }
+    }
+  }
+
   /// --- Widgets ---
 
   Widget get header => Column(children: [
-        Text(widget.title, style: Style.body3w7(context)),
+        Text(widget.flashcardSetModel.title, style: Style.body3w7(context)),
         const SizedBox(height: 4),
         Text(progress, style: Style.small3w4(context, color: TextColorRole.greyColor))
       ]);
 
-  Widget get card =>
-      PracticeFlashcardView(flashcard: current, showMeaning: showMeaning, onToggle: toggleFace);
+  Widget get card => PracticeFlashcardView(
+      flashcard: current,
+      showMeaning: shouldShowMeaning,
+      onToggle: toggleFace,
+      isLoading: isSubmitting);
 
   Widget controls(BuildContext context) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(children: [
         Expanded(
-            child: Button.border(onTap: onKnowIt, text: hasSeenMeaning ? "Next" : "I know it")),
+            child: Button.border(
+                onTap: hasSeenMeaning ? () => _nextCard(resetFace: true) : onKnowIt,
+                text: hasSeenMeaning ? "Next" : "I know it",
+                isAvialable: !isSubmitting)),
         const SizedBox(width: 12),
-        Expanded(child: Button.border(onTap: onStudyAgain, text: "Study again")),
+        Expanded(
+            child: Button.border(
+                onTap: onStudyAgain, text: "Study again", isAvialable: !isSubmitting)),
       ]));
 
   Widget get view => PrimaryBackground(
@@ -114,6 +176,23 @@ class PracticeFlashcardSprintPageState extends State<PracticeFlashcardSprintPage
         controls(context)
       ]));
 
+  Widget get resultView => PracticeFlashcardSprintResultView(stats: resultStats);
+
+  Widget get emptyView => PrimaryBackground(
+      header: header,
+      child: Center(
+          child: Text('No flashcards found.',
+              style: Style.bodyw5(context, color: TextColorRole.greyColor))));
+
   @override
-  Widget build(BuildContext context) => Scaffold(backgroundColor: context.cs.surface, body: view);
+  Widget build(BuildContext context) => BlocConsumer<FlashcardStatusBloc, FlashcardStatusState>(
+      bloc: statusBloc,
+      listener: (context, state) => _handleStatusUpdate(state),
+      builder: (context, state) => Scaffold(
+          backgroundColor: context.cs.surface,
+          body: cards.isEmpty
+              ? emptyView
+              : stage == FlashcardSprintStage.result
+                  ? resultView
+                  : view));
 }

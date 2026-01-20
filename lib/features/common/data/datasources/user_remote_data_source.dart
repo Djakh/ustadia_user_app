@@ -14,17 +14,12 @@ class UserRemoteDataSource {
     return UserProfileModel.fromJson(data);
   }
 
-  Future<UserProfileModel> updateProfile({
-    required String firstName,
-    required String lastName,
-    required String language,
-    String? profilePictureId
-  }) async {
-    final data = {
-      'firstName': firstName,
-      'lastName': lastName,
-      'language': language
-    };
+  Future<UserProfileModel> updateProfile(
+      {required String firstName,
+      required String lastName,
+      required String language,
+      String? profilePictureId}) async {
+    final data = {'firstName': firstName, 'lastName': lastName, 'language': language};
     if (profilePictureId != null && profilePictureId.isNotEmpty) {
       data['profilePictureId'] = profilePictureId;
     }
@@ -41,13 +36,12 @@ class UserRemoteDataSource {
     final response = await dio.get('/students/teachers');
     final data = response.data as Map<String, dynamic>;
     final items = data['data'] as List<dynamic>? ?? [];
-    return items
-        .map((item) => TeacherModel.fromJson(item as Map<String, dynamic>))
-        .toList();
+    return items.map((item) => TeacherModel.fromJson(item as Map<String, dynamic>)).toList();
   }
 
-  Future<SwapTeacherResponse> swapTeacher({required String teacherId}) async {
-    final response = await dio.post('/students/swap-teacher', data: {'teacher_id': teacherId});
+  Future<SwapTeacherResponse> swapTeacher({required String? teacherId}) async {
+    final response = await dio.post('/students/swap-teacher',
+        data: teacherId != null ? {'teacher_id': teacherId} : {});
     final data = response.data as Map<String, dynamic>;
     return SwapTeacherResponse.fromJson(data);
   }

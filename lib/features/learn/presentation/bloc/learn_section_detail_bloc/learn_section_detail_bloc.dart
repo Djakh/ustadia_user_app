@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/features/learn/data/datasources/learn_remote_data_source.dart';
-import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_event.dart';
-import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_state.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_bloc/learn_section_detail_event.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_bloc/learn_section_detail_state.dart';
 
 class LearnSectionDetailBloc extends Bloc<LearnSectionDetailEvent, LearnSectionDetailState> {
   final LearnRemoteDataSource learnRemoteDataSource;

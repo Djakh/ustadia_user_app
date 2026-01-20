@@ -1,4 +1,7 @@
 import 'package:ustadia_user_app/assets/constants/images.dart';
+import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_set_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_audio_file_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_question_model.dart';
 
 enum LearnSectionProgressState { completed, inProgress, locked }
 
@@ -8,7 +11,6 @@ enum LearnSectionType {
   writing,
   speaking,
   grammar,
-  flashcardSprint,
   vocabulary
 }
 
@@ -19,12 +21,18 @@ class LearnSectionModel {
   final String content;
   final int orderIndex;
   final int totalQuestions;
+  final int? answeredQuestions;
   final String? audioFileId;
-  final String? audioFile;
+  final LearnAudioFileModel? audioFile;
+  final String? flashCardSetId;
+  final LearnFlashcardSetModel? flashCardSet;
+  final bool? unitIsPublished;
+  final bool? lessonIsPublic;
+  final List<LearnSectionQuestionModel> questions;
   final String iconAsset;
-
+  final bool isLocked;
   final LearnSectionProgressState progressState;
-  final LearnSectionType lessonType;
+  final LearnSectionType sectionType;
 
   const LearnSectionModel(
       {required this.id,
@@ -33,20 +41,38 @@ class LearnSectionModel {
       required this.content,
       required this.orderIndex,
       required this.totalQuestions,
+      required this.answeredQuestions,
       required this.audioFileId,
       required this.audioFile,
+      required this.flashCardSetId,
+      required this.flashCardSet,
+      required this.unitIsPublished,
+      required this.lessonIsPublic,
+      required this.questions,
       required this.iconAsset,
       required this.progressState,
-      required this.lessonType});
+      required this.sectionType,
+      required this.isLocked});
 
   int get lessonNumber => orderIndex;
-
-  String get subtitle => content;
 
   factory LearnSectionModel.fromJson(Map<String, dynamic> json) {
     final orderIndex = _toInt(json['order_index']);
     final totalQuestions = _toInt(json['totalQuestions']);
+    final answeredQuestions =
+        json['answeredQuestions'] == null ? null : _toInt(json['answeredQuestions']);
     final type = LearnSectionTypeX.fromApi(json['type']?.toString() ?? '');
+    final questions = (json['questions'] as List<dynamic>?)
+            ?.whereType<Map<String, dynamic>>()
+            .map(LearnSectionQuestionModel.fromJson)
+            .toList() ??
+        [];
+    questions.sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
+    LearnSectionProgressState progressState = json['isLocked'] == true
+        ? LearnSectionProgressState.locked
+        : json['isCompleted'] == true
+            ? LearnSectionProgressState.completed
+            : LearnSectionProgressState.inProgress;
 
     return LearnSectionModel(
         id: json['id']?.toString() ?? '',
@@ -55,13 +81,20 @@ class LearnSectionModel {
         content: json['content']?.toString() ?? '',
         orderIndex: orderIndex,
         totalQuestions: totalQuestions,
+        answeredQuestions: answeredQuestions,
         audioFileId: json['audio_file_id']?.toString(),
-        audioFile: json['audio_file']?.toString(),
+        audioFile: LearnAudioFileModel.fromDynamic(json['audio_file']),
+        flashCardSetId: json['flashcard_set_id']?.toString(),
+        flashCardSet: json['flashcard_set'] is Map<String, dynamic>
+            ? LearnFlashcardSetModel.fromJson(json['flashcard_set'] as Map<String, dynamic>)
+            : null,
+        unitIsPublished: json['unit_ispublished'] == null ? null : json['unit_ispublished'] == true,
+        lessonIsPublic: json['lesson_isPublic'] == null ? null : json['lesson_isPublic'] == true,
+        questions: questions,
         iconAsset: type.iconAsset,
-        progressState: json['isCompleted']
-            ? LearnSectionProgressState.completed
-            : LearnSectionProgressState.inProgress,
-        lessonType: type);
+        progressState: progressState,
+        sectionType: type,
+        isLocked: json['isLocked'] == true);
   }
 
   static int _toInt(dynamic value, {int fallback = 0}) {
@@ -84,10 +117,6 @@ extension LearnSectionTypeX on LearnSectionType {
         return LearnSectionType.speaking;
       case 'grammar':
         return LearnSectionType.grammar;
-      case 'flashcard':
-      case 'flashcard-sprint':
-      case 'flashcard_sprint':
-        return LearnSectionType.flashcardSprint;
 
       case 'vocabulary':
         return LearnSectionType.vocabulary;
@@ -108,8 +137,7 @@ extension LearnSectionTypeX on LearnSectionType {
         return AppImages.learnMicrophone;
       case LearnSectionType.grammar:
         return AppImages.learnGrammar;
-      case LearnSectionType.flashcardSprint:
-        return AppImages.flashcardSprint;
+
       case LearnSectionType.vocabulary:
         return AppImages.vocabulary;
     }

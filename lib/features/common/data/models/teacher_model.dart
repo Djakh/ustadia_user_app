@@ -1,10 +1,10 @@
 class TeacherClassModel {
-  final String id;
-  final String name;
+  final String? id;
+  final String? name;
 
   const TeacherClassModel({
-    required this.id,
-    required this.name,
+     this.id,
+     this.name,
   });
 
   factory TeacherClassModel.fromJson(Map<String, dynamic> json) => TeacherClassModel(
@@ -14,28 +14,28 @@ class TeacherClassModel {
 }
 
 class TeacherModel {
-  final String id;
-  final String teacherId;
-  final String firstName;
-  final String lastName;
-  final String email;
+  final String? id;
+  final String? teacherId;
+  final String? firstName;
+  final String? lastName;
+  final String? email;
   final String? profilePicture;
-  final String level;
+  final String? level;
   final TeacherClassModel? teacherClass;
-  final bool isActive;
+  final bool? isActive;
   final DateTime? createdAt;
 
   const TeacherModel({
-    required this.id,
-    required this.teacherId,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.profilePicture,
-    required this.level,
-    required this.teacherClass,
-    required this.isActive,
-    required this.createdAt,
+    this.id,
+    this.teacherId,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.profilePicture,
+    this.level,
+    this.teacherClass,
+    this.isActive,
+    this.createdAt,
   });
 
   String get fullName => '$firstName $lastName'.trim();

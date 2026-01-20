@@ -5,11 +5,11 @@ import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/listviews/paginated_list_view.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_section_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
-import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections_bloc.dart';
-import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections_event.dart';
-import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections_state.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections_bloc/learn_sections_bloc.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections_bloc/learn_sections_event.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections_bloc/learn_sections_state.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/cards/learn_section_card.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
@@ -25,7 +25,10 @@ class LearnSectionsPage extends StatefulWidget {
 
 class LearnSectionsPageState extends State<LearnSectionsPage> {
   final LearnSectionsBloc sectionsBloc = sl<LearnSectionsBloc>();
+  bool shouldRefreshParent = false;
 
+  /// --- Life cycle ---
+ 
   @override
   void initState() {
     super.initState();
@@ -40,30 +43,41 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
     super.dispose();
   }
 
-  void onLessonTap(BuildContext context, LearnSectionModel lesson) {
-    switch (lesson.lessonType) {
+  /// --- Methods ---
+
+  Future<void> onSectionTap(BuildContext context, LearnSectionModel sectionModel) async {
+    if (!context.mounted) return;
+    final Future<bool?> navigation;
+    switch (sectionModel.sectionType) {
       case LearnSectionType.listening:
-        context.push(learnListeningRoute, extra: lesson);
-        return;
+        navigation = context.push(learnListeningRoute, extra: sectionModel);
+        break;
       case LearnSectionType.reading:
-        context.push(learnReadingRoute, extra: lesson);
-        return;
+        navigation = context.push(learnReadingRoute, extra: sectionModel);
+        break;
       case LearnSectionType.speaking:
-        context.push(learnSpeakingRoute, extra: lesson);
-        return;
+        navigation = context.push(learnSpeakingRoute, extra: sectionModel);
+        break;
       case LearnSectionType.grammar:
-        context.push(learnGrammarRoute, extra: lesson);
-        return;
-      case LearnSectionType.flashcardSprint:
+        navigation = context.push(learnGrammarRoute, extra: sectionModel);
+        break;
       case LearnSectionType.vocabulary:
-        context.push(flashcardSprintRoute, extra: lesson);
-        return;
+        if (sectionModel.flashCardSet == null) return;
+        navigation = context.push(flashcardSprintRoute, extra: sectionModel.flashCardSet!);
+        break;
       case LearnSectionType.writing:
-        context.push(learnWritingRoute, extra: lesson);
-        return;
+        navigation = context.push(learnWritingRoute, extra: sectionModel);
+        break;
+    }
+    final result = await navigation;
+    if (!context.mounted) return;
+    if (result == true) {
+      shouldRefreshParent = true;
+      sectionsBloc.add(LearnSectionsRequested(unitId: widget.unit.id));
     }
   }
 
+  /// --- Widgets ---
   PaginatedListView<LearnSectionModel> sectionsList(
           BuildContext context, List<LearnSectionModel> sections, LearnSectionsState state) =>
       PaginatedListView(
@@ -78,7 +92,7 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
                 }
               : null,
           itemBuilder: (item) =>
-              LearnSectionCard(sectionModel: item, onTap: () => onLessonTap(context, item)));
+              LearnSectionCard(sectionModel: item, onTap: () => onSectionTap(context, item)));
 
   Widget get contentChecker =>
       BlocStatusView<LearnSectionsBloc, LearnSectionsState, List<LearnSectionModel>>(
@@ -92,10 +106,17 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
           builder: (context, sections) => sectionsList(context, sections, sectionsBloc.state));
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-      backgroundColor: context.cs.surface,
-      body: PrimaryBackground(
-          title: widget.unit.title.isEmpty ? 'Sections' : widget.unit.title,
-          isScrollable: false,
-          child: contentChecker));
+  Widget build(BuildContext context) => WillPopScope(
+      onWillPop: () async {
+        if (!context.mounted) return false;
+        context.pop(shouldRefreshParent ? true : null);
+        return false;
+      },
+      child: Scaffold(
+          backgroundColor: context.cs.surface,
+          body: PrimaryBackground(
+              title: widget.unit.title.isEmpty ? 'Sections' : widget.unit.title,
+              isScrollable: false,
+              onBack: () => context.pop(shouldRefreshParent ? true : null),
+              child: contentChecker)));
 }

@@ -10,30 +10,33 @@ class LearnUnitModel {
   final double progressPercent;
   final LearnUnitProgressState progressState;
   final bool isPublished;
+  final bool isLocked;
 
-  const LearnUnitModel({
-    required this.id,
-    required this.unitNumber,
-    required this.title,
-    required this.description,
-    required this.totalSections,
-    required this.imageUrl,
-    required this.progressPercent,
-    required this.progressState,
-    required this.isPublished
-  });
+  const LearnUnitModel(
+      {required this.id,
+      required this.unitNumber,
+      required this.title,
+      required this.description,
+      required this.totalSections,
+      required this.imageUrl,
+      required this.progressPercent,
+      required this.progressState,
+      required this.isPublished,
+      required this.isLocked});
 
   factory LearnUnitModel.fromJson(Map<String, dynamic> json) {
     final isPublished = json['isPublished'] == true;
-    final progressPercent = (json['completionPercentage'] is num)
+    final isLocked = json['isLocked'] == true;
+
+    final double progressPercent = (json['completionPercentage'] is num)
         ? (json['completionPercentage'] as num).toDouble()
         : 0;
-    final progressValue = progressPercent > 1 ? progressPercent / 100 : progressPercent;
-    final progressState = progressValue >= 1
+
+    final progressState = progressPercent >= 100
         ? LearnUnitProgressState.completed
-        : isPublished
-            ? LearnUnitProgressState.inProgress
-            : LearnUnitProgressState.locked;
+        : isLocked
+            ? LearnUnitProgressState.locked
+            : LearnUnitProgressState.inProgress;
     final totalSectionsValue = json['totalSections'];
     final totalSections = totalSectionsValue is int
         ? totalSectionsValue
@@ -44,10 +47,12 @@ class LearnUnitModel {
         title: json['title']?.toString() ?? '',
         description: json['description']?.toString() ?? '',
         totalSections: totalSections,
-        imageUrl: json['image'] is Map ? json['image']['url']?.toString() : json['image']?.toString(),
-        progressPercent: progressValue.toDouble(),
+        imageUrl:
+            json['image'] is Map ? json['image']['url']?.toString() : json['image']?.toString(),
+        progressPercent: progressPercent,
         progressState: progressState,
-        isPublished: isPublished);
+        isPublished: isPublished,
+        isLocked: isLocked);
   }
 
   const LearnUnitModel.empty()
@@ -59,5 +64,6 @@ class LearnUnitModel {
         imageUrl = null,
         progressPercent = 0,
         progressState = LearnUnitProgressState.locked,
-        isPublished = false;
+        isPublished = false,
+        isLocked = false;
 }

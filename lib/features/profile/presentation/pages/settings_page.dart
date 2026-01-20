@@ -59,20 +59,23 @@ class SettingsPage extends StatelessWidget {
 
   void goToNotifications(BuildContext context) => context.push(settingsNotificationsRoute);
 
-  void goToLanguage(BuildContext context, UserProfileModel? userProfileModel) {
-    if (userProfileModel == null) return;
+  void goToLanguage(BuildContext context, UserProfileModel userProfileModel) {
     context.push(settingsLanguageRoute, extra: userProfileModel);
   }
 
   void goToEditAccount(BuildContext context) => context.push(editAccountRoute);
 
-  Future<void> showTeacherPicker(BuildContext context) async {
+  Future<void> showTeacherPicker(BuildContext context, UserProfileModel userModel) async {
     final didSwap = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
       backgroundColor: context.cs.surface,
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height * 0.4, 
+        
+      ),
       shape: RoundedRectangleBorder(borderRadius: Style.borderVer24),
-      builder: (sheetContext) => const TeacherPickerSheet(),
+      builder: (sheetContext) => TeacherPickerSheet(userModel: userModel),
     );
     if (didSwap == true && context.mounted) {
       context.go(splashRoute);
@@ -80,22 +83,25 @@ class SettingsPage extends StatelessWidget {
   }
 
   Widget itemsList(BuildContext context) => BlocBuilder<UserBloc, UserState>(
-      builder: (context, state) => Column(
-            children: [
-              SettingsListItem(item: mainItems[0], onTap: () => goToEditAccount(context)),
-              const PrimaryDivider(),
-              SettingsListItem(
-                  item: mainItems[1], onTap: () => goToLanguage(context, state.profile)),
-              const PrimaryDivider(),
-              SettingsListItem(item: mainItems[2], onTap: () => showTeacherPicker(context)),
-              const PrimaryDivider(),
-              SettingsListItem(item: mainItems[3], onTap: () => goToNotifications(context)),
-              const PrimaryDivider(),
-              SettingsListItem(item: mainItems[4], onTap: () {}),
-              const PrimaryDivider(),
-              SettingsListItem(item: mainItems[5], onTap: () {}),
-            ],
-          ));
+      builder: (context, state) => state.profile == null
+          ? const SizedBox()
+          : Column(
+              children: [
+                SettingsListItem(item: mainItems[0], onTap: () => goToEditAccount(context)),
+                const PrimaryDivider(),
+                SettingsListItem(
+                    item: mainItems[1], onTap: () => goToLanguage(context, state.profile!)),
+                const PrimaryDivider(),
+                SettingsListItem(
+                    item: mainItems[2], onTap: () => showTeacherPicker(context, state.profile!)),
+                const PrimaryDivider(),
+                SettingsListItem(item: mainItems[3], onTap: () => goToNotifications(context)),
+                const PrimaryDivider(),
+                SettingsListItem(item: mainItems[4], onTap: () {}),
+                const PrimaryDivider(),
+                SettingsListItem(item: mainItems[5], onTap: () {}),
+              ],
+            ));
 
   Widget removeSettingsItem(BuildContext context) => Container(
       decoration: BoxDecoration(color: context.cs.surface, borderRadius: Style.border20),

@@ -7,25 +7,31 @@ class CircleProgressBadge extends StatelessWidget {
   final String percentProgress;
   final Color? progressColor;
   final double? size;
+  final bool isLocked;
   const CircleProgressBadge(
       {super.key,
       this.indicatorValue,
       required this.percentProgress,
       this.progressColor,
-      this.size});
+      this.size,
+      this.isLocked = false});
 
-  Widget view(BuildContext context) => Stack(alignment: Alignment.center, children: [
+  Widget get lockedIcon => Icon(Icons.lock, size: size ?? 24);
+
+  Widget progressIndicator(BuildContext context) => Stack(alignment: Alignment.center, children: [
         SizedBox(
             width: size ?? 36,
             height: size ?? 36,
             child: CircularProgressIndicator(
-                value: indicatorValue,
+                value: (indicatorValue ?? 0) / 100,
                 strokeWidth: 3,
                 backgroundColor: AppColors.gray100,
                 valueColor: AlwaysStoppedAnimation(progressColor ?? AppColors.primary))),
         Text(percentProgress,
             style: Style.smallw7(context).copyWith(color: progressColor ?? AppColors.primary))
       ]);
+
+  Widget view(BuildContext context) => isLocked ? lockedIcon : progressIndicator(context);
 
   @override
   Widget build(BuildContext context) => view(context);

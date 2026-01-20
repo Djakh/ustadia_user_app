@@ -50,9 +50,9 @@ class AppImages {
   static const learnNotebook = 'assets/images/lessons_notebook.png';
   static const learnPen = 'assets/images/lessons_pen.png';
   static const learnListeningCheck = 'assets/images/learn_listening_check.png';
-  static const learnGrammar = 'assets/images/learn_grammar.png';
 
   /// --- JPG ---
+  static const learnGrammar = 'assets/images/learn_grammar.jpg';
 
   /// --- Icons PNG ---
 

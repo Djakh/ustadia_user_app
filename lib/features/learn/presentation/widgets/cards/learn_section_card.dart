@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_section_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_model.dart';
 
 class LearnSectionCard extends StatelessWidget {
   final LearnSectionModel sectionModel;
@@ -14,29 +14,33 @@ class LearnSectionCard extends StatelessWidget {
 
   bool get isLocked => sectionModel.progressState == LearnSectionProgressState.locked;
 
+  bool get isInProgress => sectionModel.progressState == LearnSectionProgressState.inProgress;
+
+  bool get isCompleted => sectionModel.progressState == LearnSectionProgressState.completed;
+
   Color get statusColor => isLocked ? AppColors.gray300 : AppColors.primary;
 
   String get statusText {
-    if (sectionModel.progressState == LearnSectionProgressState.completed) return 'Completed';
-    if (sectionModel.progressState == LearnSectionProgressState.inProgress) return 'In progress';
+    if (isCompleted) return 'Completed';
+    if (isInProgress) return 'In progress';
     return 'Locked';
   }
 
   Widget title(BuildContext context) => Text(sectionModel.title,
       maxLines: 1, overflow: TextOverflow.ellipsis, style: Style.body2w5(context));
 
-  Widget subtitle(BuildContext context) => Text(sectionModel.subtitle,
+  Widget subtitle(BuildContext context) => Text(sectionModel.content,
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
       style: Style.small3w5(context, color: TextColorRole.greyColor));
 
   Widget progressBadge(BuildContext context) => Row(children: [
-        Icon(Icons.check_circle, size: 16, color: statusColor),
+        if (isCompleted) Icon(Icons.check_circle, size: 16, color: statusColor),
         const SizedBox(width: 4),
         Text(statusText, style: Style.small2w5(context).copyWith(color: statusColor))
       ]);
 
-  Widget iconContainer(BuildContext context) =>
+  Widget iconImage(BuildContext context) =>
       Image.asset(sectionModel.iconAsset, height: 56, width: 56);
 
   Widget statusBadge(BuildContext context) => Row(children: [
@@ -66,7 +70,7 @@ class LearnSectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PrimaryBox(
       padding: const EdgeInsets.all(16),
-      onTap: isLocked ? null : onTap,
+      onTap: isLocked || isCompleted ? null : onTap,
       boxShadow: const [BoxShadow(color: AppColors.shadow, blurRadius: 12, offset: Offset(0, 6))],
       child: view(context));
 }

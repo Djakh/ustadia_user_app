@@ -4,14 +4,14 @@ import 'package:ustadia_user_app/features/auth/data/models/otp_verification_para
 import 'package:ustadia_user_app/features/auth/presentation/pages/login_page.dart';
 import 'package:ustadia_user_app/features/auth/presentation/pages/otp_page.dart';
 import 'package:ustadia_user_app/features/auth/presentation/pages/sign_up_page.dart';
+import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_set_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/user_profile_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_page.dart';
-import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_result_page.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:ustadia_user_app/features/home/presentation/home_page.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/pages/intro_survey_page.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_section_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_grammar_section/learn_grammar_section_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_lessons_page.dart';
@@ -87,7 +87,6 @@ const profileRoute = '$homeRoute/profile';
 /// --------------------
 
 // Practice
-const flashcardSprintResultPath = 'result';
 const wordMatchPath = 'word-match';
 const buildSentencePath = 'build-sentence';
 const writingAssessmentPath = 'writing-assessment';
@@ -111,7 +110,6 @@ const editAccountPath = 'edit-account';
 /// Absolute helpers for pushing from anywhere (always start with '/')
 /// --------------------
 const flashcardSprintRoute = '/$flashcardSprintPath';
-const flashcardSprintResultRoute = '$flashcardSprintRoute/$flashcardSprintResultPath';
 const wordMatchRoute = '$practiceRoute/$wordMatchPath';
 const buildSentenceRoute = '$practiceRoute/$buildSentencePath';
 const writingAssessmentRoute = '$practiceRoute/$writingAssessmentPath';
@@ -173,21 +171,9 @@ final appRouter = GoRouter(
         path: flashcardSprintRoute,
         parentNavigatorKey: _rootKey,
         builder: (context, state) {
-          final extra = state.extra;
-          final title = extra is LearnSectionModel
-              ? extra.title
-              : extra is String
-                  ? extra
-                  : 'Flashcard sprint';
-          return PracticeFlashcardSprintPage(title: title);
-        },
-        routes: [
-          GoRoute(
-              path: flashcardSprintResultPath,
-              parentNavigatorKey: _rootKey,
-              builder: (context, state) => PracticeFlashcardSprintResultPage(
-                  stats: state.extra as PracticeFlashcardSprintResultStats?))
-        ]),
+          return PracticeFlashcardSprintPage(
+              flashcardSetModel: state.extra as LearnFlashcardSetModel);
+        }),
 
     /// ----------- SHELL (BOTTOM NAV) -----------
     StatefulShellRoute.indexedStack(
@@ -233,17 +219,17 @@ final appRouter = GoRouter(
                             path: learnListeningPath,
                             parentNavigatorKey: _rootKey,
                             builder: (context, state) =>
-                                LearnListeningPage(lesson: state.extra as LearnSectionModel)),
+                                LearnListeningPage(sectionModel: state.extra as LearnSectionModel)),
                         GoRoute(
                             path: learnReadingPath,
                             parentNavigatorKey: _rootKey,
                             builder: (context, state) =>
-                                LearnReadingPage(lesson: state.extra as LearnSectionModel)),
+                                LearnReadingPage(sectionModel: state.extra as LearnSectionModel)),
                         GoRoute(
                             path: learnSpeakingPath,
                             parentNavigatorKey: _rootKey,
                             builder: (context, state) =>
-                                LearnSpeakingPage(lesson: state.extra as LearnSectionModel)),
+                                LearnSpeakingPage(sectionModel: state.extra as LearnSectionModel)),
                         GoRoute(
                             path: learnGrammarPath,
                             parentNavigatorKey: _rootKey,
@@ -253,7 +239,7 @@ final appRouter = GoRouter(
                             path: learnWritingPath,
                             parentNavigatorKey: _rootKey,
                             builder: (context, state) =>
-                                LearnWritingPage(lesson: state.extra as LearnSectionModel)),
+                                LearnWritingPage(sectionModel: state.extra as LearnSectionModel)),
                       ]),
                 ]),
           ],

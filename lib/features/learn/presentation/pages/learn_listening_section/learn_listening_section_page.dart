@@ -3,11 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_section_model.dart';
-import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_bloc.dart';
-import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_event.dart';
-import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_state.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_quiz_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_model.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_bloc/learn_section_detail_bloc.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_bloc/learn_section_detail_event.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_bloc/learn_section_detail_state.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_listening_section/learn_listening_section_lesson.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/components/learn_quiz_component.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/components/learn_quiz_result_component.dart';
@@ -16,9 +15,9 @@ import 'package:ustadia_user_app/injection_container.dart';
 enum LearnListeningStage { lesson, quiz, result }
 
 class LearnListeningPage extends StatefulWidget {
-  final LearnSectionModel lesson;
+  final LearnSectionModel sectionModel;
 
-  const LearnListeningPage({super.key, required this.lesson});
+  const LearnListeningPage({super.key, required this.sectionModel});
 
   @override
   State<LearnListeningPage> createState() => LearnListeningPageState();
@@ -32,8 +31,8 @@ class LearnListeningPageState extends State<LearnListeningPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.lesson.id.isNotEmpty) {
-      detailBloc.add(LearnSectionDetailRequested(sectionId: widget.lesson.id));
+    if (widget.sectionModel.id.isNotEmpty) {
+      detailBloc.add(LearnSectionDetailRequested(sectionId: widget.sectionModel.id));
     }
   }
 
@@ -43,19 +42,12 @@ class LearnListeningPageState extends State<LearnListeningPage> {
     super.dispose();
   }
 
-  /// --- Getters ---
-  List<LearnQuizModel> get fallbackQuizModels => LearnQuizModel.listeningSampleQuestions;
-
-  List<LearnQuizModel> quizModelsFor(LearnSectionDetailState state) {
-    final quizModels = state.detail?.quizModels ?? [];
-    return quizModels.isNotEmpty ? quizModels : fallbackQuizModels;
-  }
-
   /// --- Methods ---
 
-  void changeStage() => setState(() {
-        stage = LearnListeningStage.quiz;
-      });
+  void changeStage(LearnSectionDetailState state) {
+    if (state.status.isLoading || state.detail == null) return;
+    setState(() => stage = LearnListeningStage.quiz);
+  }
 
   void finishQuiz(int correct) => setState(() {
         correctCount = correct;
@@ -66,18 +58,26 @@ class LearnListeningPageState extends State<LearnListeningPage> {
 
   /// --- Widgets ---
   Widget get header => Column(children: [
-        Text(widget.lesson.title, style: Style.body2w6(context)),
+        Text(widget.sectionModel.title, style: Style.body2w6(context)),
         const SizedBox(height: 2),
-        Text('Listening • Beginner', style: Style.small3w4(context, color: TextColorRole.greyColor))
+        Text(widget.sectionModel.sectionType.name.toUpperCase(),
+            style: Style.small3w4(context, color: TextColorRole.greyColor))
       ]);
 
-  Widget body(BuildContext context, List<LearnQuizModel> quizModels) {
-    if (stage == LearnListeningStage.lesson) return LearnListeningLesson(changeStage: changeStage);
+  Widget body(BuildContext context, LearnSectionDetailState state) {
+    final isLoading = state.status.isLoading || state.detail == null;
+    if (stage == LearnListeningStage.lesson)
+      return LearnListeningLesson(
+          sectionModel: widget.sectionModel,
+          changeStage: () => changeStage(state),
+          isLoading: isLoading);
     if (stage == LearnListeningStage.quiz)
-      return LearnQuizComponent(learnQuizModels: quizModels, onFinish: finishQuiz);
-    if (stage == LearnListeningStage.result)
-      return LearnQuizResultComponent(correctCount: correctCount, quizLength: quizModels.length);
-    return LearnListeningLesson(changeStage: changeStage);
+      return LearnQuizComponent(questions: state.detail?.questions ?? [], onFinish: finishQuiz);
+    if (stage == LearnListeningStage.result) return const LearnQuizResultComponent();
+    return LearnListeningLesson(
+        sectionModel: widget.sectionModel,
+        changeStage: () => changeStage(state),
+        isLoading: isLoading);
   }
 
   @override
@@ -88,6 +88,5 @@ class LearnListeningPageState extends State<LearnListeningPage> {
           isHeader: stage != LearnListeningStage.result,
           isScrollable: stage == LearnListeningStage.quiz,
           child: BlocBuilder<LearnSectionDetailBloc, LearnSectionDetailState>(
-              bloc: detailBloc,
-              builder: (context, state) => body(context, quizModelsFor(state)))));
+              bloc: detailBloc, builder: (context, state) => body(context, state))));
 }
