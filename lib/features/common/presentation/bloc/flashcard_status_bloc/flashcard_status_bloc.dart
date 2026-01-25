@@ -28,6 +28,7 @@ class FlashcardStatusBloc extends Bloc<FlashcardStatusEvent, FlashcardStatusStat
       final response = await flashcardRepository.updateFlashcardStatus(
         flashcardId: event.flashcardId,
         status: event.status,
+        isPractice: event.isPractice,
       );
       emit(state.copyWith(
         status: Status.success,

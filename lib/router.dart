@@ -23,8 +23,11 @@ import 'package:ustadia_user_app/features/learn/presentation/pages/learn_units_p
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_writing_section/learn_writing_section_page.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:ustadia_user_app/features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:ustadia_user_app/features/practice/data/models/practice_listen_tap_set_model.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/practice_listen_tap_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_build_sentence_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/practice_flashcard_sets_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/practice_listen_tap_sets_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_vocabulary_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_word_match_page.dart';
@@ -90,6 +93,8 @@ const profileRoute = '$homeRoute/profile';
 const wordMatchPath = 'word-match';
 const buildSentencePath = 'build-sentence';
 const writingAssessmentPath = 'writing-assessment';
+const listenTapSetsPath = 'listen-tap-sets';
+
 const listenTapPath = 'listen-tap';
 const vocabularyPath = 'vocabulary';
 
@@ -113,7 +118,10 @@ const flashcardSprintRoute = '/$flashcardSprintPath';
 const wordMatchRoute = '$practiceRoute/$wordMatchPath';
 const buildSentenceRoute = '$practiceRoute/$buildSentencePath';
 const writingAssessmentRoute = '$practiceRoute/$writingAssessmentPath';
+const listenTapSetsRoute = '$practiceRoute/$listenTapSetsPath';
+
 const listenTapRoute = '$practiceRoute/$listenTapPath';
+
 const vocabularyRoute = '$practiceRoute/$vocabularyPath';
 
 const speedMixRoute = '$practiceRoute/$speedMixPath';
@@ -171,8 +179,14 @@ final appRouter = GoRouter(
         path: flashcardSprintRoute,
         parentNavigatorKey: _rootKey,
         builder: (context, state) {
-          return PracticeFlashcardSprintPage(
-              flashcardSetModel: state.extra as LearnFlashcardSetModel);
+          final extra = state.extra;
+          if (extra is FlashcardSprintParams) {
+            return FlashcardSprintPage(flashcardSetModel: extra.set, isPractice: extra.isPractice);
+          }
+          if (extra is LearnFlashcardSetModel) {
+            return FlashcardSprintPage(flashcardSetModel: extra);
+          }
+          return const PracticeFlashcardSetsPage();
         }),
 
     /// ----------- SHELL (BOTTOM NAV) -----------
@@ -269,9 +283,18 @@ final appRouter = GoRouter(
                   builder: (_, __) => const PracticeWritingAssessmentPage(),
                 ),
                 GoRoute(
+                  path: listenTapSetsPath,
+                  parentNavigatorKey: _rootKey,
+                  builder: (context, state) {
+                    return const PracticeListenTapSetsPage();
+                  },
+                ),
+                GoRoute(
                   path: listenTapPath,
                   parentNavigatorKey: _rootKey,
-                  builder: (_, __) => const PracticeListenTapPage(),
+                  builder: (context, state) {
+                    return PracticeListenTapPage(set: state.extra as PracticeListenTapSetModel);
+                  },
                 ),
                 GoRoute(
                   path: vocabularyPath,

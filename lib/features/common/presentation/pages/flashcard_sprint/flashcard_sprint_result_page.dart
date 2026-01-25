@@ -5,19 +5,19 @@ import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 
-class PracticeFlashcardSprintResultStats {
+class FlashcardSprintResultStats {
   final int known;
   final int learning;
   final int total;
 
-  const PracticeFlashcardSprintResultStats(
+  const FlashcardSprintResultStats(
       {required this.known, required this.learning, required this.total});
 }
 
-class PracticeFlashcardSprintResultView extends StatelessWidget {
-  final PracticeFlashcardSprintResultStats? stats;
+class FlashcardSprintResultView extends StatelessWidget {
+  final FlashcardSprintResultStats? stats;
 
-  const PracticeFlashcardSprintResultView({
+  const FlashcardSprintResultView({
     super.key,
     this.stats,
   });

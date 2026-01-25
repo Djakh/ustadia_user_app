@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/practice_listen_tap_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_listen_mode_card.dart';
+
+enum PracticeListenTapMode { words, sentences }
 
 class PracticeListenModeChooseView extends StatelessWidget {
   final Function(PracticeListenTapMode value) selectMode;

@@ -12,6 +12,7 @@ import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_
 import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_state.dart';
+import 'package:ustadia_user_app/features/common/presentation/pages/result_pages/quiz_result_component.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_question_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_question_answer_bloc/learn_question_answer_bloc.dart';
@@ -23,7 +24,6 @@ import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_
 import 'package:ustadia_user_app/features/learn/presentation/widgets/banners/learn_speaking_status_banner.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/buttons/learn_speaking_mic_button.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/cards/learn_speaking_prompt_card.dart';
-import 'package:ustadia_user_app/features/learn/presentation/widgets/components/learn_quiz_result_component.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 enum LearnSpeakingStage { ready, listening, checking, result }
@@ -277,7 +277,7 @@ class LearnSpeakingPageState extends State<LearnSpeakingPage> {
       bloc: detailBloc,
       builder: (context, state) {
         if (stage == LearnSpeakingStage.result) {
-          return const LearnQuizResultComponent();
+          return const QuizResultComponent();
         }
         if (state.status.isLoading && state.detail == null) {
           return const PrimaryLoadingIndicator();

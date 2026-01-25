@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:ustadia_user_app/features/common/presentation/pages/result_pages/quiz_result_component.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_bloc/learn_section_detail_bloc.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_bloc/learn_section_detail_event.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_bloc/learn_section_detail_state.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_listening_section/learn_listening_section_lesson.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/components/learn_quiz_component.dart';
-import 'package:ustadia_user_app/features/learn/presentation/widgets/components/learn_quiz_result_component.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 enum LearnListeningStage { lesson, quiz, result }
@@ -73,7 +73,7 @@ class LearnListeningPageState extends State<LearnListeningPage> {
           isLoading: isLoading);
     if (stage == LearnListeningStage.quiz)
       return LearnQuizComponent(questions: state.detail?.questions ?? [], onFinish: finishQuiz);
-    if (stage == LearnListeningStage.result) return const LearnQuizResultComponent();
+    if (stage == LearnListeningStage.result) return const QuizResultComponent();
     return LearnListeningLesson(
         sectionModel: widget.sectionModel,
         changeStage: () => changeStage(state),

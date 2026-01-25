@@ -9,6 +9,7 @@ import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/connection/reload_conntection_button.dart';
 import 'package:ustadia_user_app/core/widgets/inputs/input_field.dart';
 import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
+import 'package:ustadia_user_app/features/common/presentation/pages/result_pages/quiz_result_component.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_writing_method.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_question_answer_bloc/learn_question_answer_bloc.dart';
@@ -19,7 +20,6 @@ import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_section_detail_bloc/learn_section_detail_state.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_writing_section/learn_writing_section_lesson.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/bottom_sheets/learn_writing_bottom_sheet.dart';
-import 'package:ustadia_user_app/features/learn/presentation/widgets/components/learn_quiz_result_component.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 enum LearnWritingStage { lesson, input, result }
@@ -167,7 +167,7 @@ class LearnWritingPageState extends State<LearnWritingPage> {
     if (stage == LearnWritingStage.input) return inputView;
     if (stage == LearnWritingStage.result)
       return BlocBuilder<LearnQuestionAnswerBloc, LearnQuestionAnswerState>(
-          bloc: answerBloc, builder: (context, state) => const LearnQuizResultComponent());
+          bloc: answerBloc, builder: (context, state) => const QuizResultComponent());
 
     return const SizedBox();
   }

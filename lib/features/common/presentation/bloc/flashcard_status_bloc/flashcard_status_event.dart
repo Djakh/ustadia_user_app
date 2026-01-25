@@ -10,9 +10,14 @@ abstract class FlashcardStatusEvent extends Equatable {
 class FlashcardStatusRequested extends FlashcardStatusEvent {
   final String flashcardId;
   final String status;
+  final bool isPractice;
 
-  const FlashcardStatusRequested({required this.flashcardId, required this.status});
+  const FlashcardStatusRequested({
+    required this.flashcardId,
+    required this.status,
+    required this.isPractice,
+  });
 
   @override
-  List<Object?> get props => [flashcardId, status];
+  List<Object?> get props => [flashcardId, status, isPractice];
 }

@@ -13,7 +13,6 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/use
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/widgets/cards/dashboard_strak_card.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/widgets/cards/today_plan_card.dart';
-import 'package:ustadia_user_app/features/dashboard/presentation/widgets/dashboard_calendar.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/widgets/dashboard_grid_list.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/profile_image_view_page.dart';
 import 'package:ustadia_user_app/injection_container.dart';
@@ -49,7 +48,8 @@ class _DashboardPageState extends State<DashboardPage> {
           ? null
           : () => context.push(profileImageViewRoute,
               extra: ProfileImageViewParams(imageUrl: imageUrl)),
-      child: UserAvatar(radius: 24, imageUrl: imageUrl == null || imageUrl.isEmpty ? null : imageUrl));
+      child:
+          UserAvatar(radius: 24, imageUrl: imageUrl == null || imageUrl.isEmpty ? null : imageUrl));
 
   Container firePoint() => Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -69,8 +69,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget profileHeader(UserState state) {
     final profile = state.profile;
-    final name =
-        profile == null ? 'User' : '${profile.firstName} ${profile.lastName}'.trim();
+    final name = profile == null ? 'User' : '${profile.firstName} ${profile.lastName}'.trim();
     final imageUrl = fullImageUrl(profile?.profilePictureUrl);
     return Row(children: [
       userAvatar(imageUrl),
@@ -84,8 +83,8 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget view(UserState state) => Column(
         children: [
           profileHeader(state),
-          const SizedBox(height: 24),
-          const DashboardCalendar(),
+          // const SizedBox(height: 24),
+          // const DashboardCalendar(),
           const SizedBox(height: 24),
           const TodayPlanCard(),
           const SizedBox(height: 16),
@@ -99,6 +98,6 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) => BlocBuilder<UserBloc, UserState>(
       bloc: userBloc,
-      builder: (context, state) =>
-          PrimaryBackground(isScrollable: true, backgroundColor: context.cs.surface, child: view(state)));
+      builder: (context, state) => PrimaryBackground(
+          isScrollable: true, backgroundColor: context.cs.surface, child: view(state)));
 }
