@@ -5,6 +5,7 @@ abstract class FlashcardRepository {
   Future<FlashcardStatusResponse> updateFlashcardStatus({
     required String flashcardId,
     required String status,
+    required bool isPractice,
   });
 }
 
@@ -17,9 +18,11 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
   Future<FlashcardStatusResponse> updateFlashcardStatus({
     required String flashcardId,
     required String status,
+    required bool isPractice,
   }) async {
+    final basePath = isPractice ? '/students/practice/flashcards' : '/students/sections/flashcards';
     final response = await dio.patch(
-      '/students/sections/flashcards/$flashcardId/status',
+      '$basePath/$flashcardId/status',
       data: {'status': status},
     );
     final data = response.data as Map<String, dynamic>;

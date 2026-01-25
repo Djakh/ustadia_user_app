@@ -5,13 +5,13 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_model.dart';
 
-class PracticeFlashcardView extends StatelessWidget {
+class FlashcardView extends StatelessWidget {
   final LearnFlashcardModel flashcard;
   final bool showMeaning;
   final VoidCallback onToggle;
   final bool isLoading;
 
-  const PracticeFlashcardView(
+  const FlashcardView(
       {super.key,
       required this.flashcard,
       required this.showMeaning,
@@ -46,8 +46,7 @@ class PracticeFlashcardView extends StatelessWidget {
           Text('Meaning', style: Style.small3w4(context)),
           const SizedBox(height: 12),
           Text(flashcard.back ?? 'No meaning yet',
-              textAlign: TextAlign.center,
-              style: Style.body3w4(context))
+              textAlign: TextAlign.center, style: Style.body3w4(context))
         ],
       ));
 

@@ -26,6 +26,10 @@ import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_units_bloc/learn_units_bloc.dart';
 import 'package:ustadia_user_app/features/posts/data/datasources/post_remote_data_source.dart';
 import 'package:ustadia_user_app/features/posts/data/repositories/post_repository_impl.dart';
+import 'package:ustadia_user_app/features/practice/data/datasources/practice_remote_data_source.dart';
+import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_flashcard_sets_bloc/practice_flashcard_sets_bloc.dart';
+import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_sets_bloc/practice_listen_tap_sets_bloc.dart';
+import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_status_bloc/practice_listen_tap_status_bloc.dart';
 
 import 'core/network/dio_client.dart';
 import 'features/posts/domain/repositories/post_repository.dart';
@@ -80,6 +84,13 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<AudioRepository>(
       () => AudioRepositoryImpl(dio: sl<AuthRemoteDataSource>().dio));
   sl.registerFactory(() => AudioBloc(audioRepository: sl()));
+
+  // Features - Practice
+  sl.registerLazySingleton<PracticeRemoteDataSource>(
+      () => PracticeRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
+  sl.registerFactory(() => PracticeFlashcardSetsBloc(practiceRemoteDataSource: sl()));
+  sl.registerFactory(() => PracticeListenTapSetsBloc(practiceRemoteDataSource: sl()));
+  sl.registerFactory(() => PracticeListenTapStatusBloc(practiceRemoteDataSource: sl()));
 
   // Features - Posts
   sl.registerLazySingleton<PostRemoteDataSource>(

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'dart:convert';
 
 class DioClient {
   DioClient._();
@@ -20,11 +21,14 @@ class DioClient {
         print('[DIO] accessToken: $accessToken');
       }
       return handler.next(options);
+    }, onResponse: (response, handler) {
+      _logResponsePretty(response);
+      return handler.next(response);
     }));
     dio.interceptors.add(
       LogInterceptor(
         requestBody: true,
-        responseBody: true,
+        responseBody: false,
         logPrint: (obj) => _log(obj.toString()),
       ),
     );
@@ -35,5 +39,29 @@ class DioClient {
     // Keep logging minimal; swap with a proper logger if needed.
     // ignore: avoid_print
     print('[DIO] $message');
+  }
+
+  static void _logResponsePretty(Response<dynamic> response) {
+    final data = response.data;
+    if (data == null) return;
+    String output;
+    if (data is String) {
+      output = _tryPrettyJsonString(data) ?? data;
+    } else if (data is Map || data is List) {
+      output = const JsonEncoder.withIndent('  ').convert(data);
+    } else {
+      output = data.toString();
+    }
+    // ignore: avoid_print
+    print('[DIO] Response Pretty:\\n$output');
+  }
+
+  static String? _tryPrettyJsonString(String value) {
+    try {
+      final decoded = jsonDecode(value);
+      return const JsonEncoder.withIndent('  ').convert(decoded);
+    } catch (_) {
+      return null;
+    }
   }
 }

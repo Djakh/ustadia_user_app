@@ -15,15 +15,27 @@ import 'package:ustadia_user_app/injection_container.dart';
 
 enum FlashcardSprintStage { cards, result }
 
-class PracticeFlashcardSprintPage extends StatefulWidget {
-  final LearnFlashcardSetModel flashcardSetModel;
-  const PracticeFlashcardSprintPage({super.key, required this.flashcardSetModel});
+class FlashcardSprintParams {
+  final LearnFlashcardSetModel set;
+  final bool isPractice;
 
-  @override
-  State<PracticeFlashcardSprintPage> createState() => PracticeFlashcardSprintPageState();
+  const FlashcardSprintParams({required this.set, required this.isPractice});
 }
 
-class PracticeFlashcardSprintPageState extends State<PracticeFlashcardSprintPage> {
+class FlashcardSprintPage extends StatefulWidget {
+  final LearnFlashcardSetModel flashcardSetModel;
+  final bool isPractice;
+  const FlashcardSprintPage({
+    super.key,
+    required this.flashcardSetModel,
+    this.isPractice = false,
+  });
+
+  @override
+  State<FlashcardSprintPage> createState() => FlashcardSprintPageState();
+}
+
+class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   FlashcardSprintStage stage = FlashcardSprintStage.cards;
   int index = 0;
   bool showMeaning = false;
@@ -31,7 +43,7 @@ class PracticeFlashcardSprintPageState extends State<PracticeFlashcardSprintPage
   final Set<int> _knownCards = {};
   final Set<int> _learningCards = {};
   final FlashcardStatusBloc statusBloc = sl<FlashcardStatusBloc>();
-  PracticeFlashcardSprintResultStats? resultStats;
+  FlashcardSprintResultStats? resultStats;
 
   List<LearnFlashcardModel> get cards => widget.flashcardSetModel.flashcards;
   LearnFlashcardModel get current => cards[index];
@@ -100,7 +112,7 @@ class PracticeFlashcardSprintPageState extends State<PracticeFlashcardSprintPage
   }
 
   void _finish() {
-    final stats = PracticeFlashcardSprintResultStats(
+    final stats = FlashcardSprintResultStats(
         known: _knownCards.length, learning: _learningCards.length, total: cards.length);
     if (!mounted) return;
     setState(() {
@@ -115,7 +127,8 @@ class PracticeFlashcardSprintPageState extends State<PracticeFlashcardSprintPage
   }
 
   void _submitStatus(String status) {
-    statusBloc.add(FlashcardStatusRequested(flashcardId: current.id, status: status));
+    statusBloc.add(FlashcardStatusRequested(
+        flashcardId: current.id, status: status, isPractice: widget.isPractice));
   }
 
   void _handleStatusUpdate(FlashcardStatusState state) {
@@ -147,7 +160,7 @@ class PracticeFlashcardSprintPageState extends State<PracticeFlashcardSprintPage
         Text(progress, style: Style.small3w4(context, color: TextColorRole.greyColor))
       ]);
 
-  Widget get card => PracticeFlashcardView(
+  Widget get card => FlashcardView(
       flashcard: current,
       showMeaning: shouldShowMeaning,
       onToggle: toggleFace,
@@ -176,7 +189,7 @@ class PracticeFlashcardSprintPageState extends State<PracticeFlashcardSprintPage
         controls(context)
       ]));
 
-  Widget get resultView => PracticeFlashcardSprintResultView(stats: resultStats);
+  Widget get resultView => FlashcardSprintResultView(stats: resultStats);
 
   Widget get emptyView => PrimaryBackground(
       header: header,

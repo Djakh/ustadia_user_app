@@ -1,68 +1,45 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
-import 'package:ustadia_user_app/features/practice/data/models/listen_tap_question_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/next_task_bloc/next_task_bloc.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/practice_listen_tap_page.dart';
+import 'package:ustadia_user_app/features/common/presentation/pages/result_pages/quiz_result_component.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/audio_bloc/audio_bloc.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/audio_bloc/audio_event.dart';
+import 'package:ustadia_user_app/features/learn/presentation/bloc/audio_bloc/audio_state.dart';
+import 'package:ustadia_user_app/features/practice/data/models/practice_listen_tap_set_model.dart';
+import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_status_bloc/practice_listen_tap_status_bloc.dart';
+import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_status_bloc/practice_listen_tap_status_event.dart';
+import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_status_bloc/practice_listen_tap_status_state.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_listen_quiz_view_content.dart';
+import 'package:ustadia_user_app/injection_container.dart';
 
 class PracticeListenQuizView extends StatefulWidget {
-  final PracticeListenTapMode mode;
+  final PracticeListenTapSetModel set;
 
-  const PracticeListenQuizView({super.key, required this.mode});
+  const PracticeListenQuizView({super.key, required this.set});
 
   @override
   State<PracticeListenQuizView> createState() => PracticeListenQuizViewState();
 }
 
 class PracticeListenQuizViewState extends State<PracticeListenQuizView> {
-  final FlutterTts _tts = FlutterTts();
+  final AudioPlayer player = AudioPlayer();
+  final AudioBloc audioBloc = sl<AudioBloc>();
+  final PracticeListenTapStatusBloc statusBloc = sl<PracticeListenTapStatusBloc>();
 
   int listeningIndex = 0;
+  int correctCount = 0;
+  final Set<int> countedIndices = {};
+  bool showResult = false;
 
   /// --- Getters ---
 
-  List<ListenTapQuestionModel> get wordQuestions => const [
-        ListenTapQuestionModel(
-            prompt: 'skewer',
-            options: ['Fountain', 'Mountain', 'Skewer', 'Casino', 'Capable'],
-            answerIndex: 0),
-        ListenTapQuestionModel(
-            prompt: 'deliver',
-            options: ['Defiance', 'Delicious', 'Deliver', 'Decide', 'Decision'],
-            answerIndex: 1),
-        ListenTapQuestionModel(
-            prompt: 'liberty',
-            options: ['Liberty', 'Library', 'Lightly', 'Likely'],
-            answerIndex: 2),
-      ];
+  List<PracticeListenTapQuestionModel> get questions => widget.set.questions;
 
-  List<ListenTapQuestionModel> get sentenceQuestions => const [
-        ListenTapQuestionModel(
-            prompt: 'Where is the station?',
-            options: [
-              'Where is the station?',
-              'Where is the vacation?',
-              'Where is the bus station?'
-            ],
-            answerIndex: 0),
-        ListenTapQuestionModel(
-            prompt: 'I like coffee',
-            options: ['I like coffee', "I'd like coffee", 'See you tomorrow'],
-            answerIndex: 1),
-        ListenTapQuestionModel(
-            prompt: 'See you tomorrow',
-            options: ['See you tomorrow', 'See you borrow', 'See you next summer'],
-            answerIndex: 2),
-      ];
-
-  List<ListenTapQuestionModel> get questions =>
-      widget.mode == PracticeListenTapMode.sentences ? sentenceQuestions : wordQuestions;
-
-  ListenTapQuestionModel get current => questions[listeningIndex];
+  PracticeListenTapQuestionModel get current => questions[listeningIndex];
 
   double get progress => (listeningIndex + 1) / questions.length;
 
@@ -80,54 +57,83 @@ class PracticeListenQuizViewState extends State<PracticeListenQuizView> {
     }
   }
 
-  String get wordOrSentence => widget.mode == PracticeListenTapMode.words ? "word" : "sentence";
+  String get wordOrSentence => "word";
 
   /// --- Life cycle ---
 
   @override
   void initState() {
     super.initState();
-    configureTts();
     context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+    requestAudio();
   }
 
   @override
   void dispose() {
-    _safeStopTts();
+    player.dispose();
+    audioBloc.close();
+    statusBloc.close();
 
     super.dispose();
   }
 
-  Future<void> _safeStopTts() async {
-    try {
-      await _tts.stop();
-    } catch (_) {
-      // Ignore missing plugin when widget is disposed during hot-reload/navigation.
+  /// --- Listener ---
+
+  void audioListener(context, state) {
+    if (state.status.isError && state.errorMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
     }
   }
 
-  Future<void> configureTts() async {
-    await _tts.setLanguage('en-US');
-    await _tts.setSpeechRate(0.6);
-    await _tts.setPitch(1.0);
-    await _tts.setVolume(1.0);
-    await _tts.awaitSpeakCompletion(true);
+  void practiceListenTapStatus(context, state) {
+    if (state.status.isError && state.errorMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+    }
+    if (state.status.isSuccess) {
+      setState(() {
+        showResult = true;
+      });
+    }
   }
 
   /// --- Methods ---
 
+  void requestAudio() {
+    final url = current.audio?.url ?? '';
+    if (url.isEmpty) return;
+    audioBloc.add(AudioRequested(url: url));
+  }
+
+  Future<void> onPlayAudio() async {
+    final state = audioBloc.state;
+    if (state.status.isLoading) return;
+    final path = state.filePath;
+    if (path == null || path.isEmpty) {
+      requestAudio();
+      return;
+    }
+    await player.play(DeviceFileSource(path));
+  }
+
   void onNext() {
+    if (statusBloc.state.status.isLoading) return;
+    final nextState = context.read<NextTaskBloc>().state;
+    if (!countedIndices.contains(listeningIndex)) {
+      countedIndices.add(listeningIndex);
+      if (nextState.isAnswerCorrect) {
+        correctCount++;
+      }
+    }
     if (listeningIndex == questions.length - 1) {
-      setState(() {
-        listeningIndex = 0;
-      });
-      context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+      statusBloc
+          .add(PracticeListenTapStatusRequested(listenTapId: widget.set.id, status: 'completed'));
       return;
     }
     setState(() {
       listeningIndex++;
     });
     context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
+    requestAudio();
   }
 
   /// --- Widgets ---
@@ -150,23 +156,39 @@ class PracticeListenQuizViewState extends State<PracticeListenQuizView> {
         children: [currentListening, totalListeningWidget],
       );
 
-  Widget nextButton(bool isEnabled) =>
-      Button.primary(onTap: onNext, text: 'Next', isAvialable: isEnabled);
-
-  Widget get quizView => Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+  Widget get quizView => ListView(
+        physics: const ClampingScrollPhysics(),
         children: [
           const SizedBox(height: 24),
           indicator,
           const SizedBox(height: 4),
           listeningInfo,
-          PracticeListenQuizViewContent(question: current, tts: _tts),
+          BlocBuilder<AudioBloc, AudioState>(
+              bloc: audioBloc,
+              builder: (context, state) => PracticeListenQuizViewContent(
+                  question: current, onPlay: onPlayAudio, isLoading: state.status.isLoading)),
           const SizedBox(height: 10),
-          BlocBuilder<NextTaskBloc, NextTaskState>(
-              builder: (context, state) => nextButton(state.isCurrentTaskCompleted)),
+          BlocBuilder<PracticeListenTapStatusBloc, PracticeListenTapStatusState>(
+              bloc: statusBloc,
+              builder: (context, statusState) => BlocBuilder<NextTaskBloc, NextTaskState>(
+                  builder: (context, state) => Button.primary(
+                      onTap: onNext,
+                      text: 'Next',
+                      isAvialable: state.isCurrentTaskCompleted && !statusState.status.isLoading))),
         ],
       );
 
   @override
-  Widget build(BuildContext context) => quizView;
+  Widget build(BuildContext context) => MultiBlocListener(
+          listeners: [
+            BlocListener<AudioBloc, AudioState>(bloc: audioBloc, listener: audioListener),
+            BlocListener<PracticeListenTapStatusBloc, PracticeListenTapStatusState>(
+                bloc: statusBloc, listener: practiceListenTapStatus),
+          ],
+          child: showResult
+              ? QuizResultComponent(
+                  all: questions.length,
+                  correctOnes: correctCount,
+                )
+              : quizView);
 }

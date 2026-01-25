@@ -38,7 +38,7 @@ class PracticePage extends StatelessWidget {
             title: 'Listen & Tap',
             description: 'Train your ear with audio',
             image: AppImages.listenTap,
-            route: listenTapRoute),
+            route: listenTapSetsRoute),
         ActivityModel(
             title: 'Vocabulary',
             description: 'Choose right answer',

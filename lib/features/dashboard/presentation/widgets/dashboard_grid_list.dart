@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/core/inherited_widgets/navigation_shell_scope.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/widgets/cards/dashboard_grid_card.dart';
+import 'package:ustadia_user_app/router.dart';
 
 class DashboardQuickGridList extends StatelessWidget {
   const DashboardQuickGridList({super.key});
@@ -13,18 +15,24 @@ class DashboardQuickGridList extends StatelessWidget {
   static const double tallHeight = 140;
 
   /// --- Methods ---
+  void goToLessons(BuildContext context) => NavigationShellScope.of(context).goBranch(1);
 
   void goToPractice(BuildContext context) => NavigationShellScope.of(context).goBranch(2);
 
+  void goToChatWithAi(BuildContext context) => NavigationShellScope.of(context).goBranch(3);
+
+  void goToLeadboard(BuildContext context) => context.push(leaderboardRoute);
+
   /// --- Widgets ---
-  Widget get lessonAndChat => Column(children: [
+ 
+  Widget lessonAndChat(BuildContext context) => Column(children: [
         DashboardGridCard(
             title: 'Continue Lesson',
             subtitle: 'Unlock new skills',
             cardColor: AppColors.orangeBE,
             height: 118,
             backImage: AppImages.lessonCardBack,
-            onTap: () {}),
+            onTap: () => goToLessons(context)),
         const SizedBox(height: 12),
         DashboardGridCard(
             title: 'Chat with AI',
@@ -32,7 +40,7 @@ class DashboardQuickGridList extends StatelessWidget {
             cardColor: AppColors.greenE0,
             height: 140,
             backImage: AppImages.chatCardBack,
-            onTap: () {})
+            onTap: () => goToChatWithAi(context))
       ]);
 
   Widget chatAndLideBoard(BuildContext context) => Column(children: [
@@ -50,12 +58,12 @@ class DashboardQuickGridList extends StatelessWidget {
             cardColor: AppColors.blueFB,
             height: 118,
             backImage: AppImages.leaderboardCardBack,
-            onTap: () {})
+            onTap: () => goToLeadboard(context))
       ]);
 
   @override
   Widget build(BuildContext context) => Row(children: [
-        Expanded(child: lessonAndChat),
+        Expanded(child: lessonAndChat(context)),
         const SizedBox(width: 10),
         Expanded(child: chatAndLideBoard(context))
       ]);

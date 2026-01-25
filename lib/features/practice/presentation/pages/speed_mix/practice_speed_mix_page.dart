@@ -9,10 +9,10 @@ import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
-import 'package:ustadia_user_app/features/practice/data/models/listen_tap_question_model.dart';
 import 'package:ustadia_user_app/features/practice/data/models/speed_mix_task_model.dart';
 import 'package:ustadia_user_app/features/practice/data/models/vocabulary_question.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/next_task_bloc/next_task_bloc.dart';
+import 'package:ustadia_user_app/features/practice/data/models/practice_listen_tap_set_model.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_result_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_build_sentence_content.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_listen_quiz_view_content.dart';
@@ -87,6 +87,24 @@ class PracticeSpeedMixPlayPageState extends State<PracticeSpeedMixPlayPage> {
       pairs.add((opts[i], opts[i + 1]));
     }
     return pairs;
+  }
+
+  PracticeListenTapQuestionModel _listenQuestionFromTask(SpeedMixTaskModel task) {
+    final options = List.generate(
+        task.options.length,
+        (index) => PracticeListenTapOptionModel(
+            id: '',
+            listenTapQuestionId: '',
+            word: task.options[index],
+            isCorrect: index == task.answerIndex,
+            order: index));
+    return PracticeListenTapQuestionModel(
+        id: 'speed-mix-listen-${task.prompt}',
+        listenTapId: '',
+        audioId: '',
+        order: 0,
+        options: options,
+        audio: null);
   }
 
   /// --- Life cycle ---
@@ -166,6 +184,11 @@ class PracticeSpeedMixPlayPageState extends State<PracticeSpeedMixPlayPage> {
     await _tts.awaitSpeakCompletion(true);
   }
 
+  Future<void> _playListenPrompt(String prompt) async {
+    await _tts.stop();
+    await _tts.speak(prompt);
+  }
+
   /// --- Widgets ---
 
   Widget get timerPill => Container(
@@ -202,11 +225,9 @@ class PracticeSpeedMixPlayPageState extends State<PracticeSpeedMixPlayPage> {
       case SpeedMixTaskType.listen:
         return PracticeListenQuizViewContent(
             key: ValueKey('listen-$currentIndex'),
-            question: ListenTapQuestionModel(
-                prompt: currentTaskModel.prompt,
-                options: currentTaskModel.options,
-                answerIndex: currentTaskModel.answerIndex),
-            tts: _tts);
+            question: _listenQuestionFromTask(currentTaskModel),
+            onPlay: () => _playListenPrompt(currentTaskModel.prompt),
+            isLoading: false);
       case SpeedMixTaskType.sentence:
         return PracticeBuildSentenceContent(
             key: ValueKey('sentence-$currentIndex'), correctOrder: currentTaskModel.options);
