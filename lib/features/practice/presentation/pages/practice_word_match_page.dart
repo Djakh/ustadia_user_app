@@ -1,30 +1,79 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
+import 'package:ustadia_user_app/features/practice/data/models/practice_word_match_set_model.dart';
+import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_word_match_status_bloc/practice_word_match_status_bloc.dart';
+import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_word_match_status_bloc/practice_word_match_status_event.dart';
+import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_word_match_status_bloc/practice_word_match_status_state.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_word_match_card.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_word_match_content.dart';
+import 'package:ustadia_user_app/injection_container.dart';
 
-class PracticeWordMatchPage extends StatelessWidget {
-  const PracticeWordMatchPage({super.key});
+class PracticeWordMatchPage extends StatefulWidget {
+  final PracticeWordMatchSetModel set;
+  const PracticeWordMatchPage({super.key, required this.set});
+
+  @override
+  State<PracticeWordMatchPage> createState() => _PracticeWordMatchPageState();
+}
+
+class _PracticeWordMatchPageState extends State<PracticeWordMatchPage> {
+  final PracticeWordMatchStatusBloc statusBloc = sl<PracticeWordMatchStatusBloc>();
+  bool showResult = false;
 
   /// --- Data ---
 
-  List<(String, String)> get pairs => const [
-        ('Dog', 'Собака'),
-        ('Cat', 'Кошка'),
-        ('Water', 'Вода'),
-        ('Book', 'Книга'),
-      ];
+  List<PracticeWordMatchCardData> get sources => widget.set.options
+      .where((option) => option.isSource)
+      .map((option) => PracticeWordMatchCardData(pairId: option.pairId, text: option.word))
+      .toList();
+
+  List<PracticeWordMatchCardData> get targets => widget.set.options
+      .where((option) => !option.isSource)
+      .map((option) => PracticeWordMatchCardData(pairId: option.pairId, text: option.word))
+      .toList();
+
+  int get totalPairs => sources.length;
+
+  @override
+  void dispose() {
+    statusBloc.close();
+    super.dispose();
+  }
+
+  void submitCompleted() {
+    statusBloc.add(
+        PracticeWordMatchStatusRequested(wordMatchId: widget.set.id, status: 'completed'));
+  }
 
   /// --- Widgets ---
 
   Widget get view => PrimaryBackground(
-      title: 'Word match',
+      title: widget.set.title.isEmpty ? 'Word match' : widget.set.title,
       child: Column(children: [
         const SizedBox(height: 24),
-        PracticeWordMatchContent(wordMatchPairs: pairs),
+        PracticeWordMatchContent(sources: sources, targets: targets, onCompleted: submitCompleted),
       ]));
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(backgroundColor: context.cs.surface, body: SafeArea(child: view));
+  Widget build(BuildContext context) => BlocListener<PracticeWordMatchStatusBloc,
+          PracticeWordMatchStatusState>(
+      bloc: statusBloc,
+      listener: (context, state) {
+        if (state.status.isError && state.errorMessage != null) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+        }
+        if (state.status.isSuccess) {
+          setState(() => showResult = true);
+        }
+      },
+      child: Scaffold(
+          backgroundColor: context.cs.surface,
+          body: SafeArea(
+              child: showResult
+                  ? QuizResultComponent(all: totalPairs, correctOnes: totalPairs)
+                  : view)));
 }

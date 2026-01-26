@@ -18,6 +18,7 @@ import 'package:ustadia_user_app/features/practice/presentation/widgets/contents
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_listen_quiz_view_content.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_vocabulary_content.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_word_match_content.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_word_match_card.dart';
 import 'package:ustadia_user_app/router.dart';
 
 class PracticeSpeedMixPlayPage extends StatefulWidget {
@@ -88,6 +89,14 @@ class PracticeSpeedMixPlayPageState extends State<PracticeSpeedMixPlayPage> {
     }
     return pairs;
   }
+
+  List<PracticeWordMatchCardData> _wordMatchSources(List<(String, String)> pairs) => List.generate(
+      pairs.length,
+      (index) => PracticeWordMatchCardData(pairId: index, text: pairs[index].$1));
+
+  List<PracticeWordMatchCardData> _wordMatchTargets(List<(String, String)> pairs) => List.generate(
+      pairs.length,
+      (index) => PracticeWordMatchCardData(pairId: index, text: pairs[index].$2));
 
   PracticeListenTapQuestionModel _listenQuestionFromTask(SpeedMixTaskModel task) {
     final options = List.generate(
@@ -232,9 +241,11 @@ class PracticeSpeedMixPlayPageState extends State<PracticeSpeedMixPlayPage> {
         return PracticeBuildSentenceContent(
             key: ValueKey('sentence-$currentIndex'), correctOrder: currentTaskModel.options);
       case SpeedMixTaskType.wordMatch:
+        final pairs = _pairsFromOptions(currentTaskModel.options);
         return PracticeWordMatchContent(
             key: ValueKey('wordmatch-$currentIndex'),
-            wordMatchPairs: _pairsFromOptions(currentTaskModel.options));
+            sources: _wordMatchSources(pairs),
+            targets: _wordMatchTargets(pairs));
     }
   }
 

@@ -1,131 +1,53 @@
 [
   {
-    "id": "3efecc97-aff5-4916-9497-2c5a44e2c908",
-    "title": "ASDasd asdas",
-    "description": "ASDasd asdsd",
+    "id": "b9014ccf-51d6-4f58-9b75-104f7abccbf3",
+    "title": "Mixed Practice - Advanced - SentenceBuilder 3",
+    "description": "",
     "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
     "isPublic": false,
     "difficulty": "advanced",
     "isPublished": true,
-    "createdAt": "2026-01-22T16:13:12.200Z",
-    "updatedAt": "2026-01-22T19:20:55.933Z",
+    "createdAt": "2026-01-26T04:33:32.430Z",
+    "updatedAt": "2026-01-26T04:33:32.430Z",
     "questions": [
       {
-        "id": "8f12e625-78a3-4988-86e6-0ff92c14ab9a",
-        "listenTapId": "3efecc97-aff5-4916-9497-2c5a44e2c908",
-        "audioId": "06539496-c23f-404d-9446-c312f7a7277d",
+        "id": "d965fd3f-45ab-4261-9958-2f384ecfa9c4",
+        "sentenceBuilderId": "b9014ccf-51d6-4f58-9b75-104f7abccbf3",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
         "order": 0,
-        "createdAt": "2026-01-22T17:08:04.847Z",
-        "updatedAt": "2026-01-22T17:08:04.847Z",
-        "options": [
+        "createdAt": "2026-01-26T04:33:32.433Z",
+        "updatedAt": "2026-01-26T04:33:32.433Z",
+        "words": [
           {
-            "id": "f250dc0b-637d-4ed5-9475-c9a689cfa7f9",
-            "listenTapQuestionId": "8f12e625-78a3-4988-86e6-0ff92c14ab9a",
-            "word": "asdasd 3",
-            "isCorrect": false,
+            "id": "905f7d2e-91ce-47a2-8d1a-a55e2910c0ca",
+            "sentenceBuilderQuestionId": "d965fd3f-45ab-4261-9958-2f384ecfa9c4",
+            "word": "useful",
+            "correctPosition": 2,
             "order": 2,
-            "createdAt": "2026-01-22T18:17:49.377Z",
-            "updatedAt": "2026-01-22T18:17:49.377Z"
+            "createdAt": "2026-01-26T04:33:32.435Z",
+            "updatedAt": "2026-01-26T04:33:32.435Z"
           },
           {
-            "id": "c15ecda6-5ff3-4bbc-a028-3eca2e02a857",
-            "listenTapQuestionId": "8f12e625-78a3-4988-86e6-0ff92c14ab9a",
-            "word": "asdas",
-            "isCorrect": true,
+            "id": "30f7b9e1-bc09-4b10-b4ef-a4e6aef65fe2",
+            "sentenceBuilderQuestionId": "d965fd3f-45ab-4261-9958-2f384ecfa9c4",
+            "word": "is",
+            "correctPosition": 1,
             "order": 1,
-            "createdAt": "2026-01-22T18:17:49.087Z",
-            "updatedAt": "2026-01-22T18:17:49.087Z"
+            "createdAt": "2026-01-26T04:33:32.435Z",
+            "updatedAt": "2026-01-26T04:33:32.435Z"
           },
           {
-            "id": "e16c6207-f1fa-45e2-b071-5f2a4fe60788",
-            "listenTapQuestionId": "8f12e625-78a3-4988-86e6-0ff92c14ab9a",
-            "word": "asdasdas",
-            "isCorrect": false,
+            "id": "c8610a58-fe79-4b55-abb6-db1b50ec8753",
+            "sentenceBuilderQuestionId": "d965fd3f-45ab-4261-9958-2f384ecfa9c4",
+            "word": "Lesson 6",
+            "correctPosition": 0,
             "order": 0,
-            "createdAt": "2026-01-22T18:17:48.770Z",
-            "updatedAt": "2026-01-22T18:17:48.770Z"
+            "createdAt": "2026-01-26T04:33:32.435Z",
+            "updatedAt": "2026-01-26T04:33:32.435Z"
           }
-        ],
-        "audio": {
-          "id": "06539496-c23f-404d-9446-c312f7a7277d",
-          "filename": "4bc41327e17979604b69b6a5399b5fda.ogg",
-          "path": "67a7706379ea6f78361c0b96065122712422690dd37c12a14ace267b35287d7f_audio-ogg",
-          "mimetype": "audio/ogg",
-          "url": "/uploads/4bc41327e17979604b69b6a5399b5fda.ogg",
-          "created_at": "2026-01-22T17:07:54.942Z"
-        }
-      },
-      {
-        "id": "c5bf8d8e-cce5-48e4-a74d-1c39426ba11c",
-        "listenTapId": "3efecc97-aff5-4916-9497-2c5a44e2c908",
-        "audioId": "2ebb78f7-1488-4146-b6cb-cb4919f40ae4",
-        "order": 0,
-        "createdAt": "2026-01-22T17:33:34.469Z",
-        "updatedAt": "2026-01-22T17:33:34.469Z",
-        "options": [
-          {
-            "id": "e2be0472-98bf-4d91-8437-5a672b9fbc53",
-            "listenTapQuestionId": "c5bf8d8e-cce5-48e4-a74d-1c39426ba11c",
-            "word": "asdasd",
-            "isCorrect": false,
-            "order": 1,
-            "createdAt": "2026-01-22T17:52:40.249Z",
-            "updatedAt": "2026-01-22T17:52:40.249Z"
-          },
-          {
-            "id": "b66e742b-db24-4a1c-91ec-55047f9d798d",
-            "listenTapQuestionId": "c5bf8d8e-cce5-48e4-a74d-1c39426ba11c",
-            "word": "string",
-            "isCorrect": true,
-            "order": 0,
-            "createdAt": "2026-01-22T17:52:39.986Z",
-            "updatedAt": "2026-01-22T17:52:39.986Z"
-          }
-        ],
-        "audio": {
-          "id": "2ebb78f7-1488-4146-b6cb-cb4919f40ae4",
-          "filename": "bc5c7ea2f0cfb86902f675ca37838926.ogg",
-          "path": "6149de997e196c353a0000945f6f042137e7b17f7e7a256b96fce975613a1f09_audio-ogg",
-          "mimetype": "audio/ogg",
-          "url": "/uploads/bc5c7ea2f0cfb86902f675ca37838926.ogg",
-          "created_at": "2026-01-22T17:33:30.260Z"
-        }
-      },
-      {
-        "id": "57821cc0-f678-4906-a905-cb92e56e9a20",
-        "listenTapId": "3efecc97-aff5-4916-9497-2c5a44e2c908",
-        "audioId": "768af694-30d2-47b3-9b16-034e6fa7e83f",
-        "order": 0,
-        "createdAt": "2026-01-22T17:47:59.747Z",
-        "updatedAt": "2026-01-22T17:47:59.747Z",
-        "options": [
-          {
-            "id": "a72620bc-b574-4757-80e7-da2379a9c7e8",
-            "listenTapQuestionId": "57821cc0-f678-4906-a905-cb92e56e9a20",
-            "word": "фывфыв",
-            "isCorrect": false,
-            "order": 1,
-            "createdAt": "2026-01-22T17:48:09.973Z",
-            "updatedAt": "2026-01-22T17:48:09.973Z"
-          },
-          {
-            "id": "790f2937-4945-4a2a-9aa9-79cce0db4a95",
-            "listenTapQuestionId": "57821cc0-f678-4906-a905-cb92e56e9a20",
-            "word": "фывфыв",
-            "isCorrect": true,
-            "order": 0,
-            "createdAt": "2026-01-22T17:48:09.700Z",
-            "updatedAt": "2026-01-22T17:48:09.700Z"
-          }
-        ],
-        "audio": {
-          "id": "768af694-30d2-47b3-9b16-034e6fa7e83f",
-          "filename": "bb5a12ab9e27b2c915782085a7a2b519.ogg",
-          "path": "2ed092dbf0a17a7890cf5b45042e0803c96d9c42b5e50150022145f97f545b57_audio-ogg",
-          "mimetype": "audio/ogg",
-          "url": "/uploads/bb5a12ab9e27b2c915782085a7a2b519.ogg",
-          "created_at": "2026-01-22T17:47:55.528Z"
-        }
+        ]
       }
     ],
     "teacher": {
@@ -145,7 +67,7 @@
         "teacher",
         "user"
       ],
-      "language": "ru",
+      "language": "en",
       "created_at": "2025-12-24T15:32:44.479Z",
       "xp": "0",
       "isDeleted": false,
@@ -153,7 +75,4680 @@
       "profilePicture": null
     },
     "status": "not_completed",
-    "totalQuestions": 3,
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "0144caf0-a6dc-4173-a314-8e772a112dfb",
+    "title": "Mixed Practice - Advanced - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.417Z",
+    "updatedAt": "2026-01-26T04:33:32.417Z",
+    "questions": [
+      {
+        "id": "a2ae1c11-bc60-4b58-96d0-48c2186e971e",
+        "sentenceBuilderId": "0144caf0-a6dc-4173-a314-8e772a112dfb",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.419Z",
+        "updatedAt": "2026-01-26T04:33:32.419Z",
+        "words": [
+          {
+            "id": "fd511a30-77a4-4779-8584-bf76dd920c68",
+            "sentenceBuilderQuestionId": "a2ae1c11-bc60-4b58-96d0-48c2186e971e",
+            "word": "Answer 3",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.422Z",
+            "updatedAt": "2026-01-26T04:33:32.422Z"
+          },
+          {
+            "id": "b563401e-f429-46a4-84eb-01ccaa88513e",
+            "sentenceBuilderQuestionId": "a2ae1c11-bc60-4b58-96d0-48c2186e971e",
+            "word": "useful",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.422Z",
+            "updatedAt": "2026-01-26T04:33:32.422Z"
+          },
+          {
+            "id": "691d5d80-3a7d-4bd9-9903-a1fbdc73d8c1",
+            "sentenceBuilderQuestionId": "a2ae1c11-bc60-4b58-96d0-48c2186e971e",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.422Z",
+            "updatedAt": "2026-01-26T04:33:32.422Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "8f494f6f-a80d-47b3-a392-f35f6b4dbe29",
+    "title": "Mixed Practice - Advanced - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.403Z",
+    "updatedAt": "2026-01-26T04:33:32.403Z",
+    "questions": [
+      {
+        "id": "e36c1605-0f54-4bc6-a3c1-4cb1dc4e04c5",
+        "sentenceBuilderId": "8f494f6f-a80d-47b3-a392-f35f6b4dbe29",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.405Z",
+        "updatedAt": "2026-01-26T04:33:32.405Z",
+        "words": [
+          {
+            "id": "6b1f3877-f2ad-454a-af55-f597f10eb7ce",
+            "sentenceBuilderQuestionId": "e36c1605-0f54-4bc6-a3c1-4cb1dc4e04c5",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.408Z",
+            "updatedAt": "2026-01-26T04:33:32.408Z"
+          },
+          {
+            "id": "5f6f7bb4-0818-4c3b-9d58-65eb5ef46505",
+            "sentenceBuilderQuestionId": "e36c1605-0f54-4bc6-a3c1-4cb1dc4e04c5",
+            "word": "useful",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.408Z",
+            "updatedAt": "2026-01-26T04:33:32.408Z"
+          },
+          {
+            "id": "efb9ce6e-0c28-469c-87e1-afa52ffb5f66",
+            "sentenceBuilderQuestionId": "e36c1605-0f54-4bc6-a3c1-4cb1dc4e04c5",
+            "word": "Lesson 0",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.408Z",
+            "updatedAt": "2026-01-26T04:33:32.408Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "18e389bf-2319-450c-9a52-786b20e13924",
+    "title": "Mixed Practice - Intermediate - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.387Z",
+    "updatedAt": "2026-01-26T04:33:32.387Z",
+    "questions": [
+      {
+        "id": "95d7a2a1-8fc5-4069-943d-cc5bf9f47380",
+        "sentenceBuilderId": "18e389bf-2319-450c-9a52-786b20e13924",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.390Z",
+        "updatedAt": "2026-01-26T04:33:32.390Z",
+        "words": [
+          {
+            "id": "6356349c-63c2-4bda-b7b6-545b3a9333dd",
+            "sentenceBuilderQuestionId": "95d7a2a1-8fc5-4069-943d-cc5bf9f47380",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.393Z",
+            "updatedAt": "2026-01-26T04:33:32.393Z"
+          },
+          {
+            "id": "b8f7db64-ad8a-4d30-9e64-6c14891e42c7",
+            "sentenceBuilderQuestionId": "95d7a2a1-8fc5-4069-943d-cc5bf9f47380",
+            "word": "useful",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.393Z",
+            "updatedAt": "2026-01-26T04:33:32.393Z"
+          },
+          {
+            "id": "24652c7f-ac1d-411a-bc4b-561b0ebf2c56",
+            "sentenceBuilderQuestionId": "95d7a2a1-8fc5-4069-943d-cc5bf9f47380",
+            "word": "Lesson 6",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.393Z",
+            "updatedAt": "2026-01-26T04:33:32.393Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "8d3e33bc-2fa9-4e96-af9c-ab23fe68a8ad",
+    "title": "Mixed Practice - Intermediate - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.353Z",
+    "updatedAt": "2026-01-26T04:33:32.353Z",
+    "questions": [
+      {
+        "id": "f1d0ced9-fc8c-4ddd-a6fb-11b49100015e",
+        "sentenceBuilderId": "8d3e33bc-2fa9-4e96-af9c-ab23fe68a8ad",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.355Z",
+        "updatedAt": "2026-01-26T04:33:32.355Z",
+        "words": [
+          {
+            "id": "b7bdf91c-321d-406a-bc90-f15aa6e3f7f6",
+            "sentenceBuilderQuestionId": "f1d0ced9-fc8c-4ddd-a6fb-11b49100015e",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.358Z",
+            "updatedAt": "2026-01-26T04:33:32.358Z"
+          },
+          {
+            "id": "47530b20-4ca4-4173-b5ee-5a1ac8e23805",
+            "sentenceBuilderQuestionId": "f1d0ced9-fc8c-4ddd-a6fb-11b49100015e",
+            "word": "useful",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.358Z",
+            "updatedAt": "2026-01-26T04:33:32.358Z"
+          },
+          {
+            "id": "ba8e1e0e-8dbb-4e51-bac4-514fb3d32bd8",
+            "sentenceBuilderQuestionId": "f1d0ced9-fc8c-4ddd-a6fb-11b49100015e",
+            "word": "Answer 3",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.358Z",
+            "updatedAt": "2026-01-26T04:33:32.358Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "d5447aff-3ecf-415d-ab43-d25186a92768",
+    "title": "Mixed Practice - Intermediate - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.332Z",
+    "updatedAt": "2026-01-26T04:33:32.332Z",
+    "questions": [
+      {
+        "id": "4a697d56-5c9f-4196-bf10-db552d05ef1a",
+        "sentenceBuilderId": "d5447aff-3ecf-415d-ab43-d25186a92768",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.334Z",
+        "updatedAt": "2026-01-26T04:33:32.334Z",
+        "words": [
+          {
+            "id": "26f08962-c330-495a-ab0b-328bcdd7559a",
+            "sentenceBuilderQuestionId": "4a697d56-5c9f-4196-bf10-db552d05ef1a",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.337Z",
+            "updatedAt": "2026-01-26T04:33:32.337Z"
+          },
+          {
+            "id": "5a31d129-b832-479f-88e9-a15723b3289a",
+            "sentenceBuilderQuestionId": "4a697d56-5c9f-4196-bf10-db552d05ef1a",
+            "word": "useful",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.337Z",
+            "updatedAt": "2026-01-26T04:33:32.337Z"
+          },
+          {
+            "id": "d19978c7-eca6-4bdc-ac95-5d13678edf35",
+            "sentenceBuilderQuestionId": "4a697d56-5c9f-4196-bf10-db552d05ef1a",
+            "word": "Lesson 0",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.337Z",
+            "updatedAt": "2026-01-26T04:33:32.337Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "69eebc55-a2cb-46f3-9bef-6d0cf1cb9579",
+    "title": "Mixed Practice - Beginner - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.317Z",
+    "updatedAt": "2026-01-26T04:33:32.317Z",
+    "questions": [
+      {
+        "id": "9cbe61e6-c730-47ce-ba6c-8e0717e99049",
+        "sentenceBuilderId": "69eebc55-a2cb-46f3-9bef-6d0cf1cb9579",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.319Z",
+        "updatedAt": "2026-01-26T04:33:32.319Z",
+        "words": [
+          {
+            "id": "ab268d10-18f1-4254-b132-6c5fcad2780c",
+            "sentenceBuilderQuestionId": "9cbe61e6-c730-47ce-ba6c-8e0717e99049",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.322Z",
+            "updatedAt": "2026-01-26T04:33:32.322Z"
+          },
+          {
+            "id": "82572c27-5435-4e54-a2b4-768bfde7dc23",
+            "sentenceBuilderQuestionId": "9cbe61e6-c730-47ce-ba6c-8e0717e99049",
+            "word": "useful",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.322Z",
+            "updatedAt": "2026-01-26T04:33:32.322Z"
+          },
+          {
+            "id": "800d92ed-af64-4672-84b0-376e5cb6abd0",
+            "sentenceBuilderQuestionId": "9cbe61e6-c730-47ce-ba6c-8e0717e99049",
+            "word": "Lesson 6",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.322Z",
+            "updatedAt": "2026-01-26T04:33:32.322Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "0d65374b-fed2-44c9-9320-ea8ff566eb3b",
+    "title": "Mixed Practice - Beginner - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.302Z",
+    "updatedAt": "2026-01-26T04:33:32.302Z",
+    "questions": [
+      {
+        "id": "89646898-42d5-4dc6-825b-bd674ef70cf0",
+        "sentenceBuilderId": "0d65374b-fed2-44c9-9320-ea8ff566eb3b",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.304Z",
+        "updatedAt": "2026-01-26T04:33:32.304Z",
+        "words": [
+          {
+            "id": "74428255-b5f4-4b8c-8c12-fb63deed1cf9",
+            "sentenceBuilderQuestionId": "89646898-42d5-4dc6-825b-bd674ef70cf0",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.307Z",
+            "updatedAt": "2026-01-26T04:33:32.307Z"
+          },
+          {
+            "id": "8b3c29b6-5b90-4e02-bbfb-a55627086cf2",
+            "sentenceBuilderQuestionId": "89646898-42d5-4dc6-825b-bd674ef70cf0",
+            "word": "useful",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.307Z",
+            "updatedAt": "2026-01-26T04:33:32.307Z"
+          },
+          {
+            "id": "ba433b0c-bd2e-485b-b160-3c58ba348220",
+            "sentenceBuilderQuestionId": "89646898-42d5-4dc6-825b-bd674ef70cf0",
+            "word": "Answer 3",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.307Z",
+            "updatedAt": "2026-01-26T04:33:32.307Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "d0ae3a05-4792-48dc-98c9-8cf0356a7502",
+    "title": "Mixed Practice - Beginner - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.285Z",
+    "updatedAt": "2026-01-26T04:33:32.285Z",
+    "questions": [
+      {
+        "id": "f7dd3a45-3805-475d-a444-33d88e27aa6d",
+        "sentenceBuilderId": "d0ae3a05-4792-48dc-98c9-8cf0356a7502",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.287Z",
+        "updatedAt": "2026-01-26T04:33:32.287Z",
+        "words": [
+          {
+            "id": "2875c5a6-58d6-4230-b9aa-6a35451ce1b9",
+            "sentenceBuilderQuestionId": "f7dd3a45-3805-475d-a444-33d88e27aa6d",
+            "word": "useful",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.290Z",
+            "updatedAt": "2026-01-26T04:33:32.290Z"
+          },
+          {
+            "id": "cf29973e-0d0d-466c-b9f7-9149ef922a9b",
+            "sentenceBuilderQuestionId": "f7dd3a45-3805-475d-a444-33d88e27aa6d",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.290Z",
+            "updatedAt": "2026-01-26T04:33:32.290Z"
+          },
+          {
+            "id": "372641f3-9223-455c-82a4-ba6afb5a7e9c",
+            "sentenceBuilderQuestionId": "f7dd3a45-3805-475d-a444-33d88e27aa6d",
+            "word": "Lesson 0",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.290Z",
+            "updatedAt": "2026-01-26T04:33:32.290Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "dacfbcea-4144-4237-9a34-10bb7cc1511e",
+    "title": "Classroom Phrases - Advanced - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.272Z",
+    "updatedAt": "2026-01-26T04:33:32.272Z",
+    "questions": [
+      {
+        "id": "5504bfe2-1093-44c5-b086-89fea341da22",
+        "sentenceBuilderId": "dacfbcea-4144-4237-9a34-10bb7cc1511e",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.274Z",
+        "updatedAt": "2026-01-26T04:33:32.274Z",
+        "words": [
+          {
+            "id": "20e8efc1-36ba-40f2-b669-a702ea34e7ef",
+            "sentenceBuilderQuestionId": "5504bfe2-1093-44c5-b086-89fea341da22",
+            "word": "book",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.276Z",
+            "updatedAt": "2026-01-26T04:33:32.276Z"
+          },
+          {
+            "id": "bf996d78-a6f8-4b37-af4a-09d919a41700",
+            "sentenceBuilderQuestionId": "5504bfe2-1093-44c5-b086-89fea341da22",
+            "word": "your",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.276Z",
+            "updatedAt": "2026-01-26T04:33:32.276Z"
+          },
+          {
+            "id": "1c3ecb2c-582e-44cc-b2ff-d64b2fe9493b",
+            "sentenceBuilderQuestionId": "5504bfe2-1093-44c5-b086-89fea341da22",
+            "word": "Open",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.276Z",
+            "updatedAt": "2026-01-26T04:33:32.276Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "a1a1ceba-2d0d-4e45-95db-f98302aa71f4",
+    "title": "Classroom Phrases - Advanced - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": true,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.256Z",
+    "updatedAt": "2026-01-26T04:33:32.256Z",
+    "questions": [
+      {
+        "id": "b231c8ff-4b66-4121-80fd-11c1e7264e2c",
+        "sentenceBuilderId": "a1a1ceba-2d0d-4e45-95db-f98302aa71f4",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.258Z",
+        "updatedAt": "2026-01-26T04:33:32.258Z",
+        "words": [
+          {
+            "id": "fbff6c38-716e-4265-a9ab-bc3781bcbee8",
+            "sentenceBuilderQuestionId": "b231c8ff-4b66-4121-80fd-11c1e7264e2c",
+            "word": "Open",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.260Z",
+            "updatedAt": "2026-01-26T04:33:32.260Z"
+          },
+          {
+            "id": "3cd7482c-0fad-4b41-a98e-c8baf4f3d091",
+            "sentenceBuilderQuestionId": "b231c8ff-4b66-4121-80fd-11c1e7264e2c",
+            "word": "book",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.260Z",
+            "updatedAt": "2026-01-26T04:33:32.260Z"
+          },
+          {
+            "id": "81e74385-a963-4ee6-9deb-6ac049a68a48",
+            "sentenceBuilderQuestionId": "b231c8ff-4b66-4121-80fd-11c1e7264e2c",
+            "word": "your",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.260Z",
+            "updatedAt": "2026-01-26T04:33:32.260Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "c008aacd-cc57-4b92-b7a9-7d51115e778e",
+    "title": "Classroom Phrases - Advanced - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.240Z",
+    "updatedAt": "2026-01-26T04:33:32.240Z",
+    "questions": [
+      {
+        "id": "8ca6dced-2b1e-4020-a5dc-930be35da906",
+        "sentenceBuilderId": "c008aacd-cc57-4b92-b7a9-7d51115e778e",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.243Z",
+        "updatedAt": "2026-01-26T04:33:32.243Z",
+        "words": [
+          {
+            "id": "7a72182c-cb13-4ab8-9e3a-4a2601bc18f5",
+            "sentenceBuilderQuestionId": "8ca6dced-2b1e-4020-a5dc-930be35da906",
+            "word": "your",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.245Z",
+            "updatedAt": "2026-01-26T04:33:32.245Z"
+          },
+          {
+            "id": "e04a071c-bfaa-48e6-ad0b-a4ae40be517a",
+            "sentenceBuilderQuestionId": "8ca6dced-2b1e-4020-a5dc-930be35da906",
+            "word": "book",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.245Z",
+            "updatedAt": "2026-01-26T04:33:32.245Z"
+          },
+          {
+            "id": "82589679-3fed-4c2b-be0b-4699dc5eaed3",
+            "sentenceBuilderQuestionId": "8ca6dced-2b1e-4020-a5dc-930be35da906",
+            "word": "Open",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.245Z",
+            "updatedAt": "2026-01-26T04:33:32.245Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "dab4069e-9fc1-407e-bcb8-6f39f515df47",
+    "title": "Classroom Phrases - Intermediate - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.224Z",
+    "updatedAt": "2026-01-26T04:33:32.224Z",
+    "questions": [
+      {
+        "id": "3c1adc4d-eb48-43cf-ba15-66bd90897a9e",
+        "sentenceBuilderId": "dab4069e-9fc1-407e-bcb8-6f39f515df47",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.226Z",
+        "updatedAt": "2026-01-26T04:33:32.226Z",
+        "words": [
+          {
+            "id": "e11323eb-5821-49e2-b52c-edafe0e99182",
+            "sentenceBuilderQuestionId": "3c1adc4d-eb48-43cf-ba15-66bd90897a9e",
+            "word": "your",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.229Z",
+            "updatedAt": "2026-01-26T04:33:32.229Z"
+          },
+          {
+            "id": "933e0b09-d148-4cff-87d8-2d1a36be3601",
+            "sentenceBuilderQuestionId": "3c1adc4d-eb48-43cf-ba15-66bd90897a9e",
+            "word": "book",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.229Z",
+            "updatedAt": "2026-01-26T04:33:32.229Z"
+          },
+          {
+            "id": "2ed1318c-3448-41ec-9441-1fcfde2f884f",
+            "sentenceBuilderQuestionId": "3c1adc4d-eb48-43cf-ba15-66bd90897a9e",
+            "word": "Open",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.229Z",
+            "updatedAt": "2026-01-26T04:33:32.229Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "3c4e6b47-9325-4a45-a9de-008612de6ff6",
+    "title": "Classroom Phrases - Intermediate - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.209Z",
+    "updatedAt": "2026-01-26T04:33:32.209Z",
+    "questions": [
+      {
+        "id": "941193d7-fa46-48e1-af53-3aae27e846b7",
+        "sentenceBuilderId": "3c4e6b47-9325-4a45-a9de-008612de6ff6",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.212Z",
+        "updatedAt": "2026-01-26T04:33:32.212Z",
+        "words": [
+          {
+            "id": "7ae70c76-7f78-461b-bbbf-5e727376f804",
+            "sentenceBuilderQuestionId": "941193d7-fa46-48e1-af53-3aae27e846b7",
+            "word": "your",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.215Z",
+            "updatedAt": "2026-01-26T04:33:32.215Z"
+          },
+          {
+            "id": "759b0d72-2d31-4482-ae31-a19b260ebaf5",
+            "sentenceBuilderQuestionId": "941193d7-fa46-48e1-af53-3aae27e846b7",
+            "word": "book",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.215Z",
+            "updatedAt": "2026-01-26T04:33:32.215Z"
+          },
+          {
+            "id": "40d9110c-71f9-4692-a4bf-2e23cf6fb598",
+            "sentenceBuilderQuestionId": "941193d7-fa46-48e1-af53-3aae27e846b7",
+            "word": "Open",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.215Z",
+            "updatedAt": "2026-01-26T04:33:32.215Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "403a4dc7-051f-453a-a1bf-ab01677595bf",
+    "title": "Classroom Phrases - Intermediate - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.195Z",
+    "updatedAt": "2026-01-26T04:33:32.195Z",
+    "questions": [
+      {
+        "id": "d809977d-40e9-48f9-8724-e97a170e4959",
+        "sentenceBuilderId": "403a4dc7-051f-453a-a1bf-ab01677595bf",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.198Z",
+        "updatedAt": "2026-01-26T04:33:32.198Z",
+        "words": [
+          {
+            "id": "35be77c4-4a35-4d45-97ab-ffb7237125c0",
+            "sentenceBuilderQuestionId": "d809977d-40e9-48f9-8724-e97a170e4959",
+            "word": "your",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.200Z",
+            "updatedAt": "2026-01-26T04:33:32.200Z"
+          },
+          {
+            "id": "1e2e498c-8104-4800-b097-4045014c9d10",
+            "sentenceBuilderQuestionId": "d809977d-40e9-48f9-8724-e97a170e4959",
+            "word": "book",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.200Z",
+            "updatedAt": "2026-01-26T04:33:32.200Z"
+          },
+          {
+            "id": "c77c971c-feac-4d73-988f-494bf2d93090",
+            "sentenceBuilderQuestionId": "d809977d-40e9-48f9-8724-e97a170e4959",
+            "word": "Open",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.200Z",
+            "updatedAt": "2026-01-26T04:33:32.200Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "b97d28a3-5124-4e91-9e03-1c9bf48c4055",
+    "title": "Classroom Phrases - Beginner - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.180Z",
+    "updatedAt": "2026-01-26T04:33:32.180Z",
+    "questions": [
+      {
+        "id": "af9195cb-00e3-401d-a498-56d88b486b6a",
+        "sentenceBuilderId": "b97d28a3-5124-4e91-9e03-1c9bf48c4055",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.183Z",
+        "updatedAt": "2026-01-26T04:33:32.183Z",
+        "words": [
+          {
+            "id": "35253d15-5af6-4a8e-b111-c70ef8dab5ae",
+            "sentenceBuilderQuestionId": "af9195cb-00e3-401d-a498-56d88b486b6a",
+            "word": "your",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.185Z",
+            "updatedAt": "2026-01-26T04:33:32.185Z"
+          },
+          {
+            "id": "be2d0186-accc-4322-9491-c9743d0ab26b",
+            "sentenceBuilderQuestionId": "af9195cb-00e3-401d-a498-56d88b486b6a",
+            "word": "book",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.185Z",
+            "updatedAt": "2026-01-26T04:33:32.185Z"
+          },
+          {
+            "id": "ba5cae7a-8af9-4aa8-a3f6-18b4c264245a",
+            "sentenceBuilderQuestionId": "af9195cb-00e3-401d-a498-56d88b486b6a",
+            "word": "Open",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.185Z",
+            "updatedAt": "2026-01-26T04:33:32.185Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "0b4c0934-0e24-4ea0-aaf4-840e4c611cba",
+    "title": "Classroom Phrases - Beginner - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.166Z",
+    "updatedAt": "2026-01-26T04:33:32.166Z",
+    "questions": [
+      {
+        "id": "6339ecf7-5a3c-4493-a644-63ace321add3",
+        "sentenceBuilderId": "0b4c0934-0e24-4ea0-aaf4-840e4c611cba",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.169Z",
+        "updatedAt": "2026-01-26T04:33:32.169Z",
+        "words": [
+          {
+            "id": "814325c7-e017-4e66-935f-6c6f476fa5cd",
+            "sentenceBuilderQuestionId": "6339ecf7-5a3c-4493-a644-63ace321add3",
+            "word": "book",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.171Z",
+            "updatedAt": "2026-01-26T04:33:32.171Z"
+          },
+          {
+            "id": "587fe4c5-e259-47ef-8fcc-d2adc38b272b",
+            "sentenceBuilderQuestionId": "6339ecf7-5a3c-4493-a644-63ace321add3",
+            "word": "Open",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.171Z",
+            "updatedAt": "2026-01-26T04:33:32.171Z"
+          },
+          {
+            "id": "f9709c87-4749-4d23-9370-d979d96619fd",
+            "sentenceBuilderQuestionId": "6339ecf7-5a3c-4493-a644-63ace321add3",
+            "word": "your",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.171Z",
+            "updatedAt": "2026-01-26T04:33:32.171Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "93a48826-a529-4603-a0bc-f99a7371bb3a",
+    "title": "Classroom Phrases - Beginner - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.151Z",
+    "updatedAt": "2026-01-26T04:33:32.151Z",
+    "questions": [
+      {
+        "id": "eedb0266-ed9c-4e2c-8e75-7e3f53ed6723",
+        "sentenceBuilderId": "93a48826-a529-4603-a0bc-f99a7371bb3a",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.153Z",
+        "updatedAt": "2026-01-26T04:33:32.153Z",
+        "words": [
+          {
+            "id": "aabeae7e-c4e7-4bd9-8639-b675da929888",
+            "sentenceBuilderQuestionId": "eedb0266-ed9c-4e2c-8e75-7e3f53ed6723",
+            "word": "book",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.156Z",
+            "updatedAt": "2026-01-26T04:33:32.156Z"
+          },
+          {
+            "id": "a5f4aff0-8031-497f-afc7-db0bde6a2731",
+            "sentenceBuilderQuestionId": "eedb0266-ed9c-4e2c-8e75-7e3f53ed6723",
+            "word": "your",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.156Z",
+            "updatedAt": "2026-01-26T04:33:32.156Z"
+          },
+          {
+            "id": "d4e4e11f-d191-4c78-912a-d57b3c6441ff",
+            "sentenceBuilderQuestionId": "eedb0266-ed9c-4e2c-8e75-7e3f53ed6723",
+            "word": "Open",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.156Z",
+            "updatedAt": "2026-01-26T04:33:32.156Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "34d42229-f7f8-4b42-9a44-1a427344cf4e",
+    "title": "Travel Phrases - Advanced - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.132Z",
+    "updatedAt": "2026-01-26T04:33:32.132Z",
+    "questions": [
+      {
+        "id": "6d85d43e-8709-48fc-b076-c987955805ce",
+        "sentenceBuilderId": "34d42229-f7f8-4b42-9a44-1a427344cf4e",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.135Z",
+        "updatedAt": "2026-01-26T04:33:32.135Z",
+        "words": [
+          {
+            "id": "0e380810-b4f9-463c-899a-5b41686ae0a2",
+            "sentenceBuilderQuestionId": "6d85d43e-8709-48fc-b076-c987955805ce",
+            "word": "Where",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.139Z",
+            "updatedAt": "2026-01-26T04:33:32.139Z"
+          },
+          {
+            "id": "99d2a473-14bb-41e7-af62-8b130609a2f0",
+            "sentenceBuilderQuestionId": "6d85d43e-8709-48fc-b076-c987955805ce",
+            "word": "station",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:32.139Z",
+            "updatedAt": "2026-01-26T04:33:32.139Z"
+          },
+          {
+            "id": "341da097-2245-4e9a-8676-0fa073744c0d",
+            "sentenceBuilderQuestionId": "6d85d43e-8709-48fc-b076-c987955805ce",
+            "word": "bus",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:32.139Z",
+            "updatedAt": "2026-01-26T04:33:32.139Z"
+          },
+          {
+            "id": "eb6bedd3-f92f-44b8-9685-e5adbdcbb7dc",
+            "sentenceBuilderQuestionId": "6d85d43e-8709-48fc-b076-c987955805ce",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.139Z",
+            "updatedAt": "2026-01-26T04:33:32.139Z"
+          },
+          {
+            "id": "62d04f2d-4bdc-4731-98eb-2ef87b77fe41",
+            "sentenceBuilderQuestionId": "6d85d43e-8709-48fc-b076-c987955805ce",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.139Z",
+            "updatedAt": "2026-01-26T04:33:32.139Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "84915410-d6b7-4599-811d-7f88d0d4674d",
+    "title": "Travel Phrases - Advanced - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.117Z",
+    "updatedAt": "2026-01-26T04:33:32.117Z",
+    "questions": [
+      {
+        "id": "41f6925c-0951-49cf-a16c-46eb22e77c6c",
+        "sentenceBuilderId": "84915410-d6b7-4599-811d-7f88d0d4674d",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.120Z",
+        "updatedAt": "2026-01-26T04:33:32.120Z",
+        "words": [
+          {
+            "id": "8bef9c11-5682-40f1-90e6-21ca052bfc3a",
+            "sentenceBuilderQuestionId": "41f6925c-0951-49cf-a16c-46eb22e77c6c",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.122Z",
+            "updatedAt": "2026-01-26T04:33:32.122Z"
+          },
+          {
+            "id": "640b881b-05da-4dbf-a118-dcffd9ee6ce3",
+            "sentenceBuilderQuestionId": "41f6925c-0951-49cf-a16c-46eb22e77c6c",
+            "word": "station",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:32.122Z",
+            "updatedAt": "2026-01-26T04:33:32.122Z"
+          },
+          {
+            "id": "73a337bd-985b-4bdc-aeec-96f443e93dcd",
+            "sentenceBuilderQuestionId": "41f6925c-0951-49cf-a16c-46eb22e77c6c",
+            "word": "bus",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:32.122Z",
+            "updatedAt": "2026-01-26T04:33:32.122Z"
+          },
+          {
+            "id": "f793d1a3-895c-403e-a3b4-7a52549d3958",
+            "sentenceBuilderQuestionId": "41f6925c-0951-49cf-a16c-46eb22e77c6c",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.122Z",
+            "updatedAt": "2026-01-26T04:33:32.122Z"
+          },
+          {
+            "id": "c149e93d-81a1-46fb-92b9-968a66e5c107",
+            "sentenceBuilderQuestionId": "41f6925c-0951-49cf-a16c-46eb22e77c6c",
+            "word": "Where",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.122Z",
+            "updatedAt": "2026-01-26T04:33:32.122Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "54c0ab3b-1cf0-4501-8645-40a2ab10235e",
+    "title": "Travel Phrases - Advanced - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.102Z",
+    "updatedAt": "2026-01-26T04:33:32.102Z",
+    "questions": [
+      {
+        "id": "4072c933-c1d6-4b14-a859-9eec9d16b95f",
+        "sentenceBuilderId": "54c0ab3b-1cf0-4501-8645-40a2ab10235e",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.105Z",
+        "updatedAt": "2026-01-26T04:33:32.105Z",
+        "words": [
+          {
+            "id": "cd1aa9b2-e205-4b3f-b6e2-8f4ed7f0027a",
+            "sentenceBuilderQuestionId": "4072c933-c1d6-4b14-a859-9eec9d16b95f",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.107Z",
+            "updatedAt": "2026-01-26T04:33:32.107Z"
+          },
+          {
+            "id": "f6a4bc63-c0c1-474c-ad77-100891cfffc3",
+            "sentenceBuilderQuestionId": "4072c933-c1d6-4b14-a859-9eec9d16b95f",
+            "word": "station",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:32.107Z",
+            "updatedAt": "2026-01-26T04:33:32.107Z"
+          },
+          {
+            "id": "c406dabb-0154-49b3-b813-0050426cc552",
+            "sentenceBuilderQuestionId": "4072c933-c1d6-4b14-a859-9eec9d16b95f",
+            "word": "bus",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:32.107Z",
+            "updatedAt": "2026-01-26T04:33:32.107Z"
+          },
+          {
+            "id": "1af770d3-55da-498a-9d9a-ff4bedb7a402",
+            "sentenceBuilderQuestionId": "4072c933-c1d6-4b14-a859-9eec9d16b95f",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.107Z",
+            "updatedAt": "2026-01-26T04:33:32.107Z"
+          },
+          {
+            "id": "8886f86c-fa05-4fb5-9bcd-7808636fc147",
+            "sentenceBuilderQuestionId": "4072c933-c1d6-4b14-a859-9eec9d16b95f",
+            "word": "Where",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.107Z",
+            "updatedAt": "2026-01-26T04:33:32.107Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "5a3b308a-0a99-4358-882c-7cf10aee63d7",
+    "title": "Travel Phrases - Intermediate - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.086Z",
+    "updatedAt": "2026-01-26T04:33:32.086Z",
+    "questions": [
+      {
+        "id": "7736c194-50c5-41e3-af5f-c04718385bca",
+        "sentenceBuilderId": "5a3b308a-0a99-4358-882c-7cf10aee63d7",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.089Z",
+        "updatedAt": "2026-01-26T04:33:32.089Z",
+        "words": [
+          {
+            "id": "b93630e2-538b-43bb-9d2a-0ffa59db35c0",
+            "sentenceBuilderQuestionId": "7736c194-50c5-41e3-af5f-c04718385bca",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.092Z",
+            "updatedAt": "2026-01-26T04:33:32.092Z"
+          },
+          {
+            "id": "77432f4a-2e5d-4499-8e7a-6ff4a459a98e",
+            "sentenceBuilderQuestionId": "7736c194-50c5-41e3-af5f-c04718385bca",
+            "word": "station",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:32.092Z",
+            "updatedAt": "2026-01-26T04:33:32.092Z"
+          },
+          {
+            "id": "af28668c-5fc5-4f3a-97b6-c61a00a9e35d",
+            "sentenceBuilderQuestionId": "7736c194-50c5-41e3-af5f-c04718385bca",
+            "word": "bus",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:32.092Z",
+            "updatedAt": "2026-01-26T04:33:32.092Z"
+          },
+          {
+            "id": "20e5ed34-871f-412f-a7b1-73dcef779414",
+            "sentenceBuilderQuestionId": "7736c194-50c5-41e3-af5f-c04718385bca",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.092Z",
+            "updatedAt": "2026-01-26T04:33:32.092Z"
+          },
+          {
+            "id": "874b3464-6c7b-463d-add8-df05aab013d4",
+            "sentenceBuilderQuestionId": "7736c194-50c5-41e3-af5f-c04718385bca",
+            "word": "Where",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.092Z",
+            "updatedAt": "2026-01-26T04:33:32.092Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "0296860c-1cd4-4520-893a-0fead2f50dc2",
+    "title": "Travel Phrases - Intermediate - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.072Z",
+    "updatedAt": "2026-01-26T04:33:32.072Z",
+    "questions": [
+      {
+        "id": "382c54ef-cdf1-498b-8c8c-5f4b342affdf",
+        "sentenceBuilderId": "0296860c-1cd4-4520-893a-0fead2f50dc2",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.074Z",
+        "updatedAt": "2026-01-26T04:33:32.074Z",
+        "words": [
+          {
+            "id": "b4651199-41ea-4318-a042-42efc5654d53",
+            "sentenceBuilderQuestionId": "382c54ef-cdf1-498b-8c8c-5f4b342affdf",
+            "word": "Where",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.077Z",
+            "updatedAt": "2026-01-26T04:33:32.077Z"
+          },
+          {
+            "id": "78adddbf-d41d-42d0-9f59-0dff124e37e4",
+            "sentenceBuilderQuestionId": "382c54ef-cdf1-498b-8c8c-5f4b342affdf",
+            "word": "station",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:32.077Z",
+            "updatedAt": "2026-01-26T04:33:32.077Z"
+          },
+          {
+            "id": "3a304dd0-eb4b-4801-a58d-50975ba8d971",
+            "sentenceBuilderQuestionId": "382c54ef-cdf1-498b-8c8c-5f4b342affdf",
+            "word": "bus",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:32.077Z",
+            "updatedAt": "2026-01-26T04:33:32.077Z"
+          },
+          {
+            "id": "98ae40b7-f0b8-42ff-a149-eba972a1bcd0",
+            "sentenceBuilderQuestionId": "382c54ef-cdf1-498b-8c8c-5f4b342affdf",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.077Z",
+            "updatedAt": "2026-01-26T04:33:32.077Z"
+          },
+          {
+            "id": "54cfe69d-e552-4e61-94e2-5d142894c712",
+            "sentenceBuilderQuestionId": "382c54ef-cdf1-498b-8c8c-5f4b342affdf",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.077Z",
+            "updatedAt": "2026-01-26T04:33:32.077Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "cc0ee999-e5ea-4843-a7eb-f437ab857b42",
+    "title": "Travel Phrases - Intermediate - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.058Z",
+    "updatedAt": "2026-01-26T04:33:32.058Z",
+    "questions": [
+      {
+        "id": "d3f82a30-81fb-4132-8d13-7065ed46b23e",
+        "sentenceBuilderId": "cc0ee999-e5ea-4843-a7eb-f437ab857b42",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.060Z",
+        "updatedAt": "2026-01-26T04:33:32.060Z",
+        "words": [
+          {
+            "id": "7e77cd64-fd88-4ec7-8d7e-c323bb7a02af",
+            "sentenceBuilderQuestionId": "d3f82a30-81fb-4132-8d13-7065ed46b23e",
+            "word": "Where",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.062Z",
+            "updatedAt": "2026-01-26T04:33:32.062Z"
+          },
+          {
+            "id": "bc5f8f55-884e-4dd8-9046-7678ea65cf97",
+            "sentenceBuilderQuestionId": "d3f82a30-81fb-4132-8d13-7065ed46b23e",
+            "word": "station",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:32.062Z",
+            "updatedAt": "2026-01-26T04:33:32.062Z"
+          },
+          {
+            "id": "e7cc4bcf-ae4f-48be-b0f2-46d872dccda8",
+            "sentenceBuilderQuestionId": "d3f82a30-81fb-4132-8d13-7065ed46b23e",
+            "word": "bus",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:32.062Z",
+            "updatedAt": "2026-01-26T04:33:32.062Z"
+          },
+          {
+            "id": "dd0b792a-98f9-4873-88ec-b3ce018f8e78",
+            "sentenceBuilderQuestionId": "d3f82a30-81fb-4132-8d13-7065ed46b23e",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.062Z",
+            "updatedAt": "2026-01-26T04:33:32.062Z"
+          },
+          {
+            "id": "1030b014-4d55-407f-9569-cba8c3cae36b",
+            "sentenceBuilderQuestionId": "d3f82a30-81fb-4132-8d13-7065ed46b23e",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.062Z",
+            "updatedAt": "2026-01-26T04:33:32.062Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "08f9f304-b0b4-4250-b03d-abcfbd3bc4c0",
+    "title": "Travel Phrases - Beginner - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.041Z",
+    "updatedAt": "2026-01-26T04:33:32.041Z",
+    "questions": [
+      {
+        "id": "5224c55a-80fe-466a-ba9d-fe716617d692",
+        "sentenceBuilderId": "08f9f304-b0b4-4250-b03d-abcfbd3bc4c0",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.044Z",
+        "updatedAt": "2026-01-26T04:33:32.044Z",
+        "words": [
+          {
+            "id": "b5cd677f-6294-4df2-8e0e-2ce57f36a0a0",
+            "sentenceBuilderQuestionId": "5224c55a-80fe-466a-ba9d-fe716617d692",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.047Z",
+            "updatedAt": "2026-01-26T04:33:32.047Z"
+          },
+          {
+            "id": "84623e46-8fad-49d4-be0d-23890814079e",
+            "sentenceBuilderQuestionId": "5224c55a-80fe-466a-ba9d-fe716617d692",
+            "word": "station",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:32.047Z",
+            "updatedAt": "2026-01-26T04:33:32.047Z"
+          },
+          {
+            "id": "b6533e33-b8d2-4ac2-844f-78bdef95654b",
+            "sentenceBuilderQuestionId": "5224c55a-80fe-466a-ba9d-fe716617d692",
+            "word": "bus",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:32.047Z",
+            "updatedAt": "2026-01-26T04:33:32.047Z"
+          },
+          {
+            "id": "4249732e-6452-40fd-9c36-2e9652d18ca2",
+            "sentenceBuilderQuestionId": "5224c55a-80fe-466a-ba9d-fe716617d692",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.047Z",
+            "updatedAt": "2026-01-26T04:33:32.047Z"
+          },
+          {
+            "id": "fa5d188f-43bb-44b7-a818-3632f6d75a0f",
+            "sentenceBuilderQuestionId": "5224c55a-80fe-466a-ba9d-fe716617d692",
+            "word": "Where",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.047Z",
+            "updatedAt": "2026-01-26T04:33:32.047Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "f9141e3e-6bf7-44d1-b855-2e075fd90861",
+    "title": "Travel Phrases - Beginner - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.023Z",
+    "updatedAt": "2026-01-26T04:33:32.023Z",
+    "questions": [
+      {
+        "id": "5fc4c4f7-651d-45b4-b6f7-57590809bc74",
+        "sentenceBuilderId": "f9141e3e-6bf7-44d1-b855-2e075fd90861",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.027Z",
+        "updatedAt": "2026-01-26T04:33:32.027Z",
+        "words": [
+          {
+            "id": "048d333a-a0af-4c78-a88d-e94125b2c679",
+            "sentenceBuilderQuestionId": "5fc4c4f7-651d-45b4-b6f7-57590809bc74",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.031Z",
+            "updatedAt": "2026-01-26T04:33:32.031Z"
+          },
+          {
+            "id": "a1398424-a3c2-4e34-a24c-4356ed4963f7",
+            "sentenceBuilderQuestionId": "5fc4c4f7-651d-45b4-b6f7-57590809bc74",
+            "word": "station",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:32.031Z",
+            "updatedAt": "2026-01-26T04:33:32.031Z"
+          },
+          {
+            "id": "cdd0593d-ef04-46e7-b080-e8f6fc553509",
+            "sentenceBuilderQuestionId": "5fc4c4f7-651d-45b4-b6f7-57590809bc74",
+            "word": "bus",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:32.031Z",
+            "updatedAt": "2026-01-26T04:33:32.031Z"
+          },
+          {
+            "id": "f505e3f1-53f1-47ce-97f9-15dffc102083",
+            "sentenceBuilderQuestionId": "5fc4c4f7-651d-45b4-b6f7-57590809bc74",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.031Z",
+            "updatedAt": "2026-01-26T04:33:32.031Z"
+          },
+          {
+            "id": "c64b7b17-1693-4d07-bfd8-2ca59bc489cb",
+            "sentenceBuilderQuestionId": "5fc4c4f7-651d-45b4-b6f7-57590809bc74",
+            "word": "Where",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.031Z",
+            "updatedAt": "2026-01-26T04:33:32.031Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "8236152e-9652-4fb7-9ae5-c9fa6c2f3b36",
+    "title": "Travel Phrases - Beginner - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:32.007Z",
+    "updatedAt": "2026-01-26T04:33:32.007Z",
+    "questions": [
+      {
+        "id": "05b80595-6e1a-4889-8673-91fe1188c5a3",
+        "sentenceBuilderId": "8236152e-9652-4fb7-9ae5-c9fa6c2f3b36",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:32.010Z",
+        "updatedAt": "2026-01-26T04:33:32.010Z",
+        "words": [
+          {
+            "id": "3ce49a85-56e8-4247-9d63-97ba48467256",
+            "sentenceBuilderQuestionId": "05b80595-6e1a-4889-8673-91fe1188c5a3",
+            "word": "is",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:32.013Z",
+            "updatedAt": "2026-01-26T04:33:32.013Z"
+          },
+          {
+            "id": "d3de35fa-6a51-461d-9310-91144581def6",
+            "sentenceBuilderQuestionId": "05b80595-6e1a-4889-8673-91fe1188c5a3",
+            "word": "station",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:32.013Z",
+            "updatedAt": "2026-01-26T04:33:32.013Z"
+          },
+          {
+            "id": "fac92509-2168-4c8f-8976-6baf53a465e3",
+            "sentenceBuilderQuestionId": "05b80595-6e1a-4889-8673-91fe1188c5a3",
+            "word": "bus",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:32.013Z",
+            "updatedAt": "2026-01-26T04:33:32.013Z"
+          },
+          {
+            "id": "9472449f-a494-49f0-a048-40a82917ecef",
+            "sentenceBuilderQuestionId": "05b80595-6e1a-4889-8673-91fe1188c5a3",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:32.013Z",
+            "updatedAt": "2026-01-26T04:33:32.013Z"
+          },
+          {
+            "id": "3423e15c-478e-41d6-a4dc-426bba0c297f",
+            "sentenceBuilderQuestionId": "05b80595-6e1a-4889-8673-91fe1188c5a3",
+            "word": "Where",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:32.013Z",
+            "updatedAt": "2026-01-26T04:33:32.013Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "d10998ee-ff90-4da4-abdd-da32579fcb6e",
+    "title": "Adjectives - Advanced - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.991Z",
+    "updatedAt": "2026-01-26T04:33:31.991Z",
+    "questions": [
+      {
+        "id": "c1e2417e-63e3-4da2-9953-11c5cd7deb72",
+        "sentenceBuilderId": "d10998ee-ff90-4da4-abdd-da32579fcb6e",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.994Z",
+        "updatedAt": "2026-01-26T04:33:31.994Z",
+        "words": [
+          {
+            "id": "f3f4079e-0b7c-4e14-9fa6-9ce7ea6365ce",
+            "sentenceBuilderQuestionId": "c1e2417e-63e3-4da2-9953-11c5cd7deb72",
+            "word": "small",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.996Z",
+            "updatedAt": "2026-01-26T04:33:31.996Z"
+          },
+          {
+            "id": "d172d0bc-fe31-4f00-b43e-86917f5708bc",
+            "sentenceBuilderQuestionId": "c1e2417e-63e3-4da2-9953-11c5cd7deb72",
+            "word": "Book",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.996Z",
+            "updatedAt": "2026-01-26T04:33:31.996Z"
+          },
+          {
+            "id": "9d77a984-31f9-49d4-b072-97d4da7c010a",
+            "sentenceBuilderQuestionId": "c1e2417e-63e3-4da2-9953-11c5cd7deb72",
+            "word": "A",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.996Z",
+            "updatedAt": "2026-01-26T04:33:31.996Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "281cf709-4b08-4e46-abe3-af8ab86c0aa4",
+    "title": "Adjectives - Advanced - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.976Z",
+    "updatedAt": "2026-01-26T04:33:31.976Z",
+    "questions": [
+      {
+        "id": "f7c703c5-9f93-47b3-9c1e-a22ec1adea81",
+        "sentenceBuilderId": "281cf709-4b08-4e46-abe3-af8ab86c0aa4",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.979Z",
+        "updatedAt": "2026-01-26T04:33:31.979Z",
+        "words": [
+          {
+            "id": "5e3167a7-e995-47bf-9d8b-1c0f1367314c",
+            "sentenceBuilderQuestionId": "f7c703c5-9f93-47b3-9c1e-a22ec1adea81",
+            "word": "School",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.982Z",
+            "updatedAt": "2026-01-26T04:33:31.982Z"
+          },
+          {
+            "id": "3dd9bf4c-0148-4f26-a134-b69403185202",
+            "sentenceBuilderQuestionId": "f7c703c5-9f93-47b3-9c1e-a22ec1adea81",
+            "word": "A",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.982Z",
+            "updatedAt": "2026-01-26T04:33:31.982Z"
+          },
+          {
+            "id": "bf793488-872b-47f8-a2a5-e465870d57bc",
+            "sentenceBuilderQuestionId": "f7c703c5-9f93-47b3-9c1e-a22ec1adea81",
+            "word": "new",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.982Z",
+            "updatedAt": "2026-01-26T04:33:31.982Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "49762e9f-d244-4600-afec-2eebbe20038b",
+    "title": "Adjectives - Advanced - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.958Z",
+    "updatedAt": "2026-01-26T04:33:31.958Z",
+    "questions": [
+      {
+        "id": "0c1a120d-0483-4ccc-b53b-9d9877a68cd0",
+        "sentenceBuilderId": "49762e9f-d244-4600-afec-2eebbe20038b",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.961Z",
+        "updatedAt": "2026-01-26T04:33:31.961Z",
+        "words": [
+          {
+            "id": "b348b53a-0b42-4792-b6d9-511a8bc3e267",
+            "sentenceBuilderQuestionId": "0c1a120d-0483-4ccc-b53b-9d9877a68cd0",
+            "word": "A",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.965Z",
+            "updatedAt": "2026-01-26T04:33:31.965Z"
+          },
+          {
+            "id": "1ec27521-5c1f-4060-8c62-d049b356c24f",
+            "sentenceBuilderQuestionId": "0c1a120d-0483-4ccc-b53b-9d9877a68cd0",
+            "word": "big",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.965Z",
+            "updatedAt": "2026-01-26T04:33:31.965Z"
+          },
+          {
+            "id": "4b6cc50f-4a03-4a68-8f25-73fc7bcdaed2",
+            "sentenceBuilderQuestionId": "0c1a120d-0483-4ccc-b53b-9d9877a68cd0",
+            "word": "House",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.965Z",
+            "updatedAt": "2026-01-26T04:33:31.965Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "7d5ab662-001c-4f8c-bd75-8dd5ac23f190",
+    "title": "Adjectives - Intermediate - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.942Z",
+    "updatedAt": "2026-01-26T04:33:31.942Z",
+    "questions": [
+      {
+        "id": "33666931-1dc1-444c-b208-cdc63476ada6",
+        "sentenceBuilderId": "7d5ab662-001c-4f8c-bd75-8dd5ac23f190",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.945Z",
+        "updatedAt": "2026-01-26T04:33:31.945Z",
+        "words": [
+          {
+            "id": "94b43510-1679-4c17-b70c-4fe85c8b4616",
+            "sentenceBuilderQuestionId": "33666931-1dc1-444c-b208-cdc63476ada6",
+            "word": "Book",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.948Z",
+            "updatedAt": "2026-01-26T04:33:31.948Z"
+          },
+          {
+            "id": "9fb05011-2c1e-4bff-8ea8-984875329fb3",
+            "sentenceBuilderQuestionId": "33666931-1dc1-444c-b208-cdc63476ada6",
+            "word": "small",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.948Z",
+            "updatedAt": "2026-01-26T04:33:31.948Z"
+          },
+          {
+            "id": "f625f3ec-9dc7-4e92-9379-6990aa46cbbf",
+            "sentenceBuilderQuestionId": "33666931-1dc1-444c-b208-cdc63476ada6",
+            "word": "A",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.948Z",
+            "updatedAt": "2026-01-26T04:33:31.948Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "a93ed0e8-1d77-4476-9ce1-4b79798094c6",
+    "title": "Adjectives - Intermediate - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.928Z",
+    "updatedAt": "2026-01-26T04:33:31.928Z",
+    "questions": [
+      {
+        "id": "21d22ce6-c16d-4f22-a5bc-788683d051c1",
+        "sentenceBuilderId": "a93ed0e8-1d77-4476-9ce1-4b79798094c6",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.931Z",
+        "updatedAt": "2026-01-26T04:33:31.931Z",
+        "words": [
+          {
+            "id": "f5017191-bb66-450a-b861-477580477d39",
+            "sentenceBuilderQuestionId": "21d22ce6-c16d-4f22-a5bc-788683d051c1",
+            "word": "A",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.933Z",
+            "updatedAt": "2026-01-26T04:33:31.933Z"
+          },
+          {
+            "id": "00e19f23-817e-4eb1-b578-0bb47de435a9",
+            "sentenceBuilderQuestionId": "21d22ce6-c16d-4f22-a5bc-788683d051c1",
+            "word": "School",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.933Z",
+            "updatedAt": "2026-01-26T04:33:31.933Z"
+          },
+          {
+            "id": "fcbf0798-120c-448c-bb50-9ce49925633b",
+            "sentenceBuilderQuestionId": "21d22ce6-c16d-4f22-a5bc-788683d051c1",
+            "word": "new",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.933Z",
+            "updatedAt": "2026-01-26T04:33:31.933Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "cc8ac583-2764-4768-bf56-1fe32ad2f390",
+    "title": "Adjectives - Intermediate - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.913Z",
+    "updatedAt": "2026-01-26T04:33:31.913Z",
+    "questions": [
+      {
+        "id": "168b544c-bddc-4f9f-8432-32025a8d7d0d",
+        "sentenceBuilderId": "cc8ac583-2764-4768-bf56-1fe32ad2f390",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.916Z",
+        "updatedAt": "2026-01-26T04:33:31.916Z",
+        "words": [
+          {
+            "id": "f8534fd9-0fab-4a1a-a8e3-38544bebdef3",
+            "sentenceBuilderQuestionId": "168b544c-bddc-4f9f-8432-32025a8d7d0d",
+            "word": "big",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.919Z",
+            "updatedAt": "2026-01-26T04:33:31.919Z"
+          },
+          {
+            "id": "4db0f3ce-0da0-4326-b964-37ae3d64537a",
+            "sentenceBuilderQuestionId": "168b544c-bddc-4f9f-8432-32025a8d7d0d",
+            "word": "House",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.919Z",
+            "updatedAt": "2026-01-26T04:33:31.919Z"
+          },
+          {
+            "id": "c464171e-66f2-4578-bd9e-2189dd239075",
+            "sentenceBuilderQuestionId": "168b544c-bddc-4f9f-8432-32025a8d7d0d",
+            "word": "A",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.919Z",
+            "updatedAt": "2026-01-26T04:33:31.919Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "519cf926-a0c3-44fa-982e-3a67e10f51ff",
+    "title": "Adjectives - Beginner - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.897Z",
+    "updatedAt": "2026-01-26T04:33:31.897Z",
+    "questions": [
+      {
+        "id": "f1761757-fe59-4a7c-8815-2b350bae47b8",
+        "sentenceBuilderId": "519cf926-a0c3-44fa-982e-3a67e10f51ff",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.900Z",
+        "updatedAt": "2026-01-26T04:33:31.900Z",
+        "words": [
+          {
+            "id": "9ee2d000-3fd7-4d66-912f-456bb8a0f6a2",
+            "sentenceBuilderQuestionId": "f1761757-fe59-4a7c-8815-2b350bae47b8",
+            "word": "small",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.902Z",
+            "updatedAt": "2026-01-26T04:33:31.902Z"
+          },
+          {
+            "id": "58d496da-bfb2-4850-b187-189b3a594563",
+            "sentenceBuilderQuestionId": "f1761757-fe59-4a7c-8815-2b350bae47b8",
+            "word": "Book",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.902Z",
+            "updatedAt": "2026-01-26T04:33:31.902Z"
+          },
+          {
+            "id": "a890240b-4fb1-4ba2-93f6-00ae2f9b3dca",
+            "sentenceBuilderQuestionId": "f1761757-fe59-4a7c-8815-2b350bae47b8",
+            "word": "A",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.902Z",
+            "updatedAt": "2026-01-26T04:33:31.902Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "f745cefa-4c32-46b3-8c9b-bb2341cb2944",
+    "title": "Adjectives - Beginner - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.880Z",
+    "updatedAt": "2026-01-26T04:33:31.880Z",
+    "questions": [
+      {
+        "id": "726c34e0-02d1-4452-8c15-3de0859e95c9",
+        "sentenceBuilderId": "f745cefa-4c32-46b3-8c9b-bb2341cb2944",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.884Z",
+        "updatedAt": "2026-01-26T04:33:31.884Z",
+        "words": [
+          {
+            "id": "63c19e61-9598-4b7f-a963-ac1140323081",
+            "sentenceBuilderQuestionId": "726c34e0-02d1-4452-8c15-3de0859e95c9",
+            "word": "new",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.887Z",
+            "updatedAt": "2026-01-26T04:33:31.887Z"
+          },
+          {
+            "id": "f050e384-2ff2-44bf-9109-f767df6f9a1d",
+            "sentenceBuilderQuestionId": "726c34e0-02d1-4452-8c15-3de0859e95c9",
+            "word": "School",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.887Z",
+            "updatedAt": "2026-01-26T04:33:31.887Z"
+          },
+          {
+            "id": "9018e4f6-c8b2-4b64-aaa8-9fc31c8e2fe0",
+            "sentenceBuilderQuestionId": "726c34e0-02d1-4452-8c15-3de0859e95c9",
+            "word": "A",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.887Z",
+            "updatedAt": "2026-01-26T04:33:31.887Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "c6cb9acf-dd71-4b91-b80b-b969aa3cd5d7",
+    "title": "Adjectives - Beginner - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.865Z",
+    "updatedAt": "2026-01-26T04:33:31.865Z",
+    "questions": [
+      {
+        "id": "8ecfa9af-1475-4e7f-9981-01cac30e0634",
+        "sentenceBuilderId": "c6cb9acf-dd71-4b91-b80b-b969aa3cd5d7",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.868Z",
+        "updatedAt": "2026-01-26T04:33:31.868Z",
+        "words": [
+          {
+            "id": "711a1ecc-8185-424a-bf0c-05b2ca395314",
+            "sentenceBuilderQuestionId": "8ecfa9af-1475-4e7f-9981-01cac30e0634",
+            "word": "big",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.870Z",
+            "updatedAt": "2026-01-26T04:33:31.870Z"
+          },
+          {
+            "id": "b6a586c0-a4bb-4f43-9475-82dc6e0db652",
+            "sentenceBuilderQuestionId": "8ecfa9af-1475-4e7f-9981-01cac30e0634",
+            "word": "House",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.870Z",
+            "updatedAt": "2026-01-26T04:33:31.870Z"
+          },
+          {
+            "id": "f62aa580-5c57-474a-a253-095c60e6f98c",
+            "sentenceBuilderQuestionId": "8ecfa9af-1475-4e7f-9981-01cac30e0634",
+            "word": "A",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.870Z",
+            "updatedAt": "2026-01-26T04:33:31.870Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "eb0469e2-f2ed-4b00-a48b-eca2f5c7f758",
+    "title": "Verbs - Advanced - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.844Z",
+    "updatedAt": "2026-01-26T04:33:31.844Z",
+    "questions": [
+      {
+        "id": "121b6f68-d3de-484f-98bf-17dac7c14773",
+        "sentenceBuilderId": "eb0469e2-f2ed-4b00-a48b-eca2f5c7f758",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.848Z",
+        "updatedAt": "2026-01-26T04:33:31.848Z",
+        "words": [
+          {
+            "id": "2099e41c-e554-43f0-9f2a-df07fe94bf78",
+            "sentenceBuilderQuestionId": "121b6f68-d3de-484f-98bf-17dac7c14773",
+            "word": "eat",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.852Z",
+            "updatedAt": "2026-01-26T04:33:31.852Z"
+          },
+          {
+            "id": "3c931c1b-15bb-45ba-a283-d00d4734e823",
+            "sentenceBuilderQuestionId": "121b6f68-d3de-484f-98bf-17dac7c14773",
+            "word": "Book",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.852Z",
+            "updatedAt": "2026-01-26T04:33:31.852Z"
+          },
+          {
+            "id": "68a9961c-6de0-4e84-bca3-d822598e85d5",
+            "sentenceBuilderQuestionId": "121b6f68-d3de-484f-98bf-17dac7c14773",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.852Z",
+            "updatedAt": "2026-01-26T04:33:31.852Z"
+          },
+          {
+            "id": "9f490dfd-4c11-42fb-8ae2-b912a217e2e0",
+            "sentenceBuilderQuestionId": "121b6f68-d3de-484f-98bf-17dac7c14773",
+            "word": "I",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.852Z",
+            "updatedAt": "2026-01-26T04:33:31.852Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "4e4c3d6d-3747-457f-8798-cf13e032b04f",
+    "title": "Verbs - Advanced - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.823Z",
+    "updatedAt": "2026-01-26T04:33:31.823Z",
+    "questions": [
+      {
+        "id": "ce7aab06-1dc7-4740-95c3-3de621f34f71",
+        "sentenceBuilderId": "4e4c3d6d-3747-457f-8798-cf13e032b04f",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.826Z",
+        "updatedAt": "2026-01-26T04:33:31.826Z",
+        "words": [
+          {
+            "id": "9c7f1d88-727e-4e80-8caa-d9d08d50097e",
+            "sentenceBuilderQuestionId": "ce7aab06-1dc7-4740-95c3-3de621f34f71",
+            "word": "write",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.828Z",
+            "updatedAt": "2026-01-26T04:33:31.828Z"
+          },
+          {
+            "id": "4586640e-a455-43c3-9e4f-6fbfa3fea52a",
+            "sentenceBuilderQuestionId": "ce7aab06-1dc7-4740-95c3-3de621f34f71",
+            "word": "School",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.828Z",
+            "updatedAt": "2026-01-26T04:33:31.828Z"
+          },
+          {
+            "id": "2b597924-b3d5-46a9-b2ef-6c9fbecacc0c",
+            "sentenceBuilderQuestionId": "ce7aab06-1dc7-4740-95c3-3de621f34f71",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.828Z",
+            "updatedAt": "2026-01-26T04:33:31.828Z"
+          },
+          {
+            "id": "a8be4bcf-eedf-455c-b210-32b5d2c5ec2e",
+            "sentenceBuilderQuestionId": "ce7aab06-1dc7-4740-95c3-3de621f34f71",
+            "word": "I",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.828Z",
+            "updatedAt": "2026-01-26T04:33:31.828Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "99868020-fd22-4e18-92e0-7fca133a5cba",
+    "title": "Verbs - Advanced - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.806Z",
+    "updatedAt": "2026-01-26T04:33:31.806Z",
+    "questions": [
+      {
+        "id": "6b77884c-2ac9-479f-b132-d2509507d4e9",
+        "sentenceBuilderId": "99868020-fd22-4e18-92e0-7fca133a5cba",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.809Z",
+        "updatedAt": "2026-01-26T04:33:31.809Z",
+        "words": [
+          {
+            "id": "28a82b95-ae46-4a4d-8cdf-7a23232eb922",
+            "sentenceBuilderQuestionId": "6b77884c-2ac9-479f-b132-d2509507d4e9",
+            "word": "I",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.812Z",
+            "updatedAt": "2026-01-26T04:33:31.812Z"
+          },
+          {
+            "id": "d2b7271b-dbe5-460c-a865-aa676228cfb4",
+            "sentenceBuilderQuestionId": "6b77884c-2ac9-479f-b132-d2509507d4e9",
+            "word": "House",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.812Z",
+            "updatedAt": "2026-01-26T04:33:31.812Z"
+          },
+          {
+            "id": "6a07212d-4c02-4ca7-a748-2622635492b5",
+            "sentenceBuilderQuestionId": "6b77884c-2ac9-479f-b132-d2509507d4e9",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.812Z",
+            "updatedAt": "2026-01-26T04:33:31.812Z"
+          },
+          {
+            "id": "c7a704d4-3991-488a-a616-00f1db5b9dfd",
+            "sentenceBuilderQuestionId": "6b77884c-2ac9-479f-b132-d2509507d4e9",
+            "word": "go",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.812Z",
+            "updatedAt": "2026-01-26T04:33:31.812Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "119b5a75-0c06-4522-b01b-343b7532edd7",
+    "title": "Verbs - Intermediate - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.778Z",
+    "updatedAt": "2026-01-26T04:33:31.778Z",
+    "questions": [
+      {
+        "id": "599593ac-b780-407a-9cee-6c69df895038",
+        "sentenceBuilderId": "119b5a75-0c06-4522-b01b-343b7532edd7",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.781Z",
+        "updatedAt": "2026-01-26T04:33:31.781Z",
+        "words": [
+          {
+            "id": "dc04620c-0c54-4d9b-a456-cf4571048920",
+            "sentenceBuilderQuestionId": "599593ac-b780-407a-9cee-6c69df895038",
+            "word": "eat",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.783Z",
+            "updatedAt": "2026-01-26T04:33:31.783Z"
+          },
+          {
+            "id": "b4937ace-5cd1-4023-88c3-0767e02f8c88",
+            "sentenceBuilderQuestionId": "599593ac-b780-407a-9cee-6c69df895038",
+            "word": "Book",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.783Z",
+            "updatedAt": "2026-01-26T04:33:31.783Z"
+          },
+          {
+            "id": "3ac48bf6-3e57-41ab-bbc5-b5550102aa28",
+            "sentenceBuilderQuestionId": "599593ac-b780-407a-9cee-6c69df895038",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.783Z",
+            "updatedAt": "2026-01-26T04:33:31.783Z"
+          },
+          {
+            "id": "9b7bf448-80af-4937-8bd1-9011d6b2d72c",
+            "sentenceBuilderQuestionId": "599593ac-b780-407a-9cee-6c69df895038",
+            "word": "I",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.783Z",
+            "updatedAt": "2026-01-26T04:33:31.783Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "6eeb4eb3-d441-4b6e-a312-531cd57647ee",
+    "title": "Verbs - Intermediate - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.762Z",
+    "updatedAt": "2026-01-26T04:33:31.762Z",
+    "questions": [
+      {
+        "id": "ba1ef93d-a164-42e3-ae73-d5cefa9b3677",
+        "sentenceBuilderId": "6eeb4eb3-d441-4b6e-a312-531cd57647ee",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.765Z",
+        "updatedAt": "2026-01-26T04:33:31.765Z",
+        "words": [
+          {
+            "id": "e5027edd-9c90-41f9-892d-bac7a47b2720",
+            "sentenceBuilderQuestionId": "ba1ef93d-a164-42e3-ae73-d5cefa9b3677",
+            "word": "write",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.767Z",
+            "updatedAt": "2026-01-26T04:33:31.767Z"
+          },
+          {
+            "id": "e74eab72-c8f3-481e-9deb-5a47a921867c",
+            "sentenceBuilderQuestionId": "ba1ef93d-a164-42e3-ae73-d5cefa9b3677",
+            "word": "School",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.767Z",
+            "updatedAt": "2026-01-26T04:33:31.767Z"
+          },
+          {
+            "id": "53d20399-4d72-4895-bbc2-a19b7ee7cf4e",
+            "sentenceBuilderQuestionId": "ba1ef93d-a164-42e3-ae73-d5cefa9b3677",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.767Z",
+            "updatedAt": "2026-01-26T04:33:31.767Z"
+          },
+          {
+            "id": "9582aad6-725f-42f5-9df4-2d9b757c2297",
+            "sentenceBuilderQuestionId": "ba1ef93d-a164-42e3-ae73-d5cefa9b3677",
+            "word": "I",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.767Z",
+            "updatedAt": "2026-01-26T04:33:31.767Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "6c40c298-6592-4f62-9780-fddf8ceb1ec8",
+    "title": "Verbs - Intermediate - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.745Z",
+    "updatedAt": "2026-01-26T04:33:31.745Z",
+    "questions": [
+      {
+        "id": "3a2299d6-f5c8-4b10-b1a2-d16c0f651e48",
+        "sentenceBuilderId": "6c40c298-6592-4f62-9780-fddf8ceb1ec8",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.748Z",
+        "updatedAt": "2026-01-26T04:33:31.748Z",
+        "words": [
+          {
+            "id": "3339abd8-087e-4418-a8c2-0743e46e7b50",
+            "sentenceBuilderQuestionId": "3a2299d6-f5c8-4b10-b1a2-d16c0f651e48",
+            "word": "go",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.751Z",
+            "updatedAt": "2026-01-26T04:33:31.751Z"
+          },
+          {
+            "id": "e7da0e20-b515-4981-98c6-9c102a3b5f3c",
+            "sentenceBuilderQuestionId": "3a2299d6-f5c8-4b10-b1a2-d16c0f651e48",
+            "word": "House",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.751Z",
+            "updatedAt": "2026-01-26T04:33:31.751Z"
+          },
+          {
+            "id": "c58c4ff5-9318-4d6c-b4c0-bfb19ab08e60",
+            "sentenceBuilderQuestionId": "3a2299d6-f5c8-4b10-b1a2-d16c0f651e48",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.751Z",
+            "updatedAt": "2026-01-26T04:33:31.751Z"
+          },
+          {
+            "id": "f7bf6f3d-7806-414d-88a5-08354376c39c",
+            "sentenceBuilderQuestionId": "3a2299d6-f5c8-4b10-b1a2-d16c0f651e48",
+            "word": "I",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.751Z",
+            "updatedAt": "2026-01-26T04:33:31.751Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "1b9c7b25-14f0-42bc-a95b-8f8b0df7c788",
+    "title": "Verbs - Beginner - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.729Z",
+    "updatedAt": "2026-01-26T04:33:31.729Z",
+    "questions": [
+      {
+        "id": "2fc37767-3aa9-4194-b71a-05110e9fcbdf",
+        "sentenceBuilderId": "1b9c7b25-14f0-42bc-a95b-8f8b0df7c788",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.732Z",
+        "updatedAt": "2026-01-26T04:33:31.732Z",
+        "words": [
+          {
+            "id": "2628d565-8e55-4de5-897b-6c9fedb9d902",
+            "sentenceBuilderQuestionId": "2fc37767-3aa9-4194-b71a-05110e9fcbdf",
+            "word": "eat",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.734Z",
+            "updatedAt": "2026-01-26T04:33:31.734Z"
+          },
+          {
+            "id": "b80861ee-0345-4507-bf3d-7e2f4ff9b22c",
+            "sentenceBuilderQuestionId": "2fc37767-3aa9-4194-b71a-05110e9fcbdf",
+            "word": "Book",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.734Z",
+            "updatedAt": "2026-01-26T04:33:31.734Z"
+          },
+          {
+            "id": "8b9de55f-7434-4d4f-bca4-5a156b53e601",
+            "sentenceBuilderQuestionId": "2fc37767-3aa9-4194-b71a-05110e9fcbdf",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.734Z",
+            "updatedAt": "2026-01-26T04:33:31.734Z"
+          },
+          {
+            "id": "06b61329-a442-4351-87a6-931605748814",
+            "sentenceBuilderQuestionId": "2fc37767-3aa9-4194-b71a-05110e9fcbdf",
+            "word": "I",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.734Z",
+            "updatedAt": "2026-01-26T04:33:31.734Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "549ad918-ac82-4aa0-973e-d1841188c70d",
+    "title": "Verbs - Beginner - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.703Z",
+    "updatedAt": "2026-01-26T04:33:31.703Z",
+    "questions": [
+      {
+        "id": "700fd8a3-fb7b-4dd8-b0d9-c2bd235420dc",
+        "sentenceBuilderId": "549ad918-ac82-4aa0-973e-d1841188c70d",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.709Z",
+        "updatedAt": "2026-01-26T04:33:31.709Z",
+        "words": [
+          {
+            "id": "129e3a9c-fcb2-4aee-a81a-097cb7271bec",
+            "sentenceBuilderQuestionId": "700fd8a3-fb7b-4dd8-b0d9-c2bd235420dc",
+            "word": "I",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.715Z",
+            "updatedAt": "2026-01-26T04:33:31.715Z"
+          },
+          {
+            "id": "46a818fc-3c61-423b-a8dc-26f75f7d13c2",
+            "sentenceBuilderQuestionId": "700fd8a3-fb7b-4dd8-b0d9-c2bd235420dc",
+            "word": "School",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.715Z",
+            "updatedAt": "2026-01-26T04:33:31.715Z"
+          },
+          {
+            "id": "b482ee89-ab59-41c6-a1ca-47576df13563",
+            "sentenceBuilderQuestionId": "700fd8a3-fb7b-4dd8-b0d9-c2bd235420dc",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.715Z",
+            "updatedAt": "2026-01-26T04:33:31.715Z"
+          },
+          {
+            "id": "8de5a9af-856d-479d-a541-9e53cba64620",
+            "sentenceBuilderQuestionId": "700fd8a3-fb7b-4dd8-b0d9-c2bd235420dc",
+            "word": "write",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.715Z",
+            "updatedAt": "2026-01-26T04:33:31.715Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "9076b975-9ce5-4a00-98e9-5a15d609496d",
+    "title": "Verbs - Beginner - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.686Z",
+    "updatedAt": "2026-01-26T04:33:31.686Z",
+    "questions": [
+      {
+        "id": "bfce449c-c42d-4244-8ef3-8618bfb893be",
+        "sentenceBuilderId": "9076b975-9ce5-4a00-98e9-5a15d609496d",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.689Z",
+        "updatedAt": "2026-01-26T04:33:31.689Z",
+        "words": [
+          {
+            "id": "eb76e0de-4d2b-4d8b-9880-eb122f9625c4",
+            "sentenceBuilderQuestionId": "bfce449c-c42d-4244-8ef3-8618bfb893be",
+            "word": "I",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.692Z",
+            "updatedAt": "2026-01-26T04:33:31.692Z"
+          },
+          {
+            "id": "42816df8-b336-4c0d-9942-e85c16ca349e",
+            "sentenceBuilderQuestionId": "bfce449c-c42d-4244-8ef3-8618bfb893be",
+            "word": "House",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.692Z",
+            "updatedAt": "2026-01-26T04:33:31.692Z"
+          },
+          {
+            "id": "1cff286b-bc60-4899-a264-1a313a6a5fee",
+            "sentenceBuilderQuestionId": "bfce449c-c42d-4244-8ef3-8618bfb893be",
+            "word": "the",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.692Z",
+            "updatedAt": "2026-01-26T04:33:31.692Z"
+          },
+          {
+            "id": "d4f305a3-6ebe-499f-9bd1-c9ab046bf659",
+            "sentenceBuilderQuestionId": "bfce449c-c42d-4244-8ef3-8618bfb893be",
+            "word": "go",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.692Z",
+            "updatedAt": "2026-01-26T04:33:31.692Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "6011a771-f69f-4ffe-9c8d-5de685bd029f",
+    "title": "Nouns - Advanced - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.668Z",
+    "updatedAt": "2026-01-26T04:33:31.668Z",
+    "questions": [
+      {
+        "id": "14589fff-6ea6-4981-bdfa-e3d6210db383",
+        "sentenceBuilderId": "6011a771-f69f-4ffe-9c8d-5de685bd029f",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.671Z",
+        "updatedAt": "2026-01-26T04:33:31.671Z",
+        "words": [
+          {
+            "id": "3011847e-48b6-46ab-bb02-bedcd46a8511",
+            "sentenceBuilderQuestionId": "14589fff-6ea6-4981-bdfa-e3d6210db383",
+            "word": "The",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.674Z",
+            "updatedAt": "2026-01-26T04:33:31.674Z"
+          },
+          {
+            "id": "0a6ee7ae-50bb-4649-9e4a-2ff85392455d",
+            "sentenceBuilderQuestionId": "14589fff-6ea6-4981-bdfa-e3d6210db383",
+            "word": "Book",
+            "correctPosition": 5,
+            "order": 5,
+            "createdAt": "2026-01-26T04:33:31.674Z",
+            "updatedAt": "2026-01-26T04:33:31.674Z"
+          },
+          {
+            "id": "aa534c0d-bd93-4b4b-88a0-0e33ac871505",
+            "sentenceBuilderQuestionId": "14589fff-6ea6-4981-bdfa-e3d6210db383",
+            "word": "meet",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:31.674Z",
+            "updatedAt": "2026-01-26T04:33:31.674Z"
+          },
+          {
+            "id": "3c1cb413-1922-4649-ae19-0ebe3ae8a4c5",
+            "sentenceBuilderQuestionId": "14589fff-6ea6-4981-bdfa-e3d6210db383",
+            "word": "House",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.674Z",
+            "updatedAt": "2026-01-26T04:33:31.674Z"
+          },
+          {
+            "id": "bca9c905-1850-416b-93c5-4ef1eb5e109e",
+            "sentenceBuilderQuestionId": "14589fff-6ea6-4981-bdfa-e3d6210db383",
+            "word": "and",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.674Z",
+            "updatedAt": "2026-01-26T04:33:31.674Z"
+          },
+          {
+            "id": "66163892-c931-425d-be7f-9fb319de920f",
+            "sentenceBuilderQuestionId": "14589fff-6ea6-4981-bdfa-e3d6210db383",
+            "word": "Student",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.674Z",
+            "updatedAt": "2026-01-26T04:33:31.674Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "874e9b0f-7e27-4420-91ac-c02e61ac63c7",
+    "title": "Nouns - Advanced - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.652Z",
+    "updatedAt": "2026-01-26T04:33:31.652Z",
+    "questions": [
+      {
+        "id": "aef92132-98bb-4265-b411-c1d3b10694a1",
+        "sentenceBuilderId": "874e9b0f-7e27-4420-91ac-c02e61ac63c7",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.655Z",
+        "updatedAt": "2026-01-26T04:33:31.655Z",
+        "words": [
+          {
+            "id": "1cb10aa5-50ab-4403-9d79-c5926621fe48",
+            "sentenceBuilderQuestionId": "aef92132-98bb-4265-b411-c1d3b10694a1",
+            "word": "School",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.657Z",
+            "updatedAt": "2026-01-26T04:33:31.657Z"
+          },
+          {
+            "id": "28bf47c7-8575-4b7d-bbc9-9d43f40ab852",
+            "sentenceBuilderQuestionId": "aef92132-98bb-4265-b411-c1d3b10694a1",
+            "word": "Teacher",
+            "correctPosition": 5,
+            "order": 5,
+            "createdAt": "2026-01-26T04:33:31.657Z",
+            "updatedAt": "2026-01-26T04:33:31.657Z"
+          },
+          {
+            "id": "54803aff-a515-4ea1-b475-243a659dce8a",
+            "sentenceBuilderQuestionId": "aef92132-98bb-4265-b411-c1d3b10694a1",
+            "word": "meet",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:31.657Z",
+            "updatedAt": "2026-01-26T04:33:31.657Z"
+          },
+          {
+            "id": "8f89f4ae-87c2-4eb6-81c9-40e3235b45f2",
+            "sentenceBuilderQuestionId": "aef92132-98bb-4265-b411-c1d3b10694a1",
+            "word": "Market",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.657Z",
+            "updatedAt": "2026-01-26T04:33:31.657Z"
+          },
+          {
+            "id": "d0cb7d44-a3f9-47af-8071-b6232ea039b4",
+            "sentenceBuilderQuestionId": "aef92132-98bb-4265-b411-c1d3b10694a1",
+            "word": "and",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.657Z",
+            "updatedAt": "2026-01-26T04:33:31.657Z"
+          },
+          {
+            "id": "70cdc885-84bf-4a79-aefa-5bbcd94f0a93",
+            "sentenceBuilderQuestionId": "aef92132-98bb-4265-b411-c1d3b10694a1",
+            "word": "The",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.657Z",
+            "updatedAt": "2026-01-26T04:33:31.657Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "5667361e-a93e-4f6a-b863-c90b8d60f382",
+    "title": "Nouns - Advanced - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "advanced",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.570Z",
+    "updatedAt": "2026-01-26T04:33:31.570Z",
+    "questions": [
+      {
+        "id": "6a07ccc3-54a3-4228-a1b8-d27b9dbe0ae0",
+        "sentenceBuilderId": "5667361e-a93e-4f6a-b863-c90b8d60f382",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.573Z",
+        "updatedAt": "2026-01-26T04:33:31.573Z",
+        "words": [
+          {
+            "id": "7e68da4b-ba46-4e07-8a9a-70c44773de11",
+            "sentenceBuilderQuestionId": "6a07ccc3-54a3-4228-a1b8-d27b9dbe0ae0",
+            "word": "House",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.575Z",
+            "updatedAt": "2026-01-26T04:33:31.575Z"
+          },
+          {
+            "id": "844aba87-36bb-4a42-bab1-1f06314d6216",
+            "sentenceBuilderQuestionId": "6a07ccc3-54a3-4228-a1b8-d27b9dbe0ae0",
+            "word": "Chair",
+            "correctPosition": 5,
+            "order": 5,
+            "createdAt": "2026-01-26T04:33:31.575Z",
+            "updatedAt": "2026-01-26T04:33:31.575Z"
+          },
+          {
+            "id": "058bb68a-98ba-46a2-9fdd-bb4cd1253a1f",
+            "sentenceBuilderQuestionId": "6a07ccc3-54a3-4228-a1b8-d27b9dbe0ae0",
+            "word": "meet",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:31.575Z",
+            "updatedAt": "2026-01-26T04:33:31.575Z"
+          },
+          {
+            "id": "839ea402-247e-4e32-89bf-c37d1192b991",
+            "sentenceBuilderQuestionId": "6a07ccc3-54a3-4228-a1b8-d27b9dbe0ae0",
+            "word": "Book",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.575Z",
+            "updatedAt": "2026-01-26T04:33:31.575Z"
+          },
+          {
+            "id": "65bd4c51-21d4-40a5-8cbb-07c6ccc56dab",
+            "sentenceBuilderQuestionId": "6a07ccc3-54a3-4228-a1b8-d27b9dbe0ae0",
+            "word": "and",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.575Z",
+            "updatedAt": "2026-01-26T04:33:31.575Z"
+          },
+          {
+            "id": "06a2bdc5-d7db-411e-9c57-33e4d318f0e8",
+            "sentenceBuilderQuestionId": "6a07ccc3-54a3-4228-a1b8-d27b9dbe0ae0",
+            "word": "The",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.575Z",
+            "updatedAt": "2026-01-26T04:33:31.575Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "6df45807-e393-404b-80d2-2d11f5baa679",
+    "title": "Nouns - Intermediate - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.549Z",
+    "updatedAt": "2026-01-26T04:33:31.549Z",
+    "questions": [
+      {
+        "id": "49a7fb88-6458-4766-9791-a0aed4ad8634",
+        "sentenceBuilderId": "6df45807-e393-404b-80d2-2d11f5baa679",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.554Z",
+        "updatedAt": "2026-01-26T04:33:31.554Z",
+        "words": [
+          {
+            "id": "194022fe-0483-4642-84a1-fc1991106ebe",
+            "sentenceBuilderQuestionId": "49a7fb88-6458-4766-9791-a0aed4ad8634",
+            "word": "Student",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.557Z",
+            "updatedAt": "2026-01-26T04:33:31.557Z"
+          },
+          {
+            "id": "4411a35b-1585-472d-b748-a37b0d1db351",
+            "sentenceBuilderQuestionId": "49a7fb88-6458-4766-9791-a0aed4ad8634",
+            "word": "Book",
+            "correctPosition": 5,
+            "order": 5,
+            "createdAt": "2026-01-26T04:33:31.557Z",
+            "updatedAt": "2026-01-26T04:33:31.557Z"
+          },
+          {
+            "id": "7ec357c0-2180-4345-9de2-497d6e8e8ac4",
+            "sentenceBuilderQuestionId": "49a7fb88-6458-4766-9791-a0aed4ad8634",
+            "word": "meet",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:31.557Z",
+            "updatedAt": "2026-01-26T04:33:31.557Z"
+          },
+          {
+            "id": "8670b9ca-cb5e-482d-9e61-2bd8c669997d",
+            "sentenceBuilderQuestionId": "49a7fb88-6458-4766-9791-a0aed4ad8634",
+            "word": "House",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.557Z",
+            "updatedAt": "2026-01-26T04:33:31.557Z"
+          },
+          {
+            "id": "4d9bcf0c-4594-4c2c-b59d-529483039e11",
+            "sentenceBuilderQuestionId": "49a7fb88-6458-4766-9791-a0aed4ad8634",
+            "word": "and",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.557Z",
+            "updatedAt": "2026-01-26T04:33:31.557Z"
+          },
+          {
+            "id": "5b549d06-a9ee-4ed4-a934-6c0a17b47ed9",
+            "sentenceBuilderQuestionId": "49a7fb88-6458-4766-9791-a0aed4ad8634",
+            "word": "The",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.557Z",
+            "updatedAt": "2026-01-26T04:33:31.557Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "df2d0666-8c02-4e3d-bb16-3196f57aff15",
+    "title": "Nouns - Intermediate - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.532Z",
+    "updatedAt": "2026-01-26T04:33:31.532Z",
+    "questions": [
+      {
+        "id": "e7fe891c-a685-4e55-b058-f3ace2b86885",
+        "sentenceBuilderId": "df2d0666-8c02-4e3d-bb16-3196f57aff15",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.535Z",
+        "updatedAt": "2026-01-26T04:33:31.535Z",
+        "words": [
+          {
+            "id": "3a06fd05-21ed-4ab7-bd4d-32c80b2e0a1e",
+            "sentenceBuilderQuestionId": "e7fe891c-a685-4e55-b058-f3ace2b86885",
+            "word": "Market",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.538Z",
+            "updatedAt": "2026-01-26T04:33:31.538Z"
+          },
+          {
+            "id": "aff3bbdc-194e-4f73-b6aa-077ae050d269",
+            "sentenceBuilderQuestionId": "e7fe891c-a685-4e55-b058-f3ace2b86885",
+            "word": "Teacher",
+            "correctPosition": 5,
+            "order": 5,
+            "createdAt": "2026-01-26T04:33:31.538Z",
+            "updatedAt": "2026-01-26T04:33:31.538Z"
+          },
+          {
+            "id": "fc001a56-8879-425d-beee-4ef94253ae59",
+            "sentenceBuilderQuestionId": "e7fe891c-a685-4e55-b058-f3ace2b86885",
+            "word": "meet",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:31.538Z",
+            "updatedAt": "2026-01-26T04:33:31.538Z"
+          },
+          {
+            "id": "62587757-a6b8-4533-b209-efa527126a45",
+            "sentenceBuilderQuestionId": "e7fe891c-a685-4e55-b058-f3ace2b86885",
+            "word": "and",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.538Z",
+            "updatedAt": "2026-01-26T04:33:31.538Z"
+          },
+          {
+            "id": "2025cd52-3bff-4961-a626-06c6b5958d04",
+            "sentenceBuilderQuestionId": "e7fe891c-a685-4e55-b058-f3ace2b86885",
+            "word": "School",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.538Z",
+            "updatedAt": "2026-01-26T04:33:31.538Z"
+          },
+          {
+            "id": "752ac735-44e8-41c3-9bbd-c828d3ccc9ae",
+            "sentenceBuilderQuestionId": "e7fe891c-a685-4e55-b058-f3ace2b86885",
+            "word": "The",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.538Z",
+            "updatedAt": "2026-01-26T04:33:31.538Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "2ca0eb37-1051-49d8-9c9e-51dcba03b01e",
+    "title": "Nouns - Intermediate - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "intermediate",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.514Z",
+    "updatedAt": "2026-01-26T04:33:31.514Z",
+    "questions": [
+      {
+        "id": "e9ad52d0-05df-4b0b-b191-c8585605d432",
+        "sentenceBuilderId": "2ca0eb37-1051-49d8-9c9e-51dcba03b01e",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.518Z",
+        "updatedAt": "2026-01-26T04:33:31.518Z",
+        "words": [
+          {
+            "id": "c2bc75e8-4718-45ff-8736-b03c48d9dc2c",
+            "sentenceBuilderQuestionId": "e9ad52d0-05df-4b0b-b191-c8585605d432",
+            "word": "The",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.520Z",
+            "updatedAt": "2026-01-26T04:33:31.520Z"
+          },
+          {
+            "id": "ee5cc3b8-998e-4e34-8f99-20b56c1f6633",
+            "sentenceBuilderQuestionId": "e9ad52d0-05df-4b0b-b191-c8585605d432",
+            "word": "Chair",
+            "correctPosition": 5,
+            "order": 5,
+            "createdAt": "2026-01-26T04:33:31.520Z",
+            "updatedAt": "2026-01-26T04:33:31.520Z"
+          },
+          {
+            "id": "ef7afee1-89bd-44d7-8750-1759001cee61",
+            "sentenceBuilderQuestionId": "e9ad52d0-05df-4b0b-b191-c8585605d432",
+            "word": "meet",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:31.520Z",
+            "updatedAt": "2026-01-26T04:33:31.520Z"
+          },
+          {
+            "id": "62d2364e-b833-4ed7-a4d3-05fa7d5f4e7d",
+            "sentenceBuilderQuestionId": "e9ad52d0-05df-4b0b-b191-c8585605d432",
+            "word": "Book",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.520Z",
+            "updatedAt": "2026-01-26T04:33:31.520Z"
+          },
+          {
+            "id": "310479c0-5c34-4c97-879d-2c62b5f5dbe4",
+            "sentenceBuilderQuestionId": "e9ad52d0-05df-4b0b-b191-c8585605d432",
+            "word": "and",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.520Z",
+            "updatedAt": "2026-01-26T04:33:31.520Z"
+          },
+          {
+            "id": "8a94c4bc-5990-444f-9038-7d7619edb84f",
+            "sentenceBuilderQuestionId": "e9ad52d0-05df-4b0b-b191-c8585605d432",
+            "word": "House",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.520Z",
+            "updatedAt": "2026-01-26T04:33:31.520Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "db622c2b-aca2-4452-b327-fee8aa1e9074",
+    "title": "Nouns - Beginner - SentenceBuilder 3",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.494Z",
+    "updatedAt": "2026-01-26T04:33:31.494Z",
+    "questions": [
+      {
+        "id": "cfb8ff43-cb0b-47d3-b86a-8ce89494c206",
+        "sentenceBuilderId": "db622c2b-aca2-4452-b327-fee8aa1e9074",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.497Z",
+        "updatedAt": "2026-01-26T04:33:31.497Z",
+        "words": [
+          {
+            "id": "ad81f0ca-f90a-44dc-9f7c-8fb53b97b85a",
+            "sentenceBuilderQuestionId": "cfb8ff43-cb0b-47d3-b86a-8ce89494c206",
+            "word": "Student",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.500Z",
+            "updatedAt": "2026-01-26T04:33:31.500Z"
+          },
+          {
+            "id": "4c99fa71-9aa6-4e09-8dbf-d618bf559a92",
+            "sentenceBuilderQuestionId": "cfb8ff43-cb0b-47d3-b86a-8ce89494c206",
+            "word": "Book",
+            "correctPosition": 5,
+            "order": 5,
+            "createdAt": "2026-01-26T04:33:31.500Z",
+            "updatedAt": "2026-01-26T04:33:31.500Z"
+          },
+          {
+            "id": "5dbdc46f-3817-4f45-a8f7-a7b98634874b",
+            "sentenceBuilderQuestionId": "cfb8ff43-cb0b-47d3-b86a-8ce89494c206",
+            "word": "meet",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:31.500Z",
+            "updatedAt": "2026-01-26T04:33:31.500Z"
+          },
+          {
+            "id": "814b4417-8f64-48b3-bdac-dec08d9665ca",
+            "sentenceBuilderQuestionId": "cfb8ff43-cb0b-47d3-b86a-8ce89494c206",
+            "word": "House",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.500Z",
+            "updatedAt": "2026-01-26T04:33:31.500Z"
+          },
+          {
+            "id": "cc379dd8-5ddb-4b62-a1b5-0f3e846a0e4f",
+            "sentenceBuilderQuestionId": "cfb8ff43-cb0b-47d3-b86a-8ce89494c206",
+            "word": "and",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.500Z",
+            "updatedAt": "2026-01-26T04:33:31.500Z"
+          },
+          {
+            "id": "67673ee9-4687-4a1e-b368-9e0abb3e9f60",
+            "sentenceBuilderQuestionId": "cfb8ff43-cb0b-47d3-b86a-8ce89494c206",
+            "word": "The",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.500Z",
+            "updatedAt": "2026-01-26T04:33:31.500Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "a70ec1d5-ae0e-4c5f-a4bc-0389ee36bf67",
+    "title": "Nouns - Beginner - SentenceBuilder 2",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.473Z",
+    "updatedAt": "2026-01-26T04:33:31.473Z",
+    "questions": [
+      {
+        "id": "4fdc1a38-7815-4fe7-a186-45f3b1fd9d47",
+        "sentenceBuilderId": "a70ec1d5-ae0e-4c5f-a4bc-0389ee36bf67",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.477Z",
+        "updatedAt": "2026-01-26T04:33:31.477Z",
+        "words": [
+          {
+            "id": "1c1833ad-d0a6-4ea4-b127-cdd23239f124",
+            "sentenceBuilderQuestionId": "4fdc1a38-7815-4fe7-a186-45f3b1fd9d47",
+            "word": "School",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.480Z",
+            "updatedAt": "2026-01-26T04:33:31.480Z"
+          },
+          {
+            "id": "476d15fe-b548-4563-8326-63484fff55c4",
+            "sentenceBuilderQuestionId": "4fdc1a38-7815-4fe7-a186-45f3b1fd9d47",
+            "word": "Teacher",
+            "correctPosition": 5,
+            "order": 5,
+            "createdAt": "2026-01-26T04:33:31.480Z",
+            "updatedAt": "2026-01-26T04:33:31.480Z"
+          },
+          {
+            "id": "a00127e3-41a5-4098-a4e3-d68c634f51e5",
+            "sentenceBuilderQuestionId": "4fdc1a38-7815-4fe7-a186-45f3b1fd9d47",
+            "word": "meet",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:31.480Z",
+            "updatedAt": "2026-01-26T04:33:31.480Z"
+          },
+          {
+            "id": "f80c1621-e1eb-42b5-b240-7647c0211430",
+            "sentenceBuilderQuestionId": "4fdc1a38-7815-4fe7-a186-45f3b1fd9d47",
+            "word": "Market",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.480Z",
+            "updatedAt": "2026-01-26T04:33:31.480Z"
+          },
+          {
+            "id": "c81b1c9d-55b4-4747-b963-0503e5589470",
+            "sentenceBuilderQuestionId": "4fdc1a38-7815-4fe7-a186-45f3b1fd9d47",
+            "word": "and",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.480Z",
+            "updatedAt": "2026-01-26T04:33:31.480Z"
+          },
+          {
+            "id": "00a5b61e-f078-4f49-b3a1-e7cfbade9ecb",
+            "sentenceBuilderQuestionId": "4fdc1a38-7815-4fe7-a186-45f3b1fd9d47",
+            "word": "The",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.480Z",
+            "updatedAt": "2026-01-26T04:33:31.480Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
+    "answeredQuestions": 0
+  },
+  {
+    "id": "ba92f2bb-fd36-4ca4-8a28-e6f981af9689",
+    "title": "Nouns - Beginner - SentenceBuilder 1",
+    "description": "",
+    "teacherId": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "isPublic": false,
+    "difficulty": "beginner",
+    "isPublished": true,
+    "createdAt": "2026-01-26T04:33:31.440Z",
+    "updatedAt": "2026-01-26T04:33:31.440Z",
+    "questions": [
+      {
+        "id": "f6347d7b-1d2b-4957-b62b-28b3b09b45a1",
+        "sentenceBuilderId": "ba92f2bb-fd36-4ca4-8a28-e6f981af9689",
+        "audioId": null,
+        "hint": null,
+        "translation": null,
+        "order": 0,
+        "createdAt": "2026-01-26T04:33:31.452Z",
+        "updatedAt": "2026-01-26T04:33:31.452Z",
+        "words": [
+          {
+            "id": "22fca935-63bf-4a61-b608-1840e02c2459",
+            "sentenceBuilderQuestionId": "f6347d7b-1d2b-4957-b62b-28b3b09b45a1",
+            "word": "House",
+            "correctPosition": 1,
+            "order": 1,
+            "createdAt": "2026-01-26T04:33:31.457Z",
+            "updatedAt": "2026-01-26T04:33:31.457Z"
+          },
+          {
+            "id": "02faa5e6-ee3e-4cb4-ac36-338ed3a0d185",
+            "sentenceBuilderQuestionId": "f6347d7b-1d2b-4957-b62b-28b3b09b45a1",
+            "word": "Chair",
+            "correctPosition": 5,
+            "order": 5,
+            "createdAt": "2026-01-26T04:33:31.457Z",
+            "updatedAt": "2026-01-26T04:33:31.457Z"
+          },
+          {
+            "id": "50cc215e-16b7-4d83-8e77-901718549553",
+            "sentenceBuilderQuestionId": "f6347d7b-1d2b-4957-b62b-28b3b09b45a1",
+            "word": "meet",
+            "correctPosition": 4,
+            "order": 4,
+            "createdAt": "2026-01-26T04:33:31.457Z",
+            "updatedAt": "2026-01-26T04:33:31.457Z"
+          },
+          {
+            "id": "27fd630b-a11a-42e8-9a7e-3a76bcf00247",
+            "sentenceBuilderQuestionId": "f6347d7b-1d2b-4957-b62b-28b3b09b45a1",
+            "word": "The",
+            "correctPosition": 0,
+            "order": 0,
+            "createdAt": "2026-01-26T04:33:31.457Z",
+            "updatedAt": "2026-01-26T04:33:31.457Z"
+          },
+          {
+            "id": "8b76c5ce-b3c8-46c0-b530-b352bab946be",
+            "sentenceBuilderQuestionId": "f6347d7b-1d2b-4957-b62b-28b3b09b45a1",
+            "word": "Book",
+            "correctPosition": 3,
+            "order": 3,
+            "createdAt": "2026-01-26T04:33:31.457Z",
+            "updatedAt": "2026-01-26T04:33:31.457Z"
+          },
+          {
+            "id": "6cf66747-45d1-4120-babc-b26d0c69cf21",
+            "sentenceBuilderQuestionId": "f6347d7b-1d2b-4957-b62b-28b3b09b45a1",
+            "word": "and",
+            "correctPosition": 2,
+            "order": 2,
+            "createdAt": "2026-01-26T04:33:31.457Z",
+            "updatedAt": "2026-01-26T04:33:31.457Z"
+          }
+        ]
+      }
+    ],
+    "teacher": {
+      "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "firstName": "Sarkorbek",
+      "lastName": "Abilkosimov",
+      "email": "abilkosimovsarkor@gmail.com",
+      "phoneNumber": null,
+      "providers": [
+        {
+          "provider": "email",
+          "identifier": "abilkosimovsarkor@gmail.com",
+          "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+        }
+      ],
+      "roles": [
+        "teacher",
+        "user"
+      ],
+      "language": "en",
+      "created_at": "2025-12-24T15:32:44.479Z",
+      "xp": "0",
+      "isDeleted": false,
+      "reasoningSessions": [],
+      "profilePicture": null
+    },
+    "status": "not_completed",
+    "totalQuestions": 1,
     "answeredQuestions": 0
   }
 ]

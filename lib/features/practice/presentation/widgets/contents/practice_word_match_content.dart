@@ -7,15 +7,21 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/next_task_blo
 import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_word_match_card.dart';
 
 class PracticeWordMatchContent extends StatefulWidget {
-  final List<(String, String)> wordMatchPairs;
-  const PracticeWordMatchContent({super.key, required this.wordMatchPairs});
+  final List<PracticeWordMatchCardData> sources;
+  final List<PracticeWordMatchCardData> targets;
+  final VoidCallback? onCompleted;
+  const PracticeWordMatchContent(
+      {super.key, required this.sources, required this.targets, this.onCompleted});
 
   @override
   State<PracticeWordMatchContent> createState() => PracticeWordMatchContentState();
 }
 
 class PracticeWordMatchContentState extends State<PracticeWordMatchContent> {
+  late final List<PracticeWordMatchCardData> sources;
+  late final List<PracticeWordMatchCardData> targets;
   late final List<PracticeWordMatchCardData> cards;
+  late final int sourceCount;
   late List<WordMatchCardState> states;
   final List<int> _selected = [];
   bool _lock = false;
@@ -26,22 +32,15 @@ class PracticeWordMatchContentState extends State<PracticeWordMatchContent> {
   @override
   void initState() {
     super.initState();
-    cards = _buildCards();
+    sources = [...widget.sources]..shuffle(Random());
+    targets = [...widget.targets]..shuffle(Random());
+    cards = [...sources, ...targets];
+    sourceCount = sources.length;
     states = List<WordMatchCardState>.filled(cards.length, WordMatchCardState.idle);
     context.read<NextTaskBloc>().setCurrentTaskCompleted(false, isAnswerCorrect: false);
   }
 
   /// --- Methods ---
-
-  List<PracticeWordMatchCardData> _buildCards() {
-    final list = <PracticeWordMatchCardData>[];
-    for (var i = 0; i < widget.wordMatchPairs.length; i++) {
-      list.add(PracticeWordMatchCardData(pairId: i, text: widget.wordMatchPairs[i].$1));
-      list.add(PracticeWordMatchCardData(pairId: i, text: widget.wordMatchPairs[i].$2));
-    }
-    list.shuffle(Random());
-    return list;
-  }
 
   void onTapCard(int index) {
     if (_lock || states[index] == WordMatchCardState.matched || _selected.contains(index)) return;
@@ -68,6 +67,7 @@ class PracticeWordMatchContentState extends State<PracticeWordMatchContent> {
       });
       if (matchedCount == cards.length) {
         context.read<NextTaskBloc>().setCurrentTaskCompleted(true, isAnswerCorrect: true);
+        widget.onCompleted?.call();
       }
       return;
     }
@@ -90,15 +90,22 @@ class PracticeWordMatchContentState extends State<PracticeWordMatchContent> {
   }
 
   /// --- Widgets ---
+  Widget wordList(List<PracticeWordMatchCardData> list, int offset) => Column(
+        children: List.generate(
+            list.length,
+            (index) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: PracticeWordMatchCard(
+                    data: list[index],
+                    state: states[offset + index],
+                    onTap: () => onTapCard(offset + index)))),
+      );
 
-  Widget gridList(BuildContext context) => GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, crossAxisSpacing: 12, mainAxisSpacing: 12, childAspectRatio: 1.5),
-      itemCount: cards.length,
-      itemBuilder: (context, index) =>
-          PracticeWordMatchCard(data: cards[index], state: states[index], onTap: () => onTapCard(index)));
+  Widget gridList(BuildContext context) => Row(children: [
+        Expanded(child: wordList(sources, 0)),
+        const SizedBox(width: 12),
+        Expanded(child: wordList(targets, sourceCount)),
+      ]);
 
   Widget get instruction => Text('Tap a pair that belongs together.',
       style: Style.small3w4(context, color: TextColorRole.greyColor));

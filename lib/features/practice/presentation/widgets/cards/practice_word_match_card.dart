@@ -16,10 +16,11 @@ class PracticeWordMatchCard extends StatelessWidget {
   final WordMatchCardState state;
   final VoidCallback onTap;
 
-  const PracticeWordMatchCard({super.key, required this.data, required this.state, required this.onTap});
+  const PracticeWordMatchCard(
+      {super.key, required this.data, required this.state, required this.onTap});
 
   /// --- Widgets ---
-  
+
   Color borderColor(BuildContext context) =>
       switch (state) { WordMatchCardState.selected => context.cs.primary, _ => Colors.transparent };
 
@@ -39,6 +40,7 @@ class PracticeWordMatchCard extends StatelessWidget {
       onTap: onTap,
       borderRadius: Style.border16,
       child: Ink(
+          padding: Style.paddingAll16,
           decoration: BoxDecoration(
               color: fillColor(context),
               borderRadius: Style.border16,
