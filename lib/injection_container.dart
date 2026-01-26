@@ -30,6 +30,10 @@ import 'package:ustadia_user_app/features/practice/data/datasources/practice_rem
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_flashcard_sets_bloc/practice_flashcard_sets_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_sets_bloc/practice_listen_tap_sets_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_status_bloc/practice_listen_tap_status_bloc.dart';
+import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_sentence_builder_sets_bloc/practice_sentence_builder_sets_bloc.dart';
+import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_sentence_builder_status_bloc/practice_sentence_builder_status_bloc.dart';
+import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_word_match_sets_bloc/practice_word_match_sets_bloc.dart';
+import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_word_match_status_bloc/practice_word_match_status_bloc.dart';
 
 import 'core/network/dio_client.dart';
 import 'features/posts/domain/repositories/post_repository.dart';
@@ -91,6 +95,10 @@ Future<void> initDependencies() async {
   sl.registerFactory(() => PracticeFlashcardSetsBloc(practiceRemoteDataSource: sl()));
   sl.registerFactory(() => PracticeListenTapSetsBloc(practiceRemoteDataSource: sl()));
   sl.registerFactory(() => PracticeListenTapStatusBloc(practiceRemoteDataSource: sl()));
+  sl.registerFactory(() => PracticeSentenceBuilderSetsBloc(practiceRemoteDataSource: sl()));
+  sl.registerFactory(() => PracticeSentenceBuilderStatusBloc(practiceRemoteDataSource: sl()));
+  sl.registerFactory(() => PracticeWordMatchSetsBloc(practiceRemoteDataSource: sl()));
+  sl.registerFactory(() => PracticeWordMatchStatusBloc(practiceRemoteDataSource: sl()));
 
   // Features - Posts
   sl.registerLazySingleton<PostRemoteDataSource>(

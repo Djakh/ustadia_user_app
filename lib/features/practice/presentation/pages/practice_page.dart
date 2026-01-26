@@ -4,7 +4,6 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/practice/data/models/activity_model.dart';
-import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_daily_card.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_item_tile_card.dart';
 import 'package:ustadia_user_app/router.dart';
 
@@ -29,26 +28,26 @@ class PracticePage extends StatelessWidget {
             description: 'Put words in order',
             image: AppImages.buildTheSentence,
             route: buildSentenceRoute),
-        ActivityModel(
-            title: 'Writing assessment',
-            description: 'Get AI feedback & score',
-            image: AppImages.writingAssesment,
-            route: writingAssessmentRoute),
+        // ActivityModel(
+        //     title: 'Writing assessment',
+        //     description: 'Get AI feedback & score',
+        //     image: AppImages.writingAssesment,
+        //     route: writingAssessmentRoute),
         ActivityModel(
             title: 'Listen & Tap',
             description: 'Train your ear with audio',
             image: AppImages.listenTap,
             route: listenTapSetsRoute),
-        ActivityModel(
-            title: 'Vocabulary',
-            description: 'Choose right answer',
-            image: AppImages.vocabulary,
-            route: vocabularyRoute),
-        ActivityModel(
-            title: 'Speed Mix',
-            description: 'A fast mix of tasks for 2 minutes',
-            image: AppImages.speedMix,
-            route: speedMixRoute),
+        // ActivityModel(
+        //     title: 'Vocabulary',
+        //     description: 'Choose right answer',
+        //     image: AppImages.vocabulary,
+        //     route: vocabularyRoute),
+        // ActivityModel(
+        //     title: 'Speed Mix',
+        //     description: 'A fast mix of tasks for 2 minutes',
+        //     image: AppImages.speedMix,
+        //     route: speedMixRoute),
       ];
 
   /// --- Methods ---
@@ -69,11 +68,11 @@ class PracticePage extends StatelessWidget {
       title: 'Practice',
       child: ListView(
         children: [
-          const SizedBox(height: 16),
-          const PracticeDailyCard(),
-          const SizedBox(height: 28),
+          // const SizedBox(height: 16),
+          //  const PracticeDailyCard(),
+          const SizedBox(height: 24),
           activityList(context),
-          const SizedBox(height: 80),
+//          const SizedBox(height: 80),
         ],
       ));
 

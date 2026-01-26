@@ -8,7 +8,8 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/next_task_blo
 
 class PracticeBuildSentenceContent extends StatefulWidget {
   final List<String> correctOrder;
-  const PracticeBuildSentenceContent({super.key, required this.correctOrder});
+  final VoidCallback? onCompleted;
+  const PracticeBuildSentenceContent({super.key, required this.correctOrder, this.onCompleted});
 
   @override
   State<PracticeBuildSentenceContent> createState() => PracticeBuildSentenceContentState();
@@ -59,6 +60,7 @@ class PracticeBuildSentenceContentState extends State<PracticeBuildSentenceConte
       showSuccess = isCorrect;
     });
     context.read<NextTaskBloc>().setCurrentTaskCompleted(true, isAnswerCorrect: isCorrect);
+    if (isCorrect) widget.onCompleted?.call();
   }
 
   /// --- Widgets ---

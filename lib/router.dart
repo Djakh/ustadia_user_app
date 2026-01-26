@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ustadia_user_app/features/ask_ai/presentation/pages/ask_ai_page.dart';
 import 'package:ustadia_user_app/features/auth/data/models/otp_verification_params.dart';
 import 'package:ustadia_user_app/features/auth/presentation/pages/login_page.dart';
 import 'package:ustadia_user_app/features/auth/presentation/pages/otp_page.dart';
@@ -24,13 +25,17 @@ import 'package:ustadia_user_app/features/learn/presentation/pages/learn_writing
 import 'package:ustadia_user_app/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:ustadia_user_app/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:ustadia_user_app/features/practice/data/models/practice_listen_tap_set_model.dart';
+import 'package:ustadia_user_app/features/practice/data/models/practice_sentence_builder_set_model.dart';
+import 'package:ustadia_user_app/features/practice/data/models/practice_word_match_set_model.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/practice_listen_tap_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_build_sentence_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/practice_build_sentence_sets_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_flashcard_sets_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_listen_tap_sets_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_vocabulary_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_word_match_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/practice_word_match_sets_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_writing_assessment_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_result_page.dart';
@@ -270,12 +275,24 @@ final appRouter = GoRouter(
                 GoRoute(
                   path: wordMatchPath,
                   parentNavigatorKey: _rootKey,
-                  builder: (_, __) => const PracticeWordMatchPage(),
+                  builder: (context, state) {
+                    final extra = state.extra;
+                    if (extra is PracticeWordMatchSetModel) {
+                      return PracticeWordMatchPage(set: extra);
+                    }
+                    return const PracticeWordMatchSetsPage();
+                  },
                 ),
                 GoRoute(
                   path: buildSentencePath,
                   parentNavigatorKey: _rootKey,
-                  builder: (_, __) => const PracticeBuildSentencePage(),
+                  builder: (context, state) {
+                    final extra = state.extra;
+                    if (extra is PracticeSentenceBuilderSetModel) {
+                      return PracticeBuildSentencePage(set: extra);
+                    }
+                    return const PracticeBuildSentenceSetsPage();
+                  },
                 ),
                 GoRoute(
                   path: writingAssessmentPath,
@@ -327,17 +344,10 @@ final appRouter = GoRouter(
         ),
 
         /// 3) Ask AI
-        StatefulShellBranch(
-          navigatorKey: _askAiKey,
-          routes: [
-            GoRoute(
-              path: askAiRoute,
-              pageBuilder: (_, __) => const NoTransitionPage(
-                child: Scaffold(body: Center(child: Text('Ask AI'))),
-              ),
-            ),
-          ],
-        ),
+        StatefulShellBranch(navigatorKey: _askAiKey, routes: [
+          GoRoute(
+              path: askAiRoute, pageBuilder: (_, __) => const NoTransitionPage(child: AskAiPage()))
+        ]),
 
         /// 4) Profile (root has bottom bar; children open on root -> no bottom bar)
         StatefulShellBranch(

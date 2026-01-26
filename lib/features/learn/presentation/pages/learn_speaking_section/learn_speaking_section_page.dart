@@ -12,7 +12,7 @@ import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_
 import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_state.dart';
-import 'package:ustadia_user_app/features/common/presentation/pages/result_pages/quiz_result_component.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_question_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_question_answer_bloc/learn_question_answer_bloc.dart';
