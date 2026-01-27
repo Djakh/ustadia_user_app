@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:ustadia_user_app/core/pagination/pagination_meta.dart';
 import 'package:ustadia_user_app/core/pagination/pagination_result.dart';
+import 'package:ustadia_user_app/features/dashboard/data/models/current_unit_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_question_answer_result_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_model.dart';
@@ -35,6 +36,12 @@ class LearnRemoteDataSource {
         .toList()
       ..sort((a, b) => a.unitNumber.compareTo(b.unitNumber));
     return units;
+  }
+
+  Future<CurrentUnitModel> fetchCurrentUnit() async {
+    final response = await dio.get('/students/lessons/current-unit');
+    final data = response.data as Map<String, dynamic>;
+    return CurrentUnitModel.fromJson(data);
   }
 
   Future<PaginationResult<LearnSectionModel>> fetchSections(

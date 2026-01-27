@@ -71,8 +71,7 @@ class SettingsPage extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: context.cs.surface,
       constraints: BoxConstraints(
-        minHeight: MediaQuery.of(context).size.height * 0.4, 
-        
+        minHeight: MediaQuery.of(context).size.height * 0.4,
       ),
       shape: RoundedRectangleBorder(borderRadius: Style.borderVer24),
       builder: (sheetContext) => TeacherPickerSheet(userModel: userModel),
@@ -95,11 +94,11 @@ class SettingsPage extends StatelessWidget {
                 SettingsListItem(
                     item: mainItems[2], onTap: () => showTeacherPicker(context, state.profile!)),
                 const PrimaryDivider(),
-                SettingsListItem(item: mainItems[3], onTap: () => goToNotifications(context)),
-                const PrimaryDivider(),
-                SettingsListItem(item: mainItems[4], onTap: () {}),
-                const PrimaryDivider(),
-                SettingsListItem(item: mainItems[5], onTap: () {}),
+                // SettingsListItem(item: mainItems[3], onTap: () => goToNotifications(context)),
+                // const PrimaryDivider(),
+                // SettingsListItem(item: mainItems[4], onTap: () {}),
+                // const PrimaryDivider(),
+                // SettingsListItem(item: mainItems[5], onTap: () {}),
               ],
             ));
 
