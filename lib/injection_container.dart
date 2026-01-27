@@ -34,6 +34,8 @@ import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_se
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_sentence_builder_status_bloc/practice_sentence_builder_status_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_word_match_sets_bloc/practice_word_match_sets_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_word_match_status_bloc/practice_word_match_status_bloc.dart';
+import 'package:ustadia_user_app/features/notifications/data/datasources/notifications_remote_data_source.dart';
+import 'package:ustadia_user_app/features/notifications/presentation/bloc/notifications_bloc/notifications_bloc.dart';
 
 import 'core/network/dio_client.dart';
 import 'features/posts/domain/repositories/post_repository.dart';
@@ -99,6 +101,11 @@ Future<void> initDependencies() async {
   sl.registerFactory(() => PracticeSentenceBuilderStatusBloc(practiceRemoteDataSource: sl()));
   sl.registerFactory(() => PracticeWordMatchSetsBloc(practiceRemoteDataSource: sl()));
   sl.registerFactory(() => PracticeWordMatchStatusBloc(practiceRemoteDataSource: sl()));
+
+  // Features - Notifications
+  sl.registerLazySingleton<NotificationsRemoteDataSource>(
+      () => NotificationsRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
+  sl.registerFactory(() => NotificationsBloc(notificationsRemoteDataSource: sl()));
 
   // Features - Posts
   sl.registerLazySingleton<PostRemoteDataSource>(

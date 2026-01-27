@@ -86,9 +86,9 @@ class NotificationModel extends Equatable {
 
 
 
-class NotificationSection {
+class NotificationSection<T> {
   final DateTime date;
-  final List<NotificationModel> items;
+  final List<T> items;
 
   const NotificationSection({required this.date, required this.items});
 }
