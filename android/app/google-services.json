@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "236481695711",
+    "project_id": "ustadia-student",
+    "storage_bucket": "ustadia-student.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236481695711:android:a3f04b36da0b30afe23e6a",
+        "android_client_info": {
+          "package_name": "com.example.ustadia_user_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATxFJIhWAKHTLMgVR_xjWSc218M4LTiHM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -52,7 +52,7 @@ class ProfilePage extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, childAspectRatio: 1.34, crossAxisSpacing: 12, mainAxisSpacing: 12),
+          crossAxisCount: 2, childAspectRatio:  1.30, crossAxisSpacing: 12, mainAxisSpacing: 12),
       itemBuilder: (_, i) => ProfileStatCard(profileStatsModel: stats[i]));
 
   Widget get badgesItemList => SizedBox(
