@@ -25,9 +25,9 @@ class SettingsPage extends StatelessWidget {
         SettingsItemModel(title: 'Account', iconAsset: AppImages.settingsAccount),
         SettingsItemModel(title: 'Learning preferences', iconAsset: AppImages.settingsPreferences),
         SettingsItemModel(title: 'Choose teacher', iconAsset: AppImages.settingsAccount),
-        SettingsItemModel(title: 'Notifications', iconAsset: AppImages.settingsNotifications),
-        SettingsItemModel(title: 'Info', iconAsset: AppImages.settingsInfo),
-        SettingsItemModel(title: 'Legal', iconAsset: AppImages.settingsLegal),
+        // SettingsItemModel(title: 'Notifications', iconAsset: AppImages.settingsNotifications),
+        // SettingsItemModel(title: 'Info', iconAsset: AppImages.settingsInfo),
+        // SettingsItemModel(title: 'Legal', iconAsset: AppImages.settingsLegal),
       ];
 
   SettingsItemModel get logoutItem => const SettingsItemModel(
@@ -93,7 +93,7 @@ class SettingsPage extends StatelessWidget {
                 const PrimaryDivider(),
                 SettingsListItem(
                     item: mainItems[2], onTap: () => showTeacherPicker(context, state.profile!)),
-                const PrimaryDivider(),
+                // const PrimaryDivider(),
                 // SettingsListItem(item: mainItems[3], onTap: () => goToNotifications(context)),
                 // const PrimaryDivider(),
                 // SettingsListItem(item: mainItems[4], onTap: () {}),

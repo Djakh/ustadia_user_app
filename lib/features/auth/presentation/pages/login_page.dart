@@ -11,13 +11,13 @@ import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/inputs/input_field.dart';
+import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_login_bloc.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_login_event.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_login_state.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_password_bloc.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_password_event.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_password_state.dart';
-import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:ustadia_user_app/features/auth/presentation/widgets/dialogs/auth_contact_type.dart';
 import 'package:ustadia_user_app/features/auth/presentation/widgets/dialogs/forgot_password_dialog.dart';
 import 'package:ustadia_user_app/features/auth/presentation/widgets/dialogs/reset_password_dialog.dart';
@@ -84,6 +84,94 @@ class LoginPageState extends State<LoginPage> {
     authLoginBloc.close();
     authPasswordBloc.close();
     super.dispose();
+  }
+
+  /// --- Listeners ---
+
+  void authPasswordListener(context, state) {
+    if (state.status == Status.success) {
+      if (state.action == AuthPasswordAction.forgotPasswordEmail) {
+        if (isForgotDialogOpen && Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
+        if (state.message != null && state.message!.isNotEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message!)));
+        }
+        if (pendingForgotEmail.isNotEmpty) {
+          resetEmail = pendingForgotEmail;
+          pendingForgotEmail = '';
+        }
+        if (isForgotDialogOpen && resetEmail.isNotEmpty) {
+          showResetPasswordDialog(AuthContactType.email, resetEmail);
+        }
+      }
+      if (state.action == AuthPasswordAction.resetPasswordEmail) {
+        if (isResetDialogOpen && Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
+        if (state.message != null && state.message!.isNotEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message!)));
+        }
+      }
+      if (state.action == AuthPasswordAction.forgotPasswordPhone) {
+        if (isForgotDialogOpen && Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
+        if (state.message != null && state.message!.isNotEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message!)));
+        }
+        if (pendingForgotPhone.isNotEmpty) {
+          resetPhone = pendingForgotPhone;
+          pendingForgotPhone = '';
+        }
+        if (isForgotDialogOpen && resetPhone.isNotEmpty) {
+          showResetPasswordDialog(AuthContactType.phone, resetPhone);
+        }
+      }
+      if (state.action == AuthPasswordAction.resetPasswordPhone) {
+        if (isResetDialogOpen && Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
+        if (state.message != null && state.message!.isNotEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message!)));
+        }
+      }
+      return;
+    }
+    if (state.status == Status.error && state.errorMessage != null) {
+      pendingForgotEmail = '';
+      pendingForgotPhone = '';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+    }
+  }
+
+  void userListener(context, state) {
+    if (!isAwaitingUser) return;
+    if (state.status == Status.success) {
+      isAwaitingUser = false;
+      final profile = state.profile;
+      if (profile != null && profile.introCompleted) {
+        goToHome();
+        return;
+      }
+      goToIntroSurvey();
+    }
+    if (state.status == Status.error && state.errorMessage != null) {
+      isAwaitingUser = false;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+    }
+  }
+
+  void authLoginListener(context, state) {
+    if (state.status == Status.success) {
+      saveRememberedCredentials();
+      isAwaitingUser = true;
+      userBloc.add(const UserProfileRequested());
+      return;
+    }
+    if (state.status == Status.error && state.errorMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+    }
   }
 
   /// --- Methods ---
@@ -180,10 +268,10 @@ class LoginPageState extends State<LoginPage> {
   /// --- Showed Widgets ---
 
   Future<void> showForgotPasswordDialog(AuthContactType type) async {
-    final controller = type == AuthContactType.email ? forgotEmailController : forgotPhoneController;
-    controller.text = type == AuthContactType.email
-        ? emailController.text.trim()
-        : phoneController.text.trim();
+    final controller =
+        type == AuthContactType.email ? forgotEmailController : forgotPhoneController;
+    controller.text =
+        type == AuthContactType.email ? emailController.text.trim() : phoneController.text.trim();
     isForgotDialogOpen = true;
     await showDialog(
         context: context,
@@ -208,9 +296,9 @@ class LoginPageState extends State<LoginPage> {
     isForgotDialogOpen = false;
   }
 
-
   Future<void> showResetPasswordDialog(AuthContactType type, String contact) async {
-    final contactController = type == AuthContactType.email ? resetEmailController : resetPhoneController;
+    final contactController =
+        type == AuthContactType.email ? resetEmailController : resetPhoneController;
     contactController.text = contact;
     resetOtpController.clear();
     resetPasswordController.clear();
@@ -325,9 +413,7 @@ class LoginPageState extends State<LoginPage> {
         BlocBuilder<AuthLoginBloc, AuthLoginState>(
             bloc: authLoginBloc,
             builder: (context, state) => Button.primary(
-                onTap: onLogin,
-                text: 'Log in',
-                isLoading: state.status == Status.loading)),
+                onTap: onLogin, text: 'Log in', isLoading: state.status == Status.loading)),
         const SizedBox(height: 16),
         divider,
         const SizedBox(height: 16),
@@ -344,100 +430,9 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) => MultiBlocListener(listeners: [
         BlocListener<AuthLoginBloc, AuthLoginState>(
-            bloc: authLoginBloc,
-            listener: (context, state) {
-              if (state.status == Status.success) {
-                saveRememberedCredentials();
-                isAwaitingUser = true;
-                userBloc.add(const UserProfileRequested());
-                return;
-              }
-              if (state.status == Status.error && state.errorMessage != null) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-              }
-            }),
-        BlocListener<UserBloc, UserState>(
-            bloc: userBloc,
-            listener: (context, state) {
-              if (!isAwaitingUser) return;
-              if (state.status == Status.success) {
-                isAwaitingUser = false;
-                final profile = state.profile;
-                if (profile != null && profile.introCompleted) {
-                  goToHome();
-                  return;
-                }
-                goToIntroSurvey();
-              }
-              if (state.status == Status.error && state.errorMessage != null) {
-                isAwaitingUser = false;
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-              }
-            }),
+            bloc: authLoginBloc, listener: authLoginListener),
+        BlocListener<UserBloc, UserState>(bloc: userBloc, listener: userListener),
         BlocListener<AuthPasswordBloc, AuthPasswordState>(
-            bloc: authPasswordBloc,
-            listener: (context, state) {
-              if (state.status == Status.success) {
-                if (state.action == AuthPasswordAction.forgotPasswordEmail) {
-                  if (isForgotDialogOpen && Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
-                  }
-                  if (state.message != null && state.message!.isNotEmpty) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text(state.message!)));
-                  }
-                  if (pendingForgotEmail.isNotEmpty) {
-                    resetEmail = pendingForgotEmail;
-                    pendingForgotEmail = '';
-                  }
-                  if (isForgotDialogOpen && resetEmail.isNotEmpty) {
-                    showResetPasswordDialog(AuthContactType.email, resetEmail);
-                  }
-                }
-                if (state.action == AuthPasswordAction.resetPasswordEmail) {
-                  if (isResetDialogOpen && Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
-                  }
-                  if (state.message != null && state.message!.isNotEmpty) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text(state.message!)));
-                  }
-                }
-                if (state.action == AuthPasswordAction.forgotPasswordPhone) {
-                  if (isForgotDialogOpen && Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
-                  }
-                  if (state.message != null && state.message!.isNotEmpty) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text(state.message!)));
-                  }
-                  if (pendingForgotPhone.isNotEmpty) {
-                    resetPhone = pendingForgotPhone;
-                    pendingForgotPhone = '';
-                  }
-                  if (isForgotDialogOpen && resetPhone.isNotEmpty) {
-                    showResetPasswordDialog(AuthContactType.phone, resetPhone);
-                  }
-                }
-                if (state.action == AuthPasswordAction.resetPasswordPhone) {
-                  if (isResetDialogOpen && Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
-                  }
-                  if (state.message != null && state.message!.isNotEmpty) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text(state.message!)));
-                  }
-                }
-                return;
-              }
-              if (state.status == Status.error && state.errorMessage != null) {
-                pendingForgotEmail = '';
-                pendingForgotPhone = '';
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-              }
-            })
+            bloc: authPasswordBloc, listener: authPasswordListener)
       ], child: Scaffold(backgroundColor: context.cs.surface, body: view));
 }

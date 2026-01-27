@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/mixins/format_date.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/listviews/primary_list_view.dart';
+import 'package:ustadia_user_app/features/notifications/data/models/notification_api_model.dart';
 import 'package:ustadia_user_app/features/notifications/data/models/notification_model.dart';
+import 'package:ustadia_user_app/features/notifications/presentation/bloc/notifications_bloc/notifications_bloc.dart';
+import 'package:ustadia_user_app/features/notifications/presentation/bloc/notifications_bloc/notifications_event.dart';
+import 'package:ustadia_user_app/features/notifications/presentation/bloc/notifications_bloc/notifications_state.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/widgets/notification_list_item.dart';
+import 'package:ustadia_user_app/injection_container.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -17,35 +24,96 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> with FormatDateMixin {
-  List<NotificationModel> notifications = NotificationModel.mockNotifications;
+  final NotificationsBloc notificationsBloc = sl<NotificationsBloc>();
+  BuildContext? dialogContext;
+
+  @override
+  void initState() {
+    super.initState();
+    notificationsBloc.add(const NotificationsRequested());
+  }
+
+  @override
+  void dispose() {
+    notificationsBloc.close();
+    super.dispose();
+  }
 
   /// --- Methods ---
 
   void markAllRead() {
-    setState(() {
-      notifications = notifications.map((item) => item.copyWith(isRead: true)).toList();
-    });
+    notificationsBloc.add(const NotificationsMarkedAllRead());
   }
 
-  void toggleRead(String id) {
-    setState(() {
-      notifications = notifications
-          .map((item) => item.id == id ? item.copyWith(isRead: !item.isRead) : item)
-          .toList();
-    });
+  bool canRespondToInvitation(NotificationApiModel notification) {
+    final invitation = notification.invitation;
+    if (invitation == null) return false;
+    return invitation.status != 'accepted' && invitation.status != 'rejected';
+  }
+
+  void openNotification(NotificationApiModel notification) {
+    if (!notification.isRead) {
+      notificationsBloc.add(NotificationMarkedRead(notificationId: notification.id));
+    }
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        dialogContext = context;
+        final invitation = notification.invitation;
+        final showActions = notification.isInvitation && canRespondToInvitation(notification);
+        return BlocBuilder<NotificationsBloc, NotificationsState>(
+            bloc: notificationsBloc,
+            builder: (context, state) {
+              final isWorking =
+                  state.actionStatus.isLoading && state.actionInvitationId == invitation?.id;
+              return AlertDialog(
+                title: Text(notification.title),
+                content: Text(notification.message),
+                actions: [
+                  if (showActions)
+                    TextButton(
+                      onPressed: isWorking
+                          ? null
+                          : () {
+                              notificationsBloc.add(NotificationInvitationRejected(
+                                  notificationId: notification.id, invitationId: invitation!.id));
+                            },
+                      child: const Text('Reject'),
+                    ),
+                  if (showActions)
+                    TextButton(
+                      onPressed: isWorking
+                          ? null
+                          : () {
+                              notificationsBloc.add(NotificationInvitationAccepted(
+                                  notificationId: notification.id, invitationId: invitation!.id));
+                            },
+                      child: const Text('Accept'),
+                    ),
+                  if (!showActions)
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('Close'),
+                    ),
+                ],
+              );
+            });
+      },
+    ).then((_) => dialogContext = null);
   }
 
   /// --- Widget Methods ---
 
-  List<NotificationSection> sections(List<NotificationModel> items) {
-    final grouped = <DateTime, List<NotificationModel>>{};
+  List<NotificationSection<NotificationApiModel>> sections(List<NotificationApiModel> items) {
+    final grouped = <DateTime, List<NotificationApiModel>>{};
     for (final item in items) {
       final day = DateUtils.dateOnly(item.createdAt);
       grouped.putIfAbsent(day, () => []).add(item);
     }
 
     final sections = grouped.entries
-        .map((entry) => NotificationSection(date: entry.key, items: entry.value))
+        .map((entry) =>
+            NotificationSection<NotificationApiModel>(date: entry.key, items: entry.value))
         .toList()
       ..sort((a, b) => b.date.compareTo(a.date));
 
@@ -56,8 +124,8 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
     return sections;
   }
 
-  List<Widget> buildSectionWidgets(BuildContext context) {
-    final list = sections(notifications);
+  List<Widget> buildSectionWidgets(BuildContext context, List<NotificationApiModel> items) {
+    final list = sections(items);
     final widgets = <Widget>[];
 
     for (var i = 0; i < list.length; i++) {
@@ -82,13 +150,14 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
             style: Style.bodyw4(context, color: TextColorRole.greyColor))
       ]);
 
-  PrimaryListView sectionList(NotificationSection section) => PrimaryListView(
+  PrimaryListView sectionList(NotificationSection<NotificationApiModel> section) => PrimaryListView(
       items: section.items,
       shrinkWrap: true,
-      itemBuilder: (item) =>
-          NotificationListItem(notification: item, onTap: () => toggleRead(item.id)));
+      itemBuilder: (item) => NotificationListItem(
+          notification: item.toDisplayModel(), onTap: () => openNotification(item)));
 
-  Widget sectionListComponents(BuildContext context, NotificationSection section) =>
+  Widget sectionListComponents(
+          BuildContext context, NotificationSection<NotificationApiModel> section) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(formatDateLabel(section.date, DateTime.now()),
             style: Style.small3w4(context, color: TextColorRole.greyColor)),
@@ -96,11 +165,11 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
         sectionList(section),
       ]);
 
-  Widget listView(BuildContext context) => Column(
+  Widget listView(BuildContext context, List<NotificationApiModel> items) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 12),
-          ...buildSectionWidgets(context),
+          ...buildSectionWidgets(context, items),
           const SizedBox(height: 24),
         ],
       );
@@ -118,10 +187,37 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
         readNotificationsButton
       ]));
 
+  Widget get contentChecker =>
+      BlocStatusView<NotificationsBloc, NotificationsState, List<NotificationApiModel>>(
+          bloc: notificationsBloc,
+          statusOf: (s) => s.status,
+          errorOf: (s) => s.errorMessage,
+          data: (s) => s.notifications,
+          isEmpty: (items) => items.isEmpty,
+          empty: emptyState(context),
+          builder: (context, items) => listView(context, items));
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-      body: PrimaryBackground(
-          header: header(context),
-          isScrollable: notifications.isEmpty ? false : true,
-          child: notifications.isEmpty ? emptyState(context) : listView(context)));
+  Widget build(BuildContext context) => BlocListener<NotificationsBloc, NotificationsState>(
+      bloc: notificationsBloc,
+      listenWhen: (previous, current) => previous.actionStatus != current.actionStatus,
+      listener: (context, state) {
+        if (state.actionStatus.isError && state.actionErrorMessage != null) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(state.actionErrorMessage!)));
+          return;
+        }
+        if (state.actionStatus.isSuccess) {
+          if (dialogContext != null) {
+            Navigator.of(dialogContext!).pop();
+            dialogContext = null;
+          }
+          notificationsBloc.add(const NotificationsRequested());
+        }
+      },
+      child: Scaffold(
+          body: PrimaryBackground(
+              header: header(context),
+              isScrollable: notificationsBloc.state.notifications.isEmpty ? false : true,
+              child: contentChecker)));
 }
