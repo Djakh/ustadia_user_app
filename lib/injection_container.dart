@@ -58,10 +58,16 @@ Future<void> initDependencies() async {
       dio: DioClient.create(
           baseUrl: 'https://backend.ustadia.findecor.io',
           accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken())));
-  sl.registerFactory(() => AuthLoginBloc(authRemoteDataSource: sl(), authLocalDataSource: sl()));
+  sl.registerFactory(() => AuthLoginBloc(
+      authRemoteDataSource: sl(),
+      authLocalDataSource: sl(),
+      userRemoteDataSource: sl()));
   sl.registerFactory(() => AuthPasswordBloc(authRemoteDataSource: sl()));
   sl.registerFactory(() => AuthRegisterBloc(authRemoteDataSource: sl()));
-  sl.registerFactory(() => AuthVerifyBloc(authRemoteDataSource: sl(), authLocalDataSource: sl()));
+  sl.registerFactory(() => AuthVerifyBloc(
+      authRemoteDataSource: sl(),
+      authLocalDataSource: sl(),
+      userRemoteDataSource: sl()));
 
   // Features - Common (User)
   sl.registerLazySingleton<UserRemoteDataSource>(

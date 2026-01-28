@@ -1,17 +1,23 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/core/network/dio_error_message.dart';
+import 'package:ustadia_user_app/core/services/firebase_messaging_service.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_event.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_state.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
+import 'package:ustadia_user_app/features/common/data/datasources/user_remote_data_source.dart';
 
 class AuthVerifyBloc extends Bloc<AuthVerifyEvent, AuthVerifyState> {
   final AuthRemoteDataSource authRemoteDataSource;
   final AuthLocalDataSource authLocalDataSource;
+  final UserRemoteDataSource userRemoteDataSource;
 
-  AuthVerifyBloc({required this.authRemoteDataSource, required this.authLocalDataSource})
+  AuthVerifyBloc(
+      {required this.authRemoteDataSource,
+      required this.authLocalDataSource,
+      required this.userRemoteDataSource})
       : super(const AuthVerifyState()) {
     on<AuthVerifyOtpRequested>(handleVerifyOtp);
   }
@@ -23,6 +29,7 @@ class AuthVerifyBloc extends Bloc<AuthVerifyEvent, AuthVerifyState> {
       final accessToken =
           await authRemoteDataSource.verifyOtp(tempId: event.tempId, otp: event.otp);
       await authLocalDataSource.setAccessToken(accessToken);
+      await _registerDeviceToken();
       emit(state.copyWith(
           status: Status.success, accessToken: accessToken, errorMessage: null));
     } on DioException catch (error) {
@@ -32,5 +39,14 @@ class AuthVerifyBloc extends Bloc<AuthVerifyEvent, AuthVerifyState> {
       emit(state.copyWith(
           status: Status.error, errorMessage: 'Request failed. Please try again.'));
     }
+  }
+
+  Future<void> _registerDeviceToken() async {
+    final token = await FirebaseMessagingService.getToken();
+    if (token == null || token.isEmpty) return;
+    final deviceType = FirebaseMessagingService.deviceType();
+    try {
+      await userRemoteDataSource.registerDevice(token: token, deviceType: deviceType);
+    } catch (_) {}
   }
 }
