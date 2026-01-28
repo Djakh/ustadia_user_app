@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/services/firebase_messaging_service.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:ustadia_user_app/features/common/data/datasources/user_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/data/models/user_profile_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
@@ -52,6 +54,16 @@ class SettingsPage extends StatelessWidget {
   }
 
   Future<void> logout(BuildContext context) async {
+    final token = await FirebaseMessagingService.getToken();
+    final deviceType = FirebaseMessagingService.deviceType();
+    if (token != null && token.isNotEmpty) {
+      try {
+        await sl<UserRemoteDataSource>().unregisterDevice(
+          token: token,
+          deviceType: deviceType,
+        );
+      } catch (_) {}
+    }
     await sl<AuthLocalDataSource>().clearAccessToken();
     if (!context.mounted) return;
     context.go(loginRoute);

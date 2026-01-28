@@ -5,10 +5,12 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/services/firebase_messaging_service.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/inputs/input_field.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:ustadia_user_app/features/common/data/datasources/user_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/data/models/user_profile_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_state.dart';
@@ -118,6 +120,16 @@ class EditAccountPageState extends State<EditAccountPage> {
   }
 
   void logout() async {
+    final token = await FirebaseMessagingService.getToken();
+    final deviceType = FirebaseMessagingService.deviceType();
+    if (token != null && token.isNotEmpty) {
+      try {
+        await sl<UserRemoteDataSource>().unregisterDevice(
+          token: token,
+          deviceType: deviceType,
+        );
+      } catch (_) {}
+    }
     await sl<AuthLocalDataSource>().clearAccessToken();
     if (!mounted) return;
     context.go(loginRoute);

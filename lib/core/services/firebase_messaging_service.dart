@@ -78,4 +78,18 @@ class FirebaseMessagingService {
       debugPrint('FCM message opened: ${message.messageId}');
     });
   }
+
+  static Future<String?> getToken() async {
+    try {
+      return await FirebaseMessaging.instance.getToken();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static String deviceType() {
+    if (Platform.isAndroid) return 'android';
+    if (Platform.isIOS) return 'ios';
+    return 'unknown';
+  }
 }

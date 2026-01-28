@@ -45,4 +45,15 @@ class UserRemoteDataSource {
     final data = response.data as Map<String, dynamic>;
     return SwapTeacherResponse.fromJson(data);
   }
+
+  Future<void> registerDevice({required String token, required String deviceType}) async {
+    await dio.post('/users/devices', data: {'token': token, 'deviceType': deviceType});
+  }
+
+  Future<void> unregisterDevice({String? token, String? deviceType}) async {
+    final data = <String, dynamic>{};
+    if (token != null && token.isNotEmpty) data['token'] = token;
+    if (deviceType != null && deviceType.isNotEmpty) data['deviceType'] = deviceType;
+    await dio.delete('/users/devices', data: data.isEmpty ? null : data);
+  }
 }
