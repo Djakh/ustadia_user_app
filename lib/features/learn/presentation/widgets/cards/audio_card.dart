@@ -7,14 +7,14 @@ import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_model.dart';
+import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/audio_bloc/audio_bloc.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/audio_bloc/audio_event.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/audio_bloc/audio_state.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 class AudioCard extends StatefulWidget {
-  final LearnSectionModel sectionModel;
+  final SectionModel sectionModel;
   const AudioCard({super.key, required this.sectionModel});
 
   @override

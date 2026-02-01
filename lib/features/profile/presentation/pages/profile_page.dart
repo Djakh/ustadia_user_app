@@ -35,6 +35,7 @@ class ProfilePage extends StatelessWidget {
   /// --- Methods ---
 
   /// --- Widgets ---
+ 
   Widget headerIcon(IconData icon, AlignmentGeometry alignment, Function() onPressed) => Align(
       alignment: alignment, child: IconButton(onPressed: onPressed, icon: Icon(icon, size: 22)));
 

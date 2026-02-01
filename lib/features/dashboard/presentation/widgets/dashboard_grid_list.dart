@@ -15,24 +15,23 @@ class DashboardQuickGridList extends StatelessWidget {
   static const double tallHeight = 140;
 
   /// --- Methods ---
-  void goToLessons(BuildContext context) => NavigationShellScope.of(context).goBranch(1);
-
   void goToPractice(BuildContext context) => NavigationShellScope.of(context).goBranch(2);
+  void goToAssignments(BuildContext context) => context.push(assignmentsRoute);
 
   void goToChatWithAi(BuildContext context) => NavigationShellScope.of(context).goBranch(3);
 
   void goToLeadboard(BuildContext context) => context.push(leaderboardRoute);
 
   /// --- Widgets ---
- 
+
   Widget lessonAndChat(BuildContext context) => Column(children: [
         DashboardGridCard(
-            title: 'Continue Lesson',
-            subtitle: 'Unlock new skills',
+            title: 'Practice',
+            subtitle: 'Games & Quizzes',
             cardColor: AppColors.orangeBE,
             height: 118,
             backImage: AppImages.lessonCardBack,
-            onTap: () => goToLessons(context)),
+            onTap: () => goToPractice(context)),
         const SizedBox(height: 12),
         DashboardGridCard(
             title: 'Chat with AI',
@@ -45,12 +44,12 @@ class DashboardQuickGridList extends StatelessWidget {
 
   Widget chatAndLideBoard(BuildContext context) => Column(children: [
         DashboardGridCard(
-            title: 'Practice',
-            subtitle: 'Games & Quizzes',
-            cardColor: AppColors.pinkFF,
+            title: 'Assignments',
+            subtitle: 'Consolidate the acquired knowledge',
+            cardColor: AppColors.purpleFF,
             height: 140,
             backImage: AppImages.practiceCardBack,
-            onTap: () => goToPractice(context)),
+            onTap: () => goToAssignments(context)),
         const SizedBox(height: 12),
         DashboardGridCard(
             title: 'Leaderboard',

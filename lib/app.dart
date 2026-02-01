@@ -6,7 +6,6 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/next_task_blo
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
-import 'package:ustadia_user_app/features/posts/presentation/bloc/post_bloc.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 import 'package:ustadia_user_app/size_config.dart';
@@ -20,7 +19,6 @@ class UstadiaUserApp extends StatelessWidget {
         SizeConfig().init(context, constraints);
         return MultiBlocProvider(
             providers: [
-              BlocProvider(create: (_) => sl<PostBloc>()),
               BlocProvider(create: (_) => NextTaskBloc()),
               BlocProvider(create: (_) => sl<UserBloc>()),
               BlocProvider(create: (_) => sl<FileUploadBloc>()),

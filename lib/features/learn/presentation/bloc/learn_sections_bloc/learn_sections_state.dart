@@ -1,10 +1,10 @@
 import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/core/pagination/pagination_meta.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_model.dart';
+import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 
 class LearnSectionsState {
   final Status status;
-  final List<LearnSectionModel> sections;
+  final List<SectionModel> sections;
   final PaginationMeta pagination;
   final bool isLoadingMore;
   final String? errorMessage;
@@ -18,7 +18,7 @@ class LearnSectionsState {
 
   LearnSectionsState copyWith(
           {Status? status,
-          List<LearnSectionModel>? sections,
+          List<SectionModel>? sections,
           PaginationMeta? pagination,
           bool? isLoadingMore,
           String? errorMessage}) =>

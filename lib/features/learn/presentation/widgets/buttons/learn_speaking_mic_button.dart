@@ -5,15 +5,15 @@ import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
 import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
-import 'package:ustadia_user_app/features/learn/presentation/pages/learn_speaking_section/learn_speaking_section_page.dart';
+import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/speaking_section/speaking_section_page.dart';
 
 class LearnSpeakingMicButton extends StatelessWidget {
-  final LearnSpeakingStage stage;
+  final SpeakingSectionStage stage;
   final Function() onTap;
 
   const LearnSpeakingMicButton({super.key, required this.stage, required this.onTap});
 
-  bool get isActive => stage != LearnSpeakingStage.ready;
+  bool get isActive => stage != SpeakingSectionStage.ready;
 
   Color backgroundColor(BuildContext context) => isActive ? context.cs.primary : context.cs.surface;
 
@@ -28,7 +28,7 @@ class LearnSpeakingMicButton extends StatelessWidget {
       isActive ? AppImages.learnSpeakingListening : AppImages.learnSpeakingDefault);
 
   Widget icon(BuildContext context) {
-    if (stage == LearnSpeakingStage.checking) return loadingWidget(context);
+    if (stage == SpeakingSectionStage.checking) return loadingWidget(context);
 
     return microphoneImage();
   }
