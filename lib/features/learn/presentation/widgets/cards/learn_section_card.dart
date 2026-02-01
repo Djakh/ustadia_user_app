@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_model.dart';
+import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 
 class LearnSectionCard extends StatelessWidget {
-  final LearnSectionModel sectionModel;
+  final SectionModel sectionModel;
   final VoidCallback onTap;
 
   const LearnSectionCard({super.key, required this.sectionModel, required this.onTap});
 
   /// --- Getters ---
 
-  bool get isLocked => sectionModel.progressState == LearnSectionProgressState.locked;
+  bool get isLocked => sectionModel.progressState == SectionProgressState.locked;
 
-  bool get isInProgress => sectionModel.progressState == LearnSectionProgressState.inProgress;
+  bool get isInProgress => sectionModel.progressState == SectionProgressState.inProgress;
 
-  bool get isCompleted => sectionModel.progressState == LearnSectionProgressState.completed;
+  bool get isCompleted => sectionModel.progressState == SectionProgressState.completed;
 
   Color get statusColor => isLocked ? AppColors.gray300 : AppColors.primary;
 

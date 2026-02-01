@@ -5,8 +5,8 @@ import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/listviews/paginated_list_view.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_section_model/learn_section_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
+import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections_bloc/learn_sections_bloc.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections_bloc/learn_sections_event.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections_bloc/learn_sections_state.dart';
@@ -28,7 +28,7 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
   bool shouldRefreshParent = false;
 
   /// --- Life cycle ---
- 
+
   @override
   void initState() {
     super.initState();
@@ -45,27 +45,27 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
 
   /// --- Methods ---
 
-  Future<void> onSectionTap(BuildContext context, LearnSectionModel sectionModel) async {
+  Future<void> onSectionTap(BuildContext context, SectionModel sectionModel) async {
     if (!context.mounted) return;
     final Future<bool?> navigation;
     switch (sectionModel.sectionType) {
-      case LearnSectionType.listening:
+      case SectionType.listening:
         navigation = context.push(learnListeningRoute, extra: sectionModel);
         break;
-      case LearnSectionType.reading:
+      case SectionType.reading:
         navigation = context.push(learnReadingRoute, extra: sectionModel);
         break;
-      case LearnSectionType.speaking:
+      case SectionType.speaking:
         navigation = context.push(learnSpeakingRoute, extra: sectionModel);
         break;
-      case LearnSectionType.grammar:
+      case SectionType.grammar:
         navigation = context.push(learnGrammarRoute, extra: sectionModel);
         break;
-      case LearnSectionType.vocabulary:
+      case SectionType.vocabulary:
         if (sectionModel.flashCardSet == null) return;
         navigation = context.push(flashcardSprintRoute, extra: sectionModel.flashCardSet!);
         break;
-      case LearnSectionType.writing:
+      case SectionType.writing:
         navigation = context.push(learnWritingRoute, extra: sectionModel);
         break;
     }
@@ -78,8 +78,8 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
   }
 
   /// --- Widgets ---
-  PaginatedListView<LearnSectionModel> sectionsList(
-          BuildContext context, List<LearnSectionModel> sections, LearnSectionsState state) =>
+  PaginatedListView<SectionModel> sectionsList(
+          BuildContext context, List<SectionModel> sections, LearnSectionsState state) =>
       PaginatedListView(
           items: sections,
           padding: Style.paddingPrimary,
@@ -95,7 +95,7 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
               LearnSectionCard(sectionModel: item, onTap: () => onSectionTap(context, item)));
 
   Widget get contentChecker =>
-      BlocStatusView<LearnSectionsBloc, LearnSectionsState, List<LearnSectionModel>>(
+      BlocStatusView<LearnSectionsBloc, LearnSectionsState, List<SectionModel>>(
           bloc: sectionsBloc,
           invalid: widget.unit.id.isEmpty ? const Center(child: Text('Unit not found')) : null,
           statusOf: (s) => s.status,
