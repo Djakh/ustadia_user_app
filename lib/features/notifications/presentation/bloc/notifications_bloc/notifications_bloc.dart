@@ -21,13 +21,20 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
   Future<void> handleNotificationsRequested(
       NotificationsRequested event, Emitter<NotificationsState> emit) async {
-    emit(state.copyWith(status: Status.loading, errorMessage: null));
+    final shouldShowLoading = event.showLoading || state.notifications.isEmpty;
+    if (shouldShowLoading) {
+      emit(state.copyWith(status: Status.loading, errorMessage: null));
+    } else {
+      emit(state.copyWith(status: Status.success, errorMessage: null));
+    }
     try {
       final notifications = await notificationsRemoteDataSource.fetchNotifications();
       emit(state.copyWith(status: Status.success, notifications: notifications, errorMessage: null));
     } on DioException catch (error) {
+      if (!shouldShowLoading) return;
       emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.from(error)));
     } catch (_) {
+      if (!shouldShowLoading) return;
       emit(state.copyWith(status: Status.error, errorMessage: 'Request failed.'));
     }
   }

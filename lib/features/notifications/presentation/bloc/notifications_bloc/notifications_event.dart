@@ -8,7 +8,11 @@ abstract class NotificationsEvent extends Equatable {
 }
 
 class NotificationsRequested extends NotificationsEvent {
-  const NotificationsRequested();
+  final bool showLoading;
+  const NotificationsRequested({this.showLoading = true});
+
+  @override
+  List<Object?> get props => [showLoading];
 }
 
 class NotificationsMarkedAllRead extends NotificationsEvent {

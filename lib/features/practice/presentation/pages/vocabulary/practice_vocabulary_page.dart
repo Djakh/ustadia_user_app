@@ -8,6 +8,8 @@ import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
 import 'package:ustadia_user_app/features/practice/data/models/vocabulary_question.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/next_task_bloc/next_task_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_vocabulary_content.dart';
+import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
+import 'package:ustadia_user_app/injection_container.dart';
 
 class PracticeVocabularyPage extends StatefulWidget {
   const PracticeVocabularyPage({super.key});
@@ -18,6 +20,7 @@ class PracticeVocabularyPage extends StatefulWidget {
 
 class PracticeVocabularyPageState extends State<PracticeVocabularyPage> {
   int questionIndex = 0;
+  final ProfileStatisticsStore statisticsStore = sl<ProfileStatisticsStore>();
 
   /// --- Data ---
 
@@ -73,6 +76,7 @@ class PracticeVocabularyPageState extends State<PracticeVocabularyPage> {
       }
     });
     context.read<NextTaskBloc>().setCurrentTaskCompleted(false);
+    statisticsStore.refresh();
   }
 
   /// --- Widgets ---

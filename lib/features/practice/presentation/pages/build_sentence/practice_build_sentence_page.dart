@@ -8,6 +8,7 @@ import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_se
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_sentence_builder_status_bloc/practice_sentence_builder_status_event.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_sentence_builder_status_bloc/practice_sentence_builder_status_state.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_build_sentence_content.dart';
+import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 class PracticeBuildSentencePage extends StatefulWidget {
@@ -20,6 +21,7 @@ class PracticeBuildSentencePage extends StatefulWidget {
 
 class _PracticeBuildSentencePageState extends State<PracticeBuildSentencePage> {
   final PracticeSentenceBuilderStatusBloc statusBloc = sl<PracticeSentenceBuilderStatusBloc>();
+  final ProfileStatisticsStore statisticsStore = sl<ProfileStatisticsStore>();
   bool showResult = false;
 
   /// --- Data ---
@@ -63,6 +65,7 @@ class _PracticeBuildSentencePageState extends State<PracticeBuildSentencePage> {
               .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
         }
         if (state.status.isSuccess) {
+          statisticsStore.refresh();
           setState(() => showResult = true);
         }
       },

@@ -38,6 +38,7 @@ class SettingsPage extends StatelessWidget {
         isDestructive: true,
       );
 
+  /// --- Methods ---
   void showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -48,7 +49,7 @@ class SettingsPage extends StatelessWidget {
           actionText: 'Yes, Logout',
           onConfirm: () {
             Navigator.of(dialogContext).pop();
-            logout(dialogContext);
+            logout(context);
           }),
     );
   }
@@ -77,6 +78,7 @@ class SettingsPage extends StatelessWidget {
 
   void goToEditAccount(BuildContext context) => context.push(editAccountRoute);
 
+  /// --- Showed Widgets ---
   Future<void> showTeacherPicker(BuildContext context, UserProfileModel userModel) async {
     final didSwap = await showModalBottomSheet<bool>(
       context: context,
@@ -93,6 +95,7 @@ class SettingsPage extends StatelessWidget {
     }
   }
 
+  /// --- Widgets ---
   Widget itemsList(BuildContext context) => BlocBuilder<UserBloc, UserState>(
       builder: (context, state) => state.profile == null
           ? const SizedBox()

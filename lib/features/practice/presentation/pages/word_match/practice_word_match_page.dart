@@ -9,6 +9,7 @@ import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_wo
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_word_match_status_bloc/practice_word_match_status_state.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_word_match_card.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_word_match_content.dart';
+import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 class PracticeWordMatchPage extends StatefulWidget {
@@ -21,6 +22,7 @@ class PracticeWordMatchPage extends StatefulWidget {
 
 class _PracticeWordMatchPageState extends State<PracticeWordMatchPage> {
   final PracticeWordMatchStatusBloc statusBloc = sl<PracticeWordMatchStatusBloc>();
+  final ProfileStatisticsStore statisticsStore = sl<ProfileStatisticsStore>();
   bool showResult = false;
 
   /// --- Data ---
@@ -67,6 +69,7 @@ class _PracticeWordMatchPageState extends State<PracticeWordMatchPage> {
               .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
         }
         if (state.status.isSuccess) {
+          statisticsStore.refresh();
           setState(() => showResult = true);
         }
       },

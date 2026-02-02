@@ -7,13 +7,17 @@ import 'package:ustadia_user_app/features/common/data/models/section_model/secti
 import 'package:ustadia_user_app/features/learn/data/datasources/learn_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_state.dart';
+import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 
 class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswerState> {
   final LearnRemoteDataSource learnRemoteDataSource;
   final AssignmentsRemoteDataSource assignmentsRemoteDataSource;
+  final ProfileStatisticsStore profileStatisticsStore;
 
   QuestionAnswerBloc(
-      {required this.learnRemoteDataSource, required this.assignmentsRemoteDataSource})
+      {required this.learnRemoteDataSource,
+      required this.assignmentsRemoteDataSource,
+      required this.profileStatisticsStore})
       : super(const QuestionAnswerState()) {
     on<QuestionAnswerSubmitted>(handleQuestionAnswerSubmitted);
   }
@@ -41,6 +45,7 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
             assignmentId: assignmentId, answers: [answerItem]);
         if (success) {
           emit(state.copyWith(status: Status.success, errorMessage: null));
+          await profileStatisticsStore.refresh();
         } else {
           emit(state.copyWith(status: Status.error, errorMessage: 'Request failed.'));
         }
@@ -54,6 +59,7 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
           userInputText: event.userInputText,
           userAudioId: event.userAudioId);
       emit(state.copyWith(status: Status.success, result: result, errorMessage: null));
+      await profileStatisticsStore.refresh();
     } on DioException catch (error) {
       emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.from(error)));
     } catch (_) {

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:ustadia_user_app/features/common/data/models/swap_teacher_response.dart';
 import 'package:ustadia_user_app/features/common/data/models/teacher_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/user_profile_model.dart';
+import 'package:ustadia_user_app/features/profile/data/models/profile_statistics_model.dart';
 
 class UserRemoteDataSource {
   final Dio dio;
@@ -9,7 +10,7 @@ class UserRemoteDataSource {
   UserRemoteDataSource({required this.dio});
 
   Future<UserProfileModel> fetchProfile() async {
-    final response = await dio.get('/users/profile');
+    final response = await dio.get('/users/profile?intro=true&statistics=true');
     final data = response.data as Map<String, dynamic>;
     return UserProfileModel.fromJson(data);
   }
@@ -23,13 +24,19 @@ class UserRemoteDataSource {
     if (profilePictureId != null && profilePictureId.isNotEmpty) {
       data['profilePictureId'] = profilePictureId;
     }
-    final response = await dio.patch('/users/profile', data: data);
+    final response = await dio.patch('/users/profile?intro=true&statistics=true', data: data);
     final responseData = response.data as Map<String, dynamic>;
     return UserProfileModel.fromJson(responseData);
   }
 
   Future<void> deleteProfile() async {
     await dio.delete('/users/profile');
+  }
+
+  Future<ProfileStatisticsModel> fetchProfileStatistics() async {
+    final response = await dio.get('/users/profile/statistics');
+    final data = response.data as Map<String, dynamic>;
+    return ProfileStatisticsModel.fromJson(data);
   }
 
   Future<List<TeacherModel>> fetchTeachers() async {

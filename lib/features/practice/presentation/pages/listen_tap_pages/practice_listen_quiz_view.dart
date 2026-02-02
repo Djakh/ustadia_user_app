@@ -14,6 +14,7 @@ import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_li
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_status_bloc/practice_listen_tap_status_event.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_status_bloc/practice_listen_tap_status_state.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_listen_quiz_view_content.dart';
+import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 class PracticeListenQuizView extends StatefulWidget {
@@ -29,6 +30,7 @@ class PracticeListenQuizViewState extends State<PracticeListenQuizView> {
   final AudioPlayer player = AudioPlayer();
   final AudioBloc audioBloc = sl<AudioBloc>();
   final PracticeListenTapStatusBloc statusBloc = sl<PracticeListenTapStatusBloc>();
+  final ProfileStatisticsStore statisticsStore = sl<ProfileStatisticsStore>();
 
   int listeningIndex = 0;
   int correctCount = 0;
@@ -90,6 +92,7 @@ class PracticeListenQuizViewState extends State<PracticeListenQuizView> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
     }
     if (state.status.isSuccess) {
+      statisticsStore.refresh();
       setState(() {
         showResult = true;
       });
