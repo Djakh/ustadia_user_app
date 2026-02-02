@@ -19,6 +19,8 @@ import 'package:ustadia_user_app/features/practice/presentation/widgets/contents
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_vocabulary_content.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_word_match_content.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_word_match_card.dart';
+import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
+import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
 class PracticeSpeedMixPlayPage extends StatefulWidget {
@@ -31,6 +33,7 @@ class PracticeSpeedMixPlayPage extends StatefulWidget {
 class PracticeSpeedMixPlayPageState extends State<PracticeSpeedMixPlayPage> {
   static const totalSeconds = 120;
   final FlutterTts _tts = FlutterTts();
+  final ProfileStatisticsStore statisticsStore = sl<ProfileStatisticsStore>();
 
   late final List<SpeedMixTaskModel> tasks;
   int secondsLeft = totalSeconds;
@@ -174,6 +177,7 @@ class PracticeSpeedMixPlayPageState extends State<PracticeSpeedMixPlayPage> {
   void _openResultPage() {
     if (_resultOpened || !mounted) return;
     _resultOpened = true;
+    statisticsStore.refresh();
     final stats = PracticeSpeedMixResultStats(
         total: tasks.length,
         completed: completedCount,

@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:ustadia_user_app/router.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -76,7 +77,17 @@ class FirebaseMessagingService {
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       debugPrint('FCM message opened: ${message.messageId}');
+      openNotificationsPage();
     });
+
+    final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      openNotificationsPage();
+    }
+  }
+
+  static void openNotificationsPage() {
+    Future.microtask(() => appRouter.go(notificationsRoute));
   }
 
   static Future<String?> getToken() async {

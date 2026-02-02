@@ -37,6 +37,7 @@ import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_se
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_sentence_builder_status_bloc/practice_sentence_builder_status_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_word_match_sets_bloc/practice_word_match_sets_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_word_match_status_bloc/practice_word_match_status_bloc.dart';
+import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 
 import 'core/network/dio_client.dart';
 
@@ -65,6 +66,8 @@ Future<void> initDependencies() async {
   // Features - Common (User)
   sl.registerLazySingleton<UserRemoteDataSource>(
       () => UserRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
+  sl.registerLazySingleton<ProfileStatisticsStore>(
+      () => ProfileStatisticsStore(userRemoteDataSource: sl()));
   sl.registerLazySingleton<UserBloc>(() => UserBloc(userRemoteDataSource: sl()));
   sl.registerLazySingleton<UploadRemoteDataSource>(
       () => UploadRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
@@ -87,8 +90,10 @@ Future<void> initDependencies() async {
   sl.registerFactory(() => LearnSectionsBloc(learnRemoteDataSource: sl()));
   sl.registerFactory(
       () => SectionDetailBloc(learnRemoteDataSource: sl(), assignmentsRemoteDataSource: sl()));
-  sl.registerFactory(
-      () => QuestionAnswerBloc(learnRemoteDataSource: sl(), assignmentsRemoteDataSource: sl()));
+  sl.registerFactory(() => QuestionAnswerBloc(
+      learnRemoteDataSource: sl(),
+      assignmentsRemoteDataSource: sl(),
+      profileStatisticsStore: sl()));
   sl.registerLazySingleton<AudioRepository>(
       () => AudioRepositoryImpl(dio: sl<AuthRemoteDataSource>().dio));
   sl.registerFactory(() => AudioBloc(audioRepository: sl()));

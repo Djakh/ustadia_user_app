@@ -8,6 +8,8 @@ import 'package:ustadia_user_app/core/mixins/format_date.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/listviews/primary_list_view.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_event.dart';
 import 'package:ustadia_user_app/features/notifications/data/models/notification_api_model.dart';
 import 'package:ustadia_user_app/features/notifications/data/models/notification_model.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/bloc/notifications_bloc/notifications_bloc.dart';
@@ -26,6 +28,7 @@ class NotificationsPage extends StatefulWidget {
 class _NotificationsPageState extends State<NotificationsPage> with FormatDateMixin {
   final NotificationsBloc notificationsBloc = sl<NotificationsBloc>();
   BuildContext? dialogContext;
+  bool shouldReloadTeachers = false;
 
   @override
   void initState() {
@@ -59,16 +62,20 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
       context: context,
       builder: (context) {
         dialogContext = context;
-        final invitation = notification.invitation;
-        final showActions = notification.isInvitation && canRespondToInvitation(notification);
         return BlocBuilder<NotificationsBloc, NotificationsState>(
             bloc: notificationsBloc,
             builder: (context, state) {
+              final notificationItem = state.notifications.firstWhere(
+                  (item) => item.id == notification.id,
+                  orElse: () => notification);
+              final invitation = notificationItem.invitation;
+              final showActions =
+                  notificationItem.isInvitation && canRespondToInvitation(notificationItem);
               final isWorking =
                   state.actionStatus.isLoading && state.actionInvitationId == invitation?.id;
               return AlertDialog(
-                title: Text(notification.title),
-                content: Text(notification.message),
+                title: Text(notificationItem.title),
+                content: Text(notificationItem.message),
                 actions: [
                   if (showActions)
                     TextButton(
@@ -85,6 +92,7 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
                       onPressed: isWorking
                           ? null
                           : () {
+                              shouldReloadTeachers = true;
                               notificationsBloc.add(NotificationInvitationAccepted(
                                   notificationId: notification.id, invitationId: invitation!.id));
                             },
@@ -153,6 +161,7 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
   PrimaryListView sectionList(NotificationSection<NotificationApiModel> section) => PrimaryListView(
       items: section.items,
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (item) => NotificationListItem(
           notification: item.toDisplayModel(), onTap: () => openNotification(item)));
 
@@ -205,19 +214,18 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
         if (state.actionStatus.isError && state.actionErrorMessage != null) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(state.actionErrorMessage!)));
+          shouldReloadTeachers = false;
           return;
         }
         if (state.actionStatus.isSuccess) {
-          if (dialogContext != null) {
-            Navigator.of(dialogContext!).pop();
-            dialogContext = null;
+          if (shouldReloadTeachers) {
+            sl<TeacherBloc>().add(const TeachersRequested());
+            shouldReloadTeachers = false;
           }
-          notificationsBloc.add(const NotificationsRequested());
+          notificationsBloc.add(const NotificationsRequested(showLoading: false));
         }
       },
       child: Scaffold(
           body: PrimaryBackground(
-              header: header(context),
-              isScrollable: notificationsBloc.state.notifications.isEmpty ? false : true,
-              child: contentChecker)));
+              header: header(context), isScrollable: true, child: contentChecker)));
 }

@@ -30,7 +30,7 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
   bool isLoading = false;
   List<TeacherModel> teachersList = [
     const TeacherModel(
-        id: null,
+        id: "",
         teacherId: null,
         firstName: "System",
         lastName: "lessons",
@@ -48,7 +48,7 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
 
   /// --- Getters ---
 
-  TeacherModel? get getSelectedTeacher => widget.userModel.currentTeacher;
+  TeacherModel get getSelectedTeacher => widget.userModel.currentTeacher ?? teachersList[0];
 
   /// --- Listeners ---
 
