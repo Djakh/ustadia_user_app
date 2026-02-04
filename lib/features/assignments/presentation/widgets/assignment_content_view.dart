@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
+import 'package:ustadia_user_app/core/widgets/text/html_text.dart';
 
 class AssignmentContentView extends StatelessWidget {
   final String title;
@@ -28,8 +29,9 @@ class AssignmentContentView extends StatelessWidget {
               children: content
                   .map((paragraph) => Padding(
                       padding: const EdgeInsets.only(bottom: 12),
-                      child: Text(paragraph,
-                          style: Style.bodyw4(context, color: TextColorRole.greyColor))))
+                      child: HtmlText(
+                          data: paragraph,
+                          textStyle: Style.bodyw4(context, color: TextColorRole.greyColor))))
                   .toList()),
           const SizedBox(height: 20),
           Button.primary(onTap: onAction, text: actionLabel)

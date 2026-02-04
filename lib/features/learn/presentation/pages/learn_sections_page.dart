@@ -84,6 +84,11 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
           items: sections,
           padding: Style.paddingPrimary,
           separatorHeight: 12,
+          onRefresh: () async {
+            if (widget.unit.id.isNotEmpty) {
+              sectionsBloc.add(LearnSectionsRequested(unitId: widget.unit.id));
+            }
+          },
           hasMore: state.pagination.hasNext,
           isLoadingMore: state.isLoadingMore,
           onLoadMore: state.pagination.hasNext

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
+import 'package:ustadia_user_app/core/widgets/text/html_text.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 
 class LearnSectionCard extends StatelessWidget {
@@ -29,10 +30,10 @@ class LearnSectionCard extends StatelessWidget {
   Widget title(BuildContext context) => Text(sectionModel.title,
       maxLines: 1, overflow: TextOverflow.ellipsis, style: Style.body2w5(context));
 
-  Widget subtitle(BuildContext context) => Text(sectionModel.content,
+  Widget subtitle(BuildContext context) => HtmlText(
+      data: sectionModel.content,
       maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-      style: Style.small3w5(context, color: TextColorRole.greyColor));
+      textStyle: Style.small3w5(context, color: TextColorRole.greyColor));
 
   Widget progressBadge(BuildContext context) => Row(children: [
         if (isCompleted) Icon(Icons.check_circle, size: 16, color: statusColor),
@@ -70,7 +71,8 @@ class LearnSectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PrimaryBox(
       padding: const EdgeInsets.all(16),
-      onTap: isLocked || isCompleted ? null : onTap,
+      //onTap:  onTap,
+       onTap: isLocked || isCompleted ? null : onTap,
       boxShadow: const [BoxShadow(color: AppColors.shadow, blurRadius: 12, offset: Offset(0, 6))],
       child: view(context));
 }

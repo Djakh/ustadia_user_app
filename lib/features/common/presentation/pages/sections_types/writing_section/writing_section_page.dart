@@ -9,6 +9,7 @@ import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/connection/reload_conntection_button.dart';
 import 'package:ustadia_user_app/core/widgets/inputs/input_field.dart';
 import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
+import 'package:ustadia_user_app/core/widgets/text/html_text.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/writing_section/writing_section_lesson.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
@@ -134,8 +135,13 @@ class WritingSectionPageState extends State<WritingSectionPage> {
             style: Style.small3w4(context, color: TextColorRole.greyColor))
       ]);
 
-  Text get sectionContent => Text(widget.sectionModel.content,
-      textAlign: TextAlign.justify, style: Style.small3w4(context, color: TextColorRole.greyColor));
+  Widget get sectionContent => HtmlText(
+      data: widget.sectionModel.content,
+      textAlign: TextAlign.justify,
+      textStyle: Style.small3w4(context, color: TextColorRole.greyColor));
+
+  Widget get sectionContentView =>
+      SingleChildScrollView(child: sectionContent);
 
   Widget get inputField => InputField.textArea(
         controller: inputController,
@@ -175,8 +181,10 @@ class WritingSectionPageState extends State<WritingSectionPage> {
 
   Widget get view => Column(children: [
         const SizedBox(height: 24),
-        if (stage != WritingSectionStage.result) sectionContent,
-        const SizedBox(height: 16),
+        if (stage != WritingSectionStage.result) ...[
+          Flexible(child: sectionContentView),
+          const SizedBox(height: 16),
+        ],
         Expanded(child: bodyChecker)
       ]);
 
