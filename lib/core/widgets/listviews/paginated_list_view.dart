@@ -12,6 +12,7 @@ class PaginatedListView<T> extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final ScrollPhysics? physics;
   final bool shrinkWrap;
+  final Future<void> Function()? onRefresh;
 
   const PaginatedListView(
       {super.key,
@@ -24,7 +25,8 @@ class PaginatedListView<T> extends StatefulWidget {
       this.separatorWidget,
       this.padding,
       this.physics,
-      this.shrinkWrap = false});
+      this.shrinkWrap = false,
+      this.onRefresh});
 
   @override
   State<PaginatedListView<T>> createState() => _PaginatedListViewState<T>();
@@ -88,16 +90,28 @@ class _PaginatedListViewState<T> extends State<PaginatedListView<T>> {
         child: PrimaryLoadingIndicator(height: 24, width: 24));
   }
 
-  @override
-  Widget build(BuildContext context) => ListView.separated(
+  ScrollPhysics? get listPhysics {
+    if (widget.onRefresh == null) return widget.physics;
+    if (widget.physics == null) return const AlwaysScrollableScrollPhysics();
+    return AlwaysScrollableScrollPhysics(parent: widget.physics);
+  }
+
+  Widget get listView => ListView.separated(
       controller: _controller,
       itemCount: widget.items.length + (widget.isLoadingMore ? 1 : 0),
-      physics: widget.physics,
+      physics: listPhysics,
       padding: widget.padding,
       shrinkWrap: widget.shrinkWrap,
-      separatorBuilder: (_, index) => widget.separatorWidget ?? SizedBox(height: widget.separatorHeight),
+      separatorBuilder: (_, index) =>
+          widget.separatorWidget ?? SizedBox(height: widget.separatorHeight),
       itemBuilder: (_, index) {
         if (index >= widget.items.length) return _footer();
         return widget.itemBuilder(widget.items[index]);
       });
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.onRefresh == null) return listView;
+    return RefreshIndicator(onRefresh: widget.onRefresh!, child: listView);
+  }
 }

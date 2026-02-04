@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
@@ -29,15 +32,25 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
   final NotificationsBloc notificationsBloc = sl<NotificationsBloc>();
   BuildContext? dialogContext;
   bool shouldReloadTeachers = false;
+  StreamSubscription<RemoteMessage>? messageSubscription;
+  StreamSubscription<RemoteMessage>? messageOpenedSubscription;
 
   @override
   void initState() {
     super.initState();
     notificationsBloc.add(const NotificationsRequested());
+    messageSubscription = FirebaseMessaging.onMessage.listen((_) {
+      notificationsBloc.add(const NotificationsRequested(showLoading: false));
+    });
+    messageOpenedSubscription = FirebaseMessaging.onMessageOpenedApp.listen((_) {
+      notificationsBloc.add(const NotificationsRequested(showLoading: false));
+    });
   }
 
   @override
   void dispose() {
+    messageSubscription?.cancel();
+    messageOpenedSubscription?.cancel();
     notificationsBloc.close();
     super.dispose();
   }
@@ -174,14 +187,17 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
         sectionList(section),
       ]);
 
-  Widget listView(BuildContext context, List<NotificationApiModel> items) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 12),
-          ...buildSectionWidgets(context, items),
-          const SizedBox(height: 24),
-        ],
-      );
+  Widget listView(BuildContext context, List<NotificationApiModel> items) {
+    final grouped = sections(items);
+    return PrimaryListView(
+        items: grouped,
+        padding: const EdgeInsets.only(top: 12, bottom: 24),
+        separatorHeight: 20,
+        onRefresh: () async {
+          notificationsBloc.add(const NotificationsRequested(showLoading: false));
+        },
+        itemBuilder: (item) => sectionListComponents(context, item));
+  }
 
   Widget get readNotificationsButton => Align(
       alignment: Alignment.centerRight,
@@ -227,5 +243,5 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
       },
       child: Scaffold(
           body: PrimaryBackground(
-              header: header(context), isScrollable: true, child: contentChecker)));
+              header: header(context), isScrollable: false, child: contentChecker)));
 }

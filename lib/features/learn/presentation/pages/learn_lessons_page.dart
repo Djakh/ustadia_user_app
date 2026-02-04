@@ -51,6 +51,9 @@ class LearnLessonsPageState extends State<LearnLessonsPage> {
           padding: Style.paddingPrimary,
           shrinkWrap: true,
           separatorHeight: 12,
+          onRefresh: () async {
+            lessonsBloc.add(const LearnLessonsRequested());
+          },
           itemBuilder: (item) =>
               LearnLessonCard(lessonModel: item, onTap: () => openLesson(context, item)));
 

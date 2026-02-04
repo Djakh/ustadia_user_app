@@ -26,35 +26,34 @@ class TeacherPickerSheet extends StatefulWidget {
 }
 
 class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
+  final TeacherModel systemTeacher = const TeacherModel(
+      id: "",
+      teacherId: null,
+      firstName: "System",
+      lastName: "lessons",
+      teacherClass: TeacherClassModel(name: "Default"));
   TeacherModel? selectedTeacherModel;
   bool isLoading = false;
-  List<TeacherModel> teachersList = [
-    const TeacherModel(
-        id: "",
-        teacherId: null,
-        firstName: "System",
-        lastName: "lessons",
-        teacherClass: TeacherClassModel(name: "Default"))
-  ];
+  List<TeacherModel> teachersList = [];
 
   /// --- Life cycle ---
 
   @override
   void initState() {
     selectedTeacherModel = getSelectedTeacher;
-    teachersList.addAll(context.read<TeacherBloc>().state.teachers);
+    teachersList = [systemTeacher, ...context.read<TeacherBloc>().state.teachers];
     super.initState();
   }
 
   /// --- Getters ---
 
-  TeacherModel get getSelectedTeacher => widget.userModel.currentTeacher ?? teachersList[0];
+  TeacherModel get getSelectedTeacher => widget.userModel.currentTeacher ?? systemTeacher;
 
   /// --- Listeners ---
 
   void teacherListener(context, TeacherState state) {
-    if (state.status.isSuccess && teachersList.length < 2) {
-      teachersList.addAll(state.teachers);
+    if (state.status.isSuccess) {
+      teachersList = [systemTeacher, ...state.teachers];
     }
     if (state.swapStatus.isError && state.swapErrorMessage != null) {
       context.showSnackBar(SnackBar(content: Text(state.swapErrorMessage!)));
@@ -119,6 +118,9 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
       padding: Style.paddingPrimary,
       shrinkWrap: true,
       separatorHeight: 4,
+      onRefresh: () async {
+        sl<TeacherBloc>().add(const TeachersRequested());
+      },
       itemBuilder: (item) => teacherTile(item));
 
   Widget get contentChecker => BlocStatusView<TeacherBloc, TeacherState, List<TeacherModel>>(

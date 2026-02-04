@@ -9,6 +9,7 @@ class PrimaryListView extends StatelessWidget {
   final Axis scrollDirection;
   final EdgeInsetsGeometry? padding;
   final Widget Function(dynamic item) itemBuilder;
+  final Future<void> Function()? onRefresh;
   const PrimaryListView(
       {super.key,
       required this.items,
@@ -18,17 +19,27 @@ class PrimaryListView extends StatelessWidget {
       this.separatorWidget,
       required this.itemBuilder,
       this.scrollDirection = Axis.vertical,
-      this.padding});
+      this.padding,
+      this.onRefresh});
 
-  Widget get view => ListView.separated(
+  ScrollPhysics? get listPhysics {
+    if (onRefresh == null || scrollDirection != Axis.vertical) return physics;
+    if (physics == null) return const AlwaysScrollableScrollPhysics();
+    return AlwaysScrollableScrollPhysics(parent: physics);
+  }
+
+  Widget get listView => ListView.separated(
       itemCount: items.length,
-      physics: physics,
+      physics: listPhysics,
       padding: padding,
       scrollDirection: scrollDirection,
-      shrinkWrap: true,
+      shrinkWrap: shrinkWrap,
       separatorBuilder: (_, index) => separatorWidget ?? SizedBox(height: separatorHeight),
       itemBuilder: (_, index) => itemBuilder(items[index]));
 
   @override
-  Widget build(BuildContext context) => view;
+  Widget build(BuildContext context) {
+    if (onRefresh == null || scrollDirection != Axis.vertical) return listView;
+    return RefreshIndicator(onRefresh: onRefresh!, child: listView);
+  }
 }
