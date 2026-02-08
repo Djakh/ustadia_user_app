@@ -72,7 +72,10 @@ class WritingSectionPageState extends State<WritingSectionPage> {
   /// --- Methods ---
 
   void getSectionDetails() => detailBloc.add(SectionDetailRequested(
-      sectionId: widget.sectionModel.id, source: widget.sectionModel.source));
+      sectionId: widget.sectionModel.id,
+      source: widget.sectionModel.source,
+      unitId: widget.sectionModel.unitId,
+      lessonId: widget.sectionModel.lessonId));
 
   Future<void> pickUploadFile() async {
     try {
@@ -115,6 +118,8 @@ class WritingSectionPageState extends State<WritingSectionPage> {
         sectionId: widget.sectionModel.id,
         questionId: question.id,
         assignmentId: question.assignmentId,
+        unitId: question.unitId,
+        lessonId: question.lessonId,
         userInputText: inputController.text.trim(),
         source: question.source));
   }

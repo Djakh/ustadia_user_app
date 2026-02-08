@@ -3,7 +3,6 @@ import 'package:ustadia_user_app/core/pagination/pagination_meta.dart';
 import 'package:ustadia_user_app/core/pagination/pagination_result.dart';
 import 'package:ustadia_user_app/features/dashboard/data/models/current_unit_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_question_answer_result_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 
@@ -55,25 +54,16 @@ class LearnRemoteDataSource {
     final response = await dio.get('/students/sections/$sectionId');
     final data = response.data as Map<String, dynamic>;
     return SectionModel.fromJson(data);
+    
   }
 
-  Future<LearnQuestionAnswerResultModel> submitQuestionAnswer({
-    required String sectionId,
-    required String questionId,
-    String? answerId,
-    String? userInputText,
-    String? userAudioId,
-  }) async {
+  Future<Map<String, dynamic>> submitLessonAnswers(
+      {required String lessonId,
+      required String unitId,
+      required List<Map<String, dynamic>> answers}) async {
     final response = await dio.post(
-      '/students/sections/$sectionId/questions/$questionId/answer',
-      data: {
-        'question_id': questionId,
-        'answer_id': answerId,
-        'user_input_text': userInputText,
-        'user_audio_id': userAudioId,
-      },
-    );
-    final data = response.data as Map<String, dynamic>;
-    return LearnQuestionAnswerResultModel.fromJson(data);
+        '/students/sections/lessons/$lessonId/units/$unitId/submit-answers',
+        data: {'answers': answers});
+    return response.data as Map<String, dynamic>;
   }
 }

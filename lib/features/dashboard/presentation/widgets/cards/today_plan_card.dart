@@ -10,6 +10,7 @@ import 'package:ustadia_user_app/features/dashboard/data/models/current_unit_mod
 import 'package:ustadia_user_app/features/dashboard/presentation/bloc/current_unit_bloc/current_unit_bloc.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/bloc/current_unit_bloc/current_unit_event.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/bloc/current_unit_bloc/current_unit_state.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_sections_params.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
@@ -54,7 +55,8 @@ class TodayPlanCard extends StatelessWidget {
       );
 
   Widget startPlanButton(BuildContext context, CurrentUnitModel unit) => Button.primary(
-        onTap: () => context.push(learnSectionsRoute, extra: _toLearnUnitModel(unit)),
+        onTap: () => context.push(learnSectionsRoute,
+            extra: LearnSectionsParams(unit: _toLearnUnitModel(unit), lessonId: unit.lesson.id)),
         color: AppColors.white,
         textColor: AppColors.black,
         text: "Start today's plan",

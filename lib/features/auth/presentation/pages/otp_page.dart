@@ -183,17 +183,21 @@ class OtpPageState extends State<OtpPage> {
                   text: 'Confirm')));
 
   Widget get view => PrimaryBackground(
+      isScrollable: true,
+      child: Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        const SizedBox(height: 20),
-        Text('Enter OTP', style: Style.body2w6(context)),
-        const SizedBox(height: 4),
-        contactText,
-        const SizedBox(height: 24),
-        otpRow,
-        resend,
-        const Spacer(),
-        confirmButton
-      ]));
+            const SizedBox(height: 20),
+            Text('Enter OTP', style: Style.body2w6(context)),
+            const SizedBox(height: 4),
+            contactText,
+            const SizedBox(height: 24),
+            otpRow,
+            resend,
+            const SizedBox(height: 24),
+            confirmButton,
+            const SizedBox(height: 12)
+          ])));
 
   @override
   Widget build(BuildContext context) => MultiBlocListener(

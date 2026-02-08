@@ -397,35 +397,38 @@ class LoginPageState extends State<LoginPage> {
 
   Widget get view => PrimaryBackground(
       isHeader: false,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-        const SizedBox(height: 12),
-        logo,
-        const SizedBox(height: 24),
-        Text('Welcome back', style: Style.headlinew7(context)),
-        const SizedBox(height: 4),
-        Text('Good to see you again.',
-            style: Style.small3w4(context, color: TextColorRole.greyColor)),
-        const SizedBox(height: 40),
-        ...fields,
-        const SizedBox(height: 6),
-        rememberForgotRow,
-        const SizedBox(height: 12),
-        BlocBuilder<AuthLoginBloc, AuthLoginState>(
-            bloc: authLoginBloc,
-            builder: (context, state) => Button.primary(
-                onTap: onLogin, text: 'Log in', isLoading: state.status == Status.loading)),
-        const SizedBox(height: 16),
-        divider,
-        const SizedBox(height: 16),
-        BlocBuilder<AuthLoginBloc, AuthLoginState>(
-            bloc: authLoginBloc,
-            builder: (context, state) => Button.border(
-                onTap: toggleLoginMethod,
-                text: isEmailLogin ? 'Log in with Phone' : 'Log in with Email',
-                isAvialable: state.status != Status.loading)),
-        const SizedBox(height: 16),
-        signup
-      ]));
+      isScrollable: true,
+      child: Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            const SizedBox(height: 12),
+            logo,
+            const SizedBox(height: 24),
+            Text('Welcome back', style: Style.headlinew7(context)),
+            const SizedBox(height: 4),
+            Text('Good to see you again.',
+                style: Style.small3w4(context, color: TextColorRole.greyColor)),
+            const SizedBox(height: 40),
+            ...fields,
+            const SizedBox(height: 6),
+            rememberForgotRow,
+            const SizedBox(height: 12),
+            BlocBuilder<AuthLoginBloc, AuthLoginState>(
+                bloc: authLoginBloc,
+                builder: (context, state) => Button.primary(
+                    onTap: onLogin, text: 'Log in', isLoading: state.status == Status.loading)),
+            const SizedBox(height: 16),
+            divider,
+            const SizedBox(height: 16),
+            BlocBuilder<AuthLoginBloc, AuthLoginState>(
+                bloc: authLoginBloc,
+                builder: (context, state) => Button.border(
+                    onTap: toggleLoginMethod,
+                    text: isEmailLogin ? 'Log in with Phone' : 'Log in with Email',
+                    isAvialable: state.status != Status.loading)),
+            const SizedBox(height: 16),
+            signup
+          ])));
 
   @override
   Widget build(BuildContext context) => MultiBlocListener(listeners: [

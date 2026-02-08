@@ -12,6 +12,7 @@ enum SectionSource { learn, assignment }
 class SectionModel {
   final String id;
   final String unitId;
+  final String? lessonId;
   final String title;
   final String content;
   final int orderIndex;
@@ -36,13 +37,14 @@ class SectionModel {
   const SectionModel({
     required this.id,
     required this.unitId,
+    required this.lessonId,
     required this.title,
     required this.content,
     required this.orderIndex,
-      required this.totalQuestions,
-      required this.answeredQuestions,
-      required this.assignmentId,
-      required this.audioFileId,
+    required this.totalQuestions,
+    required this.answeredQuestions,
+    required this.assignmentId,
+    required this.audioFileId,
     required this.audioFile,
     required this.flashCardSetId,
     required this.flashCardSet,
@@ -60,6 +62,33 @@ class SectionModel {
 
   int get lessonNumber => orderIndex;
 
+  SectionModel copyWith({String? unitId, String? lessonId, List<SectionQuestionModel>? questions}) {
+    return SectionModel(
+        id: id,
+        unitId: unitId ?? this.unitId,
+        lessonId: lessonId ?? this.lessonId,
+        title: title,
+        content: content,
+        orderIndex: orderIndex,
+        totalQuestions: totalQuestions,
+        answeredQuestions: answeredQuestions,
+        assignmentId: assignmentId,
+        audioFileId: audioFileId,
+        audioFile: audioFile,
+        flashCardSetId: flashCardSetId,
+        flashCardSet: flashCardSet,
+        unitIsPublished: unitIsPublished,
+        lessonIsPublic: lessonIsPublic,
+        questions: questions ?? this.questions,
+        iconAsset: iconAsset,
+        progressState: progressState,
+        sectionType: sectionType,
+        sectionStringType: sectionStringType,
+        isLocked: isLocked,
+        timeLimit: timeLimit,
+        source: source);
+  }
+
   factory SectionModel.fromJson(Map<String, dynamic> json) {
     final orderIndex = toInt(json['order_index']);
     final questionsJson = json['questions'];
@@ -71,11 +100,15 @@ class SectionModel {
     final answeredQuestions = answeredQuestionsValue == null ? null : toInt(answeredQuestionsValue);
     final type = SectionTypeX.fromApi(json['type']?.toString() ?? '');
     final assignmentId = json['assignment_id']?.toString();
+    final lessonId = json['lesson_id']?.toString() ?? json['lessonId']?.toString();
     final source = assignmentId != null ? SectionSource.assignment : SectionSource.learn;
     final questions = (questionsJson as List<dynamic>?)
             ?.whereType<Map<String, dynamic>>()
-            .map((item) =>
-                SectionQuestionModel.fromJson(item, source: source, assignmentId: assignmentId))
+            .map((item) => SectionQuestionModel.fromJson(item,
+                source: source,
+                assignmentId: assignmentId,
+                unitId: json['unit_id']?.toString(),
+                lessonId: lessonId))
             .toList() ??
         [];
     questions.sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
@@ -88,6 +121,7 @@ class SectionModel {
     return SectionModel(
         id: json['id']?.toString() ?? '',
         unitId: json['unit_id']?.toString() ?? '',
+        lessonId: lessonId,
         title: json['title']?.toString() ?? '',
         content: json['content']?.toString() ?? '',
         orderIndex: orderIndex,

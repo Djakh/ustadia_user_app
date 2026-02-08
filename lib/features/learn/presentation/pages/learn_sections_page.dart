@@ -6,6 +6,7 @@ import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/listviews/paginated_list_view.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_sections_params.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections_bloc/learn_sections_bloc.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections_bloc/learn_sections_event.dart';
@@ -15,9 +16,9 @@ import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
 class LearnSectionsPage extends StatefulWidget {
-  final LearnUnitModel unit;
+  final LearnSectionsParams params;
 
-  const LearnSectionsPage({super.key, required this.unit});
+  const LearnSectionsPage({super.key, required this.params});
 
   @override
   State<LearnSectionsPage> createState() => LearnSectionsPageState();
@@ -32,8 +33,8 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.unit.id.isNotEmpty) {
-      sectionsBloc.add(LearnSectionsRequested(unitId: widget.unit.id));
+    if (widget.params.unit.id.isNotEmpty) {
+      sectionsBloc.add(LearnSectionsRequested(unitId: widget.params.unit.id));
     }
   }
 
@@ -73,27 +74,39 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
     if (!context.mounted) return;
     if (result == true) {
       shouldRefreshParent = true;
-      sectionsBloc.add(LearnSectionsRequested(unitId: widget.unit.id));
+      sectionsBloc.add(LearnSectionsRequested(unitId: widget.params.unit.id));
     }
   }
 
   /// --- Widgets ---
+  List<SectionModel> sectionsWithLesson(List<SectionModel> sections) => sections
+      .map((section) => section.lessonId?.isNotEmpty == true
+          ? section
+          : section.copyWith(
+              unitId: widget.params.unit.id,
+              lessonId: widget.params.lessonId,
+              questions: section.questions
+                  .map((question) => question.copyWith(
+                      unitId: widget.params.unit.id, lessonId: widget.params.lessonId))
+                  .toList()))
+      .toList();
+
   PaginatedListView<SectionModel> sectionsList(
           BuildContext context, List<SectionModel> sections, LearnSectionsState state) =>
       PaginatedListView(
-          items: sections,
+          items: sectionsWithLesson(sections),
           padding: Style.paddingPrimary,
           separatorHeight: 12,
           onRefresh: () async {
-            if (widget.unit.id.isNotEmpty) {
-              sectionsBloc.add(LearnSectionsRequested(unitId: widget.unit.id));
+            if (widget.params.unit.id.isNotEmpty) {
+              sectionsBloc.add(LearnSectionsRequested(unitId: widget.params.unit.id));
             }
           },
           hasMore: state.pagination.hasNext,
           isLoadingMore: state.isLoadingMore,
           onLoadMore: state.pagination.hasNext
               ? () async {
-                  sectionsBloc.add(LearnSectionsLoadMoreRequested(unitId: widget.unit.id));
+                  sectionsBloc.add(LearnSectionsLoadMoreRequested(unitId: widget.params.unit.id));
                 }
               : null,
           itemBuilder: (item) =>
@@ -102,7 +115,8 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
   Widget get contentChecker =>
       BlocStatusView<LearnSectionsBloc, LearnSectionsState, List<SectionModel>>(
           bloc: sectionsBloc,
-          invalid: widget.unit.id.isEmpty ? const Center(child: Text('Unit not found')) : null,
+          invalid:
+              widget.params.unit.id.isEmpty ? const Center(child: Text('Unit not found')) : null,
           statusOf: (s) => s.status,
           errorOf: (s) => s.errorMessage,
           data: (s) => s.sections,
@@ -120,7 +134,7 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
       child: Scaffold(
           backgroundColor: context.cs.surface,
           body: PrimaryBackground(
-              title: widget.unit.title.isEmpty ? 'Sections' : widget.unit.title,
+              title: widget.params.unit.title.isEmpty ? 'Sections' : widget.params.unit.title,
               isScrollable: false,
               onBack: () => context.pop(shouldRefreshParent ? true : null),
               child: contentChecker)));
