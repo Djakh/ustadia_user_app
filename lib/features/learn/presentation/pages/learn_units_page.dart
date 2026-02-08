@@ -7,6 +7,7 @@ import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_sections_params.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_units_bloc/learn_units_bloc.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_units_bloc/learn_units_event.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_units_bloc/learn_units_state.dart';
@@ -44,7 +45,8 @@ class LearnUnitsPageState extends State<LearnUnitsPage> {
   }
 
   Future<void> openUnit(BuildContext context, LearnUnitModel unit) async {
-    final result = await context.push<bool?>(learnSectionsRoute, extra: unit);
+    final result = await context.push<bool?>(learnSectionsRoute,
+        extra: LearnSectionsParams(unit: unit, lessonId: widget.learnLessonModel.id));
     if (!context.mounted) return;
     if (result == true) {
       shouldRefreshParent = true;

@@ -33,7 +33,10 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
     super.initState();
     if (widget.sectionModel.id.isNotEmpty) {
       detailBloc.add(SectionDetailRequested(
-          sectionId: widget.sectionModel.id, source: widget.sectionModel.source));
+          sectionId: widget.sectionModel.id,
+          source: widget.sectionModel.source,
+          unitId: widget.sectionModel.unitId,
+          lessonId: widget.sectionModel.lessonId));
     }
   }
 

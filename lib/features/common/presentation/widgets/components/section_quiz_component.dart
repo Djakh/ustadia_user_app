@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_answer_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_question_model.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/next_task_bloc/next_task_bloc.dart';
-import 'package:ustadia_user_app/features/common/presentation/widgets/cards/listening_quiz_card.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_state.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/cards/quiz_card.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 class SectionQuizComponent extends StatefulWidget {
@@ -27,21 +27,30 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   final QuestionAnswerBloc answerBloc = sl<QuestionAnswerBloc>();
   int questionIndex = 0;
   int correctCount = 0;
+  bool hasSubmitted = false;
+  bool? submitWasCorrect;
 
   int? selectedIndex;
+  final Set<int> selectedIndices = {};
+  final List<TextEditingController> blankControllers = [];
+  final TextEditingController shortAnswerController = TextEditingController();
 
   /// --- Life cycle ---
 
   @override
   void initState() {
     questions = widget.questions;
-    context.read<NextTaskBloc>().setCurrentTaskCompleted(false);
-
+    _resetBlankControllers();
+    shortAnswerController.addListener(_handleInputChanged);
     super.initState();
   }
 
   @override
   void dispose() {
+    for (final controller in blankControllers) {
+      controller.dispose();
+    }
+    shortAnswerController.dispose();
     answerBloc.close();
     super.dispose();
   }
@@ -53,41 +62,158 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       questions = widget.questions;
       questionIndex = 0;
       correctCount = 0;
+      hasSubmitted = false;
+      submitWasCorrect = null;
       selectedIndex = null;
-      context.read<NextTaskBloc>().setCurrentTaskCompleted(false);
+      selectedIndices.clear();
+      _resetBlankControllers();
+      shortAnswerController.clear();
     }
   }
 
   /// --- Getters ---
   SectionQuestionModel get currentQuestion => questions[questionIndex];
   List<SectionAnswerModel> get currentAnswers => currentQuestion.answers ?? [];
+  String get questionType => currentQuestion.questionType.toLowerCase();
+
+  bool get isMultipleChoice => questionType == 'multiple-choice';
+  bool get isShortAnswer => questionType == 'short-answer';
+  bool get isFillBlank => questionType == 'fill-blank';
+
+  int get blanksCount => currentQuestion.numberOfBlanks > 0
+      ? currentQuestion.numberOfBlanks
+      : currentQuestion.blankAnswers.length;
 
   /// --- Methods ---
 
-  void onSelectAnswerOption(int index) {
-    final bloc = context.read<NextTaskBloc>();
-    if (bloc.state.isCurrentTaskCompleted) return;
-    if (answerBloc.state.status.isLoading) return;
-    if (currentAnswers.isEmpty) return;
-    selectedIndex = index;
-    bool isAnswerCorrect = currentAnswers[index].isCorrect;
-    answerBloc.add(QuestionAnswerSubmitted(
-        sectionId: currentQuestion.sectionId,
-        questionId: currentQuestion.id,
-        answerId: currentAnswers[index].id,
-        assignmentId: currentQuestion.assignmentId,
-        source: currentQuestion.source));
-    bloc.setCurrentTaskCompleted(true, isAnswerCorrect: isAnswerCorrect);
-    if (isAnswerCorrect) correctCount++;
+  void _resetBlankControllers() {
+    for (final controller in blankControllers) {
+      controller.dispose();
+    }
+    blankControllers.clear();
+    if (!isFillBlank) return;
+    final count = blanksCount;
+    for (var i = 0; i < count; i++) {
+      final controller = TextEditingController();
+      controller.addListener(_handleInputChanged);
+      blankControllers.add(controller);
+    }
   }
 
-  void continueAfterAnswer() {
-    context.read<NextTaskBloc>().setCurrentTaskCompleted(false);
+  void _handleInputChanged() {
+    if (isFillBlank) {
+      setState(() {});
+      return;
+    }
+    if (isShortAnswer) {
+      setState(() {});
+      return;
+    }
+  }
 
+  void onSelectAnswerOption(int index) {
+    if (hasSubmitted) return;
+    if (answerBloc.state.status.isLoading) return;
+    if (currentAnswers.isEmpty) return;
+    if (isMultipleChoice) {
+      if (selectedIndices.contains(index)) {
+        selectedIndices.remove(index);
+      } else {
+        selectedIndices.add(index);
+      }
+      setState(() {});
+      return;
+    }
+
+    selectedIndex = index;
+    setState(() {});
+  }
+
+  bool get isReadyToSubmit {
+    if (isFillBlank) return blankControllers.every((c) => c.text.trim().isNotEmpty);
+    if (isShortAnswer) return shortAnswerController.text.trim().isNotEmpty;
+    if (isMultipleChoice) return selectedIndices.isNotEmpty;
+    return selectedIndex != null;
+  }
+
+  bool evaluateMultipleChoiceCorrect(List<String> selectedAnswerIds) {
+    final correctIds = currentAnswers.where((a) => a.isCorrect).map((a) => a.id).toSet();
+    final selectedSet = selectedAnswerIds.toSet();
+    return correctIds.isNotEmpty &&
+        selectedSet.length == correctIds.length &&
+        selectedSet.containsAll(correctIds);
+  }
+
+  void submitCurrentAnswer() {
+    if (!isReadyToSubmit) return;
+    if (answerBloc.state.status.isLoading) return;
+    submitWasCorrect = null;
+    if (isMultipleChoice) {
+      final selectedAnswerIds = selectedIndices
+          .map((index) => currentAnswers[index].id)
+          .where((id) => id.isNotEmpty)
+          .toList();
+      if (selectedAnswerIds.isEmpty) return;
+      submitWasCorrect = evaluateMultipleChoiceCorrect(selectedAnswerIds);
+      answerBloc.add(QuestionAnswerSubmitted(
+          sectionId: currentQuestion.sectionId,
+          questionId: currentQuestion.id,
+          answerIds: selectedAnswerIds,
+          assignmentId: currentQuestion.assignmentId,
+          unitId: currentQuestion.unitId,
+          lessonId: currentQuestion.lessonId,
+          source: currentQuestion.source));
+    } else if (isFillBlank) {
+      final blanks = blankControllers
+          .asMap()
+          .entries
+          .map((entry) =>
+              SectionBlankAnswer(position: entry.key + 1, answer: entry.value.text.trim()))
+          .toList();
+      if (blanks.any((item) => item.answer == null || item.answer!.isEmpty)) return;
+      answerBloc.add(QuestionAnswerSubmitted(
+          sectionId: currentQuestion.sectionId,
+          questionId: currentQuestion.id,
+          blankAnswers: blanks,
+          assignmentId: currentQuestion.assignmentId,
+          unitId: currentQuestion.unitId,
+          lessonId: currentQuestion.lessonId,
+          source: currentQuestion.source));
+    } else if (isShortAnswer) {
+      final text = shortAnswerController.text.trim();
+      if (text.isEmpty) return;
+      answerBloc.add(QuestionAnswerSubmitted(
+          sectionId: currentQuestion.sectionId,
+          questionId: currentQuestion.id,
+          userInputText: text,
+          assignmentId: currentQuestion.assignmentId,
+          unitId: currentQuestion.unitId,
+          lessonId: currentQuestion.lessonId,
+          source: currentQuestion.source));
+    } else if (selectedIndex != null && currentAnswers.isNotEmpty) {
+      submitWasCorrect = currentAnswers[selectedIndex!].isCorrect;
+      answerBloc.add(QuestionAnswerSubmitted(
+          sectionId: currentQuestion.sectionId,
+          questionId: currentQuestion.id,
+          answerId: currentAnswers[selectedIndex!].id,
+          answerIds: const [],
+          assignmentId: currentQuestion.assignmentId,
+          unitId: currentQuestion.unitId,
+          lessonId: currentQuestion.lessonId,
+          source: currentQuestion.source));
+    }
+  }
+
+  void goNextQuestion() {
     if (questionIndex == questions.length - 1) return widget.onFinish(correctCount);
 
     questionIndex++;
     selectedIndex = null;
+    selectedIndices.clear();
+    _resetBlankControllers();
+    shortAnswerController.clear();
+    hasSubmitted = false;
+    submitWasCorrect = null;
 
     setState(() {});
   }
@@ -108,26 +234,52 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
 
   /// --- Widgets ---
 
-  Color optionColor(BuildContext context, int index) {
-    if (selectedIndex == null) return context.cs.surface;
-    if (currentAnswers.isNotEmpty && currentAnswers[index].isCorrect) return context.cs.primary;
-    if (selectedIndex == index && (currentAnswers.isEmpty || !currentAnswers[index].isCorrect)) {
-      return context.cs.error;
-    }
+  bool isSelectedIndex(int index) =>
+      isMultipleChoice ? selectedIndices.contains(index) : selectedIndex == index;
+
+  Color optionFillColor(BuildContext context, int index) {
+    if (!hasSubmitted) return context.cs.surface;
+    if (!isSelectedIndex(index)) return context.cs.surface;
+    if (currentAnswers[index].isCorrect) return AppColors.primary;
+    return AppColors.error;
     return context.cs.surface;
   }
 
   Color optionTextColor(BuildContext context, int index) {
-    final fill = optionColor(context, index);
-    if (fill == context.cs.primary || fill == context.cs.error) return context.cs.onPrimary;
+    final fill = optionFillColor(context, index);
+    if (fill == AppColors.primary || fill == AppColors.error) return context.cs.onPrimary;
     return context.cs.onSurface;
   }
 
-  Button optionItem(int index) => Button.primary(
-      onTap: () => onSelectAnswerOption(index),
-      color: optionColor(context, index),
-      textColor: optionTextColor(context, index),
-      text: currentAnswers[index].answerText);
+  Button optionItem(int index) {
+    final fill = optionFillColor(context, index);
+    final isFilled = fill == AppColors.primary || fill == AppColors.error;
+    final isCorrect = currentAnswers[index].isCorrect;
+    final showCheck = hasSubmitted && isCorrect;
+    final checkColor = isFilled ? AppColors.white : AppColors.primary;
+    final label = Stack(alignment: Alignment.center, children: [
+      Text(currentAnswers[index].answerText,
+          style: Style.bodyw5(context).copyWith(color: optionTextColor(context, index)),
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis),
+      if (showCheck)
+        Align(
+            alignment: Alignment.centerRight,
+            child: Icon(Icons.check, size: 18, color: checkColor))
+    ]);
+    if (isFilled) {
+      return Button.primary(
+          onTap: () => onSelectAnswerOption(index),
+          color: fill,
+          child: label);
+    }
+    return Button.border(
+        onTap: () => onSelectAnswerOption(index),
+        color: context.cs.surface,
+        borderColor:
+            !hasSubmitted && isSelectedIndex(index) ? AppColors.primary : AppColors.transparent,
+        child: label);
+  }
 
   List<Widget> get optionsList => List.generate(
       currentAnswers.length,
@@ -136,28 +288,53 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
             child: optionItem(index),
           ));
 
-  Widget continueButton(NextTaskState state, QuestionAnswerState answerState) => Button.primary(
-      onTap: continueAfterAnswer,
-      text: 'Continue',
-      isAvialable: state.isCurrentTaskCompleted && !answerState.status.isLoading);
+  Widget fillBlankView() => Column(
+      children: List.generate(
+          blankControllers.length,
+          (index) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: TextField(
+                  controller: blankControllers[index],
+                  decoration: InputDecoration(
+                      hintText: 'Blank ${index + 1}',
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)))))));
+
+  Widget shortAnswerView() => TextField(
+      controller: shortAnswerController,
+      maxLines: 4,
+      decoration: InputDecoration(
+          hintText: 'Type your answer',
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))));
+
+  Widget submitButton(QuestionAnswerState answerState) {
+    final canSubmit = hasSubmitted ? true : isReadyToSubmit;
+    final label = hasSubmitted ? 'Continue' : 'Submit';
+    return Button.primary(
+        onTap: hasSubmitted ? goNextQuestion : submitCurrentAnswer,
+        text: label,
+        isAvialable: canSubmit && !answerState.status.isLoading);
+  }
 
   Widget get view => BlocBuilder<QuestionAnswerBloc, QuestionAnswerState>(
       bloc: answerBloc,
-      builder: (context, answerState) => BlocBuilder<NextTaskBloc, NextTaskState>(
-          builder: (context, state) => Column(children: [
-                const SizedBox(height: 24),
-                progressHeader,
-                const SizedBox(height: 24),
-                QuestionsCard(questionText: currentQuestion.title),
-                const SizedBox(height: 20),
-                if (currentAnswers.isNotEmpty)
-                  ...optionsList
-                else
-                  Text('No answers available.',
-                      style: Style.small3w4(context, color: TextColorRole.greyColor)),
-                const SizedBox(height: 20),
-                continueButton(state, answerState)
-              ])));
+      builder: (context, answerState) => Column(children: [
+            const SizedBox(height: 24),
+            progressHeader,
+            const SizedBox(height: 24),
+            QuestionsCard(currentQuestion: currentQuestion),
+            const SizedBox(height: 20),
+            if (isFillBlank)
+              fillBlankView()
+            else if (isShortAnswer)
+              shortAnswerView()
+            else if (currentAnswers.isNotEmpty)
+              ...optionsList
+            else
+              Text('No answers available.',
+                  style: Style.small3w4(context, color: TextColorRole.greyColor)),
+            const SizedBox(height: 20),
+            submitButton(answerState)
+          ]));
 
   @override
   Widget build(BuildContext context) {
@@ -169,6 +346,14 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     return BlocListener<QuestionAnswerBloc, QuestionAnswerState>(
         bloc: answerBloc,
         listener: (context, state) {
+          if (state.status.isSuccess) {
+            if (!hasSubmitted) {
+              if (submitWasCorrect == true) correctCount++;
+              hasSubmitted = true;
+              setState(() {});
+            }
+            return;
+          }
           if (state.status.isError && state.errorMessage != null) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(state.errorMessage!)));

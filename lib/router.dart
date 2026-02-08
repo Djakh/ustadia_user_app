@@ -23,6 +23,7 @@ import 'package:ustadia_user_app/features/home/presentation/home_page.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/pages/intro_survey_page.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_sections_params.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_lessons_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_sections_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_units_page.dart';
@@ -284,9 +285,16 @@ final appRouter = GoRouter(
                         GoRoute(
                             path: learnSectionsPath,
                             parentNavigatorKey: _rootKey,
-                            builder: (context, state) => LearnSectionsPage(
-                                unit: (state.extra as LearnUnitModel?) ??
-                                    const LearnUnitModel.empty())),
+                            builder: (context, state) {
+                              final extra = state.extra;
+                              final params = extra is LearnSectionsParams
+                                  ? extra
+                                  : LearnSectionsParams(
+                                      unit: (extra as LearnUnitModel?) ??
+                                          const LearnUnitModel.empty(),
+                                      lessonId: '');
+                              return LearnSectionsPage(params: params);
+                            }),
                         GoRoute(
                             path: learnListeningPath,
                             parentNavigatorKey: _rootKey,

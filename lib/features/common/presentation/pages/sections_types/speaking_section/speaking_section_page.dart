@@ -57,7 +57,10 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
     super.initState();
     if (widget.sectionModel.id.isNotEmpty) {
       detailBloc.add(SectionDetailRequested(
-          sectionId: widget.sectionModel.id, source: widget.sectionModel.source));
+          sectionId: widget.sectionModel.id,
+          source: widget.sectionModel.source,
+          unitId: widget.sectionModel.unitId,
+          lessonId: widget.sectionModel.lessonId));
     }
   }
 
@@ -108,6 +111,8 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
           sectionId: currentQuestion.sectionId,
           questionId: currentQuestion.id,
           assignmentId: currentQuestion.assignmentId,
+          unitId: currentQuestion.unitId,
+          lessonId: currentQuestion.lessonId,
           userAudioId: state.uploadedFile!.id,
           source: currentQuestion.source));
       pendingAudioPath = null;

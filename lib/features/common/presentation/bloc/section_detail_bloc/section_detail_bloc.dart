@@ -20,13 +20,24 @@ class SectionDetailBloc extends Bloc<SectionDetailEvent, SectionDetailState> {
       SectionDetailRequested event, Emitter<SectionDetailState> emit) async {
     emit(state.copyWith(status: Status.loading, errorMessage: null));
     try {
-      final detail = event.source == SectionSource.assignment
+      final fetched = event.source == SectionSource.assignment
           ? await assignmentsRemoteDataSource.fetchAssignmentSectionDetail(
               sectionId: event.sectionId)
           : await learnRemoteDataSource.fetchSectionDetail(sectionId: event.sectionId);
-      emit(state.copyWith(status: Status.success, detail: detail, errorMessage: null));
+      final updatedDetail = _applyLessonUnit(fetched, event.unitId, event.lessonId);
+      emit(state.copyWith(status: Status.success, detail: updatedDetail, errorMessage: null));
     } catch (error) {
       emit(state.copyWith(status: Status.error, errorMessage: error.toString()));
     }
+  }
+
+  SectionModel _applyLessonUnit(SectionModel detail, String? unitId, String? lessonId) {
+    final nextUnitId = unitId?.isNotEmpty == true ? unitId : detail.unitId;
+    final nextLessonId = lessonId?.isNotEmpty == true ? lessonId : detail.lessonId;
+    if ((nextUnitId == detail.unitId) && (nextLessonId == detail.lessonId)) return detail;
+    final questions = detail.questions
+        .map((q) => q.copyWith(unitId: nextUnitId, lessonId: nextLessonId))
+        .toList();
+    return detail.copyWith(unitId: nextUnitId, lessonId: nextLessonId, questions: questions);
   }
 }

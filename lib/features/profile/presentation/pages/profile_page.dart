@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
+import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/profile/data/models/profile_badge_model.dart';
 import 'package:ustadia_user_app/features/profile/data/models/profile_statistics_model.dart';
@@ -10,6 +12,8 @@ import 'package:ustadia_user_app/features/profile/data/services/profile_statisti
 import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/badge_item_card.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/profile_stats_card.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/profile_user_card.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
@@ -31,8 +35,9 @@ class ProfilePageState extends State<ProfilePage> {
 
   /// --- Data ---
 
-  List<ProfileStatsModel> stats(ProfileStatisticsModel? statistics) {
-    final level = statistics?.level.isNotEmpty == true ? statistics!.level : '-';
+  List<ProfileStatsModel> stats(ProfileStatisticsModel? statistics, String languageCode) {
+    final levelName = statistics?.level.name.forLanguage(languageCode);
+    final level = levelName != null && levelName.isNotEmpty ? levelName : '-';
     final totalCompleted = statistics?.totalCompletedTasks.toString() ?? '-';
     final totalVocabulary = statistics?.totalVocabulary.toString() ?? '-';
     final breakdown = statistics?.breakdown;
@@ -79,15 +84,23 @@ class ProfilePageState extends State<ProfilePage> {
         ProfileStatCard(profileStatsModel: secondStatsModel)
       ]);
 
-  Widget statsWidgetList(ProfileStatisticsModel? data) => Column(children: [
-        statsWidgetRow(stats(data)[0], stats(data)[1]),
-        const SizedBox(height: 12),
-        statsWidgetRow(stats(data)[2], stats(data)[3])
-      ]);
+  Widget statsWidgetList(ProfileStatisticsModel? data, String languageCode) {
+    final items = stats(data, languageCode);
+    return Column(children: [
+      statsWidgetRow(items[0], items[1]),
+      const SizedBox(height: 12),
+      statsWidgetRow(items[2], items[3])
+    ]);
+  }
 
-  Widget statsGrid(BuildContext context) => ValueListenableBuilder<ProfileStatisticsModel?>(
-      valueListenable: statisticsStore.statistics,
-      builder: (context, data, _) => statsWidgetList(data));
+  Widget statsGrid(BuildContext context) => BlocBuilder<UserBloc, UserState>(
+      buildWhen: (prev, next) => prev.profile?.language != next.profile?.language,
+      builder: (context, userState) {
+        final languageCode = userState.profile?.language ?? context.locale.languageCode;
+        return ValueListenableBuilder<ProfileStatisticsModel?>(
+            valueListenable: statisticsStore.statistics,
+            builder: (context, data, _) => statsWidgetList(data, languageCode));
+      });
 
   Widget get badgesItemList => SizedBox(
         height: 94,

@@ -17,8 +17,8 @@ class PaginationMeta {
   factory PaginationMeta.fromJson(Map<String, dynamic> json) {
     final limit = _toInt(json['limit'], fallback: 10);
     final total = _toInt(json['total']);
-    final totalPages = _toInt(json['totalPages'],
-        fallback: limit == 0 ? 1 : (total / limit).ceil());
+    final totalPages =
+        _toInt(json['totalPages'], fallback: limit == 0 ? 1 : (total / limit).ceil());
     return PaginationMeta(
         page: _toInt(json['page'], fallback: 1),
         limit: limit,
@@ -27,6 +27,7 @@ class PaginationMeta {
   }
 
   static int _toInt(dynamic value, {int fallback = 0}) {
+
     if (value == null) return fallback;
     if (value is int) return value;
     return int.tryParse(value.toString()) ?? fallback;

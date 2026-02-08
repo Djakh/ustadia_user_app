@@ -7,6 +7,9 @@ abstract class SectionDetailEvent {
 class SectionDetailRequested extends SectionDetailEvent {
   final String sectionId;
   final SectionSource source;
+  final String? unitId;
+  final String? lessonId;
 
-  const SectionDetailRequested({required this.sectionId, this.source = SectionSource.learn});
+  const SectionDetailRequested(
+      {required this.sectionId, this.source = SectionSource.learn, this.unitId, this.lessonId});
 }

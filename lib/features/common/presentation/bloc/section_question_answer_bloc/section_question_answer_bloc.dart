@@ -33,18 +33,11 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
               status: Status.error, errorMessage: 'Assignment id is missing.'));
           return;
         }
-        final Map<String, dynamic> answerItem = {
-          'questionId': event.questionId,
-        };
-        if (event.userInputText != null && event.userInputText!.trim().isNotEmpty) {
-          answerItem['answer_text'] = event.userInputText!.trim();
-        } else if (event.answerId != null && event.answerId!.isNotEmpty) {
-          answerItem['selectedAnswerId'] = event.answerId;
-        }
+        final answersPayload = buildAssignmentAnswersPayload(event);
         final success = await assignmentsRemoteDataSource.submitAssignmentAnswers(
-            assignmentId: assignmentId, answers: [answerItem]);
+            assignmentId: assignmentId, answers: answersPayload);
         if (success) {
-          emit(state.copyWith(status: Status.success, errorMessage: null));
+          emit(state.copyWith(status: Status.success, result: null, errorMessage: null));
           await profileStatisticsStore.refresh();
         } else {
           emit(state.copyWith(status: Status.error, errorMessage: 'Request failed.'));
@@ -52,18 +45,82 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
         return;
       }
 
-      final result = await learnRemoteDataSource.submitQuestionAnswer(
-          sectionId: event.sectionId,
-          questionId: event.questionId,
-          answerId: event.answerId,
-          userInputText: event.userInputText,
-          userAudioId: event.userAudioId);
-      emit(state.copyWith(status: Status.success, result: result, errorMessage: null));
+      final unitId = event.unitId;
+      final lessonId = event.lessonId;
+      if (unitId == null || unitId.isEmpty || lessonId == null || lessonId.isEmpty) {
+        emit(state.copyWith(
+            status: Status.error, errorMessage: 'Lesson or unit id is missing.'));
+        return;
+      }
+      final answersPayload = buildLessonAnswersPayload(event);
+      await learnRemoteDataSource.submitLessonAnswers(
+          lessonId: lessonId, unitId: unitId, answers: answersPayload);
+      emit(state.copyWith(status: Status.success, result: null, errorMessage: null));
       await profileStatisticsStore.refresh();
     } on DioException catch (error) {
       emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.from(error)));
     } catch (_) {
       emit(state.copyWith(status: Status.error, errorMessage: 'Request failed.'));
     }
+  }
+
+  List<Map<String, dynamic>> buildLessonAnswersPayload(QuestionAnswerSubmitted event) {
+    final answers = <Map<String, dynamic>>[];
+    final blankAnswers = event.blankAnswers
+        .map((item) => {'position': item.position, 'answer': item.answer ?? ''})
+        .toList();
+    if (blankAnswers.isNotEmpty) {
+      answers.add({'questionId': event.questionId, 'blank_answers': blankAnswers});
+      return answers;
+    }
+    if (event.answerIds.isNotEmpty) {
+      for (final answerId in event.answerIds) {
+        answers.add({'questionId': event.questionId, 'answer_id': answerId});
+      }
+      return answers;
+    }
+    if (event.answerId != null && event.answerId!.isNotEmpty) {
+      answers.add({'questionId': event.questionId, 'answer_id': event.answerId});
+      return answers;
+    }
+    final payload = <String, dynamic>{'questionId': event.questionId};
+    if (event.userInputText != null && event.userInputText!.trim().isNotEmpty) {
+      payload['user_input_text'] = event.userInputText!.trim();
+    }
+    if (event.userAudioId != null && event.userAudioId!.trim().isNotEmpty) {
+      payload['user_audio_id'] = event.userAudioId!.trim();
+    }
+    answers.add(payload);
+    return answers;
+  }
+
+  List<Map<String, dynamic>> buildAssignmentAnswersPayload(QuestionAnswerSubmitted event) {
+    final answers = <Map<String, dynamic>>[];
+    final blankAnswers = event.blankAnswers
+        .map((item) => {'position': item.position, 'answer': item.answer ?? ''})
+        .toList();
+    if (blankAnswers.isNotEmpty) {
+      answers.add({'questionId': event.questionId, 'blank_answers': blankAnswers});
+      return answers;
+    }
+    if (event.answerIds.isNotEmpty) {
+      for (final answerId in event.answerIds) {
+        answers.add({'questionId': event.questionId, 'selectedAnswerId': answerId});
+      }
+      return answers;
+    }
+    if (event.answerId != null && event.answerId!.isNotEmpty) {
+      answers.add({'questionId': event.questionId, 'selectedAnswerId': event.answerId});
+      return answers;
+    }
+    final payload = <String, dynamic>{'questionId': event.questionId};
+    if (event.userInputText != null && event.userInputText!.trim().isNotEmpty) {
+      payload['answer_text'] = event.userInputText!.trim();
+    }
+    if (event.userAudioId != null && event.userAudioId!.trim().isNotEmpty) {
+      payload['user_audio_id'] = event.userAudioId!.trim();
+    }
+    answers.add(payload);
+    return answers;
   }
 }
