@@ -13,11 +13,12 @@ class LearnUnitsBloc extends Bloc<LearnUnitsEvent, LearnUnitsState> {
 
   Future<void> handleUnitsRequested(
       LearnUnitsRequested event, Emitter<LearnUnitsState> emit) async {
-    emit(state.copyWith(status: Status.loading));
+    emit(state.copyWith(status: Status.loading, lessonId: event.lessonId));
     try {
       final units = await learnRemoteDataSource.fetchUnits(
           lessonId: event.lessonId, page: event.page, limit: event.limit);
-      emit(state.copyWith(status: Status.success, units: units, errorMessage: null));
+      emit(state.copyWith(
+          status: Status.success, units: units, errorMessage: null, lessonId: event.lessonId));
     } catch (error) {
       emit(state.copyWith(status: Status.error, errorMessage: error.toString()));
     }

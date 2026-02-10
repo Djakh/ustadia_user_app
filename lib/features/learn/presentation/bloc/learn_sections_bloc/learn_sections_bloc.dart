@@ -20,12 +20,17 @@ class LearnSectionsBloc extends Bloc<LearnSectionsEvent, LearnSectionsState> {
         sections: const [],
         pagination: const PaginationMeta(),
         isLoadingMore: false,
-        errorMessage: null));
+        errorMessage: null,
+        unitId: event.unitId));
     try {
       final result = await learnRemoteDataSource.fetchSections(
           unitId: event.unitId, page: event.page, limit: event.limit);
       emit(state.copyWith(
-          status: Status.success, sections: result.items, pagination: result.meta, errorMessage: null));
+          status: Status.success,
+          sections: result.items,
+          pagination: result.meta,
+          errorMessage: null,
+          unitId: event.unitId));
     } catch (error) {
       emit(state.copyWith(status: Status.error, errorMessage: error.toString()));
     }

@@ -22,8 +22,8 @@ import 'package:ustadia_user_app/features/dashboard/presentation/pages/dashboard
 import 'package:ustadia_user_app/features/home/presentation/home_page.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/pages/intro_survey_page.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_sections_params.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_lessons_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_sections_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_units_page.dart';
@@ -239,7 +239,15 @@ final appRouter = GoRouter(
                                         timeLimit: 0,
                                         deadline: null,
                                         progress: 0,
-                                        sections: []));
+                                        sections: [],
+                                        createdAt: null,
+                                        updatedAt: null,
+                                        sectionCount: 0,
+                                        taskCount: 0,
+                                        completedTaskCount: 0,
+                                        pendingTaskCount: 0,
+                                        completedTaskPercentage: 0,
+                                        isCompleted: false));
                             return AssignmentSectionsPage(params: params);
                           },
                           routes: [

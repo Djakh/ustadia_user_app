@@ -1,5 +1,6 @@
-import 'package:dio/dio.dart';
 import 'dart:convert';
+import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 
 class DioClient {
   DioClient._();
@@ -13,6 +14,12 @@ class DioClient {
     );
 
     final dio = Dio(options);
+    final cacheOptions = CacheOptions(
+        store: MemCacheStore(),
+        policy: CachePolicy.request,
+        hitCacheOnErrorExcept: [401, 403],
+        maxStale: const Duration(days: 7));
+    dio.interceptors.add(DioCacheInterceptor(options: cacheOptions));
     dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
       final accessToken = accessTokenGetter?.call() ?? '';
       if (accessToken.isNotEmpty) {
@@ -46,9 +53,14 @@ class DioClient {
     if (data == null) return;
     String output;
     if (data is String) {
-      output = _tryPrettyJsonString(data) ?? data;
+      final decoded = _tryDecodeJson(data);
+      if (decoded != null) {
+        output = const JsonEncoder.withIndent('  ').convert(_sanitizeForLog(decoded));
+      } else {
+        output = _singleLine(data);
+      }
     } else if (data is Map || data is List) {
-      output = const JsonEncoder.withIndent('  ').convert(data);
+      output = const JsonEncoder.withIndent('  ').convert(_sanitizeForLog(data));
     } else {
       output = data.toString();
     }
@@ -56,12 +68,30 @@ class DioClient {
     print('[DIO] Response Pretty:\\n$output');
   }
 
-  static String? _tryPrettyJsonString(String value) {
+  static dynamic _tryDecodeJson(String value) {
     try {
-      final decoded = jsonDecode(value);
-      return const JsonEncoder.withIndent('  ').convert(decoded);
+      return jsonDecode(value);
     } catch (_) {
       return null;
     }
+  }
+
+  static dynamic _sanitizeForLog(dynamic value) {
+    if (value is Map) {
+      return value.map((key, val) => MapEntry(key, _sanitizeForLog(val)));
+    }
+    if (value is List) {
+      return value.map(_sanitizeForLog).toList();
+    }
+    if (value is String) {
+      return _singleLine(value);
+    }
+    return value?.toString() ?? 'null';
+  }
+
+  static String _singleLine(String input) {
+    final normalized = input.replaceAll(RegExp(r'\s+'), ' ').trim();
+    if (normalized.length <= 120) return normalized;
+    return '${normalized.substring(0, 117)}...';
   }
 }

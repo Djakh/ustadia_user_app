@@ -5,12 +5,22 @@ class LearnUnitsState {
   final Status status;
   final List<LearnUnitModel> units;
   final String? errorMessage;
+  final String? lessonId;
 
-  const LearnUnitsState({this.status = Status.initial, this.units = const [], this.errorMessage});
+  const LearnUnitsState(
+      {this.status = Status.initial,
+      this.units = const [],
+      this.errorMessage,
+      this.lessonId});
 
-  LearnUnitsState copyWith({Status? status, List<LearnUnitModel>? units, String? errorMessage}) =>
+  LearnUnitsState copyWith(
+          {Status? status,
+          List<LearnUnitModel>? units,
+          String? errorMessage,
+          String? lessonId}) =>
       LearnUnitsState(
           status: status ?? this.status,
           units: units ?? this.units,
-          errorMessage: errorMessage);
+          errorMessage: errorMessage,
+          lessonId: lessonId ?? this.lessonId);
 }

@@ -17,6 +17,7 @@ class BlocStatusView<B extends StateStreamable<S>, S, T> extends StatelessWidget
   final Widget? empty;
   final Widget Function(String message)? errorBuilder;
   final Widget? invalid;
+  final bool keepDataOnLoading;
 
   final void Function(BuildContext context, S state)? listener;
 
@@ -40,6 +41,7 @@ class BlocStatusView<B extends StateStreamable<S>, S, T> extends StatelessWidget
     this.listener,
     this.listenWhen,
     this.buildWhen,
+    this.keepDataOnLoading = false,
   });
 
   @override
@@ -55,6 +57,10 @@ class BlocStatusView<B extends StateStreamable<S>, S, T> extends StatelessWidget
         final status = statusOf(state);
 
         if (status.isInitial || status.isLoading || isCustomLoading) {
+          if (keepDataOnLoading) {
+            final value = data(state);
+            if (!isEmpty(value)) return builder(context, value);
+          }
           return loading ?? const PrimaryLoadingIndicator(height: 30, width: 30);
         }
 

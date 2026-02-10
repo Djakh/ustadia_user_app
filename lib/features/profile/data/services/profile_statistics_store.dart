@@ -5,6 +5,7 @@ import 'package:ustadia_user_app/features/profile/data/models/profile_statistics
 class ProfileStatisticsStore {
   final UserRemoteDataSource userRemoteDataSource;
   final ValueNotifier<ProfileStatisticsModel?> statistics = ValueNotifier(null);
+  final ValueNotifier<bool> loading = ValueNotifier(false);
   bool isLoading = false;
 
   ProfileStatisticsStore({required this.userRemoteDataSource});
@@ -12,10 +13,12 @@ class ProfileStatisticsStore {
   Future<void> refresh() async {
     if (isLoading) return;
     isLoading = true;
+    loading.value = true;
     try {
       statistics.value = await userRemoteDataSource.fetchProfileStatistics();
     } finally {
       isLoading = false;
+      loading.value = false;
     }
   }
 }

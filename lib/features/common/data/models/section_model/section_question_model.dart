@@ -18,7 +18,7 @@ class SectionQuestionModel {
   final List<SectionBlankAnswer> userBlankAnswers;
   final SectionSource source;
   final String questionType;
-
+  final int? maxSelections;
   const SectionQuestionModel(
       {required this.id,
       required this.sectionId,
@@ -34,6 +34,7 @@ class SectionQuestionModel {
       required this.numberOfBlanks,
       required this.blankAnswers,
       required this.userBlankAnswers,
+      required this.maxSelections,
       this.source = SectionSource.learn,
       required this.questionType});
 
@@ -58,23 +59,24 @@ class SectionQuestionModel {
             .toList() ??
         const [];
     return SectionQuestionModel(
-        id: json['id']?.toString() ?? '',
-        sectionId:
-            json['section_id']?.toString() ?? json['assignment_section_id']?.toString() ?? '',
-        assignmentId: assignmentId,
-        unitId: unitId,
-        lessonId: lessonId,
-        title: json['title']?.toString() ?? '',
-        description: json['description']?.toString(),
-        difficulty: json['difficulty']?.toString() ?? '',
-        orderIndex: _toInt(json['order_index']),
-        xp: _toInt(json['xp']),
-        answers: answers,
-        numberOfBlanks: _toInt(json['number_of_blanks']),
-        blankAnswers: blankAnswers,
-        userBlankAnswers: userBlankAnswers,
-        source: source,
-        questionType: json['type']?.toString() ?? '');
+      id: json['id']?.toString() ?? '',
+      sectionId: json['section_id']?.toString() ?? json['assignment_section_id']?.toString() ?? '',
+      assignmentId: assignmentId,
+      unitId: unitId,
+      lessonId: lessonId,
+      title: json['title']?.toString() ?? '',
+      description: json['description']?.toString(),
+      difficulty: json['difficulty']?.toString() ?? '',
+      orderIndex: _toInt(json['order_index']),
+      xp: _toInt(json['xp']),
+      answers: answers,
+      numberOfBlanks: _toInt(json['number_of_blanks']),
+      blankAnswers: blankAnswers,
+      userBlankAnswers: userBlankAnswers,
+      source: source,
+      questionType: json['type']?.toString() ?? '',
+      maxSelections: _toInt(json['max_selections']),
+    );
   }
 
   SectionQuestionModel copyWith(
@@ -98,6 +100,7 @@ class SectionQuestionModel {
         numberOfBlanks: numberOfBlanks,
         blankAnswers: blankAnswers ?? this.blankAnswers,
         userBlankAnswers: userBlankAnswers ?? this.userBlankAnswers,
+        maxSelections: maxSelections ?? this.maxSelections,
         source: source,
         questionType: questionType);
   }
