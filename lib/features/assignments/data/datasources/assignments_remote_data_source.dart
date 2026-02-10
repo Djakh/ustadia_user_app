@@ -21,6 +21,14 @@ class AssignmentsRemoteDataSource {
     return SectionModel.fromJson(data);
   }
 
+  Future<List<SectionModel>> fetchAssignmentSections({required String assignmentId}) async {
+    final response = await dio.get('/student/assignments/$assignmentId/sections');
+    final data = response.data;
+    final items =
+        data is List ? data : (data as Map<String, dynamic>)['data'] as List<dynamic>? ?? [];
+    return items.whereType<Map<String, dynamic>>().map(SectionModel.fromJson).toList();
+  }
+
   Future<bool> submitAssignmentAnswers(
       {required String assignmentId,
       required List<Map<String, dynamic>> answers}) async {

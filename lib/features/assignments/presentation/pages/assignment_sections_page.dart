@@ -3,7 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
-import 'package:ustadia_user_app/features/assignments/data/datasources/assignments_remote_data_source.dart';
+import 'package:ustadia_user_app/core/widgets/loading/shimmer_list.dart';
+import 'package:ustadia_user_app/features/assignments/data/services/assignment_sections_store.dart';
 import 'package:ustadia_user_app/features/assignments/data/models/assignment_sections_params.dart';
 import 'package:ustadia_user_app/features/assignments/data/models/assignment_model.dart';
 import 'package:ustadia_user_app/features/assignments/presentation/widgets/assignment_section_card.dart';
@@ -21,52 +22,68 @@ class AssignmentSectionsPage extends StatefulWidget {
 }
 
 class AssignmentSectionsPageState extends State<AssignmentSectionsPage> {
-  final AssignmentsRemoteDataSource assignmentsRemoteDataSource =
-      sl<AssignmentsRemoteDataSource>();
+  final AssignmentSectionsStore sectionsStore = sl<AssignmentSectionsStore>();
   late AssignmentModel assignment;
+  List<SectionModel> sections = [];
+  bool isLoading = false;
+  String? errorMessage;
+  bool shouldRefreshParent = false;
 
   @override
   void initState() {
     super.initState();
     assignment = widget.params.assignment;
+    loadSections();
   }
 
-  List<SectionModel> get sections {
-    final list = [...assignment.sections];
-    list.sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
-    return list;
-  }
-
-  Future<void> refreshAssignment() async {
-    final list = await assignmentsRemoteDataSource.fetchAssignments();
-    final updated = list.where((item) => item.id == assignment.id).toList();
-    if (updated.isEmpty) return;
-    if (!mounted) return;
-    setState(() => assignment = updated.first);
+  Future<void> loadSections({bool forceRefresh = false}) async {
+    if (assignment.id.isEmpty) return;
+    setState(() {
+      isLoading = sections.isEmpty;
+      errorMessage = null;
+    });
+    try {
+      final list = await sectionsStore.loadSections(assignment.id, forceRefresh: forceRefresh);
+      list.sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
+      if (!mounted) return;
+      setState(() => sections = list);
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => errorMessage = error.toString());
+    } finally {
+      if (!mounted) return;
+      setState(() => isLoading = false);
+    }
   }
 
   Future<void> openSectionDetails(SectionModel sectionModel) async {
+    late final Future<bool?> navigation;
     switch (sectionModel.sectionType) {
       case SectionType.listening:
-        await context.push(learnListeningRoute, extra: sectionModel);
+        navigation = context.push(learnListeningRoute, extra: sectionModel);
         break;
       case SectionType.reading:
-        await context.push(learnReadingRoute, extra: sectionModel);
+        navigation = context.push(learnReadingRoute, extra: sectionModel);
         break;
       case SectionType.speaking:
-        await context.push(learnSpeakingRoute, extra: sectionModel);
+        navigation = context.push(learnSpeakingRoute, extra: sectionModel);
         break;
       case SectionType.grammar:
-        await context.push(learnGrammarRoute, extra: sectionModel);
+        navigation = context.push(learnGrammarRoute, extra: sectionModel);
         break;
       case SectionType.vocabulary:
-        await context.push(learnReadingRoute, extra: sectionModel);
+        navigation = context.push(learnReadingRoute, extra: sectionModel);
         break;
       case SectionType.writing:
-        await context.push(learnWritingRoute, extra: sectionModel);
+        navigation = context.push(learnWritingRoute, extra: sectionModel);
         break;
     }
-    await refreshAssignment();
+    final result = await navigation;
+    if (!mounted) return;
+    if (result == true) {
+      shouldRefreshParent = true;
+      await loadSections(forceRefresh: true);
+    }
   }
 
   Widget sectionList() => Column(
@@ -85,7 +102,19 @@ class AssignmentSectionsPageState extends State<AssignmentSectionsPage> {
         Text(assignment.description,
             style: Style.bodyw4(context, color: TextColorRole.greyColor)),
         const SizedBox(height: 20),
-        if (sections.isEmpty)
+        if (isLoading)
+          const ShimmerList(
+              itemCount: 4,
+              itemHeight: 110,
+              separatorHeight: 12,
+              borderRadius: BorderRadius.all(Radius.circular(24)))
+        else if (errorMessage != null)
+          Center(
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 32),
+                  child: Text(errorMessage!,
+                      style: Style.bodyw4(context, color: TextColorRole.greyColor))))
+        else if (sections.isEmpty)
           Center(
               child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 32),
@@ -97,6 +126,13 @@ class AssignmentSectionsPageState extends State<AssignmentSectionsPage> {
       ]));
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(backgroundColor: context.cs.surface, body: SafeArea(child: body(context)));
+  Widget build(BuildContext context) => WillPopScope(
+      onWillPop: () async {
+        if (!context.mounted) return false;
+        context.pop(shouldRefreshParent ? true : null);
+        return false;
+      },
+      child: Scaffold(
+          backgroundColor: context.cs.surface,
+          body: SafeArea(child: body(context))));
 }

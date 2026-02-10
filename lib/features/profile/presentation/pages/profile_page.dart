@@ -5,6 +5,7 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:ustadia_user_app/core/widgets/loading/shimmer_grid.dart';
 import 'package:ustadia_user_app/features/profile/data/models/profile_badge_model.dart';
 import 'package:ustadia_user_app/features/profile/data/models/profile_statistics_model.dart';
 import 'package:ustadia_user_app/features/profile/data/models/profile_stats_model.dart';
@@ -99,7 +100,19 @@ class ProfilePageState extends State<ProfilePage> {
         final languageCode = userState.profile?.language ?? context.locale.languageCode;
         return ValueListenableBuilder<ProfileStatisticsModel?>(
             valueListenable: statisticsStore.statistics,
-            builder: (context, data, _) => statsWidgetList(data, languageCode));
+            builder: (context, data, _) => ValueListenableBuilder<bool>(
+                valueListenable: statisticsStore.loading,
+                builder: (context, isLoading, __) {
+                  if (isLoading && data == null) {
+                    return const ShimmerGrid(
+                        itemCount: 4,
+                        crossAxisCount: 2,
+                        childAspectRatio: 1.5,
+                        padding: EdgeInsets.zero,
+                        borderRadius: BorderRadius.all(Radius.circular(20)));
+                  }
+                  return statsWidgetList(data, languageCode);
+                }));
       });
 
   Widget get badgesItemList => SizedBox(

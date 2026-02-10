@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
+import 'package:ustadia_user_app/core/widgets/loading/shimmer_grid.dart';
+import 'package:ustadia_user_app/core/widgets/loading/shimmer_list.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_sections_params.dart';
@@ -33,16 +36,15 @@ class LearnUnitsPageState extends State<LearnUnitsPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.learnLessonModel.id.isNotEmpty) {
+    if (widget.learnLessonModel.id.isNotEmpty &&
+        (unitsBloc.state.units.isEmpty ||
+            unitsBloc.state.lessonId != widget.learnLessonModel.id)) {
       unitsBloc.add(LearnUnitsRequested(lessonId: widget.learnLessonModel.id));
     }
   }
 
   @override
-  void dispose() {
-    unitsBloc.close();
-    super.dispose();
-  }
+  void dispose() => super.dispose();
 
   Future<void> openUnit(BuildContext context, LearnUnitModel unit) async {
     final result = await context.push<bool?>(learnSectionsRoute,
@@ -88,7 +90,23 @@ class LearnUnitsPageState extends State<LearnUnitsPage> {
         errorOf: (s) => s.errorMessage,
         data: (s) => s.units,
         isEmpty: (units) => units.isEmpty,
+        keepDataOnLoading: true,
         empty: const Center(child: Text('No units found')),
+        loading: Column(children: [
+          const SizedBox(height: 24),
+          const ShimmerList(
+              itemCount: 1,
+              itemHeight: 54,
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              borderRadius: BorderRadius.all(Radius.circular(12))),
+          const SizedBox(height: 12),
+          const ShimmerGrid(
+              itemCount: 4,
+              crossAxisCount: 2,
+              childAspectRatio: 0.92,
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              borderRadius: BorderRadius.all(Radius.circular(20)))
+        ]),
         builder: (context, units) => view(context, units),
       );
 

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/listviews/primary_list_view.dart';
+import 'package:ustadia_user_app/core/widgets/loading/shimmer_list.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_lessons_bloc/learn_lessons_bloc.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_lessons_bloc/learn_lessons_event.dart';
@@ -27,14 +29,13 @@ class LearnLessonsPageState extends State<LearnLessonsPage> {
   @override
   void initState() {
     super.initState();
-    lessonsBloc.add(const LearnLessonsRequested());
+    if (lessonsBloc.state.lessons.isEmpty) {
+      lessonsBloc.add(const LearnLessonsRequested());
+    }
   }
 
   @override
-  void dispose() {
-    lessonsBloc.close();
-    super.dispose();
-  }
+  void dispose() => super.dispose();
 
   Future<void> openLesson(BuildContext context, LearnLessonModel lesson) async {
     final result = await context.push<bool?>(learnUnitsRoute, extra: lesson);
@@ -64,7 +65,13 @@ class LearnLessonsPageState extends State<LearnLessonsPage> {
         errorOf: (s) => s.errorMessage,
         data: (s) => s.lessons,
         isEmpty: (lessons) => lessons.isEmpty,
+        keepDataOnLoading: true,
         empty: const Center(child: Text('No lessons found')),
+        loading: ShimmerList(
+            itemCount: 5,
+            itemHeight: 112,
+            padding: Style.paddingPrimary,
+            borderRadius: Style.border20),
         builder: (context, lessons) => lessonsList(context, lessons),
       );
 

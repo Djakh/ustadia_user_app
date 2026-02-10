@@ -6,6 +6,7 @@ import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
+import 'package:ustadia_user_app/core/widgets/loading/shimmer_list.dart';
 import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_set_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_flashcard_sets_bloc/practice_flashcard_sets_bloc.dart';
@@ -27,14 +28,13 @@ class _PracticeFlashcardSetsPageState extends State<PracticeFlashcardSetsPage> {
   @override
   void initState() {
     super.initState();
-    setsBloc.add(const PracticeFlashcardSetsRequested());
+    if (setsBloc.state.sets.isEmpty) {
+      setsBloc.add(const PracticeFlashcardSetsRequested());
+    }
   }
 
   @override
-  void dispose() {
-    setsBloc.close();
-    super.dispose();
-  }
+  void dispose() => super.dispose();
 
   void openSet(LearnFlashcardSetModel set) {
     context.push(flashcardSprintRoute, extra: FlashcardSprintParams(set: set, isPractice: true));
@@ -71,6 +71,12 @@ class _PracticeFlashcardSetsPageState extends State<PracticeFlashcardSetsPage> {
       errorOf: (s) => s.errorMessage,
       data: (s) => s.sets,
       isEmpty: (sets) => sets.isEmpty,
+      keepDataOnLoading: true,
+      loading: const ShimmerList(
+          itemCount: 5,
+          itemHeight: 92,
+          padding: EdgeInsets.symmetric(vertical: 12),
+          borderRadius: BorderRadius.all(Radius.circular(20))),
       empty: const Center(child: Text('No flashcard sets found')),
       builder: (context, sets) => setsList(context, sets));
 

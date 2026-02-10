@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ustadia_user_app/features/assignments/data/datasources/assignments_remote_data_source.dart';
+import 'package:ustadia_user_app/features/assignments/data/services/assignment_sections_store.dart';
 import 'package:ustadia_user_app/features/assignments/presentation/bloc/assignments_bloc/assignments_bloc.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_remote_data_source.dart';
@@ -85,9 +86,9 @@ Future<void> initDependencies() async {
   // Features - Learn
   sl.registerLazySingleton<LearnRemoteDataSource>(
       () => LearnRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
-  sl.registerFactory(() => LearnLessonsBloc(learnRemoteDataSource: sl()));
-  sl.registerFactory(() => LearnUnitsBloc(learnRemoteDataSource: sl()));
-  sl.registerFactory(() => LearnSectionsBloc(learnRemoteDataSource: sl()));
+  sl.registerLazySingleton(() => LearnLessonsBloc(learnRemoteDataSource: sl()));
+  sl.registerLazySingleton(() => LearnUnitsBloc(learnRemoteDataSource: sl()));
+  sl.registerLazySingleton(() => LearnSectionsBloc(learnRemoteDataSource: sl()));
   sl.registerFactory(
       () => SectionDetailBloc(learnRemoteDataSource: sl(), assignmentsRemoteDataSource: sl()));
   sl.registerFactory(() => QuestionAnswerBloc(
@@ -104,12 +105,12 @@ Future<void> initDependencies() async {
   // Features - Practice
   sl.registerLazySingleton<PracticeRemoteDataSource>(
       () => PracticeRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
-  sl.registerFactory(() => PracticeFlashcardSetsBloc(practiceRemoteDataSource: sl()));
-  sl.registerFactory(() => PracticeListenTapSetsBloc(practiceRemoteDataSource: sl()));
+  sl.registerLazySingleton(() => PracticeFlashcardSetsBloc(practiceRemoteDataSource: sl()));
+  sl.registerLazySingleton(() => PracticeListenTapSetsBloc(practiceRemoteDataSource: sl()));
   sl.registerFactory(() => PracticeListenTapStatusBloc(practiceRemoteDataSource: sl()));
-  sl.registerFactory(() => PracticeSentenceBuilderSetsBloc(practiceRemoteDataSource: sl()));
+  sl.registerLazySingleton(() => PracticeSentenceBuilderSetsBloc(practiceRemoteDataSource: sl()));
   sl.registerFactory(() => PracticeSentenceBuilderStatusBloc(practiceRemoteDataSource: sl()));
-  sl.registerFactory(() => PracticeWordMatchSetsBloc(practiceRemoteDataSource: sl()));
+  sl.registerLazySingleton(() => PracticeWordMatchSetsBloc(practiceRemoteDataSource: sl()));
   sl.registerFactory(() => PracticeWordMatchStatusBloc(practiceRemoteDataSource: sl()));
 
   // Features - Notifications
@@ -120,5 +121,6 @@ Future<void> initDependencies() async {
   // Features - Assignments
   sl.registerLazySingleton<AssignmentsRemoteDataSource>(
       () => AssignmentsRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
-  sl.registerFactory(() => AssignmentsBloc(assignmentsRemoteDataSource: sl()));
+  sl.registerLazySingleton(() => AssignmentSectionsStore(remoteDataSource: sl()));
+  sl.registerLazySingleton(() => AssignmentsBloc(assignmentsRemoteDataSource: sl()));
 }

@@ -79,6 +79,9 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   bool get isMultipleChoice => questionType == 'multiple-choice';
   bool get isShortAnswer => questionType == 'short-answer';
   bool get isFillBlank => questionType == 'fill-blank';
+  int get maxSelectionLimit => (currentQuestion.maxSelections ?? 0) > 0
+      ? currentQuestion.maxSelections!
+      : currentAnswers.length;
 
   int get blanksCount => currentQuestion.numberOfBlanks > 0
       ? currentQuestion.numberOfBlanks
@@ -119,6 +122,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       if (selectedIndices.contains(index)) {
         selectedIndices.remove(index);
       } else {
+        if (selectedIndices.length >= maxSelectionLimit) return;
         selectedIndices.add(index);
       }
       setState(() {});

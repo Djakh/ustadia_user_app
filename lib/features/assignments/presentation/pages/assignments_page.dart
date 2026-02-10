@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
+import 'package:ustadia_user_app/core/widgets/loading/shimmer_box.dart';
+import 'package:ustadia_user_app/core/widgets/loading/shimmer_list.dart';
 import 'package:ustadia_user_app/core/widgets/toggles/segmented_control.dart';
 import 'package:ustadia_user_app/features/assignments/data/models/assignment_models.dart';
 import 'package:ustadia_user_app/features/assignments/presentation/bloc/assignments_bloc/assignments_bloc.dart';
@@ -27,14 +30,13 @@ class AssignmentsPageState extends State<AssignmentsPage> {
   @override
   void initState() {
     super.initState();
-    assignmentsBloc.add(const AssignmentsRequested());
+    if (assignmentsBloc.state.assignments.isEmpty) {
+      assignmentsBloc.add(const AssignmentsRequested());
+    }
   }
 
   @override
-  void dispose() {
-    assignmentsBloc.close();
-    super.dispose();
-  }
+  void dispose() => super.dispose();
 
   List<AssignmentModel> activeAssignments(List<AssignmentModel> list) =>
       list.where((assignment) => assignment.isActive).toList();
@@ -51,9 +53,10 @@ class AssignmentsPageState extends State<AssignmentsPage> {
   void onSelectedTabIndex(int index) => setState(() => selectedTabIndex = index);
 
   Future<void> openAssignmentSections(AssignmentModel assignment) async {
-    await context.push(assignmentsSectionsRoute, extra: AssignmentSectionsParams(assignment: assignment));
+    final result = await context.push(assignmentsSectionsRoute,
+        extra: AssignmentSectionsParams(assignment: assignment));
     if (!mounted) return;
-    assignmentsBloc.add(const AssignmentsRequested());
+    if (result == true) assignmentsBloc.add(const AssignmentsRequested());
   }
 
   Widget tabSelector() => SegmentedControl(
@@ -99,18 +102,6 @@ class AssignmentsPageState extends State<AssignmentsPage> {
           ? emptyState(context, 'No completed assignments yet')
           : assignmentsList(completedAssignments(assignments));
 
-  Widget content(BuildContext context, List<AssignmentModel> assignments) =>
-      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const SizedBox(height: 24),
-        tabSelector(),
-        const SizedBox(height: 20),
-        if (selectedTabIndex == 0)
-          activeTabView(context, assignments)
-        else
-          completedTabView(context, assignments),
-        const SizedBox(height: 80)
-      ]);
-
   Widget body(BuildContext context) => PrimaryBackground(
       title: 'Assignments',
       isScrollable: true,
@@ -120,8 +111,24 @@ class AssignmentsPageState extends State<AssignmentsPage> {
           errorOf: (state) => state.errorMessage,
           data: (state) => state.assignments,
           isEmpty: (data) => data.isEmpty,
+          keepDataOnLoading: true,
           empty: emptyState(context, 'No assignments found'),
-          builder: (context, data) => content(context, data)));
+          loading: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const SizedBox(height: 24),
+            const ShimmerBox(height: 40, width: 180, borderRadius: BorderRadius.all(Radius.circular(20))),
+            const SizedBox(height: 20),
+            const ShimmerList(itemCount: 3, itemHeight: 160, borderRadius: BorderRadius.all(Radius.circular(24)))
+          ]),
+          builder: (context, data) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const SizedBox(height: 24),
+            tabSelector(),
+            const SizedBox(height: 20),
+            if (selectedTabIndex == 0)
+              activeTabView(context, data)
+            else
+              completedTabView(context, data),
+            const SizedBox(height: 80)
+          ])));
 
   @override
   Widget build(BuildContext context) =>

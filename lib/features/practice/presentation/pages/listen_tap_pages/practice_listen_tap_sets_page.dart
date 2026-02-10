@@ -6,6 +6,7 @@ import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
+import 'package:ustadia_user_app/core/widgets/loading/shimmer_list.dart';
 import 'package:ustadia_user_app/features/practice/data/models/practice_listen_tap_set_model.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_sets_bloc/practice_listen_tap_sets_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_sets_bloc/practice_listen_tap_sets_event.dart';
@@ -26,14 +27,13 @@ class _PracticeListenTapSetsPageState extends State<PracticeListenTapSetsPage> {
   @override
   void initState() {
     super.initState();
-    setsBloc.add(const PracticeListenTapSetsRequested());
+    if (setsBloc.state.sets.isEmpty) {
+      setsBloc.add(const PracticeListenTapSetsRequested());
+    }
   }
 
   @override
-  void dispose() {
-    setsBloc.close();
-    super.dispose();
-  }
+  void dispose() => super.dispose();
 
   void openSet(PracticeListenTapSetModel set) {
     context.push(listenTapRoute, extra: set);
@@ -69,6 +69,12 @@ class _PracticeListenTapSetsPageState extends State<PracticeListenTapSetsPage> {
       errorOf: (s) => s.errorMessage,
       data: (s) => s.sets,
       isEmpty: (sets) => sets.isEmpty,
+      keepDataOnLoading: true,
+      loading: const ShimmerList(
+          itemCount: 5,
+          itemHeight: 92,
+          padding: EdgeInsets.symmetric(vertical: 12),
+          borderRadius: BorderRadius.all(Radius.circular(20))),
       empty: const Center(child: Text('No listen & tap sets found')),
       builder: (context, sets) => setsList(context, sets));
 
