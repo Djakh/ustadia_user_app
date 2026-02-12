@@ -68,13 +68,13 @@ class ResetPasswordDialogState extends State<ResetPasswordDialog> {
   Widget get contactField => isEmail
       ? InputField.email(
           controller: widget.contactController,
-          label: 'Email',
+          label: 'Email'.tr(),
           hint: 'e.g. name@email.com',
           readOnly: true,
           errorText: showContactError ? 'Email is invalid.' : null)
       : InputField.primary(
           controller: widget.contactController,
-          label: 'Phone number',
+          label: 'Phone number'.tr(),
           readOnly: true,
           errorText: showContactError ? 'Phone number is invalid.' : null);
 
@@ -83,20 +83,20 @@ class ResetPasswordDialogState extends State<ResetPasswordDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-          title: const Text('Reset password'),
+          title: Text('Reset password'.tr()),
           content: Column(mainAxisSize: MainAxisSize.min, children: [
             contactField,
             const SizedBox(height: 12),
             InputField.primary(
                 controller: widget.otpController,
-                label: 'OTP',
+                label: 'OTP'.tr(),
                 hint: 'Enter 6-digit OTP',
                 errorText: showOtpError ? 'OTP is required.' : null,
                 onChanged: (value) => setState(() => showOtpError = false)),
             const SizedBox(height: 12),
             InputField.password(
                 controller: widget.passwordController,
-                label: 'New password',
+                label: 'New password'.tr(),
                 hint: 'Enter new password',
                 obscure: true,
                 errorText: showPasswordError ? 'Password is not strong enough.' : null,
@@ -108,7 +108,7 @@ class ResetPasswordDialogState extends State<ResetPasswordDialog> {
                 bloc: widget.authPasswordBloc,
                 builder: (context, state) => Button.primary(
                     onTap: submit,
-                    text: 'Reset password',
+                    text: 'Reset password'.tr(),
                     isLoading: state.status == Status.loading &&
                         state.action == widget.loadingAction))
           ]);

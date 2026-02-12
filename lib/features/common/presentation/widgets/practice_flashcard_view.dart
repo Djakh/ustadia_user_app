@@ -26,12 +26,12 @@ class FlashcardView extends StatelessWidget {
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         iconImage,
         const SizedBox(width: 6),
-        Text('Tap to flip', style: Style.small3w4(context, color: TextColorRole.greyColor))
+        Text('Tap to flip'.tr(), style: Style.small3w4(context, color: TextColorRole.greyColor))
       ]);
 
   Widget faceContent(BuildContext context) =>
       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text('Word', style: Style.small3w4(context, color: TextColorRole.greyColor)),
+        Text('Word'.tr(), style: Style.small3w4(context, color: TextColorRole.greyColor)),
         const SizedBox(height: 8),
         Text(flashcard.front, style: Style.headline5w7(context)),
         const SizedBox(height: 24),
@@ -43,7 +43,7 @@ class FlashcardView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Meaning', style: Style.small3w4(context)),
+          Text('Meaning'.tr(), style: Style.small3w4(context)),
           const SizedBox(height: 12),
           Text(flashcard.back ?? 'No meaning yet',
               textAlign: TextAlign.center, style: Style.body3w4(context))

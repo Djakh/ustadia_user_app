@@ -63,7 +63,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Column profileInfoTexts(String name) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Welcome back,', style: Style.small2w5(context, color: TextColorRole.greyColor)),
+        Text('Welcome back,'.tr(), style: Style.small2w5(context, color: TextColorRole.greyColor)),
         Text(name, style: Style.body3w7(context))
       ]);
 

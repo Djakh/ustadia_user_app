@@ -24,9 +24,10 @@ class ProfileUserCard extends StatelessWidget {
   Row xpWidget(BuildContext context, String xp) => Row(children: [
         Image.asset(AppImages.xpLightningOrange),
         const SizedBox(width: 2),
-        Text('$xp XP', style: Style.smallw6(context).copyWith(color: AppColors.orange033)),
+        Text('{xp} XP'.tr(namedArgs: {'xp': '$xp'}),
+            style: Style.smallw6(context).copyWith(color: AppColors.orange033)),
         const SizedBox(width: 8),
-        Text('Keep motivated.', style: Style.smallw6(context, color: TextColorRole.greyColor))
+        Text('Keep motivated.'.tr(), style: Style.smallw6(context, color: TextColorRole.greyColor))
       ]);
 
   Column userInfo(BuildContext context, String name, String xp) =>

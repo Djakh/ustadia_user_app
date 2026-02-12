@@ -90,7 +90,7 @@ class PracticeVocabularyContentState extends State<PracticeVocabularyContent> {
   Widget get view => Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         promptCard,
         const SizedBox(height: 16),
-        Text('Answer as many as you can!',
+        Text('Answer as many as you can!'.tr(),
             style: Style.small3w4(context, color: TextColorRole.greyColor)),
         const SizedBox(height: 16),
         ...optionsList

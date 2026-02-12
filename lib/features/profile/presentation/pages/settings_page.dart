@@ -23,17 +23,17 @@ import 'package:ustadia_user_app/router.dart';
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
-  List<SettingsItemModel> get mainItems => const [
-        SettingsItemModel(title: 'Account', iconAsset: AppImages.settingsAccount),
-        SettingsItemModel(title: 'Learning preferences', iconAsset: AppImages.settingsPreferences),
-        SettingsItemModel(title: 'Choose teacher', iconAsset: AppImages.settingsAccount),
-        // SettingsItemModel(title: 'Notifications', iconAsset: AppImages.settingsNotifications),
-        // SettingsItemModel(title: 'Info', iconAsset: AppImages.settingsInfo),
-        // SettingsItemModel(title: 'Legal', iconAsset: AppImages.settingsLegal),
+  List<SettingsItemModel> get mainItems =>  [
+        SettingsItemModel(title: 'Account'.tr(), iconAsset: AppImages.settingsAccount),
+        SettingsItemModel(title: 'Learning preferences'.tr(), iconAsset: AppImages.settingsPreferences),
+        SettingsItemModel(title: 'Choose teacher'.tr(), iconAsset: AppImages.settingsAccount),
+        // SettingsItemModel(title: 'Notifications'.tr(), iconAsset: AppImages.settingsNotifications),
+        // SettingsItemModel(title: 'Info'.tr(), iconAsset: AppImages.settingsInfo),
+        // SettingsItemModel(title: 'Legal'.tr(), iconAsset: AppImages.settingsLegal),
       ];
 
-  SettingsItemModel get logoutItem => const SettingsItemModel(
-        title: 'Log out',
+  SettingsItemModel get logoutItem =>  SettingsItemModel(
+        title: 'Log out'.tr(),
         iconAsset: AppImages.settingsSmallLogout,
         isDestructive: true,
       );
@@ -44,8 +44,8 @@ class SettingsPage extends StatelessWidget {
       context: context,
       builder: (dialogContext) => SettingsActionDialog(
           iconAsset: AppImages.settingsLargerLogout,
-          title: 'Log out?',
-          subtitle: 'You can log in again anytime.',
+          title: 'Log out?'.tr(),
+          subtitle: 'You can log in again anytime.'.tr(),
           actionText: 'Yes, Logout',
           onConfirm: () {
             Navigator.of(dialogContext).pop();
@@ -124,7 +124,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
       body: PrimaryBackground(
-          title: 'Settings',
+          title: 'Settings'.tr(),
           isScrollable: true,
           child: Column(children: [
             const SizedBox(height: 12),

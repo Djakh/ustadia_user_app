@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 enum NotificationCategory { dailyReminder, streakReminder, featuresAndTips }
 
@@ -35,8 +36,8 @@ class NotificationModel extends Equatable {
   static List<NotificationModel> get mockNotifications => [
         NotificationModel(
           id: 'n-1001',
-          title: 'Daily reminder',
-          message: 'Review your tasks and stay on track',
+          title: 'Daily reminder'.tr(),
+          message: 'Review your tasks and stay on track'.tr(),
           iconAsset: AppImages.notificationDailyRemainder,
           createdAt: DateTime(2025, 12, 4, 9, 10),
           isRead: false,
@@ -44,8 +45,8 @@ class NotificationModel extends Equatable {
         ),
         NotificationModel(
           id: 'n-1002',
-          title: 'Streak reminders',
-          message: "Keep your momentum and don't break the chain",
+          title: 'Streak reminders'.tr(),
+          message: "Keep your momentum and don't break the chain".tr(),
           iconAsset: AppImages.notificationStreakRemainders,
           createdAt: DateTime(2025, 12, 4, 8, 40),
           isRead: false,
@@ -53,8 +54,8 @@ class NotificationModel extends Equatable {
         ),
         NotificationModel(
           id: 'n-1003',
-          title: 'New features and tips',
-          message: 'Learn how to get more out of the app',
+          title: 'New features and tips'.tr(),
+          message: 'Learn how to get more out of the app'.tr(),
           iconAsset: AppImages.notificationFeaturesAndTips,
           createdAt: DateTime(2025, 12, 4, 8, 5),
           isRead: true,
@@ -62,8 +63,8 @@ class NotificationModel extends Equatable {
         ),
         NotificationModel(
           id: 'n-0999',
-          title: 'Daily reminder',
-          message: 'Review your tasks and stay on track',
+          title: 'Daily reminder'.tr(),
+          message: 'Review your tasks and stay on track'.tr(),
           iconAsset: AppImages.notificationDailyRemainder,
           createdAt: DateTime(2025, 12, 3, 9, 12),
           isRead: true,
@@ -71,8 +72,8 @@ class NotificationModel extends Equatable {
         ),
         NotificationModel(
           id: 'n-0998',
-          title: 'Streak reminders',
-          message: "Keep your momentum and don't break the chain",
+          title: 'Streak reminders'.tr(),
+          message: "Keep your momentum and don't break the chain".tr(),
           iconAsset: AppImages.notificationStreakRemainders,
           createdAt: DateTime(2025, 12, 3, 8, 32),
           isRead: true,

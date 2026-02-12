@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
@@ -12,39 +13,39 @@ class PracticePage extends StatelessWidget {
 
   /// --- Data ---
 
-  List<ActivityModel> get activities => const [
+  List<ActivityModel> get activities => [
         ActivityModel(
-            title: 'Flashcard sprint',
+            title: 'Flashcard sprint'.tr(),
             description: 'Flip cards to review words',
             image: AppImages.flashcardSprint,
             route: flashcardSprintRoute),
         ActivityModel(
-            title: 'Word match',
+            title: 'Word match'.tr(),
             description: 'Match words & meanings',
             image: AppImages.worldMatch,
             route: wordMatchRoute),
         ActivityModel(
-            title: 'Build the sentence',
+            title: 'Build the sentence'.tr(),
             description: 'Put words in order',
             image: AppImages.buildTheSentence,
             route: buildSentenceRoute),
         // ActivityModel(
-        //     title: 'Writing assessment',
+        //     title: 'Writing assessment'.tr(),
         //     description: 'Get AI feedback & score',
         //     image: AppImages.writingAssesment,
         //     route: writingAssessmentRoute),
         ActivityModel(
-            title: 'Listen & Tap',
+            title: 'Listen & Tap'.tr(),
             description: 'Train your ear with audio',
             image: AppImages.listenTap,
             route: listenTapSetsRoute),
         // ActivityModel(
-        //     title: 'Vocabulary',
+        //     title: 'Vocabulary'.tr(),
         //     description: 'Choose right answer',
         //     image: AppImages.vocabulary,
         //     route: vocabularyRoute),
         // ActivityModel(
-        //     title: 'Speed Mix',
+        //     title: 'Speed Mix'.tr(),
         //     description: 'A fast mix of tasks for 2 minutes',
         //     image: AppImages.speedMix,
         //     route: speedMixRoute),
@@ -65,7 +66,7 @@ class PracticePage extends StatelessWidget {
       itemBuilder: (context, index) => PracticeItemTileCard(activityModel: activities[index]));
 
   Widget body(BuildContext context) => PrimaryBackground(
-      title: 'Practice',
+      title: 'Practice'.tr(),
       child: ListView(
         children: [
           // const SizedBox(height: 16),

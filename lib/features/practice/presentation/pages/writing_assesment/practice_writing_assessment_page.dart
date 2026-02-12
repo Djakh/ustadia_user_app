@@ -57,7 +57,7 @@ class PracticeWritingAssessmentPageState extends State<PracticeWritingAssessment
 
   Widget promptContent(BuildContext context) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Choose a prompt', style: Style.bodyw5(context)),
+        Text('Choose a prompt'.tr(), style: Style.bodyw5(context)),
         const SizedBox(height: 12),
         ...promptsList
       ]);
@@ -77,13 +77,14 @@ class PracticeWritingAssessmentPageState extends State<PracticeWritingAssessment
         const SizedBox(height: 12),
         responseTextField,
         const SizedBox(height: 8),
-        Text('$wordCount words', style: Style.small3w4(context, color: TextColorRole.greyColor)),
+        Text('{count} words'.tr(namedArgs: {'count': '$wordCount'}),
+            style: Style.small3w4(context, color: TextColorRole.greyColor)),
         const Spacer(),
-        Button.primary(onTap: onSubmit, text: 'Submit')
+        Button.primary(onTap: onSubmit, text: 'Submit'.tr())
       ]));
 
   Widget get view => PrimaryBackground(
-      title: 'Writing assessment',
+      title: 'Writing assessment'.tr(),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const SizedBox(height: 24),
         if (selectedPrompt == null) promptContent(context) else responseArea(context),

@@ -4,6 +4,7 @@ import 'package:ustadia_user_app/features/profile/data/models/settings_toggle_mo
 import 'package:ustadia_user_app/features/profile/presentation/widgets/dividers/primary_divider.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/settings/item_list_box.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/settings/settings_notification_item.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SettingsNotificationsPage extends StatefulWidget {
   const SettingsNotificationsPage({super.key});
@@ -13,10 +14,10 @@ class SettingsNotificationsPage extends StatefulWidget {
 }
 
 class SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
-  List<SettingsToggleModel> items = const [
-    SettingsToggleModel(title: 'Daily reminder', isEnabled: true),
-    SettingsToggleModel(title: 'Streak reminders', isEnabled: true),
-    SettingsToggleModel(title: 'New features and tips', isEnabled: true),
+  List<SettingsToggleModel> items =  [
+    SettingsToggleModel(title: 'Daily reminder'.tr(), isEnabled: true),
+    SettingsToggleModel(title: 'Streak reminders'.tr(), isEnabled: true),
+    SettingsToggleModel(title: 'New features and tips'.tr(), isEnabled: true),
   ];
 
   void updateItem(int index, bool value) {
@@ -42,7 +43,7 @@ class SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
       body: PrimaryBackground(
-          title: 'Notifications',
+          title: 'Notifications'.tr(),
           isScrollable: true,
           child: Column(children: [
             const SizedBox(height: 24),

@@ -86,14 +86,16 @@ class PracticeVocabularyPageState extends State<PracticeVocabularyPage> {
 
   Widget info(BuildContext context) =>
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text('${ordinalLabel(questionIndex)} word',
-            style: Style.small2w4(context, color: TextColorRole.greyColor)),
-        Text('Total: ${vocabularyModels.length} words',
-            style: Style.small2w4(context, color: TextColorRole.greyColor))
+        Text('{ordinal} word'.tr(namedArgs: {
+          'ordinal': ordinalLabel(questionIndex)
+        }), style: Style.small2w4(context, color: TextColorRole.greyColor)),
+        Text('Total: {count} words'.tr(namedArgs: {
+          'count': '${vocabularyModels.length}'
+        }), style: Style.small2w4(context, color: TextColorRole.greyColor))
       ]);
 
   Widget nextButton(BuildContext context, bool isEnabled) =>
-      Button.primary(onTap: onNext, text: 'Next', isAvialable: isEnabled);
+      Button.primary(onTap: onNext, text: 'Next'.tr(), isAvialable: isEnabled);
 
   Widget view(BuildContext context, NextTaskState state) =>
       Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -112,7 +114,7 @@ class PracticeVocabularyPageState extends State<PracticeVocabularyPage> {
       backgroundColor: context.cs.surface,
       body: BlocBuilder<NextTaskBloc, NextTaskState>(
           builder: (context, state) => PrimaryBackground(
-              title: 'Vocabulary',
+              title: 'Vocabulary'.tr(),
               isScrollable: true,
               child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),

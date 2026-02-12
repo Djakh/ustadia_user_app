@@ -145,12 +145,18 @@ class PracticeListenQuizViewState extends State<PracticeListenQuizView> {
       PageIndicator(currentIndex: listeningIndex, total: questions.length, isExpanded: true);
 
   Widget get currentListening => Text(
-        "${getNumberInWords(listeningIndex)} $wordOrSentence",
+        '{index} {label}'.tr(namedArgs: {
+          'index': getNumberInWords(listeningIndex),
+          'label': wordOrSentence
+        }),
         style: Style.small2w4(context, color: TextColorRole.greyColor),
       );
 
   Widget get totalListeningWidget => Text(
-        "Total: ${questions.length} ${wordOrSentence}s",
+        'Total: {count} {label}s'.tr(namedArgs: {
+          'count': '${questions.length}',
+          'label': wordOrSentence
+        }),
         style: Style.small2w4(context),
       );
 
@@ -176,7 +182,7 @@ class PracticeListenQuizViewState extends State<PracticeListenQuizView> {
               builder: (context, statusState) => BlocBuilder<NextTaskBloc, NextTaskState>(
                   builder: (context, state) => Button.primary(
                       onTap: onNext,
-                      text: 'Next',
+                      text: 'Next'.tr(),
                       isAvialable: state.isCurrentTaskCompleted && !statusState.status.isLoading))),
         ],
       );

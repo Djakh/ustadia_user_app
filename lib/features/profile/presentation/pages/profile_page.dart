@@ -3,9 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
-import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/loading/shimmer_grid.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
 import 'package:ustadia_user_app/features/profile/data/models/profile_badge_model.dart';
 import 'package:ustadia_user_app/features/profile/data/models/profile_statistics_model.dart';
 import 'package:ustadia_user_app/features/profile/data/models/profile_stats_model.dart';
@@ -13,8 +14,6 @@ import 'package:ustadia_user_app/features/profile/data/services/profile_statisti
 import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/badge_item_card.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/profile_stats_card.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/profile_user_card.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
@@ -47,21 +46,24 @@ class ProfilePageState extends State<ProfilePage> {
         : 'P-${breakdown.practiceCompleted}  A-${breakdown.assignmentCompleted}  L-${breakdown.lessonCompleted}';
 
     return [
-      ProfileStatsModel(icon: AppImages.profileLevelCardIcon, title: 'Current level', value: level),
       ProfileStatsModel(
-          icon: AppImages.profileStreakCardIcon, title: 'Completed tasks', value: totalCompleted),
+          icon: AppImages.profileLevelCardIcon, title: 'Current level'.tr(), value: level),
       ProfileStatsModel(
-          icon: AppImages.profileWordsCardIcon, title: 'Vocabulary', value: totalVocabulary),
+          icon: AppImages.profileStreakCardIcon,
+          title: 'Completed tasks'.tr(),
+          value: totalCompleted),
       ProfileStatsModel(
-          icon: AppImages.profileTimeCardIcon, title: 'Breakdown', value: breakdownValue)
+          icon: AppImages.profileWordsCardIcon, title: 'Vocabulary'.tr(), value: totalVocabulary),
+      ProfileStatsModel(
+          icon: AppImages.profileTimeCardIcon, title: 'Breakdown'.tr(), value: breakdownValue)
     ];
   }
 
   List<ProfileBadgeModel> get badges => [
-        ProfileBadgeModel(asset: AppImages.profileFirstLessonIcon, label: 'First lesson'),
-        ProfileBadgeModel(asset: AppImages.profileDaysStreakIcon, label: '7 days streak'),
-        ProfileBadgeModel(asset: AppImages.profile50WordsIcon, label: '50 words'),
-        ProfileBadgeModel(asset: AppImages.profileEarlyBirdIcon, label: 'Early bird')
+        ProfileBadgeModel(asset: AppImages.profileFirstLessonIcon, label: 'First lesson'.tr()),
+        ProfileBadgeModel(asset: AppImages.profileDaysStreakIcon, label: '7 days streak'.tr()),
+        ProfileBadgeModel(asset: AppImages.profile50WordsIcon, label: '50 words'.tr()),
+        ProfileBadgeModel(asset: AppImages.profileEarlyBirdIcon, label: 'Early bird'.tr())
       ];
 
   /// --- Methods ---
@@ -75,7 +77,7 @@ class ProfilePageState extends State<ProfilePage> {
           child: Stack(alignment: Alignment.center, children: [
         headerIcon(
             Icons.notifications, Alignment.centerLeft, () => context.push(notificationsRoute)),
-        Text('Profile', style: Style.body2w6(context)),
+        Text('Profile'.tr(), style: Style.body2w6(context)),
         headerIcon(Icons.settings, Alignment.centerRight, () => context.push(settingsRoute))
       ]));
   Widget statsWidgetRow(ProfileStatsModel firstStatsModel, ProfileStatsModel secondStatsModel) =>
@@ -131,7 +133,7 @@ class ProfilePageState extends State<ProfilePage> {
         const SizedBox(height: 24),
         statsGrid(context),
         const SizedBox(height: 24),
-        // Text('Badges', style: Style.body2w7(context)),
+        // Text('Badges'.tr(), style: Style.body2w7(context)),
         //  const SizedBox(height: 12),
         //  badgesItemList,
         //   const SizedBox(height: 24),

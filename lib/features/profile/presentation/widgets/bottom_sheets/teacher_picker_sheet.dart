@@ -133,12 +133,12 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
             onReloadConnection: () => sl<TeacherBloc>().add(const TeachersRequested())),
         data: (s) => s.teachers,
         isEmpty: (teachers) => teachers.isEmpty,
-        empty: const Center(child: Text('No lessons found')),
+        empty: Center(child: Text('No lessons found'.tr())),
         builder: (context, teachers) => teacherList,
       );
 
   Widget get view => Column(mainAxisSize: MainAxisSize.min, children: [
-        const PrimaryBottomSheetHeader(title: 'Choose teacher'),
+        PrimaryBottomSheetHeader(title: 'Choose teacher'.tr()),
         const SizedBox(height: 8),
         contentChecker
       ]);

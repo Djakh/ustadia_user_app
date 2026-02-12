@@ -17,6 +17,7 @@ import 'package:ustadia_user_app/features/intro_survey/presentation/widgets/step
 import 'package:ustadia_user_app/features/intro_survey/presentation/widgets/steps/intro_survey_single_choice.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class IntroSurveyPage extends StatefulWidget {
   const IntroSurveyPage({super.key});
@@ -184,7 +185,7 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
         child: Button.primary(
             onTap: () => goToNext(questions),
-            text: 'Continue',
+            text: 'Continue'.tr(),
             isAvialable: canContinue(questions) && !isSubmitting && !isSubmittingAnswer,
             isLoading: isSubmitting || isSubmittingAnswer),
       );
@@ -196,7 +197,7 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
             Text(message, textAlign: TextAlign.center),
             const SizedBox(height: 16),
             Button.primary(
-                onTap: () => introSurveyBloc.add(const IntroSurveyRequested()), text: 'Retry')
+                onTap: () => introSurveyBloc.add(IntroSurveyRequested()), text: 'Retry'.tr())
           ])));
 
   Widget buildContent(IntroSurveyState state) {

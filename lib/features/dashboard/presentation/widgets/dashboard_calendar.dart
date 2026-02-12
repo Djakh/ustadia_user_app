@@ -101,7 +101,7 @@ class _DashboardCalendarState extends State<DashboardCalendar> {
 
   Widget get monthHeader => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         IconButton(onPressed: _prevWeek, icon: const Icon(Icons.arrow_back, size: 24)),
-        Text('November, 2025', style: Style.body2w6(context)),
+        Text('November, 2025'.tr(), style: Style.body2w6(context)),
         IconButton(onPressed: _nextWeek, icon: const Icon(Icons.arrow_forward, size: 24))
       ]);
 

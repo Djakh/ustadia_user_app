@@ -5,6 +5,7 @@ import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/core/inherited_widgets/navigation_shell_scope.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/widgets/cards/dashboard_grid_card.dart';
 import 'package:ustadia_user_app/router.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class DashboardQuickGridList extends StatelessWidget {
   const DashboardQuickGridList({super.key});
@@ -26,16 +27,16 @@ class DashboardQuickGridList extends StatelessWidget {
 
   Widget lessonAndChat(BuildContext context) => Column(children: [
         DashboardGridCard(
-            title: 'Practice',
-            subtitle: 'Games & Quizzes',
+            title: 'Practice'.tr(),
+            subtitle: 'Games & Quizzes'.tr(),
             cardColor: AppColors.orangeBE,
             height: 118,
             backImage: AppImages.lessonCardBack,
             onTap: () => goToPractice(context)),
         const SizedBox(height: 12),
         DashboardGridCard(
-            title: 'Chat with AI',
-            subtitle: 'Voice practice',
+            title: 'Chat with AI'.tr(),
+            subtitle: 'Voice practice'.tr(),
             cardColor: AppColors.greenE0,
             height: 140,
             backImage: AppImages.chatCardBack,
@@ -44,16 +45,16 @@ class DashboardQuickGridList extends StatelessWidget {
 
   Widget chatAndLideBoard(BuildContext context) => Column(children: [
         DashboardGridCard(
-            title: 'Assignments',
-            subtitle: 'Consolidate the acquired knowledge',
+            title: 'Assignments'.tr(),
+            subtitle: 'Consolidate the acquired knowledge'.tr(),
             cardColor: AppColors.purpleFF,
             height: 140,
             backImage: AppImages.practiceCardBack,
             onTap: () => goToAssignments(context)),
         const SizedBox(height: 12),
         DashboardGridCard(
-            title: 'Leaderboard',
-            subtitle: 'Top 10 this week',
+            title: 'Leaderboard'.tr(),
+            subtitle: 'Top 10 this week'.tr(),
             cardColor: AppColors.blueFB,
             height: 118,
             backImage: AppImages.leaderboardCardBack,
@@ -61,9 +62,12 @@ class DashboardQuickGridList extends StatelessWidget {
       ]);
 
   @override
-  Widget build(BuildContext context) => Row(children: [
-        Expanded(child: lessonAndChat(context)),
-        const SizedBox(width: 10),
-        Expanded(child: chatAndLideBoard(context))
-      ]);
+  Widget build(BuildContext context) {
+    final _ = context.locale;
+    return Row(children: [
+      Expanded(child: lessonAndChat(context)),
+      const SizedBox(width: 10),
+      Expanded(child: chatAndLideBoard(context))
+    ]);
+  }
 }

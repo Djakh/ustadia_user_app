@@ -13,7 +13,7 @@ class PracticeSpeedMixStartPage extends StatelessWidget {
   /// --- Widgets ---
 
   Widget startButton(BuildContext context) =>
-      Button.primary(onTap: () => context.pushReplacement(speedMixPlayRoute), text: 'Start (2:00)');
+      Button.primary(onTap: () => context.pushReplacement(speedMixPlayRoute), text: 'Start (2:00)'.tr());
 
   Widget startCard(BuildContext context) => Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -21,9 +21,9 @@ class PracticeSpeedMixStartPage extends StatelessWidget {
           const Spacer(),
           Image.asset(AppImages.speedMixLightning, height: 160, width: 160),
           const SizedBox(height: 12),
-          Text('Speed mix', style: Style.body3w7(context)),
+          Text('Speed mix'.tr(), style: Style.body3w7(context)),
           const SizedBox(height: 4),
-          Text('A fast mix of tasks. You have 2 minutes',
+          Text('A fast mix of tasks. You have 2 minutes'.tr(),
               style: Style.bodyw4(context, color: TextColorRole.greyColor)),
           const Spacer(),
           startButton(context)
@@ -34,7 +34,7 @@ class PracticeSpeedMixStartPage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: context.cs.surface,
         body: PrimaryBackground(
-            title: 'Speed Mix',
+            title: 'Speed Mix'.tr(),
             child: Padding(
                 padding: const EdgeInsets.all(12), child: Center(child: startCard(context)))),
       );

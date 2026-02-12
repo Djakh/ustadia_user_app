@@ -75,14 +75,14 @@ class _PracticeListenTapSetsPageState extends State<PracticeListenTapSetsPage> {
           itemHeight: 92,
           padding: EdgeInsets.symmetric(vertical: 12),
           borderRadius: BorderRadius.all(Radius.circular(20))),
-      empty: const Center(child: Text('No listen & tap sets found')),
+      empty: Center(child: Text('No listen & tap sets found'.tr())),
       builder: (context, sets) => setsList(context, sets));
 
   @override
   Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.cs.surface,
       body: PrimaryBackground(
-          title: 'Listen & Tap',
+          title: 'Listen & Tap'.tr(),
           child: ListView(children: [
             const SizedBox(height: 16),
             contentChecker,

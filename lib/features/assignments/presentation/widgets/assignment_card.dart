@@ -77,7 +77,7 @@ class AssignmentCard extends StatelessWidget {
   Widget progressRow(BuildContext context) => Column(children: [
         const SizedBox(height: 12),
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text('Progress', style: Style.small2w4(context, color: TextColorRole.greyColor)),
+          Text('Progress'.tr(), style: Style.small2w4(context, color: TextColorRole.greyColor)),
           Text('${assignment.progress}%',
               style: Style.small2w5(context, color: TextColorRole.greyColor))
         ]),

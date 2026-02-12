@@ -33,7 +33,7 @@ class WritingSectionLesson extends StatelessWidget {
   Widget view(BuildContext context) => Column(children: [
         Expanded(child: SingleChildScrollView(child: lessonContent(context))),
         const SizedBox(height: 16),
-        Button.primary(onTap: onTapContinue, text: 'Continue')
+        Button.primary(onTap: onTapContinue, text: 'Continue'.tr())
       ]);
 
   @override

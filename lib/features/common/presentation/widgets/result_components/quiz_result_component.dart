@@ -29,7 +29,10 @@ class QuizResultComponent extends StatelessWidget {
   Widget correctAnswers(BuildContext context) {
     if (all == null || correctOnes == null) return const SizedBox.shrink();
     return Text(
-      '$correctOnes of $all correct',
+      '{correct} of {all} correct'.tr(namedArgs: {
+        'correct': '$correctOnes',
+        'all': '$all'
+      }),
       style: Style.small2w3(context, color: TextColorRole.greyColor),
       textAlign: TextAlign.center,
     );
@@ -57,7 +60,7 @@ class QuizResultComponent extends StatelessWidget {
   Widget centerBlock(BuildContext context) => Column(
         children: [
           Image.asset(AppImages.learnListeningCheck, height: 160, width: 160),
-          Text('Task completed!', style: Style.body3w7(context), textAlign: TextAlign.center),
+          Text('Task completed!'.tr(), style: Style.body3w7(context), textAlign: TextAlign.center),
           const SizedBox(height: 8),
           correctAnswers(context),
           const SizedBox(height: 24),
@@ -82,7 +85,7 @@ class QuizResultComponent extends StatelessWidget {
 
   Widget bottomButton(BuildContext context) => Button.primary(
         onTap: () => backToTopic(context),
-        text: 'Back to topic',
+        text: 'Back to topic'.tr(),
       );
 
   @override

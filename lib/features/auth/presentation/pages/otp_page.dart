@@ -123,7 +123,7 @@ class OtpPageState extends State<OtpPage> {
 
   Widget get contactText => Text.rich(TextSpan(children: [
         TextSpan(
-          text: 'Enter the 6-digit OTP sent to your email to complete sign-up verification, ',
+          text: 'Enter the 6-digit OTP sent to your email to complete sign-up verification, '.tr(),
           style: Style.small3w4(context, color: TextColorRole.greyColor),
         ),
         TextSpan(
@@ -166,7 +166,7 @@ class OtpPageState extends State<OtpPage> {
               .copyWith(color: secondsLeft == 0 ? context.cs.primary : context.cs.onSurface)));
 
   Widget get resend => Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text('Didn’t receive the OTP?',
+        Text('Didn’t receive the OTP?'.tr(),
             style: Style.small3w4(context, color: TextColorRole.greyColor)),
         resendButton
       ]);
@@ -180,7 +180,7 @@ class OtpPageState extends State<OtpPage> {
                   isAvialable:
                       isComplete && state.status != Status.loading,
                   isLoading: state.status == Status.loading,
-                  text: 'Confirm')));
+                  text: 'Confirm'.tr())));
 
   Widget get view => PrimaryBackground(
       isScrollable: true,
@@ -188,7 +188,7 @@ class OtpPageState extends State<OtpPage> {
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             const SizedBox(height: 20),
-            Text('Enter OTP', style: Style.body2w6(context)),
+            Text('Enter OTP'.tr(), style: Style.body2w6(context)),
             const SizedBox(height: 4),
             contactText,
             const SizedBox(height: 24),

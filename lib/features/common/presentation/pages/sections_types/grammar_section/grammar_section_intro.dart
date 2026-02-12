@@ -24,7 +24,7 @@ class GrammarSectionIntro extends StatelessWidget {
         const SizedBox(height: 24),
         Expanded(child: SingleChildScrollView(child: htmlContent(context))),
         const SizedBox(height: 24),
-        Button.primary(onTap: changeStage, text: 'Continue', isAvialable: !isLoading)
+        Button.primary(onTap: changeStage, text: 'Continue'.tr(), isAvialable: !isLoading)
       ]);
 
   @override

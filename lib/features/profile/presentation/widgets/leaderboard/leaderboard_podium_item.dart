@@ -23,7 +23,8 @@ class LeaderboardPodiumItem extends StatelessWidget {
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         SvgPicture.asset(AppImages.xpLightningWhite),
         const SizedBox(width: 4),
-        Text('${podium.user.xp} XP', style: Style.smallw6(context, color: TextColorRole.whiteColor))
+        Text('{xp} XP'.tr(namedArgs: {'xp': '${podium.user.xp}'}),
+            style: Style.smallw6(context, color: TextColorRole.whiteColor))
       ]));
 
   Widget podiumImage() => SvgPicture.asset(podium.placeAsset);

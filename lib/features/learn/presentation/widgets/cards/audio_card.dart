@@ -116,7 +116,7 @@ class AudioCardState extends State<AudioCard> {
         const SizedBox(width: 12),
         Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Audio lesson', style: Style.bodyw6(context)),
+          Text('Audio lesson'.tr(), style: Style.bodyw6(context)),
           const SizedBox(height: 4),
           Text(statusText(state), style: Style.small3w4(context, color: TextColorRole.greyColor))
         ])),

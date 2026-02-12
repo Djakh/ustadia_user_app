@@ -12,8 +12,8 @@ class LeaderBoardCard extends StatelessWidget {
 
   Widget leaderboardTitleAndSub(BuildContext context) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Leaderboard', style: Style.body3w7(context)),
-        Text('See how you compare this week.',
+        Text('Leaderboard'.tr(), style: Style.body3w7(context)),
+        Text('See how you compare this week.'.tr(),
             style: Style.bodyw4(context, color: TextColorRole.greyColor)),
       ]);
 
@@ -28,14 +28,14 @@ class LeaderBoardCard extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(color: AppColors.grayFB, borderRadius: Style.border16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Your rank this week: #12', style: Style.bodyw5(context)),
+        Text('Your rank this week: #12'.tr(), style: Style.bodyw5(context)),
         const SizedBox(height: 2),
-        Text('You finished 8 lessons.',
+        Text('You finished 8 lessons.'.tr(),
             style: Style.small3w4(context, color: TextColorRole.greyColor))
       ]));
 
   Widget leadboardButton(BuildContext context) =>
-      Button.primary(onTap: () => context.push(leaderboardRoute), text: 'View full leaderboard');
+      Button.primary(onTap: () => context.push(leaderboardRoute), text: 'View full leaderboard'.tr());
 
   Widget view(BuildContext context) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

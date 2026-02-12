@@ -116,13 +116,13 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
       BlocStatusView<LearnSectionsBloc, LearnSectionsState, List<SectionModel>>(
           bloc: sectionsBloc,
           invalid:
-              widget.params.unit.id.isEmpty ? const Center(child: Text('Unit not found')) : null,
+              widget.params.unit.id.isEmpty ? Center(child: Text('Unit not found'.tr())) : null,
           statusOf: (s) => s.status,
           errorOf: (s) => s.errorMessage,
           data: (s) => s.sections,
           isEmpty: (sections) => sections.isEmpty,
           keepDataOnLoading: true,
-          empty: const Center(child: Text('No sections found')),
+          empty: Center(child: Text('No sections found'.tr())),
           loading: ShimmerList(
               itemCount: 6,
               itemHeight: 96,

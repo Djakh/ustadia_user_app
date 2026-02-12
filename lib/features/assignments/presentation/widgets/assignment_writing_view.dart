@@ -31,35 +31,35 @@ class AssignmentWritingView extends StatelessWidget {
                           child: Text(AssignmentThemeCatalog.writing.emoji,
                               style: const TextStyle(fontSize: 18)))),
                   const SizedBox(width: 12),
-                  Text('Topic', style: Style.body2w6(context))
+                  Text('Topic'.tr(), style: Style.body2w6(context))
                 ]),
                 const SizedBox(height: 12),
-                Text('"Describe a memorable trip you took recently and why it was special."',
+                Text('"Describe a memorable trip you took recently and why it was special."'.tr(),
                     style: Style.bodyw4(context))
               ])),
           const SizedBox(height: 20),
-          Text('Upload Handwriting', style: Style.body2w6(context)),
+          Text('Upload Handwriting'.tr(), style: Style.body2w6(context)),
           const SizedBox(height: 4),
-          Text('Take a clear photo of your handwritten essay',
+          Text('Take a clear photo of your handwritten essay'.tr(),
               style: Style.small2w4(context, color: TextColorRole.greyColor)),
           const SizedBox(height: 16),
           Row(children: [
             Expanded(
                 child: AssignmentUploadCard(
                     icon: Icons.camera_alt,
-                    label: 'Take Photo',
+                    label: 'Take Photo'.tr(),
                     backgroundColor: AppColors.orangeEB,
                     iconColor: AppColors.orange12)),
             const SizedBox(width: 12),
             Expanded(
                 child: AssignmentUploadCard(
                     icon: Icons.image,
-                    label: 'Upload Image',
+                    label: 'Upload Image'.tr(),
                     backgroundColor: AppColors.gray50,
                     iconColor: AppColors.gray500))
           ]),
           const SizedBox(height: 24),
-          Button.primary(onTap: onSubmit, text: 'Submit Essay')
+          Button.primary(onTap: onSubmit, text: 'Submit Essay'.tr())
         ]
       );
 }

@@ -23,21 +23,21 @@ class _OnboardingPageState extends State<OnboardingPage> {
   int _pageIndex = 0;
 
   List<SlideModel> get slides => [
-        const SlideModel(
-            title: 'Speak Fearlessly',
+         SlideModel(
+            title: 'Speak Fearlessly'.tr(),
             description: 'Chat with your AI tutor anytime, anywhere.\nNo judgment, just practice.',
             asset: AppImages.onboard1,
             background: AppColors.green49,
             accent: AppColors.green50),
-        const SlideModel(
-            title: 'Micro-learning',
+         SlideModel(
+            title: 'Micro-learning'.tr(),
             description:
                 'Master new words and grammar with fun,\nbite-sized practices in just 5 minutes a day.',
             asset: AppImages.onboard2,
             background: AppColors.purpleC3,
             accent: AppColors.purpleD6),
-        const SlideModel(
-            title: 'See Your Growth',
+         SlideModel(
+            title: 'See Your Growth'.tr(),
             description:
                 'Get instant feedback on your pronunciation\nand track your daily progress.',
             asset: AppImages.onboard3,
@@ -82,7 +82,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   TextButton skipButton() => TextButton(
         onPressed: () => goToLogin(),
-        child: Text('Skip', style: Style.small3w4(context, color: TextColorRole.whiteColor)),
+        child: Text('Skip'.tr(), style: Style.small3w4(context, color: TextColorRole.whiteColor)),
       );
 
   Widget get pageView => PageView.builder(

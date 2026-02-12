@@ -10,11 +10,11 @@ class ReloadConntectionButton extends StatelessWidget {
 
   Widget get reloadButton => Button.text(
         onTap: onReloadConnection,
-        text: "Reload",
+        text: 'Reload'.tr(),
       );
 
   Widget view(BuildContext context) => Column(children: [
-        Text("Something went wrong",
+        Text('Something went wrong'.tr(),
             style: Style.small2w3(context, color: TextColorRole.greyColor)),
         const SizedBox(height: 4),
         reloadButton

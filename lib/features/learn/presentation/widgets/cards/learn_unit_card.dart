@@ -27,7 +27,8 @@ class LearnUnitCard extends StatelessWidget {
       size: isLocked ? 20 : 30,
       isLocked: isLocked);
 
-  Widget unitLabel(BuildContext context) => Text('Unit ${unit.unitNumber}',
+  Widget unitLabel(BuildContext context) => Text('Unit {number}'.tr(
+      namedArgs: {'number': unit.unitNumber.toString()}),
       style: Style.small3w4(context, color: TextColorRole.primaryColor));
 
   Row unitLabelAndProgressBadge(BuildContext context) => Row(

@@ -118,7 +118,7 @@ class AssignmentSectionsPageState extends State<AssignmentSectionsPage> {
           Center(
               child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 32),
-                  child: Text('No sections yet',
+                  child: Text('No sections yet'.tr(),
                       style: Style.bodyw4(context, color: TextColorRole.greyColor))))
         else
           sectionList(),

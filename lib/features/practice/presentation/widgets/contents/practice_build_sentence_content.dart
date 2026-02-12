@@ -89,7 +89,7 @@ class PracticeBuildSentenceContentState extends State<PracticeBuildSentenceConte
           color: showError ? AppColors.redE2 : AppColors.white, borderRadius: Style.border20),
       child: selected.isEmpty
           ? Center(
-              child: Text('Tap a word to build the sentence.',
+              child: Text('Tap a word to build the sentence.'.tr(),
                   style: Style.small3w4(context, color: TextColorRole.greyColor)))
           : Wrap(
               spacing: 8,
@@ -113,11 +113,11 @@ class PracticeBuildSentenceContentState extends State<PracticeBuildSentenceConte
       );
 
   Widget get errorText => Center(
-      child: Text('Not quite. Try a different order.',
+      child: Text('Not quite. Try a different order.'.tr(),
           style: Style.body2w4(context).copyWith(color: context.cs.error)));
 
   Widget get successText => Center(
-      child: Text('Great! Your sentence looks correct.',
+      child: Text('Great! Your sentence looks correct.'.tr(),
           style: Style.body2w4(context).copyWith(color: context.cs.primary)));
 
   @override

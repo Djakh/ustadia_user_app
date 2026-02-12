@@ -84,14 +84,14 @@ class LearnUnitsPageState extends State<LearnUnitsPage> {
       BlocStatusView<LearnUnitsBloc, LearnUnitsState, List<LearnUnitModel>>(
         bloc: unitsBloc,
         invalid: widget.learnLessonModel.id.isEmpty
-            ? const Center(child: Text('Lesson not found'))
+            ? Center(child: Text('Lesson not found'.tr()))
             : null,
         statusOf: (s) => s.status,
         errorOf: (s) => s.errorMessage,
         data: (s) => s.units,
         isEmpty: (units) => units.isEmpty,
         keepDataOnLoading: true,
-        empty: const Center(child: Text('No units found')),
+        empty: Center(child: Text('No units found'.tr())),
         loading: Column(children: [
           const SizedBox(height: 24),
           const ShimmerList(

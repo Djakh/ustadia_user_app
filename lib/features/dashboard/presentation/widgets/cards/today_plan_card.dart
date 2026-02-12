@@ -29,11 +29,11 @@ class TodayPlanCard extends StatelessWidget {
 
   Row todaysPlanInfo(BuildContext context, CurrentUnitModel unit) =>
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        _planItem('${unit.totalSections}', 'Total sections', context),
+        _planItem('${unit.totalSections}', 'Total sections'.tr(), context),
         _divider(),
-        _planItem('${unit.completedSections}', 'Completed', context),
+        _planItem('${unit.completedSections}', 'Completed'.tr(), context),
         _divider(),
-        _planItem('${unit.completionPercentage.round()}%', 'Progress', context)
+        _planItem('${unit.completionPercentage.round()}%', 'Progress'.tr(), context)
       ]);
 
   LearnUnitProgressState _progressState(CurrentUnitModel unit) =>
@@ -59,16 +59,18 @@ class TodayPlanCard extends StatelessWidget {
             extra: LearnSectionsParams(unit: _toLearnUnitModel(unit), lessonId: unit.lesson.id)),
         color: AppColors.white,
         textColor: AppColors.black,
-        text: "Start today's plan",
+        text: 'Start today`s plan'.tr(),
       );
 
   Widget unitHeader(BuildContext context, CurrentUnitModel unit) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Today's plan", style: Style.small3w4(context, color: TextColorRole.whiteColor)),
+          Text('Today`s plan'.tr(), style: Style.small3w4(context, color: TextColorRole.whiteColor)),
           const SizedBox(height: 8),
           Text(
-            unit.name.isNotEmpty ? unit.name : 'Unit ${unit.orderIndex}',
+            unit.name.isNotEmpty
+                ? unit.name
+                : 'Unit {number}'.tr(namedArgs: {'number': '${unit.orderIndex}'}),
             style: Style.body2w7(context, color: TextColorRole.whiteColor),
           ),
           if (unit.lesson.name.isNotEmpty) ...[
@@ -109,7 +111,7 @@ class TodayPlanCard extends StatelessWidget {
   Widget errorView(BuildContext context, String message) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Today's plan", style: Style.small3w4(context, color: TextColorRole.whiteColor)),
+          Text('Today`s plan'.tr(), style: Style.small3w4(context, color: TextColorRole.whiteColor)),
           const SizedBox(height: 12),
           Text(message, style: Style.bodyw5(context, color: TextColorRole.whiteColor)),
         ],
@@ -127,7 +129,7 @@ class TodayPlanCard extends StatelessWidget {
                 data: (s) => s.unit,
                 isEmpty: (unit) => unit == null || unit.id.isEmpty,
                 loading: loading(context),
-                empty: errorView(context, 'No current unit found'),
+                empty: errorView(context, 'No current unit found'.tr()),
                 errorBuilder: (message) => errorView(context, message),
                 builder: (context, unit) => view(context, unit!),
               )),

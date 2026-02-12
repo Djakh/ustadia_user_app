@@ -107,7 +107,7 @@ class PracticeWordMatchContentState extends State<PracticeWordMatchContent> {
         Expanded(child: wordList(targets, sourceCount)),
       ]);
 
-  Widget get instruction => Text('Tap a pair that belongs together.',
+  Widget get instruction => Text('Tap a pair that belongs together.'.tr(),
       style: Style.small3w4(context, color: TextColorRole.greyColor));
 
   @override

@@ -66,7 +66,7 @@ class LearnLessonsPageState extends State<LearnLessonsPage> {
         data: (s) => s.lessons,
         isEmpty: (lessons) => lessons.isEmpty,
         keepDataOnLoading: true,
-        empty: const Center(child: Text('No lessons found')),
+        empty: Center(child: Text('No lessons found'.tr())),
         loading: ShimmerList(
             itemCount: 5,
             itemHeight: 112,
@@ -85,7 +85,7 @@ class LearnLessonsPageState extends State<LearnLessonsPage> {
       child: Scaffold(
           backgroundColor: context.cs.surface,
           body: PrimaryBackground(
-              title: 'Lessons',
+              title: 'Lessons'.tr(),
               isScrollable: false,
               onBack: () => context.pop(shouldRefreshParent ? true : null),
               child: contentChecker)));

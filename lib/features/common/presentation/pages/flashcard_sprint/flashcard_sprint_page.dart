@@ -177,7 +177,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
         const SizedBox(width: 12),
         Expanded(
             child: Button.border(
-                onTap: onStudyAgain, text: "Study again", isAvialable: !isSubmitting)),
+                onTap: onStudyAgain, text: 'Study again'.tr(), isAvialable: !isSubmitting)),
       ]));
 
   Widget get view => PrimaryBackground(
@@ -194,7 +194,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   Widget get emptyView => PrimaryBackground(
       header: header,
       child: Center(
-          child: Text('No flashcards found.',
+          child: Text('No flashcards found.'.tr(),
               style: Style.bodyw5(context, color: TextColorRole.greyColor))));
 
   @override

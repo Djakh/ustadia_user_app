@@ -46,8 +46,8 @@ class _HomePageState extends State<HomePage> {
               child: AnimatedContainer(
                   duration: const Duration(milliseconds: 220),
                   curve: Curves.easeOut,
-                  width: 64, // tighter than 68
-                  height: 64, // tighter than 68
+                  width: 80,
+                  height: 74,
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                       color:
@@ -70,11 +70,11 @@ class _HomePageState extends State<HomePage> {
           selectedFontSize: 0,
           unselectedFontSize: 0,
           items: [
-            _itemBox(navigationIndex == 0, Icons.home_rounded, 'Home'),
-            _itemBox(navigationIndex == 1, Icons.menu_book_rounded, 'Learn'),
-            _itemBox(navigationIndex == 2, Icons.extension_rounded, 'Practice'),
-            _itemBox(navigationIndex == 3, Icons.auto_awesome_rounded, 'Ask AI'),
-            _itemBox(navigationIndex == 4, Icons.person_rounded, 'Profile'),
+            _itemBox(navigationIndex == 0, Icons.home_rounded, 'Home'.tr()),
+            _itemBox(navigationIndex == 1, Icons.menu_book_rounded, 'Learn'.tr()),
+            _itemBox(navigationIndex == 2, Icons.extension_rounded, 'Practice'.tr()),
+            _itemBox(navigationIndex == 3, Icons.auto_awesome_rounded, 'ai_chat'.tr()),
+            _itemBox(navigationIndex == 4, Icons.person_rounded, 'Profile'.tr()),
           ],
         ),
       );
