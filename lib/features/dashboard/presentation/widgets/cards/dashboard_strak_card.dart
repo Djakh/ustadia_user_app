@@ -16,10 +16,10 @@ class DashboardStrakCard extends StatelessWidget {
       child: Row(children: [
         Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('You have learned for 1 days in a row.',
+          Text('You have learned for 1 days in a row.'.tr(),
               style: Style.bodyw7(context).copyWith(color: AppColors.orange549)),
           const SizedBox(height: 4),
-          Text('Nice work. Keep it going.',
+          Text('Nice work. Keep it going.'.tr(),
               style: Style.small3w5(context).copyWith(color: AppColors.orange549))
         ])),
         Image.asset(AppImages.strakFire),

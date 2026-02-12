@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,8 +25,8 @@ class ImagePickerBottomSheet extends StatelessWidget {
       if (!sheetContext.mounted) return;
       sheetContext.read<FileUploadBloc>().add(ImageUploadRequested(filePath: path));
     } on MissingPluginException {
-      ScaffoldMessenger.of(sheetContext).showSnackBar(const SnackBar(
-          content: Text('File picker is not available on this device. Try a real device.')));
+      ScaffoldMessenger.of(sheetContext).showSnackBar(SnackBar(
+          content: Text('File picker is not available on this device. Try a real device.'.tr())));
     }
     Navigator.of(sheetContext).pop();
   }
@@ -55,11 +56,11 @@ class ImagePickerBottomSheet extends StatelessWidget {
                 color: sheetContext.cs.onTertiary.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2))),
         const SizedBox(height: 16),
-        Button.primary(onTap: pickFromCamera, text: 'Take photo'),
+        Button.primary(onTap: pickFromCamera, text: 'Take photo'.tr()),
         const SizedBox(height: 12),
         Button.border(
           onTap: pickFromGallery,
-          text: 'Choose from gallery',
+          text: 'Choose from gallery'.tr(),
           borderWidth: 1,
           borderColor: AppColors.gray400,
         ),

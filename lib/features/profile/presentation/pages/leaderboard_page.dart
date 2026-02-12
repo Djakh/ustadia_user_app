@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/toggles/segmented_control.dart';
+import 'package:ustadia_user_app/features/common/presentation/pages/coming_soon.dart';
 import 'package:ustadia_user_app/features/profile/data/models/leaderboard_podium_model.dart';
 import 'package:ustadia_user_app/features/profile/data/models/leaderboard_user_model.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/leaderboard/leaderboard_podium_item.dart';
@@ -126,5 +128,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: PrimaryBackground(title: 'Leaderboard', isScrollable: true, child: view(context)));
+      body: PrimaryBackground(
+          title: 'Leaderboard'.tr(), isScrollable: false, child: const ComingSoonPage()));
 }

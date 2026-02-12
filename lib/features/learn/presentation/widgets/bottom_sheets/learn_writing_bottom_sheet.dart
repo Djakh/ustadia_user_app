@@ -15,17 +15,17 @@ class LearnWritingBottomSheet extends StatelessWidget {
           color: context.cs.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Text('How do you want to write?', style: Style.body2w7(context)),
+        Text('How do you want to write?'.tr(), style: Style.body2w7(context)),
         const SizedBox(height: 16),
         LearnWritingMethodCard(
-            title: 'Upload paper writing',
-            subtitle: 'Take a photo of your notebook',
+            title: 'Upload paper writing'.tr(),
+            subtitle: 'Take a photo of your notebook'.tr(),
             image: AppImages.learnWritingUploadMethod,
             onTap: () => onTap(LearnWritingMethodType.upload)),
         const SizedBox(height: 8),
         LearnWritingMethodCard(
-            title: 'In-app writing',
-            subtitle: 'Type directly in the app',
+            title: 'In-app writing'.tr(),
+            subtitle: 'Type directly in the app'.tr(),
             image: AppImages.learnWritingInappMethod,
             onTap: () => onTap(LearnWritingMethodType.inApp)),
         const SizedBox(height: 16),

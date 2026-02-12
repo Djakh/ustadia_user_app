@@ -142,7 +142,7 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
   void showMicPermissionSnack() {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Microphone permission is required.')),
+      SnackBar(content: Text('Microphone permission is required.'.tr())),
     );
   }
 
@@ -247,9 +247,12 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
 
   Row progressHeaderInfo(int totalQuestions) =>
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text('Question ${questionIndex + 1}',
-            style: Style.small2w4(context, color: TextColorRole.greyColor)),
-        Text('Total: $totalQuestions Questions', style: Style.small2w4(context))
+        Text('Question {current}'.tr(namedArgs: {
+          'current': '${questionIndex + 1}'
+        }), style: Style.small2w4(context, color: TextColorRole.greyColor)),
+        Text('Total: {total} Questions'.tr(namedArgs: {
+          'total': '$totalQuestions'
+        }), style: Style.small2w4(context))
       ]);
 
   Widget progressHeader(int totalQuestions) => Column(children: [
@@ -263,7 +266,7 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
 
   Widget speakingView(SectionDetailState state) => getQuestionsList(state).isEmpty
       ? Center(
-          child: Text('No questions available.',
+          child: Text('No questions available.'.tr(),
               style: Style.bodyw5(context, color: TextColorRole.greyColor)))
       : Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           const SizedBox(height: 24),
@@ -303,5 +306,5 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
           child: Scaffold(
               backgroundColor: context.cs.surface,
               body: PrimaryBackground(
-                  title: 'Listen & Tap', isScrollable: false, child: bodyChecker)));
+                  title: 'Listen & Tap'.tr(), isScrollable: false, child: bodyChecker)));
 }

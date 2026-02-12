@@ -11,15 +11,15 @@ import 'package:ustadia_user_app/core/widgets/inputs/input_field.dart';
 import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 import 'package:ustadia_user_app/core/widgets/text/html_text.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
-import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/writing_section/writing_section_lesson.dart';
-import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
-import 'package:ustadia_user_app/features/learn/data/models/learn_writing_method.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_bloc.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_event.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_state.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_state.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_event.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_state.dart';
+import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/writing_section/writing_section_lesson.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_writing_method.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/bottom_sheets/learn_writing_bottom_sheet.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
@@ -85,8 +85,8 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       setState(() => stage = WritingSectionStage.result);
     } on MissingPluginException {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('File picker is not available on this device. Try a real device.')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('File picker is not available on this device. Try a real device.'.tr())));
     }
   }
 
@@ -111,7 +111,7 @@ class WritingSectionPageState extends State<WritingSectionPage> {
     final question = detail != null && detail.questions.isNotEmpty ? detail.questions.first : null;
     if (question == null) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Question is not available yet.')));
+          .showSnackBar(SnackBar(content: Text('Question is not available yet.'.tr())));
       return;
     }
     answerBloc.add(QuestionAnswerSubmitted(
@@ -145,8 +145,7 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       textAlign: TextAlign.justify,
       textStyle: Style.small3w4(context, color: TextColorRole.greyColor));
 
-  Widget get sectionContentView =>
-      SingleChildScrollView(child: sectionContent);
+  Widget get sectionContentView => SingleChildScrollView(child: sectionContent);
 
   Widget get inputField => InputField.textArea(
         controller: inputController,
@@ -160,7 +159,7 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       builder: (context, state) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             inputField,
             const Spacer(),
-            Button.primary(onTap: submit, isLoading: state.status.isLoading, text: 'Submit')
+            Button.primary(onTap: submit, isLoading: state.status.isLoading, text: 'Submit'.tr())
           ]));
 
   Widget get lessonView => BlocBuilder<SectionDetailBloc, SectionDetailState>(

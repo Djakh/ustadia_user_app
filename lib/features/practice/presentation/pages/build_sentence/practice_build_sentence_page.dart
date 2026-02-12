@@ -10,6 +10,7 @@ import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_se
 import 'package:ustadia_user_app/features/practice/presentation/widgets/contents/practice_build_sentence_content.dart';
 import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 import 'package:ustadia_user_app/injection_container.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class PracticeBuildSentencePage extends StatefulWidget {
   final PracticeSentenceBuilderSetModel set;
@@ -51,7 +52,7 @@ class _PracticeBuildSentencePageState extends State<PracticeBuildSentencePage> {
       title: widget.set.title.isEmpty ? 'Build the sentence' : widget.set.title,
       child: Center(
           child: correctOrder.isEmpty
-              ? const Text('No questions found')
+              ? Text('No questions found'.tr())
               : PracticeBuildSentenceContent(
                   correctOrder: correctOrder, onCompleted: submitCompleted)));
 

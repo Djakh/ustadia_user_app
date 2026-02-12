@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
@@ -60,12 +59,12 @@ class AssignmentsPageState extends State<AssignmentsPage> {
   }
 
   Widget tabSelector() => SegmentedControl(
-      labels: const ['Active', 'Completed'],
+      labels: ['active'.tr(), 'Completed'.tr()],
       selectedIndex: selectedTabIndex,
       onChanged: onSelectedTabIndex);
 
   Widget sectionHeader(BuildContext context, String title) =>
-      Text(title, style: Style.body2w6(context));
+      Text(title.tr(), style: Style.body2w6(context));
 
   Widget assignmentsList(List<AssignmentModel> list) => Column(
       children: list
@@ -78,7 +77,8 @@ class AssignmentsPageState extends State<AssignmentsPage> {
   Widget emptyState(BuildContext context, String label) => Center(
       child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 32),
-          child: Text(label, style: Style.bodyw4(context, color: TextColorRole.greyColor))));
+          child: Text(label.tr(),
+              style: Style.bodyw4(context, color: TextColorRole.greyColor))));
 
   Widget activeTabView(BuildContext context, List<AssignmentModel> assignments) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -89,7 +89,7 @@ class AssignmentsPageState extends State<AssignmentsPage> {
         else
           assignmentsList(newAssignments(assignments)),
         const SizedBox(height: 16),
-        sectionHeader(context, 'In Progress'),
+        sectionHeader(context, 'in_progress'),
         const SizedBox(height: 12),
         if (inProgressAssignments(assignments).isEmpty)
           emptyState(context, 'No assignments in progress')
@@ -103,7 +103,7 @@ class AssignmentsPageState extends State<AssignmentsPage> {
           : assignmentsList(completedAssignments(assignments));
 
   Widget body(BuildContext context) => PrimaryBackground(
-      title: 'Assignments',
+      title: 'Assignments'.tr(),
       isScrollable: true,
       child: BlocStatusView<AssignmentsBloc, AssignmentsState, List<AssignmentModel>>(
           bloc: assignmentsBloc,
@@ -113,22 +113,24 @@ class AssignmentsPageState extends State<AssignmentsPage> {
           isEmpty: (data) => data.isEmpty,
           keepDataOnLoading: true,
           empty: emptyState(context, 'No assignments found'),
-          loading: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const SizedBox(height: 24),
-            const ShimmerBox(height: 40, width: 180, borderRadius: BorderRadius.all(Radius.circular(20))),
-            const SizedBox(height: 20),
-            const ShimmerList(itemCount: 3, itemHeight: 160, borderRadius: BorderRadius.all(Radius.circular(24)))
+          loading: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            SizedBox(height: 24),
+            ShimmerBox(height: 40, width: 180, borderRadius: BorderRadius.all(Radius.circular(20))),
+            SizedBox(height: 20),
+            ShimmerList(
+                itemCount: 3, itemHeight: 160, borderRadius: BorderRadius.all(Radius.circular(24)))
           ]),
-          builder: (context, data) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const SizedBox(height: 24),
-            tabSelector(),
-            const SizedBox(height: 20),
-            if (selectedTabIndex == 0)
-              activeTabView(context, data)
-            else
-              completedTabView(context, data),
-            const SizedBox(height: 80)
-          ])));
+          builder: (context, data) =>
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const SizedBox(height: 24),
+                tabSelector(),
+                const SizedBox(height: 20),
+                if (selectedTabIndex == 0)
+                  activeTabView(context, data)
+                else
+                  completedTabView(context, data),
+                const SizedBox(height: 80)
+              ])));
 
   @override
   Widget build(BuildContext context) =>

@@ -26,7 +26,11 @@ class IntroSurveyHeaderCard extends StatelessWidget {
         isExpanded: true,
       );
 
-  Widget stepText(BuildContext context) => Text('Step ${stepIndex + 1} of $totalSteps',
+  Widget stepText(BuildContext context) => Text(
+      'Step {current} of {total}'.tr(namedArgs: {
+        'current': '${stepIndex + 1}',
+        'total': '$totalSteps'
+      }),
       style: Style.small2w4(context, color: TextColorRole.greyColor));
 
   Widget titleText(BuildContext context) => Text(title, style: Style.body2w6(context));

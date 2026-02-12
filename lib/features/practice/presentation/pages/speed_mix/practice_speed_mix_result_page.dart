@@ -34,7 +34,7 @@ class PracticeSpeedMixResultPage extends StatelessWidget {
   Widget get summaryImage => Image.asset(AppImages.speedMixClock, height: 160, width: 160);
 
   Widget titleText(BuildContext context) =>
-      Text(stats.timeUp ? "Time's up!" : 'Completed', style: Style.body2w6(context));
+      Text(stats.timeUp ? "Time's up!".tr() : 'Completed'.tr(), style: Style.body2w6(context));
 
   Widget statLine(BuildContext context, String text) =>
       Text(text, style: Style.small3w4(context, color: TextColorRole.greyColor));
@@ -43,7 +43,7 @@ class PracticeSpeedMixResultPage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: context.cs.surface,
         body: PrimaryBackground(
-            title: 'Speed Mix',
+            title: 'Speed Mix'.tr(),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -52,15 +52,26 @@ class PracticeSpeedMixResultPage extends StatelessWidget {
                 const SizedBox(height: 12),
                 titleText(context),
                 const SizedBox(height: 6),
-                statLine(context, 'Completed: ${stats.completed} / ${stats.total}'),
+                statLine(
+                    context,
+                    'Completed: {completed} / {total}'.tr(namedArgs: {
+                      'completed': '${stats.completed}',
+                      'total': '${stats.total}'
+                    })),
                 const SizedBox(height: 6),
-                statLine(context, 'Correct answers: ${stats.correct}'),
+                statLine(context, 'Correct answers: {correct}'.tr(namedArgs: {
+                  'correct': '${stats.correct}'
+                })),
                 const SizedBox(height: 6),
-                statLine(context, 'Remaining: ${stats.total - stats.completed}'),
+                statLine(
+                    context,
+                    'Remaining: {remaining}'.tr(namedArgs: {
+                      'remaining': '${stats.total - stats.completed}'
+                    })),
                 const Spacer(),
-                Button.primary(onTap: () => onPlayAgain(context), text: 'Play again'),
+                Button.primary(onTap: () => onPlayAgain(context), text: 'Play again'.tr()),
                 const SizedBox(height: 10),
-                Button.border(onTap: () => onBackToPractice(context), text: 'Back to practice')
+                Button.border(onTap: () => onBackToPractice(context), text: 'Back to practice'.tr())
               ],
             )),
       );

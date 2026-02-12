@@ -40,7 +40,7 @@ class SettingsActionDialog extends StatelessWidget {
         const SizedBox(height: 24),
         confirmButton(context),
         const SizedBox(height: 12),
-        Button.border(onTap: () => cancel(context), text: "Cancel")
+        Button.border(onTap: () => cancel(context), text: 'Cancel'.tr())
       ]);
 
   @override

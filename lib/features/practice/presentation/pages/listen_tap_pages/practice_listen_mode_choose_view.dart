@@ -11,17 +11,17 @@ class PracticeListenModeChooseView extends StatelessWidget {
   Widget modeSelection(BuildContext context) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const SizedBox(height: 24),
-        Text('Choose how to train', style: Style.bodyw6(context)),
+        Text('Choose how to train'.tr(), style: Style.bodyw6(context)),
         const SizedBox(height: 12),
         PracticeListenModeCard(
             selectMode: () => selectMode(PracticeListenTapMode.words),
-            title: 'Single words',
-            subtitle: 'Practice pronunciation nuance'),
+            title: 'Single words'.tr(),
+            subtitle: 'Practice pronunciation nuance'.tr()),
         const SizedBox(height: 12),
         PracticeListenModeCard(
             selectMode: () => selectMode(PracticeListenTapMode.sentences),
-            title: 'Short sentences',
-            subtitle: 'Improve your comprehension speed'),
+            title: 'Short sentences'.tr(),
+            subtitle: 'Improve your comprehension speed'.tr()),
       ]);
   @override
   Widget build(BuildContext context) => modeSelection(context);

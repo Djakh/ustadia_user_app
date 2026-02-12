@@ -262,12 +262,12 @@ class PracticeSpeedMixPlayPageState extends State<PracticeSpeedMixPlayPage> {
           if (isSentenceTask) ...[
             Expanded(child: Center(child: currentTaskBody)),
             const SizedBox(height: 16),
-            Text('Answer as many as you can!',
+            Text('Answer as many as you can!'.tr(),
                 style: Style.small3w4(context, color: TextColorRole.greyColor)),
           ] else ...[
             currentTaskBody,
             const SizedBox(height: 20),
-            Text('Answer as many as you can!',
+            Text('Answer as many as you can!'.tr(),
                 style: Style.small3w4(context, color: TextColorRole.greyColor)),
           ],
         ],
@@ -279,7 +279,7 @@ class PracticeSpeedMixPlayPageState extends State<PracticeSpeedMixPlayPage> {
       child: Scaffold(
           backgroundColor: context.cs.surface,
           body: PrimaryBackground(
-              title: 'Speed Mix',
+              title: 'Speed Mix'.tr(),
               isScrollable: !isSentenceTask,
               child: isSentenceTask ? SizedBox.expand(child: view) : view)));
 }

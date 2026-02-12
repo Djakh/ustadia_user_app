@@ -168,14 +168,14 @@ class SignUpPageState extends State<SignUpPage> {
   Widget get form => Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         InputField.primary(
             controller: fullNameController,
-            label: 'Full Name',
+            label: 'Full Name'.tr(),
             hint: 'e.g. John Doe',
             errorText: showFullNameError ? 'Full name is required.' : null,
             onChanged: (value) => setState(() => showFullNameError = false)),
         const SizedBox(height: 12),
         InputField.primary(
             controller: usernameController,
-            label: 'Username',
+            label: 'Username'.tr(),
             hint: 'e.g. @johndoe',
             errorText: showUsernameError ? 'Username is required.' : null,
             onChanged: (value) => setState(() => showUsernameError = false)),
@@ -183,20 +183,20 @@ class SignUpPageState extends State<SignUpPage> {
         if (!isEmailSignUp)
           InputField.phone(
               controller: phoneController,
-              label: 'Phone number',
+              label: 'Phone number'.tr(),
               errorText: showPhoneError ? 'Phone number is invalid.' : null,
               onChanged: (value) => setState(() => showPhoneError = false)),
         if (isEmailSignUp)
           InputField.email(
               controller: emailController,
-              label: 'Email',
+              label: 'Email'.tr(),
               hint: 'e.g. name@email.com',
               errorText: showEmailError ? 'Email is invalid.' : null,
               onChanged: (value) => setState(() => showEmailError = false)),
         const SizedBox(height: 12),
         InputField.password(
             controller: passwordController,
-            label: 'Password',
+            label: 'Password'.tr(),
             hint: 'Must contain at least 11 characters',
             obscure: !passwordVisible,
             showVisibilityToggle: true,
@@ -210,7 +210,7 @@ class SignUpPageState extends State<SignUpPage> {
         const SizedBox(height: 12),
         InputField.password(
             controller: confirmController,
-            label: 'Confirm Password',
+            label: 'Confirm Password'.tr(),
             hint: 'Must contain at least 11 characters',
             obscure: !confirmVisible,
             showVisibilityToggle: true,
@@ -222,11 +222,11 @@ class SignUpPageState extends State<SignUpPage> {
       ]);
 
   Widget get footer => Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text('Already have an account? ',
+        Text('Already have an account? '.tr(),
             style: Style.small3w4(context, color: TextColorRole.greyColor)),
         GestureDetector(
             onTap: goToLogin,
-            child: Text('Log in', style: Style.small3w5(context, color: TextColorRole.onSurface)))
+            child: Text('Log in'.tr(), style: Style.small3w5(context, color: TextColorRole.onSurface)))
       ]);
 
   BlocBuilder<AuthRegisterBloc, AuthRegisterState> signUpButton() =>
@@ -234,7 +234,7 @@ class SignUpPageState extends State<SignUpPage> {
           bloc: authRegisterBloc,
           builder: (context, state) => Button.primary(
               onTap: onSignUp,
-              text: 'Sign up',
+              text: 'Sign up'.tr(),
               isAvialable: state.status != Status.loading,
               isLoading: state.status == Status.loading));
 
@@ -248,9 +248,9 @@ class SignUpPageState extends State<SignUpPage> {
         const SizedBox(height: 12),
         logo,
         const SizedBox(height: 16),
-        Text('Create your account', style: Style.body2w6(context)),
+        Text('Create your account'.tr(), style: Style.body2w6(context)),
         const SizedBox(height: 4),
-        Text('It takes less than a minute.',
+        Text('It takes less than a minute.'.tr(),
             style: Style.small3w4(context, color: TextColorRole.greyColor)),
         const SizedBox(height: 28),
         form,

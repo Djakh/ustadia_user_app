@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class BlocStatusView<B extends StateStreamable<S>, S, T> extends StatelessWidget {
   final B? bloc;
@@ -71,7 +72,7 @@ class BlocStatusView<B extends StateStreamable<S>, S, T> extends StatelessWidget
 
         final value = data(state);
         if (isEmpty(value)) {
-          return empty ?? const Center(child: Text('No data found'));
+          return empty ?? Center(child: Text('No data found'.tr()));
         }
 
         return builder(context, value);

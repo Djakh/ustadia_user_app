@@ -21,7 +21,7 @@ class ReadingSectionLesson extends StatelessWidget {
         const SizedBox(height: 24),
         Expanded(child: content(context)),
         const SizedBox(height: 8),
-        Button.primary(onTap: changeStage, text: 'Continue', isAvialable: !isLoading)
+        Button.primary(onTap: changeStage, text: 'Continue'.tr(), isAvialable: !isLoading)
       ]);
 
   @override

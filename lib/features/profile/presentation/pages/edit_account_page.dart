@@ -144,20 +144,20 @@ class EditAccountPageState extends State<EditAccountPage> {
       context: context,
       builder: (dialogContext) => SettingsActionDialog(
           iconAsset: AppImages.settingsRemove,
-          title: 'Delete account?',
-          subtitle: 'This will permanently remove your data from Ustadia.',
+          title: 'Delete account?'.tr(),
+          subtitle: 'This will permanently remove your data from Ustadia.'.tr(),
           actionText: 'Delete',
           onConfirm: confirmDelete));
 
   /// --- Widgets ---
 
   Button saveButton(bool isLoading) =>
-      Button.primary(onTap: submit, text: 'Save', isLoading: isLoading);
+      Button.primary(onTap: submit, text: 'Save'.tr(), isLoading: isLoading);
 
   Button removeButton(bool isLoading) => Button.border(
       onTap: showLogoutDialog,
       isLoading: isLoading,
-      text: 'Delete account',
+      text: 'Delete account'.tr(),
       borderColor: context.cs.error,
       textColor: context.cs.error);
 
@@ -166,10 +166,10 @@ class EditAccountPageState extends State<EditAccountPage> {
         const ProfileEditableAvatar(radius: 60),
         const SizedBox(height: 24),
         InputField.primary(
-            controller: firstNameController, label: 'First name', hint: 'Enter first name'),
+            controller: firstNameController, label: 'First name'.tr(), hint: 'Enter first name'),
         const SizedBox(height: 12),
         InputField.primary(
-            controller: lastNameController, label: 'Last name', hint: 'Enter last name'),
+            controller: lastNameController, label: 'Last name'.tr(), hint: 'Enter last name'),
         const SizedBox(height: 32),
         saveButton(isLoading),
         const Spacer(),
@@ -186,7 +186,7 @@ class EditAccountPageState extends State<EditAccountPage> {
           ],
           child: Scaffold(
             body: PrimaryBackground(
-                title: 'Edit account',
+                title: 'Edit account'.tr(),
                 child: BlocBuilder<UserBloc, UserState>(
                     bloc: userBloc, builder: (context, state) => view(state.status.isLoading))),
           ));

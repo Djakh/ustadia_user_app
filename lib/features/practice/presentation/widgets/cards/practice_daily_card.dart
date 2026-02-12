@@ -10,15 +10,15 @@ class PracticeDailyCard extends StatelessWidget {
   /// --- Widgets ---
 
   Widget title(BuildContext context) =>
-      Text('Daily challenge', style: Style.body3w7(context, color: TextColorRole.whiteColor));
+      Text('Daily challenge'.tr(), style: Style.body3w7(context, color: TextColorRole.whiteColor));
 
-  Widget subtitle(BuildContext context) => Text('Finish 3 mini games today',
+  Widget subtitle(BuildContext context) => Text('Finish 3 mini games today'.tr(),
       style: Style.bodyw4(context, color: TextColorRole.whiteColor));
 
   Widget button(BuildContext context) => Button.border(
         onTap: () {},
         height: 46,
-        text: "Start challenge",
+        text: 'Start challenge'.tr(),
         textStyle: Style.bodyw5(context).copyWith(color: AppColors.orange09),
       );
 

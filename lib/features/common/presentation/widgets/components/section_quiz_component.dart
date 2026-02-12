@@ -228,9 +228,12 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       PageIndicator(currentIndex: questionIndex, total: questions.length, isExpanded: true);
 
   Row get progressHeaderInfo => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text('${questionIndex + 1} Question',
-            style: Style.small2w4(context, color: TextColorRole.greyColor)),
-        Text('Total ${questions.length} Questions', style: Style.small2w4(context))
+        Text('{current} Question'.tr(namedArgs: {
+          'current': '${questionIndex + 1}'
+        }), style: Style.small2w4(context, color: TextColorRole.greyColor)),
+        Text('Total {total} Questions'.tr(namedArgs: {
+          'total': '${questions.length}'
+        }), style: Style.small2w4(context))
       ]);
 
   Widget get progressHeader =>
@@ -300,14 +303,14 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
               child: TextField(
                   controller: blankControllers[index],
                   decoration: InputDecoration(
-                      hintText: 'Blank ${index + 1}',
+                      hintText: 'Blank {number}'.tr(namedArgs: {'number': '${index + 1}'}),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)))))));
 
   Widget shortAnswerView() => TextField(
       controller: shortAnswerController,
       maxLines: 4,
       decoration: InputDecoration(
-          hintText: 'Type your answer',
+          hintText: 'Type your answer'.tr(),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))));
 
   Widget submitButton(QuestionAnswerState answerState) {
@@ -315,7 +318,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     final label = hasSubmitted ? 'Continue' : 'Submit';
     return Button.primary(
         onTap: hasSubmitted ? goNextQuestion : submitCurrentAnswer,
-        text: label,
+        text: label.tr(),
         isAvialable: canSubmit && !answerState.status.isLoading);
   }
 
@@ -334,7 +337,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
             else if (currentAnswers.isNotEmpty)
               ...optionsList
             else
-              Text('No answers available.',
+              Text('No answers available.'.tr(),
                   style: Style.small3w4(context, color: TextColorRole.greyColor)),
             const SizedBox(height: 20),
             submitButton(answerState)
@@ -344,7 +347,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   Widget build(BuildContext context) {
     if (questions.isEmpty)
       return Center(
-          child: Text('No questions available.',
+          child: Text('No questions available.'.tr(),
               style: Style.bodyw5(context, color: TextColorRole.greyColor)));
 
     return BlocListener<QuestionAnswerBloc, QuestionAnswerState>(

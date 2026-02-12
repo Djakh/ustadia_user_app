@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+export 'package:easy_localization/easy_localization.dart';
 
 enum TextColorRole { onSurface, whiteColor, primaryColor, greyColor }
 

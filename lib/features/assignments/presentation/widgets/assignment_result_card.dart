@@ -27,9 +27,9 @@ class AssignmentResultCard extends StatelessWidget {
                 decoration: const BoxDecoration(color: AppColors.greenE7, shape: BoxShape.circle),
                 child: const Icon(Icons.check, size: 40, color: AppColors.success)),
             const SizedBox(height: 16),
-            Text('Excellent!', style: Style.headlinew7(context)),
+            Text('Excellent!'.tr(), style: Style.headlinew7(context)),
             const SizedBox(height: 8),
-            Text('You passed the assignment with a high score.',
+            Text('You passed the assignment with a high score.'.tr(),
                 textAlign: TextAlign.center,
                 style: Style.bodyw4(context, color: TextColorRole.greyColor)),
             const SizedBox(height: 20),
@@ -40,7 +40,7 @@ class AssignmentResultCard extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: AppColors.gray50, borderRadius: Style.border20),
                       child: Column(children: [
-                        Text('Score',
+                        Text('Score'.tr(),
                             style: Style.smallw7(context, color: TextColorRole.greyColor)),
                         const SizedBox(height: 6),
                         Text('92/100', style: Style.body2w6(context))
@@ -52,18 +52,18 @@ class AssignmentResultCard extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: AppColors.gray50, borderRadius: Style.border20),
                       child: Column(children: [
-                        Text('Time', style: Style.smallw7(context, color: TextColorRole.greyColor)),
+                        Text('Time'.tr(), style: Style.smallw7(context, color: TextColorRole.greyColor)),
                         const SizedBox(height: 6),
-                        Text('12m', style: Style.body2w6(context))
+                        Text('12m'.tr(), style: Style.body2w6(context))
                       ])))
             ]),
             const SizedBox(height: 20),
-            const Column(children: [
-              AssignmentResultRow(text: 'Perfect pronunciation on key terms'),
-              SizedBox(height: 8),
-              AssignmentResultRow(text: 'Great use of vocabulary')
+            Column(children: [
+              AssignmentResultRow(text: 'Perfect pronunciation on key terms'.tr()),
+              const SizedBox(height: 8),
+              AssignmentResultRow(text: 'Great use of vocabulary'.tr())
             ]),
             const SizedBox(height: 20),
-            Button.primary(onTap: onContinue, text: 'Continue Learning')
+            Button.primary(onTap: onContinue, text: 'Continue Learning'.tr())
           ])));
 }

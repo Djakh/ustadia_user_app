@@ -24,8 +24,8 @@ class AssignmentAudioCard extends StatelessWidget {
               child: const Icon(Icons.volume_up, color: AppColors.white)),
           const SizedBox(width: 12),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('Audio lesson', style: Style.bodyw6(context)),
-            Text('Tap to listen',
+            Text('Audio lesson'.tr(), style: Style.bodyw6(context)),
+            Text('Tap to listen'.tr(),
                 style: Style.small2w4(context, color: TextColorRole.greyColor))
           ])
         ]),

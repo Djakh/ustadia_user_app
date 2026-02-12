@@ -48,6 +48,7 @@ dependencies:
   dotted_border: ^3.1.0
   cached_network_image: ^3.4.1
   dio_cache_interceptor: ^3.5.0
+  easy_localization: ^3.0.7
   flutter_svg: ^2.2.3
   file_picker: ^8.0.6
   image_picker: ^1.1.2
@@ -77,6 +78,7 @@ dependency_overrides:
 
 # The following section is specific to Flutter packages.
 flutter:
+  
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -88,7 +90,7 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/svg/
-    
+    - assets/translations/
   fonts:
     - family: Ubuntu
       fonts:

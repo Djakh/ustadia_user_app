@@ -11,6 +11,9 @@ class SettingsLanguageModel {
     required this.key,
   });
 
-  SettingsLanguageModel copyWith({bool? isSelected}) => SettingsLanguageModel(
-      title: title, iconAsset: iconAsset, isSelected: isSelected ?? this.isSelected, key: key);
+  SettingsLanguageModel copyWith({String? title, bool? isSelected}) => SettingsLanguageModel(
+      title: title ?? this.title,
+      iconAsset: iconAsset,
+      isSelected: isSelected ?? this.isSelected,
+      key: key);
 }

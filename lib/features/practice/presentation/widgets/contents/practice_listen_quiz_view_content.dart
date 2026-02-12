@@ -62,11 +62,11 @@ class PracticeListenQuizViewContentState extends State<PracticeListenQuizViewCon
   Widget get controlRow => Row(children: [
         Expanded(
             child: Button.border(
-                onTap: widget.onPlay, isAvialable: !widget.isLoading, text: 'Slower')),
+                onTap: widget.onPlay, isAvialable: !widget.isLoading, text: 'Slower'.tr())),
         const SizedBox(width: 8),
         Expanded(
             child: Button.border(
-                onTap: widget.onPlay, isAvialable: !widget.isLoading, text: 'Again'))
+                onTap: widget.onPlay, isAvialable: !widget.isLoading, text: 'Again'.tr()))
       ]);
 
   Color optionColor(BuildContext context, int index) {
@@ -96,7 +96,7 @@ class PracticeListenQuizViewContentState extends State<PracticeListenQuizViewCon
         SizedBox(height: SizeConfig.screenHeight / 14),
         audioButton,
         const SizedBox(height: 16),
-        Text('Listen and tap what your hear',
+        Text('Listen and tap what your hear'.tr(),
             style: Style.small3w4(context, color: TextColorRole.greyColor)),
         const SizedBox(height: 24),
         controlRow,

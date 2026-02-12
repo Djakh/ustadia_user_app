@@ -31,7 +31,7 @@ class LeaderboardUserListItem extends StatelessWidget {
           Text('#${user.rank}', style: _rankStyle(context)),
           const SizedBox(width: 12),
           Expanded(child: Text(user.name, style: _nameStyle(context))),
-          Text('${user.xp} XP', style: _xpStyle(context)),
+          Text('{xp} XP'.tr(namedArgs: {'xp': '${user.xp}'}), style: _xpStyle(context)),
         ]),
       );
 }

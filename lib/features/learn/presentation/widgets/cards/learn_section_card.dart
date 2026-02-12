@@ -22,9 +22,9 @@ class LearnSectionCard extends StatelessWidget {
   Color get statusColor => isLocked ? AppColors.gray300 : AppColors.primary;
 
   String get statusText {
-    if (isCompleted) return 'Completed';
-    if (isInProgress) return 'In progress';
-    return 'Locked';
+    if (isCompleted) return 'Completed'.tr();
+    if (isInProgress) return 'in_progress'.tr();
+    return 'logcked'.tr();
   }
 
   Widget title(BuildContext context) => Text(sectionModel.title,

@@ -6,6 +6,7 @@ import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_password_b
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_password_state.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/features/auth/presentation/widgets/dialogs/auth_contact_type.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ForgotPasswordDialog extends StatefulWidget {
   final AuthContactType contactType;
@@ -56,26 +57,26 @@ class ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
   Widget get inputField => isEmail
       ? InputField.email(
           controller: widget.controller,
-          label: 'Email',
+          label: 'Email'.tr(),
           hint: 'e.g. name@email.com',
           errorText: showError ? 'Email is invalid.' : null,
           onChanged: (value) => setState(() => showError = false))
       : InputField.phone(
           controller: widget.controller,
-          label: 'Phone number',
+          label: 'Phone number'.tr(),
           errorText: showError ? 'Phone number is invalid.' : null,
           onChanged: (value) => setState(() => showError = false));
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-      title: const Text('Forgot password'),
+      title: Text('Forgot password'.tr()),
       content: Column(mainAxisSize: MainAxisSize.min, children: [inputField]),
       actions: [
         BlocBuilder<AuthPasswordBloc, AuthPasswordState>(
             bloc: widget.authPasswordBloc,
             builder: (context, state) => Button.primary(
                 onTap: submit,
-                text: 'Send OTP',
+                text: 'Send OTP'.tr(),
                 isLoading:
                     state.status == Status.loading && state.action == widget.loadingAction))
       ]);

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
@@ -22,13 +23,13 @@ class SettingsLanguagePage extends StatefulWidget {
 class SettingsLanguagePageState extends State<SettingsLanguagePage> {
   late String selectedKey;
 
-  List<SettingsLanguageModel> items = const [
+  List<SettingsLanguageModel> items = [
     SettingsLanguageModel(
-        title: 'English', iconAsset: AppImages.settingsEnglish, isSelected: true, key: 'en'),
+        title: 'English'.tr(), iconAsset: AppImages.settingsEnglish, isSelected: true, key: 'en'),
     SettingsLanguageModel(
-        title: 'Russian', iconAsset: AppImages.settingsRussian, isSelected: false, key: 'ru'),
+        title: 'Russian'.tr(), iconAsset: AppImages.settingsRussian, isSelected: false, key: 'ru'),
     SettingsLanguageModel(
-        title: 'Uzbek', iconAsset: AppImages.settingsUzbek, isSelected: false, key: 'uz'),
+        title: 'Uzbek'.tr(), iconAsset: AppImages.settingsUzbek, isSelected: false, key: 'uz'),
   ];
 
   /// --- Life cycle ---
@@ -42,6 +43,7 @@ class SettingsLanguagePageState extends State<SettingsLanguagePage> {
 
   void selectLanguage(String key) {
     selectedKey = key;
+    context.setLocale(Locale(key));
     context.read<UserBloc>().add(UserProfileUpdated(language: selectedKey));
   }
 
@@ -51,13 +53,19 @@ class SettingsLanguagePageState extends State<SettingsLanguagePage> {
       builder: (context, state) => Column(
             children: [
               SettingsLanguageItem(
-                  item: items[0], isSelected: items[0].key == selectedKey, onTap: selectLanguage),
+                  item: items[0].copyWith(title: items[0].title.tr()),
+                  isSelected: items[0].key == selectedKey,
+                  onTap: selectLanguage),
               const PrimaryDivider(),
               SettingsLanguageItem(
-                  item: items[1], isSelected: items[1].key == selectedKey, onTap: selectLanguage),
+                  item: items[1].copyWith(title: items[1].title.tr()),
+                  isSelected: items[1].key == selectedKey,
+                  onTap: selectLanguage),
               const PrimaryDivider(),
               SettingsLanguageItem(
-                  item: items[2], isSelected: items[2].key == selectedKey, onTap: selectLanguage),
+                  item: items[2].copyWith(title: items[2].title.tr()),
+                  isSelected: items[2].key == selectedKey,
+                  onTap: selectLanguage),
             ],
           ));
 
@@ -69,5 +77,6 @@ class SettingsLanguagePageState extends State<SettingsLanguagePage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: PrimaryBackground(title: 'Language', isScrollable: true, child: view(context)));
+      body:
+          PrimaryBackground(title: 'Language'.tr().tr(), isScrollable: true, child: view(context)));
 }

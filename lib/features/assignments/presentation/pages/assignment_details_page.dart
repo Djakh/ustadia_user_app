@@ -10,6 +10,7 @@ import 'package:ustadia_user_app/features/assignments/presentation/widgets/assig
 import 'package:ustadia_user_app/features/assignments/presentation/widgets/assignment_quiz_view.dart';
 import 'package:ustadia_user_app/features/assignments/presentation/widgets/assignment_result_card.dart';
 import 'package:ustadia_user_app/features/assignments/presentation/widgets/assignment_writing_view.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AssignmentDetailsPage extends StatefulWidget {
   final AssignmentDetailsParams params;
@@ -88,7 +89,7 @@ class AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
       accentColor: AppColors.green6B);
 
   Widget speakingView() => Column(children: [
-        const AssignmentPromptCard(title: 'Introduce yourself', subtitle: 'Tap to record'),
+        AssignmentPromptCard(title: 'Introduce yourself'.tr(), subtitle: 'Tap to record'.tr()),
         const SizedBox(height: 24),
         GestureDetector(
             onTap: toggleRecording,
@@ -126,7 +127,7 @@ class AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
     }
 
     return AssignmentContentView(
-        title: 'Daily Routines',
+        title: 'Daily Routines'.tr(),
         content: const [
           'Many people start their day with simple morning routines. These routines help them feel more focused, calm, and ready for the day ahead.',
           'A typical morning often begins with waking up early. Some people wake up at the same time every day to keep a stable schedule. After waking up, they usually wash their face, brush their teeth, and get dressed.',
@@ -148,7 +149,7 @@ class AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
     }
 
     return AssignmentContentView(
-        title: 'Present Simple',
+        title: 'Present Simple'.tr(),
         content: const [
           'We use the Present Simple to talk about habits, daily routines, and general facts. It describes things that happen regularly or are always true.',
           'For habits, the Present Simple shows what people do every day or often. For example, a person wakes up early, drinks coffee, and goes to work.',

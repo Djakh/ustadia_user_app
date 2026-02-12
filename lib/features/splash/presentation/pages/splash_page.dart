@@ -80,14 +80,14 @@ class _SplashPageState extends State<SplashPage> {
   /// --- Widgets ---
 
   Widget get title =>
-      Text('Ustadia', style: Style.headline9w7(context).copyWith(color: context.cs.primary));
+      Text('Ustadia'.tr(), style: Style.headline9w7(context).copyWith(color: context.cs.primary));
 
   Widget get loader => PrimaryLoadingIndicator(
       strokeWidth: 3,
       valueColor: AlwaysStoppedAnimation(context.cs.primary),
       backgroundColor: context.cs.primary.withValues(alpha: 0.18));
 
-  Widget get footer => Text('Ustadia Mobile v1.0',
+  Widget get footer => Text('Ustadia Mobile v1.0'.tr(),
       textAlign: TextAlign.center, style: Style.bodyw6(context, color: TextColorRole.greyColor));
 
   Widget get view => Center(

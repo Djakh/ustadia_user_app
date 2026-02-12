@@ -339,35 +339,35 @@ class LoginPageState extends State<LoginPage> {
 
   Widget get rememberRow => Row(children: [
         rememberCheckBox,
-        Text('Remember me', style: Style.small2w4(context, color: TextColorRole.greyColor))
+        Text('Remember me'.tr(), style: Style.small2w4(context, color: TextColorRole.greyColor))
       ]);
 
   Widget get rememberForgotRow => Row(children: [
         rememberCheckBox,
-        Text('Remember me', style: Style.small2w4(context, color: TextColorRole.greyColor)),
+        Text('Remember me'.tr(), style: Style.small2w4(context, color: TextColorRole.greyColor)),
         const Spacer(),
         TextButton(
             onPressed: () => showForgotPasswordDialog(
                 isEmailLogin ? AuthContactType.email : AuthContactType.phone),
-            child: Text('Forgot Password?', style: Style.small2w5(context)))
+            child: Text('Forgot Password?'.tr(), style: Style.small2w5(context)))
       ]);
 
   Widget get phoneTextField => InputField.phone(
       controller: phoneController,
-      label: 'Phone number',
+      label: 'Phone number'.tr(),
       errorText: showError ? 'Phone number is invalid.' : null,
       onChanged: (value) => setState(() => showError = false));
 
   Widget get emailTextField => InputField.email(
       controller: emailController,
-      label: 'Email',
+      label: 'Email'.tr(),
       hint: 'e.g. name@email.com',
       errorText: showEmailError ? 'Email is invalid.' : null,
       onChanged: (value) => setState(() => showEmailError = false));
 
   Widget get passwordField => InputField.password(
       controller: passwordController,
-      label: 'Password',
+      label: 'Password'.tr(),
       hint: 'Enter your password',
       obscure: !passwordVisible,
       showVisibilityToggle: true,
@@ -379,16 +379,16 @@ class LoginPageState extends State<LoginPage> {
         Expanded(child: Divider(color: context.cs.onTertiary.withValues(alpha: 0.4))),
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Text('or', style: Style.small3w4(context, color: TextColorRole.greyColor))),
+            child: Text('or'.tr(), style: Style.small3w4(context, color: TextColorRole.greyColor))),
         Expanded(child: Divider(color: context.cs.onTertiary.withValues(alpha: 0.4)))
       ]);
 
   Widget get signup => Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text('Don\'t have an account? ',
+        Text('Don\'t have an account? '.tr(),
             style: Style.small3w4(context, color: TextColorRole.greyColor)),
         GestureDetector(
             onTap: goToSignup,
-            child: Text('Sign up', style: Style.small3w5(context, color: TextColorRole.onSurface)))
+            child: Text('Sign up'.tr(), style: Style.small3w5(context, color: TextColorRole.onSurface)))
       ]);
 
   List<Widget> get fields => isEmailLogin
@@ -404,9 +404,9 @@ class LoginPageState extends State<LoginPage> {
             const SizedBox(height: 12),
             logo,
             const SizedBox(height: 24),
-            Text('Welcome back', style: Style.headlinew7(context)),
+            Text('Welcome back'.tr(), style: Style.headlinew7(context)),
             const SizedBox(height: 4),
-            Text('Good to see you again.',
+            Text('Good to see you again.'.tr(),
                 style: Style.small3w4(context, color: TextColorRole.greyColor)),
             const SizedBox(height: 40),
             ...fields,
@@ -416,7 +416,7 @@ class LoginPageState extends State<LoginPage> {
             BlocBuilder<AuthLoginBloc, AuthLoginState>(
                 bloc: authLoginBloc,
                 builder: (context, state) => Button.primary(
-                    onTap: onLogin, text: 'Log in', isLoading: state.status == Status.loading)),
+                    onTap: onLogin, text: 'Log in'.tr(), isLoading: state.status == Status.loading)),
             const SizedBox(height: 16),
             divider,
             const SizedBox(height: 16),
@@ -424,7 +424,7 @@ class LoginPageState extends State<LoginPage> {
                 bloc: authLoginBloc,
                 builder: (context, state) => Button.border(
                     onTap: toggleLoginMethod,
-                    text: isEmailLogin ? 'Log in with Phone' : 'Log in with Email',
+                    text: isEmailLogin ? 'Log in with Phone'.tr() : 'Log in with Email'.tr(),
                     isAvialable: state.status != Status.loading)),
             const SizedBox(height: 16),
             signup

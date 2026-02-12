@@ -48,20 +48,20 @@ class FlashcardSprintResultView extends StatelessWidget {
       ]);
 
   Widget view(BuildContext context) => PrimaryBackground(
-      title: 'Flashcard sprint',
+      title: 'Flashcard sprint'.tr(),
       isHeader: false,
       child: Column(children: [
         const Spacer(),
         emoji(),
         const SizedBox(height: 12),
-        Text('Nice job', style: Style.body3w7(context)),
+        Text('Nice job'.tr(), style: Style.body3w7(context)),
         const SizedBox(height: 6),
-        Text('You reviewed $total words',
+        Text('You reviewed {count} words'.tr(namedArgs: {'count': '$total'}),
             style: Style.bodyw4(context, color: TextColorRole.greyColor)),
         const SizedBox(height: 24),
         statsRow(context),
         const Spacer(),
-        Button.primary(onTap: () => goBack(context), text: 'Back to topic')
+        Button.primary(onTap: () => goBack(context), text: 'Back to topic'.tr())
       ]));
 
   @override

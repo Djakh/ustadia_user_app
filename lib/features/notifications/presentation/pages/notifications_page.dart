@@ -98,7 +98,7 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
                               notificationsBloc.add(NotificationInvitationRejected(
                                   notificationId: notification.id, invitationId: invitation!.id));
                             },
-                      child: const Text('Reject'),
+                      child: Text('Reject'.tr()),
                     ),
                   if (showActions)
                     TextButton(
@@ -109,12 +109,12 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
                               notificationsBloc.add(NotificationInvitationAccepted(
                                   notificationId: notification.id, invitationId: invitation!.id));
                             },
-                      child: const Text('Accept'),
+                      child: Text('Accept'.tr()),
                     ),
                   if (!showActions)
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Close'),
+                      child: Text('Close'.tr()),
                     ),
                 ],
               );
@@ -164,9 +164,9 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
   Widget emptyState(BuildContext context) =>
       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Image.asset(AppImages.notificationBell, height: 160, width: 160),
-        Text("You don't have any notifications yet", style: Style.body3w7(context)),
+        Text('You don`t have any notifications yet'.tr(), style: Style.body3w7(context)),
         const SizedBox(height: 4),
-        Text('New lessons, reminders, and learning updates will appear here.',
+        Text('New lessons, reminders, and learning updates will appear here.'.tr(),
             textAlign: TextAlign.center,
             style: Style.bodyw4(context, color: TextColorRole.greyColor))
       ]);
@@ -208,7 +208,7 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
 
   Widget header(BuildContext context) => IntrinsicHeight(
           child: Stack(alignment: Alignment.center, children: [
-        Text('Notifications', style: Style.body2w6(context)),
+        Text('Notifications'.tr(), style: Style.body2w6(context)),
         readNotificationsButton
       ]));
 

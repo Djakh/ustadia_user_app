@@ -52,7 +52,7 @@ class AssignmentDetailsHeader extends StatelessWidget {
         const SizedBox(height: 6),
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text(phaseLabel, style: Style.smallw7(context, color: TextColorRole.greyColor)),
-          Text('Total: 5', style: Style.smallw7(context, color: TextColorRole.greyColor))
+          Text('Total: 5'.tr(), style: Style.smallw7(context, color: TextColorRole.greyColor))
         ])
       ]);
 }

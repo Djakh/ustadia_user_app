@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/features/ask_ai/presentation/pages/ask_ai_page.dart';
@@ -230,10 +231,10 @@ final appRouter = GoRouter(
                             final extra = state.extra;
                             final params = extra is AssignmentSectionsParams
                                 ? extra
-                                : const AssignmentSectionsParams(
+                                : AssignmentSectionsParams(
                                     assignment: AssignmentModel(
                                         id: '',
-                                        title: 'Assignment',
+                                        title: 'Assignment'.tr(),
                                         description: 'Practice',
                                         status: 'active',
                                         timeLimit: 0,
@@ -258,9 +259,9 @@ final appRouter = GoRouter(
                                   final extra = state.extra;
                                   final params = extra is AssignmentDetailsParams
                                       ? extra
-                                      : const AssignmentDetailsParams(
-                                          title: 'Assignment',
-                                          subtitle: 'Practice',
+                                      : AssignmentDetailsParams(
+                                          title: 'Assignment'.tr(),
+                                          subtitle: 'Practice'.tr(),
                                           type: AssignmentDetailType.listening,
                                           theme: AssignmentThemeCatalog.listening);
                                   return AssignmentDetailsPage(params: params);

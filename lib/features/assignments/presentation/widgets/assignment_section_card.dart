@@ -44,7 +44,7 @@ class AssignmentSectionCard extends StatelessWidget {
       child: const Icon(Icons.play_arrow, size: 16, color: AppColors.gray400));
 
   Widget completedLabel(BuildContext context) =>
-      Text('Completed', style: Style.small2w5(context).copyWith(color: AppColors.success));
+      Text('Completed'.tr(), style: Style.small2w5(context).copyWith(color: AppColors.success));
 
   @override
   Widget build(BuildContext context) => InkWell(
@@ -76,7 +76,7 @@ class AssignmentSectionCard extends StatelessWidget {
                       style: Style.small2w4(context, color: TextColorRole.greyColor))
                 ]),
                 const SizedBox(width: 8),
-                Text('${section.questions.length} Q',
+                Text('{count} Q'.tr(namedArgs: {'count': '${section.questions.length}'}),
                     style: Style.small2w5(context).copyWith(color: AppColors.gray400))
               ])
             ])),
