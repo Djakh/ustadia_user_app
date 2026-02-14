@@ -6,6 +6,7 @@ import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_
 import 'package:ustadia_user_app/features/common/data/datasources/user_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_state.dart';
+import 'package:ustadia_user_app/injection_container.dart';
 
 class TeacherBloc extends Bloc<TeacherEvent, TeacherState> {
   final UserRemoteDataSource userRemoteDataSource;
@@ -45,6 +46,7 @@ class TeacherBloc extends Bloc<TeacherEvent, TeacherState> {
     try {
       final response = await userRemoteDataSource.swapTeacher(teacherId: event.teacherId);
       await authLocalDataSource.setAccessToken(response.accessToken);
+      await resetTeacherScopedData();
 
       emit(state.copyWith(
         swapStatus: Status.success,

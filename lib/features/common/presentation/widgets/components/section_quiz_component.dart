@@ -16,7 +16,9 @@ import 'package:ustadia_user_app/injection_container.dart';
 class SectionQuizComponent extends StatefulWidget {
   final List<SectionQuestionModel> questions;
   final ValueChanged<int> onFinish;
-  const SectionQuizComponent({super.key, required this.questions, required this.onFinish});
+  final Widget? headerWidget;
+  const SectionQuizComponent(
+      {super.key, required this.questions, required this.onFinish, this.headerWidget});
 
   @override
   State<SectionQuizComponent> createState() => _SectionQuizComponentState();
@@ -228,18 +230,21 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       PageIndicator(currentIndex: questionIndex, total: questions.length, isExpanded: true);
 
   Row get progressHeaderInfo => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text('{current} Question'.tr(namedArgs: {
-          'current': '${questionIndex + 1}'
-        }), style: Style.small2w4(context, color: TextColorRole.greyColor)),
-        Text('Total {total} Questions'.tr(namedArgs: {
-          'total': '${questions.length}'
-        }), style: Style.small2w4(context))
+        Text('{current} Question'.tr(namedArgs: {'current': '${questionIndex + 1}'}),
+            style: Style.small2w4(context, color: TextColorRole.greyColor)),
+        Text('Total {total} Questions'.tr(namedArgs: {'total': '${questions.length}'}),
+            style: Style.small2w4(context))
       ]);
 
   Widget get progressHeader =>
       Column(children: [indicator, const SizedBox(height: 4), progressHeaderInfo]);
 
-  /// --- Widgets ---
+  List<Widget> get isShownHeaderWidget => widget.headerWidget != null
+      ? [
+          widget.headerWidget!,
+          const SizedBox(height: 24),
+        ]
+      : [];
 
   bool isSelectedIndex(int index) =>
       isMultipleChoice ? selectedIndices.contains(index) : selectedIndex == index;
@@ -249,7 +254,6 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     if (!isSelectedIndex(index)) return context.cs.surface;
     if (currentAnswers[index].isCorrect) return AppColors.primary;
     return AppColors.error;
-    return context.cs.surface;
   }
 
   Color optionTextColor(BuildContext context, int index) {
@@ -271,14 +275,10 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
           overflow: TextOverflow.ellipsis),
       if (showCheck)
         Align(
-            alignment: Alignment.centerRight,
-            child: Icon(Icons.check, size: 18, color: checkColor))
+            alignment: Alignment.centerRight, child: Icon(Icons.check, size: 18, color: checkColor))
     ]);
     if (isFilled) {
-      return Button.primary(
-          onTap: () => onSelectAnswerOption(index),
-          color: fill,
-          child: label);
+      return Button.primary(onTap: () => onSelectAnswerOption(index), color: fill, child: label);
     }
     return Button.border(
         onTap: () => onSelectAnswerOption(index),
@@ -328,6 +328,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
             const SizedBox(height: 24),
             progressHeader,
             const SizedBox(height: 24),
+            ...isShownHeaderWidget,
             QuestionsCard(currentQuestion: currentQuestion),
             const SizedBox(height: 20),
             if (isFillBlank)

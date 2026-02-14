@@ -124,3 +124,17 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => AssignmentSectionsStore(remoteDataSource: sl()));
   sl.registerLazySingleton(() => AssignmentsBloc(assignmentsRemoteDataSource: sl()));
 }
+
+Future<void> resetTeacherScopedData() async {
+  await sl.resetLazySingleton<UserBloc>();
+  await sl.resetLazySingleton<ProfileStatisticsStore>();
+  await sl.resetLazySingleton<AssignmentsBloc>();
+  await sl.resetLazySingleton<AssignmentSectionsStore>();
+  await sl.resetLazySingleton<LearnLessonsBloc>();
+  await sl.resetLazySingleton<LearnUnitsBloc>();
+  await sl.resetLazySingleton<LearnSectionsBloc>();
+  await sl.resetLazySingleton<PracticeFlashcardSetsBloc>();
+  await sl.resetLazySingleton<PracticeListenTapSetsBloc>();
+  await sl.resetLazySingleton<PracticeSentenceBuilderSetsBloc>();
+  await sl.resetLazySingleton<PracticeWordMatchSetsBloc>();
+}

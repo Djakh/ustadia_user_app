@@ -306,5 +306,5 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
           child: Scaffold(
               backgroundColor: context.cs.surface,
               body: PrimaryBackground(
-                  title: 'Listen & Tap'.tr(), isScrollable: false, child: bodyChecker)));
+                  title: widget.sectionModel.title, isScrollable: false, child: bodyChecker)));
 }
