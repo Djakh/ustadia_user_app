@@ -76,7 +76,7 @@ class _DashboardPageState extends State<DashboardPage> {
       const SizedBox(width: 12),
       profileInfoTexts(name),
       const Spacer(),
-      firePoint()
+     // firePoint()
     ]);
   }
 
@@ -90,7 +90,7 @@ class _DashboardPageState extends State<DashboardPage> {
           const SizedBox(height: 16),
           const DashboardQuickGridList(),
           const SizedBox(height: 18),
-          const DashboardStrakCard(),
+       //   const DashboardStrakCard(),
           const SizedBox(height: 80)
         ],
       );

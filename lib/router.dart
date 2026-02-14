@@ -157,6 +157,7 @@ const profileImageViewRoute = '/profile-image-view';
 /// Navigator keys
 /// --------------------
 final _rootKey = GlobalKey<NavigatorState>(debugLabel: 'root');
+GlobalKey<NavigatorState> get rootNavigatorKey => _rootKey;
 
 final _dashboardKey = GlobalKey<NavigatorState>(debugLabel: 'dashboard');
 final _learnKey = GlobalKey<NavigatorState>(debugLabel: 'learn');

@@ -4,12 +4,13 @@ import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
-import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/listening_section/listening_section_intro.dart';
-import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_quiz_component.dart';
-import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_state.dart';
+import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/listening_section/listening_section_intro.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_quiz_component.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
+import 'package:ustadia_user_app/features/learn/presentation/widgets/cards/audio_card.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 enum ListeningSectionStage { lesson, quiz, result }
@@ -76,7 +77,10 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
           changeStage: () => changeStage(state),
           isLoading: isLoading);
     if (stage == ListeningSectionStage.quiz)
-      return SectionQuizComponent(questions: state.detail?.questions ?? [], onFinish: finishQuiz);
+      return SectionQuizComponent(
+          questions: state.detail?.questions ?? [],
+          headerWidget: AudioCard(sectionModel: widget.sectionModel),
+          onFinish: finishQuiz);
     if (stage == ListeningSectionStage.result) return const QuizResultComponent();
     return ListeningSectionIntro(
         sectionModel: widget.sectionModel,

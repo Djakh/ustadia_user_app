@@ -47,8 +47,9 @@ class UserRemoteDataSource {
   }
 
   Future<SwapTeacherResponse> swapTeacher({required String? teacherId}) async {
-    final response = await dio.post('/students/swap-teacher',
-        data: teacherId != null ? {'teacher_id': teacherId} : {});
+    final normalizedTeacherId = teacherId == null || teacherId.isEmpty ? null : teacherId;
+    final response =
+        await dio.post('/students/swap-teacher', data: {'teacher_id': normalizedTeacherId});
     final data = response.data as Map<String, dynamic>;
     return SwapTeacherResponse.fromJson(data);
   }

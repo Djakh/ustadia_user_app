@@ -12,10 +12,10 @@ import 'package:ustadia_user_app/features/common/data/models/user_profile_model.
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_state.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_event.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/dividers/primary_divider.dart';
 import 'package:ustadia_user_app/injection_container.dart';
+import 'package:ustadia_user_app/core/widgets/app_restart.dart';
+import 'package:ustadia_user_app/router.dart';
 
 class TeacherPickerSheet extends StatefulWidget {
   final UserProfileModel userModel;
@@ -59,8 +59,10 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
       context.showSnackBar(SnackBar(content: Text(state.swapErrorMessage!)));
     }
     if (state.swapStatus.isSuccess) {
-      sl<UserBloc>().add(const UserProfileRequested());
       Navigator.of(context).pop(true);
+      final rootContext = rootNavigatorKey.currentContext;
+      if (rootContext != null) AppRestart.restart(rootContext);
+      appRouter.go(splashRoute);
     }
   }
 
