@@ -22,6 +22,7 @@ class SectionDetailBloc extends Bloc<SectionDetailEvent, SectionDetailState> {
     try {
       final fetched = event.source == SectionSource.assignment
           ? await assignmentsRemoteDataSource.fetchAssignmentSectionDetail(
+              assignmentId: _assignmentId(event),
               sectionId: event.sectionId)
           : await learnRemoteDataSource.fetchSectionDetail(sectionId: event.sectionId);
       final updatedDetail = _applyLessonUnit(fetched, event.unitId, event.lessonId);
@@ -29,6 +30,12 @@ class SectionDetailBloc extends Bloc<SectionDetailEvent, SectionDetailState> {
     } catch (error) {
       emit(state.copyWith(status: Status.error, errorMessage: error.toString()));
     }
+  }
+
+  String _assignmentId(SectionDetailRequested event) {
+    final assignmentId = event.assignmentId;
+    if (assignmentId != null && assignmentId.isNotEmpty) return assignmentId;
+    throw Exception('Assignment id is missing.');
   }
 
   SectionModel _applyLessonUnit(SectionModel detail, String? unitId, String? lessonId) {

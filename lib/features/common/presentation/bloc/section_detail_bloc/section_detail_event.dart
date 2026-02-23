@@ -9,7 +9,12 @@ class SectionDetailRequested extends SectionDetailEvent {
   final SectionSource source;
   final String? unitId;
   final String? lessonId;
+  final String? assignmentId;
 
   const SectionDetailRequested(
-      {required this.sectionId, this.source = SectionSource.learn, this.unitId, this.lessonId});
+      {required this.sectionId,
+      this.source = SectionSource.learn,
+      this.unitId,
+      this.lessonId,
+      this.assignmentId});
 }

@@ -1,4 +1,4 @@
-package com.example.ustadia_user_app
+package uz.ustadia.user
 
 import io.flutter.embedding.android.FlutterActivity
 

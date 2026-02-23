@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:236481695711:android:a3f04b36da0b30afe23e6a",
+        "mobilesdk_app_id": "1:236481695711:android:31016a3e286fd16ae23e6a",
         "android_client_info": {
-          "package_name": "com.example.ustadia_user_app"
+          "package_name": "uz.ustadia.user"
         }
       },
       "oauth_client": [],

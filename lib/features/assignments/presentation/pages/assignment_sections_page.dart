@@ -39,7 +39,7 @@ class AssignmentSectionsPageState extends State<AssignmentSectionsPage> {
   Future<void> loadSections({bool forceRefresh = false}) async {
     if (assignment.id.isEmpty) return;
     setState(() {
-      isLoading = sections.isEmpty;
+      isLoading = true;
       errorMessage = null;
     });
     try {
