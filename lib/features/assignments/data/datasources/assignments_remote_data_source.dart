@@ -8,21 +8,23 @@ class AssignmentsRemoteDataSource {
   AssignmentsRemoteDataSource({required this.dio});
 
   Future<List<AssignmentModel>> fetchAssignments() async {
-    final response = await dio.get('/student/assignments');
+    final response = await dio.get('/students/assignments');
     final data = response.data;
     final items =
-        data is List ? data : (data as Map<String, dynamic>)['data'] as List<dynamic>? ?? [];
+        data is List ? data : (data as Map<String, dynamic>)['items'] as List<dynamic>? ?? [];
     return items.whereType<Map<String, dynamic>>().map(AssignmentModel.fromJson).toList();
   }
 
-  Future<SectionModel> fetchAssignmentSectionDetail({required String sectionId}) async {
-    final response = await dio.get('/student/assignments/sections/$sectionId');
+  Future<SectionModel> fetchAssignmentSectionDetail(
+      {required String assignmentId, required String sectionId}) async {
+    final response =
+        await dio.get('/students/assignments/$assignmentId/sections/$sectionId');
     final data = response.data as Map<String, dynamic>;
     return SectionModel.fromJson(data);
   }
 
   Future<List<SectionModel>> fetchAssignmentSections({required String assignmentId}) async {
-    final response = await dio.get('/student/assignments/$assignmentId/sections');
+    final response = await dio.get('/students/assignments/$assignmentId/sections');
     final data = response.data;
     final items =
         data is List ? data : (data as Map<String, dynamic>)['data'] as List<dynamic>? ?? [];
@@ -30,10 +32,9 @@ class AssignmentsRemoteDataSource {
   }
 
   Future<bool> submitAssignmentAnswers(
-      {required String assignmentId,
-      required List<Map<String, dynamic>> answers}) async {
+      {required String assignmentId, required List<Map<String, dynamic>> answers}) async {
     final response =
-        await dio.post('/student/assignments/$assignmentId/submit', data: {'answers': answers});
+        await dio.post('/students/assignments/$assignmentId/submit', data: {'answers': answers});
     final data = response.data;
     if (data is Map<String, dynamic>) return data['success'] == true;
     return false;

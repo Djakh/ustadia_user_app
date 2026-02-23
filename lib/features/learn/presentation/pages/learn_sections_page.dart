@@ -121,7 +121,7 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
           errorOf: (s) => s.errorMessage,
           data: (s) => s.sections,
           isEmpty: (sections) => sections.isEmpty,
-          keepDataOnLoading: true,
+          keepDataOnLoading: false,
           empty: Center(child: Text('No sections found'.tr())),
           loading: ShimmerList(
               itemCount: 6,

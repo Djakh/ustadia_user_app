@@ -65,7 +65,7 @@ class LearnLessonsPageState extends State<LearnLessonsPage> {
         errorOf: (s) => s.errorMessage,
         data: (s) => s.lessons,
         isEmpty: (lessons) => lessons.isEmpty,
-        keepDataOnLoading: true,
+        keepDataOnLoading: false,
         empty: Center(child: Text('No lessons found'.tr())),
         loading: ShimmerList(
             itemCount: 5,

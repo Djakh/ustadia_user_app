@@ -1,4 +1,4 @@
-# ustadia_user_app
+# ustadia
 
 A new Flutter project.
 

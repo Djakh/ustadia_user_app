@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/core/widgets/loading/shimmer_box.dart';
+import 'package:ustadia_user_app/core/widgets/loading/shimmer.dart';
 
 class ShimmerList extends StatelessWidget {
   final int itemCount;
@@ -23,6 +24,7 @@ class ShimmerList extends StatelessWidget {
       items.add(ShimmerBox(height: itemHeight, borderRadius: borderRadius));
       if (i != itemCount - 1) items.add(SizedBox(height: separatorHeight));
     }
-    return Padding(padding: padding ?? EdgeInsets.zero, child: Column(children: items));
+    return Shimmer(
+        child: Padding(padding: padding ?? EdgeInsets.zero, child: Column(children: items)));
   }
 }

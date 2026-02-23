@@ -75,7 +75,8 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       sectionId: widget.sectionModel.id,
       source: widget.sectionModel.source,
       unitId: widget.sectionModel.unitId,
-      lessonId: widget.sectionModel.lessonId));
+      lessonId: widget.sectionModel.lessonId,
+      assignmentId: widget.sectionModel.assignmentId));
 
   Future<void> pickUploadFile() async {
     try {

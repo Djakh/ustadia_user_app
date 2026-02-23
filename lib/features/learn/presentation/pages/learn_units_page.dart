@@ -90,7 +90,7 @@ class LearnUnitsPageState extends State<LearnUnitsPage> {
         errorOf: (s) => s.errorMessage,
         data: (s) => s.units,
         isEmpty: (units) => units.isEmpty,
-        keepDataOnLoading: true,
+        keepDataOnLoading: false,
         empty: Center(child: Text('No units found'.tr())),
         loading: Column(children: [
           const SizedBox(height: 24),

@@ -111,7 +111,7 @@ class AssignmentsPageState extends State<AssignmentsPage> {
           errorOf: (state) => state.errorMessage,
           data: (state) => state.assignments,
           isEmpty: (data) => data.isEmpty,
-          keepDataOnLoading: true,
+          keepDataOnLoading: false,
           empty: emptyState(context, 'No assignments found'),
           loading: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             SizedBox(height: 24),
