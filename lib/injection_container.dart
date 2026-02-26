@@ -4,6 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ustadia_user_app/features/assignments/data/datasources/assignments_remote_data_source.dart';
 import 'package:ustadia_user_app/features/assignments/data/services/assignment_sections_store.dart';
 import 'package:ustadia_user_app/features/assignments/presentation/bloc/assignments_bloc/assignments_bloc.dart';
+import 'package:ustadia_user_app/features/ask_ai/data/datasources/ai_chat_remote_data_source.dart';
+import 'package:ustadia_user_app/features/ask_ai/data/repositories/auth_repository.dart';
+import 'package:ustadia_user_app/features/ask_ai/presentation/bloc/ask_ai_bloc/ask_ai_bloc.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_login_bloc.dart';
@@ -123,6 +126,15 @@ Future<void> initDependencies() async {
       () => AssignmentsRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
   sl.registerLazySingleton(() => AssignmentSectionsStore(remoteDataSource: sl()));
   sl.registerLazySingleton(() => AssignmentsBloc(assignmentsRemoteDataSource: sl()));
+
+  // Features - Ask AI
+  sl.registerLazySingleton<AiChatRemoteDataSource>(
+      () => AiChatRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
+  sl.registerLazySingleton<AuthRepository>(() => InMemoryAuthRepository(
+      jwtToken: sl<AuthLocalDataSource>().getAccessToken(),
+      userId: sl<UserBloc>().state.profile?.id ?? ''));
+  sl.registerFactory(() =>
+      AskAiBloc(aiChatRemoteDataSource: sl<AiChatRemoteDataSource>(), authRepository: sl()));
 }
 
 Future<void> resetTeacherScopedData() async {

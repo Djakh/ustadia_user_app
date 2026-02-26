@@ -32,6 +32,7 @@ dependencies:
   flutter:
     sdk: flutter
   livekit_client: ^2.6.3
+  permission_handler: ^11.3.1
 
   flutter_bloc: ^9.0.0
   get_it: ^7.7.0
