@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/theme.dart';
+import 'package:ustadia_user_app/features/ask_ai/presentation/bloc/ask_ai_bloc/ask_ai_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/next_task_bloc/next_task_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_bloc.dart';
@@ -23,6 +24,7 @@ class UstadiaUserApp extends StatelessWidget {
               BlocProvider(create: (_) => NextTaskBloc()),
               BlocProvider(create: (_) => sl<UserBloc>()),
               BlocProvider(create: (_) => sl<FileUploadBloc>()),
+              BlocProvider(create: (_) => sl<AskAiBloc>()),
               BlocProvider(create: (_) => sl<TeacherBloc>()..add(const TeachersRequested())),
             ],
             child: MaterialApp.router(

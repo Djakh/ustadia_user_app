@@ -19,12 +19,24 @@ class ShimmerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = <Widget>[];
-    for (var i = 0; i < itemCount; i++) {
-      items.add(ShimmerBox(height: itemHeight, borderRadius: borderRadius));
-      if (i != itemCount - 1) items.add(SizedBox(height: separatorHeight));
-    }
-    return Shimmer(
-        child: Padding(padding: padding ?? EdgeInsets.zero, child: Column(children: items)));
+    return LayoutBuilder(builder: (context, constraints) {
+      final hasBoundedHeight = constraints.maxHeight.isFinite;
+      final listView = ListView.separated(
+          padding: padding ?? EdgeInsets.zero,
+          itemCount: itemCount,
+          itemBuilder: (context, index) =>
+              ShimmerBox(height: itemHeight, borderRadius: borderRadius),
+          separatorBuilder: (context, index) => SizedBox(height: separatorHeight));
+      if (hasBoundedHeight) {
+        return Shimmer(child: SizedBox(height: constraints.maxHeight, child: listView));
+      }
+      final items = <Widget>[];
+      for (var i = 0; i < itemCount; i++) {
+        items.add(ShimmerBox(height: itemHeight, borderRadius: borderRadius));
+        if (i != itemCount - 1) items.add(SizedBox(height: separatorHeight));
+      }
+      return Shimmer(
+          child: Padding(padding: padding ?? EdgeInsets.zero, child: Column(children: items)));
+    });
   }
 }
