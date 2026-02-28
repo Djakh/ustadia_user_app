@@ -265,14 +265,14 @@ class VoiceCallNotifier extends ChangeNotifier {
   void startThinkingTransition() {
     setVoiceState(VoiceUiState.thinking);
     thinkingTimer?.cancel();
-    thinkingTimer = Timer(const Duration(milliseconds: 1200), () {
+    thinkingTimer = Timer(const Duration(milliseconds: 1500), () {
       if (!agentAudioPlaying) setVoiceState(VoiceUiState.listening);
     });
   }
 
   void startListeningTransition() {
     speakingSilenceTimer?.cancel();
-    speakingSilenceTimer = Timer(const Duration(milliseconds: 1200), () {
+    speakingSilenceTimer = Timer(const Duration(milliseconds: 1500), () {
       if (!agentAudioPlaying && voiceUiState != VoiceUiState.thinking) {
         setVoiceState(VoiceUiState.listening);
       }
@@ -343,6 +343,9 @@ class VoiceCallNotifier extends ChangeNotifier {
     thinkingTimer?.cancel();
     speakingSilenceTimer?.cancel();
     levelJitterTimer?.cancel();
+    if (room != null) {
+      unawaited(room!.disconnect());
+    }
     livekitListener?.dispose();
     room?.dispose();
     super.dispose();

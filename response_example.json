@@ -1,47 +1,1053 @@
 {
-  "id": "be7388a0-3a02-42e2-8bd6-bb5616568881",
-  "assignment_id": "5c1ad4cf-0db9-4e22-9b92-1d8444c322a4",
-  "type": "listening",
-  "title": "Listening Part 1",
-  "content": null,
-  "order_index": 1,
-  "topic": null,
-  "time_limit": 10,
-  "taskCount": 1,
-  "CompletedTaskCount": 1,
-  "PendingTaskCount": 0,
-  "completedTaskPercentage": 100,
-  "isCompleted": true,
-  "questions": [
+  "id": "00a38634-93a9-4e70-ade9-c17c2914f9f6",
+  "firstName": "Ali",
+  "lastName": "Karimov",
+  "email": "fayzullayevnodir1@gmail.com",
+  "phoneNumber": null,
+  "providers": [
     {
-      "id": "d044663d-698e-4ba7-b805-bed0bbccdef5",
-      "assignment_section_id": "be7388a0-3a02-42e2-8bd6-bb5616568881",
-      "type": "multiple-choice",
-      "title": "Where is the conversation taking place? (A/B/C)",
-      "description": null,
-      "order_index": 1,
-      "isCompleted": true,
-      "answers": [
-        {
-          "id": "065072ec-1f03-4191-b497-41911a0ff84a",
-          "assignment_question_id": "d044663d-698e-4ba7-b805-bed0bbccdef5",
-          "answer_text": "At a train station",
-          "order_index": 1
-        },
-        {
-          "id": "a8e280b1-14a7-42b8-ad1a-fbc8d7edb2b2",
-          "assignment_question_id": "d044663d-698e-4ba7-b805-bed0bbccdef5",
-          "answer_text": "At a hospital",
-          "order_index": 2
-        },
-        {
-          "id": "e1d8fa29-bfbe-4b18-8bb6-a7b3f592ced7",
-          "assignment_question_id": "d044663d-698e-4ba7-b805-bed0bbccdef5",
-          "answer_text": "At a restaurant",
-          "order_index": 3
-        }
-      ]
+      "provider": "email",
+      "identifier": "fayzullayevnodir1@gmail.com"
     }
   ],
-  "vocabulary": null
+  "roles": [
+    "user"
+  ],
+  "language": "uz",
+  "level_id": "550e8400-e29b-41d4-a716-446655440000",
+  "created_at": "2026-01-12T06:55:51.862Z",
+  "xp": "13",
+  "isDeleted": false,
+  "reasoningSessions": [],
+  "profilePicture": {
+    "id": "55c686ea-c51b-4b78-814e-a477f8e2a645",
+    "filename": "847e683e4f2464019badee44ca590888.jpg",
+    "received_filename": null,
+    "path": "afae5ae2bfa98b00abd8c81ef5acd9eb3dd853361a6aba1ed84f6db4864a3b08_image-jpeg",
+    "mimetype": "image/jpeg",
+    "url": "/uploads/847e683e4f2464019badee44ca590888.jpg",
+    "created_at": "2026-01-15T12:00:28.613Z"
+  },
+  "level": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "name": {
+      "en": "Beginner",
+      "ru": "Начинающий",
+      "uz": "Yangi boshlovchi"
+    },
+    "description": {
+      "en": "Beginner level for absolute beginners with no prior language knowledge",
+      "ru": "Уровень начинающих для абсолютных новичков без предварительных знаний языка",
+      "uz": "Yangi boshlovchilar uchun oldindan hech qanday til bilimisiz bo'lganlar uchun"
+    },
+    "isPublic": true,
+    "teacher_id": null,
+    "created_at": "2026-02-06T10:10:16.547Z",
+    "updated_at": "2026-02-06T10:10:16.547Z"
+  },
+  "currentTeacher": {
+    "id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
+    "firstName": "Nodir",
+    "lastName": "Fayzullayev",
+    "phoneNumber": null,
+    "profilePicture": null,
+    "isActive": true,
+    "level": {
+      "id": "a7b8c9d0-e1f2-41d4-a716-446655440001",
+      "name": {
+        "en": "Elementary",
+        "ru": "Элементарный",
+        "uz": "Boshlangʻich"
+      },
+      "description": {
+        "en": "Elementary level for beginners learning basic vocabulary and simple sentence structures",
+        "ru": "Элементарный уровень для начинающих изучение базовой лексики и простых структур предложений",
+        "uz": "Boshlangʻich daraja - asosiy leksika va oddiy gaplarni oʻrganayotgan boshlangʻich oʻquvchilar uchun"
+      },
+      "isPublic": true,
+      "teacher_id": null,
+      "created_at": "2026-02-06T10:10:16.563Z",
+      "updated_at": "2026-02-06T10:10:16.563Z"
+    }
+  },
+  "introCompleted": true,
+  "introAnswers": [
+    {
+      "id": "af4d71d1-70fc-418c-a398-823f1f6df3a0",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "cf79055e-c0e0-421b-9d30-8f3ccb13bc7d",
+      "answerText": "Speaking and pronunciation",
+      "created_at": "2026-02-02T17:37:46.101Z"
+    },
+    {
+      "id": "bde34a18-d476-4b89-9a04-015058137364",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "1a503d71-7250-46fc-a04f-dce1d7008536",
+      "answerText": "26-35",
+      "created_at": "2026-02-02T17:37:44.871Z"
+    },
+    {
+      "id": "f207b48e-b928-4832-b6ce-ea522aa422c4",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "f00c13e4-aa62-4c5f-92aa-2b28973f7c0d",
+      "answerText": "Yes, with a tutor or language course",
+      "created_at": "2026-02-02T17:37:43.624Z"
+    },
+    {
+      "id": "a913dc8f-a201-44f9-98b8-ab380ae5d551",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "ffd06581-d686-46a5-bb42-e15c2340bce4",
+      "answerText": "Reading texts and articles",
+      "created_at": "2026-02-02T17:37:42.182Z"
+    },
+    {
+      "id": "7fe4ccf2-07ee-482e-a554-b97533f93207",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "c94b4a3b-88e7-4fb8-8f2e-4813b038c63d",
+      "answerText": "30-60 minutes",
+      "created_at": "2026-02-02T17:37:41.183Z"
+    },
+    {
+      "id": "dd8b0837-fd0f-44df-8252-f90c1b669c67",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "f05b349b-a2a5-423a-9bdf-8061a82a852d",
+      "answerText": "Improve my speaking and conversation skills",
+      "created_at": "2026-02-02T17:37:40.035Z"
+    },
+    {
+      "id": "a07d17f7-5bbc-44cc-bc40-85ec848bf321",
+      "questionId": "system:level",
+      "questionDescription": "What is your current learning level?",
+      "answerId": "52e324a1-9848-4b52-b34a-ed797b9feff9",
+      "answerText": "pre-intermediate",
+      "created_at": "2026-02-02T17:37:38.206Z"
+    },
+    {
+      "id": "93af7a65-5054-4373-a8f5-920af7a1b4de",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "cf79055e-c0e0-421b-9d30-8f3ccb13bc7d",
+      "answerText": "Speaking and pronunciation",
+      "created_at": "2026-02-02T17:33:09.874Z"
+    },
+    {
+      "id": "270bf932-dbc5-4b14-bc22-44cf3b99e4a4",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "1a503d71-7250-46fc-a04f-dce1d7008536",
+      "answerText": "26-35",
+      "created_at": "2026-02-02T17:33:08.594Z"
+    },
+    {
+      "id": "fcb75228-b4b6-4f34-a54a-7424aa68a37f",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "f00c13e4-aa62-4c5f-92aa-2b28973f7c0d",
+      "answerText": "Yes, with a tutor or language course",
+      "created_at": "2026-02-02T17:33:07.421Z"
+    },
+    {
+      "id": "bb6613cc-cf98-4317-bb02-96cfb371ce04",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "ffd06581-d686-46a5-bb42-e15c2340bce4",
+      "answerText": "Reading texts and articles",
+      "created_at": "2026-02-02T17:33:06.219Z"
+    },
+    {
+      "id": "0cf317dd-f2a6-4f58-a0e6-386fb6ef798b",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "c94b4a3b-88e7-4fb8-8f2e-4813b038c63d",
+      "answerText": "30-60 minutes",
+      "created_at": "2026-02-02T17:33:04.076Z"
+    },
+    {
+      "id": "549de446-758a-461b-b1f6-37e4afc15081",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "f05b349b-a2a5-423a-9bdf-8061a82a852d",
+      "answerText": "Improve my speaking and conversation skills",
+      "created_at": "2026-02-02T17:33:02.742Z"
+    },
+    {
+      "id": "797c57ea-4242-4267-a8e4-804b5f9d9d63",
+      "questionId": "system:level",
+      "questionDescription": "What is your current learning level?",
+      "answerId": "52e324a1-9848-4b52-b34a-ed797b9feff9",
+      "answerText": "pre-intermediate",
+      "created_at": "2026-02-02T17:33:01.142Z"
+    },
+    {
+      "id": "ff8a758a-ed9f-4af7-86f8-4790753092ac",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "104a9099-7ae9-4f84-9b44-4e5a9b4f48e1",
+      "answerText": "Grammar and sentence structure",
+      "created_at": "2026-02-02T14:53:55.194Z"
+    },
+    {
+      "id": "16fcc6c5-d229-4dba-b6dd-bddd13158e3a",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "180913f4-5b5c-4701-9aa5-867ede9fa7ad",
+      "answerText": "Over 50",
+      "created_at": "2026-02-02T14:53:53.252Z"
+    },
+    {
+      "id": "fea92f6f-bfbd-484a-9b36-8788b4662a20",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "b082ae8e-0e49-4452-abfb-1104c4b3a108",
+      "answerText": "Yes, through self-study (apps, books, etc.)",
+      "created_at": "2026-02-02T14:53:51.271Z"
+    },
+    {
+      "id": "58fee6bb-1dac-4912-9715-e775454497d6",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "32112e07-6827-4d31-b9c7-487da01516fa",
+      "answerText": "Interactive exercises and quizzes",
+      "created_at": "2026-02-02T14:53:49.345Z"
+    },
+    {
+      "id": "2650198b-7c58-40e2-8497-964093687f94",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "35e86f56-c031-4394-bfe7-85ecf6a8b571",
+      "answerText": "More than 1 hour",
+      "created_at": "2026-02-02T14:53:47.570Z"
+    },
+    {
+      "id": "9d0d241f-735a-4028-a60b-018a95120630",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "a8a24029-052a-4f76-a51b-12803e4e3109",
+      "answerText": "General knowledge and personal growth",
+      "created_at": "2026-02-02T14:53:45.686Z"
+    },
+    {
+      "id": "530ca479-cca7-458a-b55d-bb24f6456f53",
+      "questionId": "system:level",
+      "questionDescription": "What is your current learning level?",
+      "answerId": "afe03ba1-5132-4c3b-8a12-0926f049843b",
+      "answerText": "upper-intermediate",
+      "created_at": "2026-02-02T14:53:43.914Z"
+    },
+    {
+      "id": "0664b6ba-d7d2-4c81-83f5-c2e3d154528a",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "104a9099-7ae9-4f84-9b44-4e5a9b4f48e1",
+      "answerText": "Grammar and sentence structure",
+      "created_at": "2026-02-02T14:53:38.064Z"
+    },
+    {
+      "id": "2316713f-7fae-4698-a77b-c04150fbd680",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "180913f4-5b5c-4701-9aa5-867ede9fa7ad",
+      "answerText": "Over 50",
+      "created_at": "2026-02-02T14:53:33.966Z"
+    },
+    {
+      "id": "334da6dc-3393-4cc9-bb6a-a4861c73f6e0",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "b082ae8e-0e49-4452-abfb-1104c4b3a108",
+      "answerText": "Yes, through self-study (apps, books, etc.)",
+      "created_at": "2026-02-02T14:53:31.094Z"
+    },
+    {
+      "id": "e4e11057-fe85-4a4c-8682-125a200663fd",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "40ed77cc-0bb8-4ccc-91bd-1b5fbd746155",
+      "answerText": "Speaking practice with others",
+      "created_at": "2026-02-02T14:53:28.258Z"
+    },
+    {
+      "id": "0d03b4e3-3557-4f6f-90f2-b93901fecb29",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "35e86f56-c031-4394-bfe7-85ecf6a8b571",
+      "answerText": "More than 1 hour",
+      "created_at": "2026-02-02T14:53:26.282Z"
+    },
+    {
+      "id": "26be9982-cc5b-406a-a40b-9d70988db6c4",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "b7a1a4dd-8e3f-44b8-aaa6-0f333f3f6d6f",
+      "answerText": "Study abroad or travel",
+      "created_at": "2026-02-02T14:53:24.251Z"
+    },
+    {
+      "id": "d03302a1-7f3c-467d-95cd-b145499528d7",
+      "questionId": "system:level",
+      "questionDescription": "What is your current learning level?",
+      "answerId": "afe03ba1-5132-4c3b-8a12-0926f049843b",
+      "answerText": "upper-intermediate",
+      "created_at": "2026-02-02T14:53:22.116Z"
+    },
+    {
+      "id": "28c84a0b-1cba-4405-89f7-5f439d9d92e5",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "f8d37bdb-aa86-4394-9c15-3d899a6e9e32",
+      "answerText": "Reading and vocabulary",
+      "created_at": "2026-02-02T14:53:03.816Z"
+    },
+    {
+      "id": "0ec9a14f-3f82-49eb-88a1-653a3958f649",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "aa8751ad-ce60-4c65-a389-ab7356cf9ad1",
+      "answerText": "36-50",
+      "created_at": "2026-02-02T14:53:02.573Z"
+    },
+    {
+      "id": "4d8b7fbd-1528-429a-823f-022c8087f536",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "b082ae8e-0e49-4452-abfb-1104c4b3a108",
+      "answerText": "Yes, through self-study (apps, books, etc.)",
+      "created_at": "2026-02-02T14:53:01.271Z"
+    },
+    {
+      "id": "534e2bd8-b6bb-4be6-9489-2ea672bc8f11",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "1288eeb1-f838-494e-9dd4-bd7eb164b20a",
+      "answerText": "Listening to audio and podcasts",
+      "created_at": "2026-02-02T14:53:00.092Z"
+    },
+    {
+      "id": "b651fd73-7db1-4e81-81f7-bd026541197c",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "c94b4a3b-88e7-4fb8-8f2e-4813b038c63d",
+      "answerText": "30-60 minutes",
+      "created_at": "2026-02-02T14:52:58.929Z"
+    },
+    {
+      "id": "8035b0fd-63fd-49dc-9dd8-1cf23f17d96b",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "08b83f39-1164-46f7-a565-4f21e44f15fb",
+      "answerText": "Enhance my writing and grammar",
+      "created_at": "2026-02-02T14:52:57.734Z"
+    },
+    {
+      "id": "66e1e317-bbe5-4827-8009-2f6eb23d2845",
+      "questionId": "system:level",
+      "questionDescription": "What is your current learning level?",
+      "answerId": "09bc3752-c7d9-4946-be59-15d1de84aea5",
+      "answerText": "elementary",
+      "created_at": "2026-02-02T14:52:56.309Z"
+    },
+    {
+      "id": "88ebdf9b-e449-48d3-b8fc-547653f080ef",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "f8d37bdb-aa86-4394-9c15-3d899a6e9e32",
+      "answerText": "Reading and vocabulary",
+      "created_at": "2026-02-02T14:52:44.682Z"
+    },
+    {
+      "id": "765ea8d3-72bd-4663-bd12-6d90b2809bfa",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "aa8751ad-ce60-4c65-a389-ab7356cf9ad1",
+      "answerText": "36-50",
+      "created_at": "2026-02-02T14:52:42.762Z"
+    },
+    {
+      "id": "8805c4c8-3086-4a40-9706-d2f55690c5d4",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "a73e05fd-5a9d-4446-92b2-b390fd46ca4e",
+      "answerText": "Yes, in school",
+      "created_at": "2026-02-02T14:52:40.726Z"
+    },
+    {
+      "id": "9b50a33a-4e0c-467c-ad59-ed0bdcc33165",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "4af91535-c54a-4073-8c6b-b8049799cf24",
+      "answerText": "Watching videos and movies",
+      "created_at": "2026-02-02T14:52:38.074Z"
+    },
+    {
+      "id": "bdb64a6c-7ab9-4a02-a108-29b369df1a1e",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "c94b4a3b-88e7-4fb8-8f2e-4813b038c63d",
+      "answerText": "30-60 minutes",
+      "created_at": "2026-02-02T14:52:36.066Z"
+    },
+    {
+      "id": "64aef0bc-797d-4cd3-817c-c7e489ab706d",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "47f4dfce-aef6-4389-a3ef-ff9ff0aec144",
+      "answerText": "Prepare for exams (IELTS, TOEFL, etc.)",
+      "created_at": "2026-02-02T14:52:33.954Z"
+    },
+    {
+      "id": "77512e55-b711-4a25-a9b0-4ead5f99b51d",
+      "questionId": "system:level",
+      "questionDescription": "What is your current learning level?",
+      "answerId": "09bc3752-c7d9-4946-be59-15d1de84aea5",
+      "answerText": "elementary",
+      "created_at": "2026-02-02T14:52:30.755Z"
+    },
+    {
+      "id": "9f9fee84-caa9-4d7b-9fe1-6e01b6bf6a0a",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "cf79055e-c0e0-421b-9d30-8f3ccb13bc7d",
+      "answerText": "Speaking and pronunciation",
+      "created_at": "2026-02-02T14:21:51.500Z"
+    },
+    {
+      "id": "b966fcf2-5abf-40a2-a2a0-48a9d969e100",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "aa8751ad-ce60-4c65-a389-ab7356cf9ad1",
+      "answerText": "36-50",
+      "created_at": "2026-02-02T14:21:50.351Z"
+    },
+    {
+      "id": "34e46a1a-a67f-4b47-95d4-757dd4f406fd",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "b082ae8e-0e49-4452-abfb-1104c4b3a108",
+      "answerText": "Yes, through self-study (apps, books, etc.)",
+      "created_at": "2026-02-02T14:21:49.098Z"
+    },
+    {
+      "id": "90dff7be-1c2d-45d9-a2bd-7862bd5f6ca3",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "4af91535-c54a-4073-8c6b-b8049799cf24",
+      "answerText": "Watching videos and movies",
+      "created_at": "2026-02-02T14:21:48.007Z"
+    },
+    {
+      "id": "82079390-742c-4c78-b348-8929b038eec9",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "c94b4a3b-88e7-4fb8-8f2e-4813b038c63d",
+      "answerText": "30-60 minutes",
+      "created_at": "2026-02-02T14:21:46.815Z"
+    },
+    {
+      "id": "f4c39c41-bf18-492d-acdc-b6cd87a69ee0",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "08b83f39-1164-46f7-a565-4f21e44f15fb",
+      "answerText": "Enhance my writing and grammar",
+      "created_at": "2026-02-02T14:21:45.624Z"
+    },
+    {
+      "id": "62ea622d-fdf5-42b4-85fc-3b9b123c5be5",
+      "questionId": "system:level",
+      "questionDescription": "What is your current learning level?",
+      "answerId": "0d3577ca-f78b-4406-927d-e0f99e16bdc8",
+      "answerText": "intermediate",
+      "created_at": "2026-02-02T14:21:43.597Z"
+    },
+    {
+      "id": "fb773652-7ab5-4626-93e8-501c9cc8ce25",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "5cd1192e-7785-43b4-b572-606964cb203b",
+      "answerText": "Listening comprehension",
+      "created_at": "2026-02-02T14:00:17.606Z"
+    },
+    {
+      "id": "83a728b4-01fc-4200-8aab-efd73a4456a5",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "1a503d71-7250-46fc-a04f-dce1d7008536",
+      "answerText": "26-35",
+      "created_at": "2026-02-02T14:00:15.877Z"
+    },
+    {
+      "id": "5aa9d546-4ba8-4f94-bbae-8d766c73f238",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "f00c13e4-aa62-4c5f-92aa-2b28973f7c0d",
+      "answerText": "Yes, with a tutor or language course",
+      "created_at": "2026-02-02T14:00:14.693Z"
+    },
+    {
+      "id": "40ee5b3a-2ec5-40f7-a1dc-03c076d63a0a",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "ffd06581-d686-46a5-bb42-e15c2340bce4",
+      "answerText": "Reading texts and articles",
+      "created_at": "2026-02-02T14:00:13.092Z"
+    },
+    {
+      "id": "85a20c16-0fcb-4cd8-8dbe-3d10908e794b",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "c94b4a3b-88e7-4fb8-8f2e-4813b038c63d",
+      "answerText": "30-60 minutes",
+      "created_at": "2026-02-02T14:00:11.811Z"
+    },
+    {
+      "id": "bb310f2d-fd6d-40ed-9c8a-2ca81aac15e9",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "08b83f39-1164-46f7-a565-4f21e44f15fb",
+      "answerText": "Enhance my writing and grammar",
+      "created_at": "2026-02-02T14:00:10.553Z"
+    },
+    {
+      "id": "9c81cf4c-75db-45a3-9c5e-5e64369441c6",
+      "questionId": "system:level",
+      "questionDescription": "What is your current learning level?",
+      "answerId": "0d3577ca-f78b-4406-927d-e0f99e16bdc8",
+      "answerText": "intermediate",
+      "created_at": "2026-02-02T14:00:09.153Z"
+    },
+    {
+      "id": "32e1197c-2095-4ab1-a91d-76e9ff801231",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "cf79055e-c0e0-421b-9d30-8f3ccb13bc7d",
+      "answerText": "Speaking and pronunciation",
+      "created_at": "2026-02-02T13:33:49.002Z"
+    },
+    {
+      "id": "8c82db18-ecfd-46a5-b6f0-82c585250e8f",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "1a503d71-7250-46fc-a04f-dce1d7008536",
+      "answerText": "26-35",
+      "created_at": "2026-02-02T13:33:47.857Z"
+    },
+    {
+      "id": "1276e0c2-16b1-4725-91df-2c9e510f7e57",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "b082ae8e-0e49-4452-abfb-1104c4b3a108",
+      "answerText": "Yes, through self-study (apps, books, etc.)",
+      "created_at": "2026-02-02T13:33:46.640Z"
+    },
+    {
+      "id": "f22f0a16-0f3e-4118-a179-4d52a3d65faf",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "ffd06581-d686-46a5-bb42-e15c2340bce4",
+      "answerText": "Reading texts and articles",
+      "created_at": "2026-02-02T13:33:45.542Z"
+    },
+    {
+      "id": "1eb5681c-23ec-479e-a1fe-c38c8b950046",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "c94b4a3b-88e7-4fb8-8f2e-4813b038c63d",
+      "answerText": "30-60 minutes",
+      "created_at": "2026-02-02T13:33:44.317Z"
+    },
+    {
+      "id": "47f6f186-8f9f-4f73-9a5d-ba3a84afa9b3",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "47f4dfce-aef6-4389-a3ef-ff9ff0aec144",
+      "answerText": "Prepare for exams (IELTS, TOEFL, etc.)",
+      "created_at": "2026-02-02T13:33:43.178Z"
+    },
+    {
+      "id": "45f167b0-da1c-4703-9ba1-a05c555fe443",
+      "questionId": "system:level",
+      "questionDescription": "What is your current learning level?",
+      "answerId": "52e324a1-9848-4b52-b34a-ed797b9feff9",
+      "answerText": "pre-intermediate",
+      "created_at": "2026-02-02T13:33:41.816Z"
+    },
+    {
+      "id": "ee8af95b-293c-4efc-afea-96799791b299",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "cf79055e-c0e0-421b-9d30-8f3ccb13bc7d",
+      "answerText": "Speaking and pronunciation",
+      "created_at": "2026-02-02T13:15:48.435Z"
+    },
+    {
+      "id": "e989f440-79d1-4256-9fe8-6a469d135942",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "ff49539f-f41a-4ed6-b1f2-5630ba602e0b",
+      "answerText": "18-25",
+      "created_at": "2026-02-02T13:15:47.183Z"
+    },
+    {
+      "id": "a3df5685-479f-45fa-8b9c-6f30b9ece0f6",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "a73e05fd-5a9d-4446-92b2-b390fd46ca4e",
+      "answerText": "Yes, in school",
+      "created_at": "2026-02-02T13:15:45.972Z"
+    },
+    {
+      "id": "bd0b4ffe-e34c-42e4-9dee-b4b044591c98",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "ffd06581-d686-46a5-bb42-e15c2340bce4",
+      "answerText": "Reading texts and articles",
+      "created_at": "2026-02-02T13:15:44.389Z"
+    },
+    {
+      "id": "1a4c289f-8cea-4f51-a82f-90a326fb07ef",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "1febf2d5-34b1-4552-8af2-341fcd4357f6",
+      "answerText": "5-15 minutes",
+      "created_at": "2026-02-02T13:15:43.137Z"
+    },
+    {
+      "id": "b4bef64b-78d7-4784-b07a-8ca83e0666da",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "f05b349b-a2a5-423a-9bdf-8061a82a852d",
+      "answerText": "Improve my speaking and conversation skills",
+      "created_at": "2026-02-02T13:15:41.422Z"
+    },
+    {
+      "id": "22d70e27-c065-4788-b321-b5ceb937bb92",
+      "questionId": "system:level",
+      "questionDescription": "What is your current learning level?",
+      "answerId": "09bc3752-c7d9-4946-be59-15d1de84aea5",
+      "answerText": "elementary",
+      "created_at": "2026-02-02T13:15:39.061Z"
+    },
+    {
+      "id": "07291e7a-bce8-45b0-bb85-2bf810c020f6",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "cf79055e-c0e0-421b-9d30-8f3ccb13bc7d",
+      "answerText": "Speaking and pronunciation",
+      "created_at": "2026-02-02T12:31:59.353Z"
+    },
+    {
+      "id": "626c8536-60ff-460a-90dc-428ef578711d",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "aa8751ad-ce60-4c65-a389-ab7356cf9ad1",
+      "answerText": "36-50",
+      "created_at": "2026-02-02T12:31:56.547Z"
+    },
+    {
+      "id": "8fbe923f-4426-4682-be0f-bc73bb27512b",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "f00c13e4-aa62-4c5f-92aa-2b28973f7c0d",
+      "answerText": "Yes, with a tutor or language course",
+      "created_at": "2026-02-02T12:31:54.280Z"
+    },
+    {
+      "id": "60c83b8e-5936-4193-8a64-b4ae88b2c58e",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "1288eeb1-f838-494e-9dd4-bd7eb164b20a",
+      "answerText": "Listening to audio and podcasts",
+      "created_at": "2026-02-02T12:31:51.946Z"
+    },
+    {
+      "id": "7c482bfe-db84-4698-b060-8ebcfb9d98ec",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "c94b4a3b-88e7-4fb8-8f2e-4813b038c63d",
+      "answerText": "30-60 minutes",
+      "created_at": "2026-02-02T12:31:50.303Z"
+    },
+    {
+      "id": "a2602d11-ef8a-4029-97d9-b50e6ea7ca44",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "08b83f39-1164-46f7-a565-4f21e44f15fb",
+      "answerText": "Enhance my writing and grammar",
+      "created_at": "2026-02-02T12:31:47.974Z"
+    },
+    {
+      "id": "3cf9412c-3958-4fcb-ae1e-c57e363b1375",
+      "questionId": "system:level",
+      "questionDescription": "What is your current learning level?",
+      "answerId": "52e324a1-9848-4b52-b34a-ed797b9feff9",
+      "answerText": "pre-intermediate",
+      "created_at": "2026-02-02T12:31:45.517Z"
+    },
+    {
+      "id": "fe33fdc7-ac94-446c-924d-3b2ecddba618",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "2916bd2f-a5dd-4f41-b97e-6b4a2be94129",
+      "answerText": "Writing and composition",
+      "created_at": "2026-02-02T11:37:37.175Z"
+    },
+    {
+      "id": "5a5fb522-0944-49b2-884a-6cac2d6d0bcc",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "1a503d71-7250-46fc-a04f-dce1d7008536",
+      "answerText": "26-35",
+      "created_at": "2026-02-02T11:37:30.125Z"
+    },
+    {
+      "id": "4b24e8f9-f2e4-49d8-8b2a-aa9d2b1bd6e9",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "b082ae8e-0e49-4452-abfb-1104c4b3a108",
+      "answerText": "Yes, through self-study (apps, books, etc.)",
+      "created_at": "2026-02-02T11:37:27.533Z"
+    },
+    {
+      "id": "d5dc6402-d0a5-463f-8785-e4e1b8831738",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "1288eeb1-f838-494e-9dd4-bd7eb164b20a",
+      "answerText": "Listening to audio and podcasts",
+      "created_at": "2026-02-02T11:37:25.305Z"
+    },
+    {
+      "id": "cf83ebf0-d8bc-479c-b362-b6bbaba81a4e",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "c94b4a3b-88e7-4fb8-8f2e-4813b038c63d",
+      "answerText": "30-60 minutes",
+      "created_at": "2026-02-02T11:37:22.536Z"
+    },
+    {
+      "id": "1d17553f-59d0-4847-b016-241a113cb1e8",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "08b83f39-1164-46f7-a565-4f21e44f15fb",
+      "answerText": "Enhance my writing and grammar",
+      "created_at": "2026-02-02T11:37:20.547Z"
+    },
+    {
+      "id": "22e9ba0b-9691-4f67-adcf-53a6a6677c4f",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "cf79055e-c0e0-421b-9d30-8f3ccb13bc7d",
+      "answerText": "Speaking and pronunciation",
+      "created_at": "2026-02-02T11:32:27.305Z"
+    },
+    {
+      "id": "ecb535a8-4322-40cc-bf9a-fd376d7f3384",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "92882e97-b8f3-4b3d-b442-3a87305b8dc3",
+      "answerText": "Under 18",
+      "created_at": "2026-02-02T11:32:23.403Z"
+    },
+    {
+      "id": "6b1f6e84-1182-4808-aab8-7cd5205fc5b3",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "c58790dd-e8aa-4ebd-954f-c0e44a332b3b",
+      "answerText": "No, this is my first time",
+      "created_at": "2026-02-02T11:32:20.860Z"
+    },
+    {
+      "id": "4fa0522b-de9e-4f53-8bbc-48ab32c7a92c",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "ffd06581-d686-46a5-bb42-e15c2340bce4",
+      "answerText": "Reading texts and articles",
+      "created_at": "2026-02-02T11:32:17.875Z"
+    },
+    {
+      "id": "53e9a63e-f950-4949-af5e-fbc3e55823ae",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "1febf2d5-34b1-4552-8af2-341fcd4357f6",
+      "answerText": "5-15 minutes",
+      "created_at": "2026-02-02T11:32:15.615Z"
+    },
+    {
+      "id": "18e768b3-5e84-4171-a0c0-07573bc7742b",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "f05b349b-a2a5-423a-9bdf-8061a82a852d",
+      "answerText": "Improve my speaking and conversation skills",
+      "created_at": "2026-02-02T11:32:13.407Z"
+    },
+    {
+      "id": "91c89420-c8b4-4c64-82ea-23220a663d5d",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "cf79055e-c0e0-421b-9d30-8f3ccb13bc7d",
+      "answerText": "Speaking and pronunciation",
+      "created_at": "2026-02-02T11:32:02.549Z"
+    },
+    {
+      "id": "7342e7f6-0b11-4351-936a-58f7bf707c49",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "1a503d71-7250-46fc-a04f-dce1d7008536",
+      "answerText": "26-35",
+      "created_at": "2026-02-02T11:31:55.608Z"
+    },
+    {
+      "id": "b241f692-f627-4d55-9e34-afaeb47d527a",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "a73e05fd-5a9d-4446-92b2-b390fd46ca4e",
+      "answerText": "Yes, in school",
+      "created_at": "2026-02-02T11:31:48.984Z"
+    },
+    {
+      "id": "ef407cd7-4399-45a4-882b-8c8956855fdb",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "1288eeb1-f838-494e-9dd4-bd7eb164b20a",
+      "answerText": "Listening to audio and podcasts",
+      "created_at": "2026-02-02T11:31:42.129Z"
+    },
+    {
+      "id": "86aff368-2519-4706-aa9b-850cca1cea10",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "32112e07-6827-4d31-b9c7-487da01516fa",
+      "answerText": "Interactive exercises and quizzes",
+      "created_at": "2026-02-02T11:31:42.129Z"
+    },
+    {
+      "id": "fcd4193e-610d-4c57-8e5e-21d89e1811a7",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "4af91535-c54a-4073-8c6b-b8049799cf24",
+      "answerText": "Watching videos and movies",
+      "created_at": "2026-02-02T11:31:42.129Z"
+    },
+    {
+      "id": "6bd11be7-01c7-47cb-a07d-4883af70a4f6",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "c94b4a3b-88e7-4fb8-8f2e-4813b038c63d",
+      "answerText": "30-60 minutes",
+      "created_at": "2026-02-02T11:31:33.343Z"
+    },
+    {
+      "id": "c9751d62-b772-481b-8c58-ffaf8d8cd01e",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "47f4dfce-aef6-4389-a3ef-ff9ff0aec144",
+      "answerText": "Prepare for exams (IELTS, TOEFL, etc.)",
+      "created_at": "2026-02-02T11:31:19.500Z"
+    },
+    {
+      "id": "ca959751-6037-499b-ad47-a94ab3709f01",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "f8d37bdb-aa86-4394-9c15-3d899a6e9e32",
+      "answerText": "Reading and vocabulary",
+      "created_at": "2026-02-02T06:19:49.141Z"
+    },
+    {
+      "id": "0e6b54dd-84ff-4051-8d2b-9e2d3c7f395e",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "aa8751ad-ce60-4c65-a389-ab7356cf9ad1",
+      "answerText": "36-50",
+      "created_at": "2026-02-02T06:19:40.229Z"
+    },
+    {
+      "id": "781ed36a-cccb-4d8c-926a-56232ef7115c",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "f00c13e4-aa62-4c5f-92aa-2b28973f7c0d",
+      "answerText": "Yes, with a tutor or language course",
+      "created_at": "2026-02-02T06:19:36.156Z"
+    },
+    {
+      "id": "3d75b030-a51f-474f-ab67-66c7a40cf6a9",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "1288eeb1-f838-494e-9dd4-bd7eb164b20a",
+      "answerText": "Listening to audio and podcasts",
+      "created_at": "2026-02-02T06:19:32.080Z"
+    },
+    {
+      "id": "1b954468-b1fe-4b66-830d-ca8c26d64d4b",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "c94b4a3b-88e7-4fb8-8f2e-4813b038c63d",
+      "answerText": "30-60 minutes",
+      "created_at": "2026-02-02T06:19:28.376Z"
+    },
+    {
+      "id": "62e84d8a-593a-4c94-b61d-36763a7c12d4",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "f05b349b-a2a5-423a-9bdf-8061a82a852d",
+      "answerText": "Improve my speaking and conversation skills",
+      "created_at": "2026-02-02T06:19:24.432Z"
+    },
+    {
+      "id": "03908e8f-7b51-458d-8e29-ca025e1859e8",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "f8d37bdb-aa86-4394-9c15-3d899a6e9e32",
+      "answerText": "Reading and vocabulary",
+      "created_at": "2026-02-02T06:19:01.438Z"
+    },
+    {
+      "id": "36634c6c-3034-4969-afba-2ca4ee977cf0",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "aa8751ad-ce60-4c65-a389-ab7356cf9ad1",
+      "answerText": "36-50",
+      "created_at": "2026-02-02T06:18:52.794Z"
+    },
+    {
+      "id": "c632f64e-803e-4444-8f91-2c5b04afb230",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "f00c13e4-aa62-4c5f-92aa-2b28973f7c0d",
+      "answerText": "Yes, with a tutor or language course",
+      "created_at": "2026-02-02T06:18:46.744Z"
+    },
+    {
+      "id": "5361f415-c1c8-4baa-b5ce-724f1a8bb38e",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "4af91535-c54a-4073-8c6b-b8049799cf24",
+      "answerText": "Watching videos and movies",
+      "created_at": "2026-02-02T06:18:41.218Z"
+    },
+    {
+      "id": "9ac1692d-6456-43e5-b637-6794b84c8f0a",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "82de44ec-96ad-44ab-8f12-f49cb02e88f3",
+      "answerText": "15-30 minutes",
+      "created_at": "2026-02-02T06:18:37.293Z"
+    },
+    {
+      "id": "9097e378-3d00-44f5-b8b1-a8e0d31e8485",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "08b83f39-1164-46f7-a565-4f21e44f15fb",
+      "answerText": "Enhance my writing and grammar",
+      "created_at": "2026-02-02T06:18:32.372Z"
+    },
+    {
+      "id": "b174d5f9-4870-476e-9e3b-418cc39e870f",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "f8d37bdb-aa86-4394-9c15-3d899a6e9e32",
+      "answerText": "Reading and vocabulary",
+      "created_at": "2026-01-29T14:05:44.523Z"
+    },
+    {
+      "id": "26f9d6c6-2d79-4ab0-888e-92d930709cd2",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "1a503d71-7250-46fc-a04f-dce1d7008536",
+      "answerText": "26-35",
+      "created_at": "2026-01-29T14:05:36.609Z"
+    },
+    {
+      "id": "100779db-288e-4090-8d97-9903667bb1fc",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "f00c13e4-aa62-4c5f-92aa-2b28973f7c0d",
+      "answerText": "Yes, with a tutor or language course",
+      "created_at": "2026-01-29T14:05:32.851Z"
+    },
+    {
+      "id": "c744aa42-a84b-414e-8940-af73cfd89e3b",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "4af91535-c54a-4073-8c6b-b8049799cf24",
+      "answerText": "Watching videos and movies",
+      "created_at": "2026-01-29T14:05:29.395Z"
+    },
+    {
+      "id": "93a4ce35-9814-41ba-ba9e-66d3a3adff45",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "35e86f56-c031-4394-bfe7-85ecf6a8b571",
+      "answerText": "More than 1 hour",
+      "created_at": "2026-01-29T14:05:25.113Z"
+    },
+    {
+      "id": "f715f02b-7d3a-43dd-9892-4dfd4063469b",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "47f4dfce-aef6-4389-a3ef-ff9ff0aec144",
+      "answerText": "Prepare for exams (IELTS, TOEFL, etc.)",
+      "created_at": "2026-01-29T14:05:20.508Z"
+    },
+    {
+      "id": "a91dece8-c751-4b98-b172-94e30a870f25",
+      "questionId": "319f281b-1ca5-4140-9dfe-c7a8a4e6272c",
+      "questionDescription": "Which English skills do you want to focus on most? (Select up to 3)",
+      "answerId": "f8d37bdb-aa86-4394-9c15-3d899a6e9e32",
+      "answerText": "Reading and vocabulary",
+      "created_at": "2026-01-18T11:11:44.202Z"
+    },
+    {
+      "id": "799f32fe-2687-4301-8798-c60b447e6dd2",
+      "questionId": "58b9dfa6-f25f-432b-b080-0fecb8624dc6",
+      "questionDescription": "What is your age group?",
+      "answerId": "180913f4-5b5c-4701-9aa5-867ede9fa7ad",
+      "answerText": "Over 50",
+      "created_at": "2026-01-18T11:11:37.557Z"
+    },
+    {
+      "id": "a41b48fd-be55-4f72-98ac-5307dde53259",
+      "questionId": "ec5f5348-6b44-40c7-9fe4-a1d4cbe73dc6",
+      "questionDescription": "Have you learned English before?",
+      "answerId": "f00c13e4-aa62-4c5f-92aa-2b28973f7c0d",
+      "answerText": "Yes, with a tutor or language course",
+      "created_at": "2026-01-18T11:11:33.431Z"
+    },
+    {
+      "id": "7921ff38-0e26-4776-8790-065e3f97f857",
+      "questionId": "d74c8bfe-5bd4-4322-a390-1ad855bd3563",
+      "questionDescription": "Which learning methods do you prefer? (Select all that apply)",
+      "answerId": "ffd06581-d686-46a5-bb42-e15c2340bce4",
+      "answerText": "Reading texts and articles",
+      "created_at": "2026-01-18T11:11:29.037Z"
+    },
+    {
+      "id": "bd181b5f-9e03-4e26-84c1-949c0000d520",
+      "questionId": "79a90522-b073-43bc-a4a2-4c55ea16086c",
+      "questionDescription": "How much time can you dedicate to learning English per day?",
+      "answerId": "c94b4a3b-88e7-4fb8-8f2e-4813b038c63d",
+      "answerText": "30-60 minutes",
+      "created_at": "2026-01-18T11:11:24.425Z"
+    },
+    {
+      "id": "4326b082-7a34-4e6c-91de-271a0c659de9",
+      "questionId": "8ccdf6ad-d6c0-45c3-9b59-6885d7cf64fa",
+      "questionDescription": "What are your main goals for learning English? (Select all that apply)",
+      "answerId": "08b83f39-1164-46f7-a565-4f21e44f15fb",
+      "answerText": "Enhance my writing and grammar",
+      "created_at": "2026-01-18T11:11:21.110Z"
+    }
+  ],
+  "totalCompletedTasks": 122,
+  "totalVocabulary": 5,
+  "breakdown": {
+    "practiceCompleted": 8,
+    "assignmentCompleted": 49,
+    "lessonCompleted": 65
+  },
+  "myWeeklyRank": 2,
+  "myMonthlyRank": 2
 }
