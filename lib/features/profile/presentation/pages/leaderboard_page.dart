@@ -1,65 +1,41 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
+import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/toggles/segmented_control.dart';
-import 'package:ustadia_user_app/features/common/presentation/pages/coming_soon.dart';
 import 'package:ustadia_user_app/features/profile/data/models/leaderboard_podium_model.dart';
 import 'package:ustadia_user_app/features/profile/data/models/leaderboard_user_model.dart';
+import 'package:ustadia_user_app/features/profile/presentation/bloc/leaderboard_bloc/leaderboard_bloc.dart';
+import 'package:ustadia_user_app/features/profile/presentation/bloc/leaderboard_bloc/leaderboard_event.dart';
+import 'package:ustadia_user_app/features/profile/presentation/bloc/leaderboard_bloc/leaderboard_state.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/leaderboard/leaderboard_podium_item.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/leaderboard/leaderboard_user_list_item.dart';
-import 'package:ustadia_user_app/features/profile/presentation/widgets/leaderboard/scope_filter_item.dart';
+import 'package:ustadia_user_app/injection_container.dart';
 
 class LeaderboardPage extends StatefulWidget {
   const LeaderboardPage({super.key});
 
   @override
-  State<LeaderboardPage> createState() => _LeaderboardPageState();
+  State<LeaderboardPage> createState() => LeaderboardPageState();
 }
 
-class _LeaderboardPageState extends State<LeaderboardPage> {
+class LeaderboardPageState extends State<LeaderboardPage> {
+  final LeaderboardBloc leaderboardBloc = sl<LeaderboardBloc>();
   int selectedRangeIndex = 0;
-  int selectedScopeIndex = 0;
 
-  List<String> scopeFilters = ['Global', 'Friends'];
+  @override
+  void initState() {
+    super.initState();
+    leaderboardBloc.add(const LeaderboardRequested());
+  }
 
-  static const String _avatarAlex =
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=300&auto=format&fit=crop';
-  static const String _avatarTaylor =
-      'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=300&auto=format&fit=crop';
-  static const String _avatarJordan =
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=300&auto=format&fit=crop';
-  static const String _avatarRahimov =
-      'https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=300&auto=format&fit=crop';
-
-  static const List<LeaderboardPodiumModel> _podiumUsers = [
-    LeaderboardPodiumModel(
-      user: LeaderboardUserModel(rank: 2, name: 'Taylor Reed', xp: 2150, avatarUrl: _avatarTaylor),
-      placeAsset: AppImages.leaderboardSecondPlace,
-      placeLabel: '2nd',
-    ),
-    LeaderboardPodiumModel(
-      user: LeaderboardUserModel(rank: 1, name: 'Alex Mercer', xp: 2400, avatarUrl: _avatarAlex),
-      placeAsset: AppImages.leaderboardFirstPlace,
-      placeLabel: '1st',
-    ),
-    LeaderboardPodiumModel(
-      user: LeaderboardUserModel(rank: 3, name: 'Jordan Blake', xp: 1980, avatarUrl: _avatarJordan),
-      placeAsset: AppImages.leaderboardThirdPlace,
-      placeLabel: '3rd',
-    ),
-  ];
-
-  static const List<LeaderboardUserModel> _leaderboardUsers = [
-    LeaderboardUserModel(rank: 4, name: 'Rahimov A.', xp: 1920, avatarUrl: _avatarRahimov),
-    LeaderboardUserModel(rank: 5, name: 'Rahimov A.', xp: 1760, avatarUrl: _avatarRahimov),
-    LeaderboardUserModel(rank: 6, name: 'Rahimov A.', xp: 1720, avatarUrl: _avatarRahimov),
-    LeaderboardUserModel(rank: 7, name: 'Rahimov A.', xp: 1630, avatarUrl: _avatarRahimov),
-    LeaderboardUserModel(rank: 8, name: 'Rahimov A.', xp: 1850, avatarUrl: _avatarRahimov),
-    LeaderboardUserModel(rank: 9, name: 'Rahimov A.', xp: 1810, avatarUrl: _avatarRahimov),
-    LeaderboardUserModel(
-        rank: 10, name: 'You', xp: 1850, avatarUrl: _avatarRahimov, isCurrentUser: true),
-  ];
+  @override
+  void dispose() {
+    leaderboardBloc.close();
+    super.dispose();
+  }
 
   /// --- Methods ---
 
@@ -67,67 +43,101 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
     setState(() => selectedRangeIndex = index);
   }
 
-  void onSelectScopeFilter(int index) {
-    selectedScopeIndex = index;
-    setState(() {});
+  List<LeaderboardUserModel> usersForSelectedRange(LeaderboardState state) {
+    return selectedRangeIndex == 0 ? state.weeklyUsers : state.monthlyUsers;
+  }
+
+  List<LeaderboardUserModel> topThreeUsers(List<LeaderboardUserModel> users) {
+    final byRank = <int, LeaderboardUserModel>{};
+    for (final user in users) {
+      byRank[user.rank] = user;
+    }
+    return [
+      if (byRank.containsKey(2)) byRank[2]!,
+      if (byRank.containsKey(1)) byRank[1]!,
+      if (byRank.containsKey(3)) byRank[3]!,
+    ];
+  }
+
+  List<LeaderboardPodiumModel> podiumItems(List<LeaderboardUserModel> users) {
+    return users.map((user) {
+      if (user.rank == 1) {
+        return LeaderboardPodiumModel(
+            user: user, placeAsset: AppImages.leaderboardFirstPlace, placeLabel: '1st');
+      }
+      if (user.rank == 2) {
+        return LeaderboardPodiumModel(
+            user: user, placeAsset: AppImages.leaderboardSecondPlace, placeLabel: '2nd');
+      }
+      return LeaderboardPodiumModel(
+          user: user, placeAsset: AppImages.leaderboardThirdPlace, placeLabel: '3rd');
+    }).toList();
+  }
+
+  List<LeaderboardUserModel> leaderboardUsers(List<LeaderboardUserModel> users) {
+    return users.where((user) => user.rank > 3).toList();
   }
 
   /// --- Widgets ---
 
-  Widget rangeSelector(BuildContext context) => SegmentedControl(
+  Widget rangeSelector() => SegmentedControl(
       labels: const ['This week', 'This month'],
       selectedIndex: selectedRangeIndex,
       onChanged: onSelectedRangeIndex);
 
-  Widget get scopeFiltersList => SizedBox(
-        height: 34,
-        child: ListView.separated(
-            itemCount: scopeFilters.length,
-            scrollDirection: Axis.horizontal,
-            separatorBuilder: (_, index) => const SizedBox(width: 12),
-            itemBuilder: (_, index) => ScopeFilterItem(
-                  title: scopeFilters[index],
-                  index: index,
-                  isSelected: selectedScopeIndex == index,
-                  onTap: onSelectScopeFilter,
-                )),
-      );
-
-  Widget podiumRow(BuildContext context) => Row(
+  Widget podiumRow(List<LeaderboardUserModel> users) {
+    final topUsers = topThreeUsers(users);
+    final podium = podiumItems(topUsers);
+    if (podium.length < 3) return const SizedBox.shrink();
+    return Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          LeaderboardPodiumItem(podium: _podiumUsers[0]),
-          LeaderboardPodiumItem(podium: _podiumUsers[1]),
-          LeaderboardPodiumItem(podium: _podiumUsers[2]),
-        ],
-      );
+          LeaderboardPodiumItem(podium: podium[0]),
+          LeaderboardPodiumItem(podium: podium[1]),
+          LeaderboardPodiumItem(podium: podium[2]),
+        ]);
+  }
 
-  Widget leaderboardList(BuildContext context) => ListView.separated(
-        itemCount: _leaderboardUsers.length,
+  Widget leaderboardList(List<LeaderboardUserModel> users) {
+    final listUsers = leaderboardUsers(users);
+    return ListView.separated(
+        itemCount: listUsers.length,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         separatorBuilder: (_, __) => const SizedBox(height: 4),
-        itemBuilder: (_, index) => LeaderboardUserListItem(user: _leaderboardUsers[index]),
-      );
+        itemBuilder: (_, index) => LeaderboardUserListItem(user: listUsers[index]));
+  }
 
-  Widget view(BuildContext context) => Column(
+  Widget dataView(List<LeaderboardUserModel> users) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 24),
-          rangeSelector(context),
-          const SizedBox(height: 12),
-          scopeFiltersList,
+          rangeSelector(),
           const SizedBox(height: 28),
-          podiumRow(context),
+          podiumRow(users),
           const SizedBox(height: 24),
-          leaderboardList(context),
+          leaderboardList(users),
           const SizedBox(height: 80),
         ],
       );
 
+  Widget get content => BlocStatusView<LeaderboardBloc, LeaderboardState, List<LeaderboardUserModel>>(
+      bloc: leaderboardBloc,
+      statusOf: (state) => state.status,
+      errorOf: (state) => state.errorMessage,
+      data: usersForSelectedRange,
+      isEmpty: (users) => users.isEmpty,
+      empty: Center(child: Text('No data found'.tr())),
+      loading: const Center(child: CircularProgressIndicator()),
+      builder: (context, users) => dataView(users),
+      listener: (context, state) {
+        if (state.status == Status.error && state.errorMessage != null) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+        }
+      });
+
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: PrimaryBackground(
-          title: 'Leaderboard'.tr(), isScrollable: false, child: const ComingSoonPage()));
+      body: PrimaryBackground(title: 'Leaderboard'.tr(), isScrollable: true, child: content));
 }

@@ -12,6 +12,7 @@ import 'package:ustadia_user_app/features/profile/data/models/profile_statistics
 import 'package:ustadia_user_app/features/profile/data/models/profile_stats_model.dart';
 import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/badge_item_card.dart';
+import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/leaderboard_card.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/profile_stats_card.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/profile_user_card.dart';
 import 'package:ustadia_user_app/injection_container.dart';
@@ -137,7 +138,7 @@ class ProfilePageState extends State<ProfilePage> {
         //  const SizedBox(height: 12),
         //  badgesItemList,
         //   const SizedBox(height: 24),
-        //  const LeaderBoardCard(),
+        const LeaderBoardCard(),
         const SizedBox(height: 74),
       ]);
 

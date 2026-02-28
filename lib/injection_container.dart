@@ -41,7 +41,9 @@ import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_se
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_sentence_builder_status_bloc/practice_sentence_builder_status_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_word_match_sets_bloc/practice_word_match_sets_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_word_match_status_bloc/practice_word_match_status_bloc.dart';
+import 'package:ustadia_user_app/features/profile/data/datasources/leaderboard_remote_data_source.dart';
 import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
+import 'package:ustadia_user_app/features/profile/presentation/bloc/leaderboard_bloc/leaderboard_bloc.dart';
 
 import 'core/network/dio_client.dart';
 
@@ -58,7 +60,8 @@ Future<void> initDependencies() async {
   // Features - Auth
   sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSource(
       dio: DioClient.create(
-          baseUrl: 'https://backend.ustadia.findecor.io',
+          // baseUrl: 'https://backend.ustadia.findecor.io',
+         baseUrl: 'https://dev.backend.ustadia.findecor.io',
           accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken())));
   sl.registerFactory(() => AuthLoginBloc(
       authRemoteDataSource: sl(), authLocalDataSource: sl(), userRemoteDataSource: sl()));
@@ -72,7 +75,10 @@ Future<void> initDependencies() async {
       () => UserRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
   sl.registerLazySingleton<ProfileStatisticsStore>(
       () => ProfileStatisticsStore(userRemoteDataSource: sl()));
+  sl.registerLazySingleton<LeaderboardRemoteDataSource>(
+      () => LeaderboardRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
   sl.registerLazySingleton<UserBloc>(() => UserBloc(userRemoteDataSource: sl()));
+  sl.registerFactory(() => LeaderboardBloc(leaderboardRemoteDataSource: sl(), userBloc: sl()));
   sl.registerLazySingleton<UploadRemoteDataSource>(
       () => UploadRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
   sl.registerFactory(() => FileUploadBloc(uploadRemoteDataSource: sl()));
