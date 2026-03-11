@@ -14,8 +14,9 @@ import 'package:ustadia_user_app/features/learn/presentation/bloc/audio_bloc/aud
 import 'package:ustadia_user_app/injection_container.dart';
 
 class AudioCard extends StatefulWidget {
-  final SectionModel sectionModel;
-  const AudioCard({super.key, required this.sectionModel});
+  final SectionModel? sectionModel;
+  final String? audioUrl;
+  const AudioCard({super.key, this.sectionModel, this.audioUrl});
 
   @override
   State<AudioCard> createState() => AudioCardState();
@@ -26,6 +27,7 @@ class AudioCardState extends State<AudioCard> {
   final AudioBloc audioBloc = sl<AudioBloc>();
   bool isPlaying = false;
   bool hasLoadedSource = false;
+  bool hasCompletedPlayback = false;
   bool isSeeking = false;
   Duration currentPosition = Duration.zero;
   Duration totalDuration = Duration.zero;
@@ -40,6 +42,7 @@ class AudioCardState extends State<AudioCard> {
       if (!mounted) return;
       setState(() {
         isPlaying = false;
+        hasCompletedPlayback = true;
         currentPosition = totalDuration;
       });
     });
@@ -57,7 +60,8 @@ class AudioCardState extends State<AudioCard> {
   @override
   void didUpdateWidget(covariant AudioCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.sectionModel.audioFile?.url != widget.sectionModel.audioFile?.url) {
+    final oldUrl = oldWidget.audioUrl ?? oldWidget.sectionModel?.audioFile?.url;
+    if (oldUrl != resolvedAudioUrl) {
       resetPlayerForNewAudio();
       requestAudio();
     }
@@ -71,7 +75,7 @@ class AudioCardState extends State<AudioCard> {
   }
 
   /// --- Getters ---
-  String? get audioUrl => widget.sectionModel.audioFile?.url;
+  String? get resolvedAudioUrl => widget.audioUrl ?? widget.sectionModel?.audioFile?.url;
   double get progressValue {
     if (totalDuration.inMilliseconds == 0) return 0;
     final value = currentPosition.inMilliseconds / totalDuration.inMilliseconds;
@@ -83,7 +87,6 @@ class AudioCardState extends State<AudioCard> {
   /// --- Listeners ---
 
   void audioListener(context, state) {
-    print("my state is ${state.status}");
     if (state.status.isError && state.errorMessage != null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
     }
@@ -92,7 +95,7 @@ class AudioCardState extends State<AudioCard> {
   /// --- Methods ---
 
   void requestAudio() {
-    final url = audioUrl;
+    final url = resolvedAudioUrl;
     if (url == null || url.isEmpty) return;
     audioBloc.add(AudioRequested(url: url));
   }
@@ -103,6 +106,7 @@ class AudioCardState extends State<AudioCard> {
     setState(() {
       isPlaying = false;
       hasLoadedSource = false;
+      hasCompletedPlayback = false;
       isSeeking = false;
       currentPosition = Duration.zero;
       totalDuration = Duration.zero;
@@ -124,14 +128,27 @@ class AudioCardState extends State<AudioCard> {
     }
     setState(() => isPlaying = true);
     if (hasLoadedSource) {
-      if (totalDuration != Duration.zero && currentPosition >= totalDuration) {
-        await player.seek(Duration.zero);
-        if (mounted) setState(() => currentPosition = Duration.zero);
+      if (hasCompletedPlayback ||
+          (totalDuration != Duration.zero && currentPosition >= totalDuration)) {
+        await player.stop();
+        await player.play(DeviceFileSource(state.filePath!));
+        if (!mounted) return;
+        setState(() {
+          hasCompletedPlayback = false;
+          currentPosition = Duration.zero;
+        });
+        return;
       }
       await player.resume();
+      if (!mounted) return;
+      setState(() => hasCompletedPlayback = false);
     } else {
       await player.play(DeviceFileSource(state.filePath!));
-      hasLoadedSource = true;
+      if (!mounted) return;
+      setState(() {
+        hasLoadedSource = true;
+        hasCompletedPlayback = false;
+      });
     }
   }
 
@@ -168,6 +185,8 @@ class AudioCardState extends State<AudioCard> {
     isSeeking = false;
     final target = Duration(milliseconds: (value * totalDuration.inMilliseconds).round());
     await player.seek(target);
+    if (!mounted) return;
+    setState(() => hasCompletedPlayback = false);
   }
 
   /// --- Widgets ---

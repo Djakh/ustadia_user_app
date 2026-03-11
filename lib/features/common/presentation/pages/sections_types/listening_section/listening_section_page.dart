@@ -10,7 +10,7 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/section_detai
 import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/listening_section/listening_section_intro.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_quiz_component.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
-import 'package:ustadia_user_app/features/learn/presentation/widgets/cards/audio_card.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/cards/audio_card.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 enum ListeningSectionStage { lesson, quiz, result }

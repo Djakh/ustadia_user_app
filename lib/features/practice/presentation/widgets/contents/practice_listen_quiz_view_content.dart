@@ -12,8 +12,13 @@ class PracticeListenQuizViewContent extends StatefulWidget {
   final PracticeListenTapQuestionModel question;
   final VoidCallback onPlay;
   final bool isLoading;
+  final bool hideAudioControls;
   const PracticeListenQuizViewContent(
-      {super.key, required this.question, required this.onPlay, required this.isLoading});
+      {super.key,
+      required this.question,
+      required this.onPlay,
+      required this.isLoading,
+      this.hideAudioControls = false});
 
   @override
   State<PracticeListenQuizViewContent> createState() => PracticeListenQuizViewContentState();
@@ -93,13 +98,14 @@ class PracticeListenQuizViewContentState extends State<PracticeListenQuizViewCon
               textColor: optionTextColor(context, index))));
 
   Widget get view => Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-        SizedBox(height: SizeConfig.screenHeight / 14),
-        audioButton,
-        const SizedBox(height: 16),
-        Text('Listen and tap what your hear'.tr(),
-            style: Style.small3w4(context, color: TextColorRole.greyColor)),
-        const SizedBox(height: 24),
-        controlRow,
+        if (!widget.hideAudioControls) SizedBox(height: SizeConfig.screenHeight / 14),
+        if (!widget.hideAudioControls) audioButton,
+        if (!widget.hideAudioControls) const SizedBox(height: 16),
+        if (!widget.hideAudioControls)
+          Text('Listen and tap what your hear'.tr(),
+              style: Style.small3w4(context, color: TextColorRole.greyColor)),
+        if (!widget.hideAudioControls) const SizedBox(height: 24),
+        if (!widget.hideAudioControls) controlRow,
         SizedBox(height: SizeConfig.screenHeight / 15),
         ...optionsList
       ]);

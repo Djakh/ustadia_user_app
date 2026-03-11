@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
-import 'package:ustadia_user_app/features/learn/presentation/widgets/cards/audio_card.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/cards/audio_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ListeningSectionIntro extends StatelessWidget {
