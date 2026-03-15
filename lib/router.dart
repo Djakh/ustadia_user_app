@@ -42,7 +42,6 @@ import 'package:ustadia_user_app/features/practice/presentation/pages/practice_p
 import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_result_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_start_page.dart';
-import 'package:ustadia_user_app/features/practice/presentation/pages/vocabulary/practice_vocabulary_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/word_match/practice_word_match_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/word_match/practice_word_match_sets_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/writing_assesment/practice_writing_assessment_page.dart';
@@ -138,8 +137,6 @@ const writingAssessmentRoute = '$practiceRoute/$writingAssessmentPath';
 const listenTapSetsRoute = '$practiceRoute/$listenTapSetsPath';
 
 const listenTapRoute = '$practiceRoute/$listenTapPath';
-
-const vocabularyRoute = '$practiceRoute/$vocabularyPath';
 
 const speedMixRoute = '$practiceRoute/$speedMixPath';
 const speedMixPlayRoute = '$speedMixRoute/$speedMixPlayPath';
@@ -383,11 +380,6 @@ final appRouter = GoRouter(
                   builder: (context, state) {
                     return PracticeListenTapPage(set: state.extra as PracticeListenTapSetModel);
                   },
-                ),
-                GoRoute(
-                  path: vocabularyPath,
-                  parentNavigatorKey: _rootKey,
-                  builder: (_, __) => const PracticeVocabularyPage(),
                 ),
 
                 /// SpeedMix: start -> play/result
