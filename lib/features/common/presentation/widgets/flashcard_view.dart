@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
+import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_model.dart';
 
 class FlashcardView extends StatelessWidget {
@@ -29,24 +30,27 @@ class FlashcardView extends StatelessWidget {
         Text('Tap to flip'.tr(), style: Style.small3w4(context, color: TextColorRole.greyColor))
       ]);
 
-  Widget faceContent(BuildContext context) =>
-      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text('Word'.tr(), style: Style.small3w4(context, color: TextColorRole.greyColor)),
-        const SizedBox(height: 8),
-        Text(flashcard.front, style: Style.headline5w7(context)),
-        const SizedBox(height: 24),
-        tapToFlipWidgets(context)
-      ]);
+  Widget faceContent(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text('Word'.tr(), style: Style.small3w4(context, color: TextColorRole.greyColor)),
+          const SizedBox(height: 8),
+          Text(flashcard.front, style: Style.headlinew7(context), textAlign: TextAlign.center),
+          const SizedBox(height: 24),
+          tapToFlipWidgets(context)
+        ]),
+      );
 
   Widget backContent(BuildContext context) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Meaning'.tr(), style: Style.small3w4(context)),
+          Text('${'Meaning'.tr()}:', style: Style.small3w4(context)),
           const SizedBox(height: 12),
-          Text(flashcard.back ?? 'No meaning yet',
-              textAlign: TextAlign.center, style: Style.body3w4(context))
+          flashcard.back == null
+              ? const PrimaryLoadingIndicator()
+              : Text(flashcard.back!, textAlign: TextAlign.center, style: Style.body3w4(context))
         ],
       ));
 

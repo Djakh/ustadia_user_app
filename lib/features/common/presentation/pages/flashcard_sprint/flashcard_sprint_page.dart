@@ -10,7 +10,7 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/flashcard_sta
 import 'package:ustadia_user_app/features/common/presentation/bloc/flashcard_status_bloc/flashcard_status_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/flashcard_status_bloc/flashcard_status_state.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_result_page.dart';
-import 'package:ustadia_user_app/features/common/presentation/widgets/practice_flashcard_view.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/flashcard_view.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 enum FlashcardSprintStage { cards, result }
@@ -160,7 +160,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
         Text(progress, style: Style.small3w4(context, color: TextColorRole.greyColor))
       ]);
 
-  Widget get card => FlashcardView(
+  Widget get flashCard => FlashcardView(
       flashcard: current,
       showMeaning: shouldShowMeaning,
       onToggle: toggleFace,
@@ -184,7 +184,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
       header: header,
       child: Column(children: [
         const SizedBox(height: 24),
-        card,
+        flashCard,
         const SizedBox(height: 20),
         controls(context)
       ]));

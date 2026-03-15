@@ -227,12 +227,15 @@ class LoginPageState extends State<LoginPage> {
         phoneNumber: fullPhoneNumber, password: passwordController.text.trim()));
   }
 
-  void toggleLoginMethod() => setState(() {
-        isEmailLogin = !isEmailLogin;
-        showError = false;
-        showEmailError = false;
-        showPasswordError = false;
-      });
+  void toggleLoginMethod() {
+    FocusScope.of(context).unfocus();
+    setState(() {
+      isEmailLogin = !isEmailLogin;
+      showError = false;
+      showEmailError = false;
+      showPasswordError = false;
+    });
+  }
 
   void loadRememberedCredentials() {
     final shouldRemember = authLocalDataSource.isRememberMeEnabled();

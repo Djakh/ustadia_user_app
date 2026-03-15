@@ -35,7 +35,7 @@ class _SplashPageState extends State<SplashPage> {
 
   /// --- Listeners ---
 
-  void userListener(context, state) {
+  void userListener(context,UserState state) {
     if (!isCheckingUser) return;
     if (state.status == Status.success) {
       isCheckingUser = false;

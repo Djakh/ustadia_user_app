@@ -121,13 +121,16 @@ class SignUpPageState extends State<SignUpPage> {
 
   void goToLogin() => context.go(loginRoute);
 
-  void toggleSignUpMethod() => setState(() {
-        isEmailSignUp = !isEmailSignUp;
-        showPhoneError = false;
-        showEmailError = false;
-        showPasswordError = false;
-        showConfirmError = false;
-      });
+  void toggleSignUpMethod() {
+    FocusScope.of(context).unfocus();
+    setState(() {
+      isEmailSignUp = !isEmailSignUp;
+      showPhoneError = false;
+      showEmailError = false;
+      showPasswordError = false;
+      showConfirmError = false;
+    });
+  }
 
   bool get isEmailFormValid =>
       isFullNameValid && isUsernameValid && isEmailValid && isPasswordStrong && passwordsMatch;

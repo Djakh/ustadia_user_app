@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
@@ -112,23 +111,24 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
           itemBuilder: (item) =>
               LearnSectionCard(sectionModel: item, onTap: () => onSectionTap(context, item)));
 
-  Widget get contentChecker =>
-      BlocStatusView<LearnSectionsBloc, LearnSectionsState, List<SectionModel>>(
-          bloc: sectionsBloc,
-          invalid:
-              widget.params.unit.id.isEmpty ? Center(child: Text('Unit not found'.tr())) : null,
-          statusOf: (s) => s.status,
-          errorOf: (s) => s.errorMessage,
-          data: (s) => s.sections,
-          isEmpty: (sections) => sections.isEmpty,
-          keepDataOnLoading: false,
-          empty: Center(child: Text('No sections found'.tr())),
-          loading: ShimmerList(
-              itemCount: 6,
-              itemHeight: 96,
-              padding: Style.paddingPrimary,
-              borderRadius: Style.border20),
-          builder: (context, sections) => sectionsList(context, sections, sectionsBloc.state));
+  Widget
+      get contentChecker =>
+          BlocStatusView<LearnSectionsBloc, LearnSectionsState, List<SectionModel>>(
+              bloc: sectionsBloc,
+              invalid:
+                  widget.params.unit.id.isEmpty ? Center(child: Text('Unit not found'.tr())) : null,
+              statusOf: (s) => s.status,
+              errorOf: (s) => s.errorMessage,
+              data: (s) => s.sections,
+              isEmpty: (sections) => sections.isEmpty,
+              keepDataOnLoading: false,
+              empty: Center(child: Text('No sections found'.tr())),
+              loading: ShimmerList(
+                  itemCount: 6,
+                  itemHeight: 96,
+                  padding: Style.paddingPrimary,
+                  borderRadius: Style.border20),
+              builder: (context, sections) => sectionsList(context, sections, sectionsBloc.state));
 
   @override
   Widget build(BuildContext context) => WillPopScope(

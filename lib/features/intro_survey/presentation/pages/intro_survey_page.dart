@@ -34,6 +34,7 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
   bool isSubmittingAnswer = false;
 
   final Map<String, Set<String>> selectedAnswerIdsByQuestion = {};
+  final Set<String> submittedQuestionIds = {};
 
   final UserBloc userBloc = sl<UserBloc>();
   final IntroSurveyBloc introSurveyBloc = sl<IntroSurveyBloc>();
@@ -43,6 +44,9 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
   @override
   void initState() {
     super.initState();
+    if (userBloc.state.profile == null) {
+      userBloc.add(const UserProfileRequested());
+    }
     introSurveyBloc.add(const IntroSurveyRequested());
   }
 
@@ -56,6 +60,7 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
   /// --- Listeners ---
 
   void userListener(BuildContext context, UserState state) {
+    syncPager(filteredQuestions(introSurveyBloc.state.questions, state));
     if (!isSubmitting) return;
     if (state.status == Status.success) {
       setState(() => isSubmitting = false);
@@ -80,20 +85,68 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
     }
     if (state.submissionStatus == Status.success) {
-      setState(() => isSubmittingAnswer = false);
-      final questions = state.questions;
-      if (questions.isEmpty) return;
-      if (pageIndex < questions.length - 1) {
-        controller.nextPage(
-            duration: const Duration(milliseconds: 300), curve: Curves.easeOutCubic);
-        return;
-      }
+      final currentQuestionId = state.submissionQuestionId;
+      setState(() {
+        isSubmittingAnswer = false;
+        if (currentQuestionId != null && currentQuestionId.isNotEmpty) {
+          submittedQuestionIds.add(currentQuestionId);
+        }
+      });
+      final questions = filteredQuestions(state.questions, userBloc.state);
+      syncPager(questions);
+      if (questions.isNotEmpty) return;
       setState(() => isSubmitting = true);
       userBloc.add(const UserProfileRequested());
     }
   }
 
   /// --- Methods ---
+  Set<String> answeredQuestionIds(UserState userState) => userState.profile?.introAnswers
+          .map((item) => item.questionId)
+          .where((id) => id.isNotEmpty)
+          .toSet() ??
+      {};
+
+  List<IntroSurveyQuestionModel> filteredQuestions(
+      List<IntroSurveyQuestionModel> questions, UserState userState) {
+    final answeredIds = answeredQuestionIds(userState);
+    return questions
+        .where((question) =>
+            !answeredIds.contains(question.id) && !submittedQuestionIds.contains(question.id))
+        .toList();
+  }
+
+  void syncPager(List<IntroSurveyQuestionModel> questions) {
+    if (questions.isEmpty) {
+      if (pageIndex != 0 || lastAllowedIndex != 0) {
+        setState(() {
+          pageIndex = 0;
+          lastAllowedIndex = 0;
+        });
+      }
+      return;
+    }
+    final nextIndex = pageIndex >= questions.length ? questions.length - 1 : pageIndex;
+    final nextAllowedIndex =
+        lastAllowedIndex >= questions.length ? questions.length - 1 : lastAllowedIndex;
+    if (nextIndex == pageIndex && nextAllowedIndex == lastAllowedIndex) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || !controller.hasClients) return;
+        if (controller.page?.round() == nextIndex) return;
+        controller.jumpToPage(nextIndex);
+      });
+      return;
+    }
+    setState(() {
+      pageIndex = nextIndex;
+      lastAllowedIndex = nextAllowedIndex;
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !controller.hasClients) return;
+      controller.jumpToPage(nextIndex);
+    });
+  }
+
   bool canContinueFor(int index, List<IntroSurveyQuestionModel> questions) {
     if (index < 0 || index >= questions.length) return false;
     final question = questions[index];
@@ -152,19 +205,29 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
 
   /// --- Widgets ---
 
-  Widget buildHeader(List<IntroSurveyQuestionModel> questions) {
+  int fullQuestionIndex(
+      IntroSurveyQuestionModel question, List<IntroSurveyQuestionModel> allQuestions) {
+    final index = allQuestions.indexWhere((item) => item.id == question.id);
+    if (index == -1) return pageIndex;
+    return index;
+  }
+
+  Widget buildHeader(
+      List<IntroSurveyQuestionModel> questions, List<IntroSurveyQuestionModel> allQuestions) {
     final question = questions[pageIndex];
+    final originalIndex = fullQuestionIndex(question, allQuestions);
     return Padding(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
         child: IntroSurveyHeaderCard(
-            stepIndex: pageIndex,
-            totalSteps: questions.length,
+            stepIndex: originalIndex,
+            totalSteps: allQuestions.length,
             title: question.description,
             subtitle: headerSubtitleFor(question.type)));
   }
 
   Widget buildQuestions(List<IntroSurveyQuestionModel> questions) => Expanded(
         child: PageView(
+            key: ValueKey(questions.map((item) => item.id).join(',')),
             controller: controller,
             onPageChanged: (index) => onPageChanged(index, questions),
             physics: const PageScrollPhysics(),
@@ -197,23 +260,35 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
             Text(message, textAlign: TextAlign.center),
             const SizedBox(height: 16),
             Button.primary(
-                onTap: () => introSurveyBloc.add(IntroSurveyRequested()), text: 'Retry'.tr())
+                onTap: () => introSurveyBloc.add(const IntroSurveyRequested()),
+                text: 'Retry'.tr())
           ])));
 
-  Widget buildContent(IntroSurveyState state) {
+  Widget buildContent(IntroSurveyState state, UserState userState) {
     if (state.status == Status.loading || state.status == Status.initial) {
       return const PrimaryLoadingIndicator();
     }
     if (state.status == Status.error) {
       return buildErrorState(state.errorMessage ?? 'Failed to load questions');
     }
+    final questions = filteredQuestions(state.questions, userState);
     if (state.questions.isEmpty) {
       return buildErrorState('No questions found');
     }
+    if (questions.isEmpty) {
+      if (!isSubmitting && userState.status != Status.loading) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted || isSubmitting) return;
+          setState(() => isSubmitting = true);
+          userBloc.add(const UserProfileRequested());
+        });
+      }
+      return const PrimaryLoadingIndicator();
+    }
     return Column(children: [
-      buildHeader(state.questions),
-      buildQuestions(state.questions),
-      SafeArea(top: false, child: buildContinueButton(state.questions))
+      buildHeader(questions, state.questions),
+      buildQuestions(questions),
+      SafeArea(top: false, child: buildContinueButton(questions))
     ]);
   }
 
@@ -228,5 +303,8 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
               backgroundColor: context.cs.surface,
               body: SafeArea(
                   child: BlocBuilder<IntroSurveyBloc, IntroSurveyState>(
-                      bloc: introSurveyBloc, builder: (context, state) => buildContent(state)))));
+                      bloc: introSurveyBloc,
+                      builder: (context, introState) => BlocBuilder<UserBloc, UserState>(
+                          bloc: userBloc,
+                          builder: (context, userState) => buildContent(introState, userState))))));
 }
