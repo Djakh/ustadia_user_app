@@ -49,11 +49,17 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
 
   TeacherModel get getSelectedTeacher => widget.userModel.currentTeacher ?? systemTeacher;
 
+  List<TeacherModel> teachersWithSystem(List<TeacherModel> teachers) {
+    final hasSystemTeacher = teachers.any((teacher) => teacher.id == systemTeacher.id);
+    if (hasSystemTeacher) return teachers;
+    return [systemTeacher, ...teachers];
+  }
+
   /// --- Listeners ---
 
   void teacherListener(context, TeacherState state) {
     if (state.status.isSuccess) {
-      teachersList = [systemTeacher, ...state.teachers];
+      teachersList = teachersWithSystem(state.teachers);
     }
     if (state.swapStatus.isError && state.swapErrorMessage != null) {
       context.showSnackBar(SnackBar(content: Text(state.swapErrorMessage!)));
@@ -132,11 +138,15 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
         isCustomLoading: isLoading,
         errorOf: (s) => s.errorMessage,
         errorBuilder: (String error) => ReloadConntectionButton(
-            onReloadConnection: () => sl<TeacherBloc>().add(const TeachersRequested())),
-        data: (s) => s.teachers,
+            onReloadConnection: () async =>
+                context.read<TeacherBloc>().add(const TeachersRequested())),
+        data: (s) => teachersWithSystem(s.teachers),
         isEmpty: (teachers) => teachers.isEmpty,
-        empty: Center(child: Text('No lessons found'.tr())),
-        builder: (context, teachers) => teacherList,
+        empty: Center(child: Text('No teachers found'.tr())),
+        builder: (context, teachers) {
+          teachersList = teachers;
+          return teacherList;
+        },
       );
 
   Widget get view => Column(mainAxisSize: MainAxisSize.min, children: [

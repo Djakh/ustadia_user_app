@@ -136,8 +136,8 @@ class OtpPageState extends State<OtpPage> {
       borderRadius: Style.border10, borderSide: BorderSide(color: color, width: 1.4));
 
   Widget otpBox(int index) => SizedBox(
-      width: 60,
-      height: 54,
+      width: 48,
+      height: 40,
       child: TextField(
           controller: codes[index],
           focusNode: nodes[index],

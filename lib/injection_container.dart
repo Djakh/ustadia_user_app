@@ -21,6 +21,7 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/flashcard_sta
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/bloc/current_unit_bloc/current_unit_bloc.dart';
+import 'package:ustadia_user_app/features/dashboard/data/services/current_unit_store.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/datasources/intro_survey_remote_data_source.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/bloc/intro_survey_bloc.dart';
 import 'package:ustadia_user_app/features/learn/data/datasources/learn_remote_data_source.dart';
@@ -60,7 +61,7 @@ Future<void> initDependencies() async {
   // Features - Auth
   sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSource(
       dio: DioClient.create(
-          baseUrl: 'https://backend.ustadia.findecor.io',
+       baseUrl: 'https://backend.ustadia.findecor.io',
        //  baseUrl: 'https://dev.backend.ustadia.findecor.io',
           accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken())));
   sl.registerFactory(() => AuthLoginBloc(
@@ -84,7 +85,8 @@ Future<void> initDependencies() async {
   sl.registerFactory(() => FileUploadBloc(uploadRemoteDataSource: sl()));
   sl.registerLazySingleton<FlashcardRepository>(
       () => FlashcardRepositoryImpl(dio: sl<AuthRemoteDataSource>().dio));
-  sl.registerFactory(() => FlashcardStatusBloc(flashcardRepository: sl()));
+  sl.registerFactory(() => FlashcardStatusBloc(
+      flashcardRepository: sl(), profileStatisticsStore: sl(), currentUnitStore: sl()));
   sl.registerFactory(() => TeacherBloc(userRemoteDataSource: sl(), authLocalDataSource: sl()));
 
   // Features - Intro Survey
@@ -103,12 +105,14 @@ Future<void> initDependencies() async {
   sl.registerFactory(() => QuestionAnswerBloc(
       learnRemoteDataSource: sl(),
       assignmentsRemoteDataSource: sl(),
-      profileStatisticsStore: sl()));
+      profileStatisticsStore: sl(),
+      currentUnitStore: sl()));
   sl.registerLazySingleton<AudioRepository>(
       () => AudioRepositoryImpl(dio: sl<AuthRemoteDataSource>().dio));
   sl.registerFactory(() => AudioBloc(audioRepository: sl()));
 
   // Features - Dashboard
+  sl.registerLazySingleton<CurrentUnitStore>(() => CurrentUnitStore(learnRemoteDataSource: sl()));
   sl.registerFactory(() => CurrentUnitBloc(learnRemoteDataSource: sl()));
 
   // Features - Practice
@@ -116,11 +120,14 @@ Future<void> initDependencies() async {
       () => PracticeRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
   sl.registerLazySingleton(() => PracticeFlashcardSetsBloc(practiceRemoteDataSource: sl()));
   sl.registerLazySingleton(() => PracticeListenTapSetsBloc(practiceRemoteDataSource: sl()));
-  sl.registerFactory(() => PracticeListenTapStatusBloc(practiceRemoteDataSource: sl()));
+  sl.registerFactory(() => PracticeListenTapStatusBloc(
+      practiceRemoteDataSource: sl(), profileStatisticsStore: sl()));
   sl.registerLazySingleton(() => PracticeSentenceBuilderSetsBloc(practiceRemoteDataSource: sl()));
-  sl.registerFactory(() => PracticeSentenceBuilderStatusBloc(practiceRemoteDataSource: sl()));
+  sl.registerFactory(() => PracticeSentenceBuilderStatusBloc(
+      practiceRemoteDataSource: sl(), profileStatisticsStore: sl()));
   sl.registerLazySingleton(() => PracticeWordMatchSetsBloc(practiceRemoteDataSource: sl()));
-  sl.registerFactory(() => PracticeWordMatchStatusBloc(practiceRemoteDataSource: sl()));
+  sl.registerFactory(() => PracticeWordMatchStatusBloc(
+      practiceRemoteDataSource: sl(), profileStatisticsStore: sl()));
 
   // Features - Notifications
   sl.registerLazySingleton<NotificationsRemoteDataSource>(
@@ -151,6 +158,7 @@ Future<void> resetTeacherScopedData() async {
   await sl.resetLazySingleton<LearnLessonsBloc>();
   await sl.resetLazySingleton<LearnUnitsBloc>();
   await sl.resetLazySingleton<LearnSectionsBloc>();
+  await sl.resetLazySingleton<CurrentUnitStore>();
   await sl.resetLazySingleton<PracticeFlashcardSetsBloc>();
   await sl.resetLazySingleton<PracticeListenTapSetsBloc>();
   await sl.resetLazySingleton<PracticeSentenceBuilderSetsBloc>();

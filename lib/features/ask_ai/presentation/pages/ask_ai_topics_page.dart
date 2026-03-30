@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
@@ -7,23 +8,43 @@ import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_c
 import 'package:ustadia_user_app/core/widgets/loading/shimmer_list.dart';
 import 'package:ustadia_user_app/features/ask_ai/data/models/ai_chat_topic_model.dart';
 import 'package:ustadia_user_app/features/ask_ai/presentation/bloc/ask_ai_bloc/ask_ai_bloc.dart';
+import 'package:ustadia_user_app/features/ask_ai/presentation/bloc/ask_ai_bloc/ask_ai_event.dart';
 import 'package:ustadia_user_app/features/ask_ai/presentation/bloc/ask_ai_bloc/ask_ai_state.dart';
-import 'package:ustadia_user_app/features/ask_ai/presentation/pages/messages_page.dart';
 import 'package:ustadia_user_app/features/ask_ai/presentation/widgets/ai_chat_topic_card.dart';
+import 'package:ustadia_user_app/router.dart';
 
-class TopicsPage extends StatelessWidget {
-  const TopicsPage({super.key});
+class AskAiTopicsPage extends StatefulWidget {
+  const AskAiTopicsPage({super.key});
 
-  void openTopic(BuildContext context, AiChatTopicModel topic) {
-    Navigator.of(context, rootNavigator: true)
-        .push(MaterialPageRoute(builder: (context) => MessagesPage(topic: topic)));
+  @override
+  State<AskAiTopicsPage> createState() => _AskAiTopicsPageState();
+}
+
+class _AskAiTopicsPageState extends State<AskAiTopicsPage> {
+  /// --- Life cycle ---
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (!mounted) return;
+      context.read<AskAiBloc>().add(const AskAiTopicsRequested());
+    });
   }
+
+  /// --- Methods ---
+  void openTopicVoiceAgent(BuildContext context, AiChatTopicModel topic) {
+    context.push(askAiVoiceAgentRoute, extra: topic);
+  }
+
+  /// --- Widgets ---
 
   Widget topicsList(BuildContext context, List<AiChatTopicModel> topics) => Column(
       children: topics
           .map((topic) => Padding(
               padding: const EdgeInsets.only(bottom: 12),
-              child: AiChatTopicCard(topic: topic, onTap: () => openTopic(context, topic))))
+              child:
+                  AiChatTopicCard(topic: topic, onTap: () => openTopicVoiceAgent(context, topic))))
           .toList());
 
   @override

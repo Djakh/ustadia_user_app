@@ -6,6 +6,9 @@ import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/inherited_widgets/navigation_shell_scope.dart';
+import 'package:ustadia_user_app/features/dashboard/data/services/current_unit_store.dart';
+import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
+import 'package:ustadia_user_app/injection_container.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.navigationShell});
@@ -23,6 +26,13 @@ class _HomePageState extends State<HomePage> {
 
   void onSelectBottomNavigation(int i) {
     final current = navigationIndex;
+    if (i == 0) {
+      sl<ProfileStatisticsStore>().refreshIfNeeded();
+      sl<CurrentUnitStore>().refreshIfNeeded();
+    }
+    if (i == 4) {
+      sl<ProfileStatisticsStore>().refreshIfNeeded();
+    }
     widget.navigationShell.goBranch(i, initialLocation: i == current);
     setState(() {});
   }

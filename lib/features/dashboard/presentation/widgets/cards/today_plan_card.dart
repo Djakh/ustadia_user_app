@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
-import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 import 'package:ustadia_user_app/features/dashboard/data/models/current_unit_model.dart';
-import 'package:ustadia_user_app/features/dashboard/presentation/bloc/current_unit_bloc/current_unit_bloc.dart';
-import 'package:ustadia_user_app/features/dashboard/presentation/bloc/current_unit_bloc/current_unit_event.dart';
-import 'package:ustadia_user_app/features/dashboard/presentation/bloc/current_unit_bloc/current_unit_state.dart';
+import 'package:ustadia_user_app/features/dashboard/data/services/current_unit_store.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_sections_params.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
-class TodayPlanCard extends StatelessWidget {
+class TodayPlanCard extends StatefulWidget {
   const TodayPlanCard({super.key});
+
+  @override
+  State<TodayPlanCard> createState() => TodayPlanCardState();
+}
+
+class TodayPlanCardState extends State<TodayPlanCard> {
+  late final CurrentUnitStore currentUnitStore;
+
+  @override
+  void initState() {
+    super.initState();
+    currentUnitStore = sl<CurrentUnitStore>();
+    currentUnitStore.refreshIfNeeded();
+  }
 
   Widget _planItem(String value, String label, BuildContext context) => Column(children: [
         Text(value, style: Style.headline3w7(context).copyWith(color: AppColors.white)),
@@ -54,9 +64,15 @@ class TodayPlanCard extends StatelessWidget {
         isLocked: false,
       );
 
+  Future<void> openTodayPlan(BuildContext context, CurrentUnitModel unit) async {
+    await context.push(learnSectionsRoute,
+        extra: LearnSectionsParams(unit: _toLearnUnitModel(unit), lessonId: unit.lesson.id));
+    if (!mounted) return;
+    currentUnitStore.refreshIfNeeded();
+  }
+
   Widget startPlanButton(BuildContext context, CurrentUnitModel unit) => Button.primary(
-        onTap: () => context.push(learnSectionsRoute,
-            extra: LearnSectionsParams(unit: _toLearnUnitModel(unit), lessonId: unit.lesson.id)),
+        onTap: () => openTodayPlan(context, unit),
         color: AppColors.white,
         textColor: AppColors.black,
         text: 'Start today`s plan'.tr(),
@@ -108,7 +124,7 @@ class TodayPlanCard extends StatelessWidget {
         valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
       );
 
-  Widget errorView(BuildContext context, String message) => Column(
+  Widget messageView(BuildContext context, String message) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Today`s plan'.tr(), style: Style.small3w4(context, color: TextColorRole.whiteColor)),
@@ -118,21 +134,18 @@ class TodayPlanCard extends StatelessWidget {
       );
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
-        create: (_) => sl<CurrentUnitBloc>()..add(const CurrentUnitRequested()),
-        child: Builder(
-          builder: (context) => cardShell(
-              context,
-              BlocStatusView<CurrentUnitBloc, CurrentUnitState, CurrentUnitModel?>(
-                statusOf: (s) => s.status,
-                errorOf: (s) => s.errorMessage,
-                data: (s) => s.unit,
-                isEmpty: (unit) => unit == null || unit.id.isEmpty,
-                loading: loading(context),
-                empty: errorView(context, 'No current unit found'.tr()),
-                errorBuilder: (message) => errorView(context, message),
-                builder: (context, unit) => view(context, unit!),
-              )),
-        ),
-      );
+  Widget build(BuildContext context) => cardShell(
+      context,
+      ValueListenableBuilder<bool>(
+          valueListenable: currentUnitStore.loading,
+          builder: (context, isLoading, _) =>
+              ValueListenableBuilder<CurrentUnitModel?>(
+                  valueListenable: currentUnitStore.unit,
+                  builder: (context, unit, __) {
+                    if (isLoading && unit == null) return loading(context);
+                    if (unit == null || unit.id.isEmpty) {
+                      return messageView(context, 'No current unit found'.tr());
+                    }
+                    return view(context, unit);
+                  })));
 }

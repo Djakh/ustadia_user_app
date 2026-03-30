@@ -11,7 +11,6 @@ import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
-import 'package:ustadia_user_app/features/dashboard/presentation/widgets/cards/dashboard_strak_card.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/widgets/cards/today_plan_card.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/widgets/dashboard_grid_list.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/profile_image_view_page.dart';

@@ -7,6 +7,7 @@ class ProfileStatisticsStore {
   final ValueNotifier<ProfileStatisticsModel?> statistics = ValueNotifier(null);
   final ValueNotifier<bool> loading = ValueNotifier(false);
   bool isLoading = false;
+  bool isUpToDate = false;
 
   ProfileStatisticsStore({required this.userRemoteDataSource});
 
@@ -16,9 +17,20 @@ class ProfileStatisticsStore {
     loading.value = true;
     try {
       statistics.value = await userRemoteDataSource.fetchProfileStatistics();
+      isUpToDate = true;
     } finally {
       isLoading = false;
       loading.value = false;
     }
+  }
+
+  Future<void> refreshIfNeeded() async {
+    if (statistics.value == null || !isUpToDate) {
+      await refresh();
+    }
+  }
+
+  void markStale() {
+    isUpToDate = false;
   }
 }
