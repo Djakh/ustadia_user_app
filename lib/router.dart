@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ustadia_user_app/features/ask_ai/presentation/pages/ask_ai_page.dart';
+import 'package:ustadia_user_app/features/ask_ai/data/models/ai_chat_topic_model.dart';
+import 'package:ustadia_user_app/features/ask_ai/presentation/pages/ask_ai_topics_page.dart';
+import 'package:ustadia_user_app/features/ask_ai/presentation/pages/voice_agent_page.dart';
 import 'package:ustadia_user_app/features/assignments/data/models/assignment_models.dart';
 import 'package:ustadia_user_app/features/assignments/presentation/pages/assignment_details_page.dart';
 import 'package:ustadia_user_app/features/assignments/presentation/pages/assignment_sections_page.dart';
@@ -98,7 +100,9 @@ const learnWritingRoute = '$learnUnitsRoute/$learnWritingPath';
 const flashcardSprintPath = 'flashcard-sprint';
 
 const practiceRoute = '$homeRoute/practice';
-const askAiRoute = '$homeRoute/ask-ai';
+const askAiTopicsRoute = '$homeRoute/ask-ai';
+const askAiVoiceAgentPath = 'ask-ai-voice-agent';
+const askAiVoiceAgentRoute = '$askAiTopicsRoute/$askAiVoiceAgentPath';
 const profileRoute = '$homeRoute/profile';
 
 /// --------------------
@@ -407,10 +411,22 @@ final appRouter = GoRouter(
         ),
 
         /// 3) Ask AI
-        StatefulShellBranch(navigatorKey: _askAiKey, routes: [
-          GoRoute(
-              path: askAiRoute, pageBuilder: (_, __) => const NoTransitionPage(child: AskAiPage()))
-        ]),
+        StatefulShellBranch(
+          navigatorKey: _askAiKey,
+          routes: [
+            GoRoute(
+              path: askAiTopicsRoute,
+              pageBuilder: (_, __) => const NoTransitionPage(child: AskAiTopicsPage()),
+              routes: [
+                GoRoute(
+                  path: askAiVoiceAgentPath,
+                  parentNavigatorKey: _rootKey,
+                  builder: (_, state) => VoiceAgentPage(topic: state.extra as AiChatTopicModel),
+                ),
+              ],
+            ),
+          ],
+        ),
 
         /// 4) Profile (root has bottom bar; children open on root -> no bottom bar)
         StatefulShellBranch(

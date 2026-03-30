@@ -30,10 +30,10 @@ class AskAiBloc extends Bloc<AskAiEvent, AskAiState> {
     on<AskAiVoiceSpeakerToggled>(handleVoiceSpeakerToggled);
     on<AskAiRoomUpdated>(handleRoomUpdated);
     on<AskAiLivekitEventReported>(handleLivekitEventReported);
+    on<AskAiMessageReceived>(handleMessageReceived);
   }
 
-  Future<void> handleTopicsRequested(
-      AskAiTopicsRequested event, Emitter<AskAiState> emit) async {
+  Future<void> handleTopicsRequested(AskAiTopicsRequested event, Emitter<AskAiState> emit) async {
     emit(state.copyWith(topicsStatus: Status.loading, errorMessage: null));
     final authCheck = await ensureAuthValues(emit);
     if (!authCheck) return;
@@ -47,8 +47,7 @@ class AskAiBloc extends Bloc<AskAiEvent, AskAiState> {
     }
   }
 
-  Future<void> handleTopicOpened(
-      AskAiTopicOpened event, Emitter<AskAiState> emit) async {
+  Future<void> handleTopicOpened(AskAiTopicOpened event, Emitter<AskAiState> emit) async {
     emit(state.copyWith(currentTopic: event.topic, messages: const [], errorMessage: null));
     add(AskAiMessagesRequested(topicId: event.topic.id, page: 1, limit: 50));
   }
@@ -61,15 +60,7 @@ class AskAiBloc extends Bloc<AskAiEvent, AskAiState> {
     try {
       final list = await aiChatRemoteDataSource.fetchMessages(
           topicId: event.topicId, page: event.page, limit: event.limit);
-      final map = <String, AiChatMessageModel>{};
-      for (final item in state.messages) {
-        map[item.id] = item;
-      }
-      for (final item in list) {
-        map[item.id] = item;
-      }
-      final merged = map.values.toList();
-      merged.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+      final merged = mergeMessages([...state.messages, ...list]);
       emit(state.copyWith(messagesStatus: Status.success, messages: merged, errorMessage: null));
     } on DioException catch (error) {
       emit(state.copyWith(messagesStatus: Status.error, errorMessage: DioErrorMessage.from(error)));
@@ -96,10 +87,14 @@ class AskAiBloc extends Bloc<AskAiEvent, AskAiState> {
     if (!authCheck) return;
     try {
       final tokenModel = await aiChatRemoteDataSource.fetchLivekitToken(topicId: topic.id);
-      final nextRoom = room ?? Room();
+      final nextRoom = room ??
+          Room(
+              roomOptions: const RoomOptions(
+                  adaptiveStream: true,
+                  dynacast: true,
+                  defaultAudioOutputOptions: AudioOutputOptions(speakerOn: true)));
       listenToRoomEvents(nextRoom);
-      await nextRoom.connect(tokenModel.url, tokenModel.token,
-          roomOptions: const RoomOptions(adaptiveStream: true, dynacast: true));
+      await nextRoom.connect(tokenModel.url, tokenModel.token);
       await nextRoom.localParticipant?.setMicrophoneEnabled(true);
       await nextRoom.setSpeakerOn(true, forceSpeakerOutput: true);
       room = nextRoom;
@@ -140,8 +135,7 @@ class AskAiBloc extends Bloc<AskAiEvent, AskAiState> {
     }
   }
 
-  Future<void> handleVoiceMicToggled(
-      AskAiVoiceMicToggled event, Emitter<AskAiState> emit) async {
+  Future<void> handleVoiceMicToggled(AskAiVoiceMicToggled event, Emitter<AskAiState> emit) async {
     if (room == null) return;
     final next = !state.micEnabled;
     await room!.localParticipant?.setMicrophoneEnabled(next);
@@ -170,6 +164,15 @@ class AskAiBloc extends Bloc<AskAiEvent, AskAiState> {
         lastLivekitEvent: event.lastLivekitEvent,
         agentConnected: event.agentConnected ?? state.agentConnected,
         agentAudioActive: event.agentAudioActive ?? state.agentAudioActive));
+  }
+
+  Future<void> handleMessageReceived(AskAiMessageReceived event, Emitter<AskAiState> emit) async {
+    if (state.currentTopic?.id.isNotEmpty == true &&
+        event.message.topicId != state.currentTopic!.id) {
+      return;
+    }
+    final merged = mergeMessages([...state.messages, event.message]);
+    emit(state.copyWith(messagesStatus: Status.success, messages: merged, errorMessage: null));
   }
 
   Future<bool> ensureAuthValues(Emitter<AskAiState> emit) async {
@@ -218,6 +221,34 @@ class AskAiBloc extends Bloc<AskAiEvent, AskAiState> {
     return false;
   }
 
+  List<AiChatMessageModel> mergeMessages(List<AiChatMessageModel> items) {
+    final map = <String, AiChatMessageModel>{};
+    final semanticMap = <String, AiChatMessageModel>{};
+    for (final item in items) {
+      map[item.id] = item;
+    }
+    for (final item in map.values) {
+      final semanticKey = messageSemanticKey(item);
+      final existing = semanticMap[semanticKey];
+      if (existing == null) {
+        semanticMap[semanticKey] = item;
+        continue;
+      }
+      semanticMap[semanticKey] = item.copyWith(
+          id: item.id.length >= existing.id.length ? item.id : existing.id,
+          isFinished: existing.isFinished || item.isFinished);
+    }
+    final merged = semanticMap.values.toList();
+    merged.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    return merged;
+  }
+
+  String messageSemanticKey(AiChatMessageModel message) {
+    final createdAtSecond = message.createdAt.toUtc().millisecondsSinceEpoch ~/ 1000;
+    final normalizedContent = message.content.trim();
+    return '${message.topicId}|${message.userId}|${message.role}|$createdAtSecond|$normalizedContent';
+  }
+
   void listenToRoomEvents(Room nextRoom) {
     livekitListener?.dispose();
     livekitListener = nextRoom.createListener();
@@ -245,7 +276,8 @@ class AskAiBloc extends Bloc<AskAiEvent, AskAiState> {
           lastLivekitEvent: 'Participant left: ${event.participant.identity}'));
     });
     livekitListener!.on<TrackPublishedEvent>((event) {
-      debugPrint('[LiveKit] track published: ${event.publication.sid} ${event.publication.kind.name}');
+      debugPrint(
+          '[LiveKit] track published: ${event.publication.sid} ${event.publication.kind.name}');
       add(const AskAiRoomUpdated());
       add(AskAiLivekitEventReported(
           lastLivekitEvent:
@@ -253,7 +285,8 @@ class AskAiBloc extends Bloc<AskAiEvent, AskAiState> {
           agentConnected: true));
     });
     livekitListener!.on<TrackUnpublishedEvent>((event) {
-      debugPrint('[LiveKit] track unpublished: ${event.publication.sid} ${event.publication.kind.name}');
+      debugPrint(
+          '[LiveKit] track unpublished: ${event.publication.sid} ${event.publication.kind.name}');
       add(const AskAiRoomUpdated());
       add(AskAiLivekitEventReported(
           lastLivekitEvent:
@@ -263,7 +296,8 @@ class AskAiBloc extends Bloc<AskAiEvent, AskAiState> {
       final track = event.track;
       final publication = event.publication;
       final isAudio = track is RemoteAudioTrack;
-      debugPrint('[LiveKit] track subscribed: kind=${publication.kind.name} participant=${event.participant.identity}');
+      debugPrint(
+          '[LiveKit] track subscribed: kind=${publication.kind.name} participant=${event.participant.identity}');
       if (isAudio) {
         debugPrint('🔥 AGENT AUDIO TRACK RECEIVED from ${event.participant.identity}');
         await track.start();

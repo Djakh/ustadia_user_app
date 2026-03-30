@@ -5,12 +5,15 @@ import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/features/practice/data/datasources/practice_remote_data_source.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_sentence_builder_status_bloc/practice_sentence_builder_status_event.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_sentence_builder_status_bloc/practice_sentence_builder_status_state.dart';
+import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 
 class PracticeSentenceBuilderStatusBloc
     extends Bloc<PracticeSentenceBuilderStatusEvent, PracticeSentenceBuilderStatusState> {
   final PracticeRemoteDataSource practiceRemoteDataSource;
+  final ProfileStatisticsStore profileStatisticsStore;
 
-  PracticeSentenceBuilderStatusBloc({required this.practiceRemoteDataSource})
+  PracticeSentenceBuilderStatusBloc(
+      {required this.practiceRemoteDataSource, required this.profileStatisticsStore})
       : super(const PracticeSentenceBuilderStatusState()) {
     on<PracticeSentenceBuilderStatusRequested>(handleStatusRequested);
   }
@@ -32,6 +35,7 @@ class PracticeSentenceBuilderStatusBloc
         sentenceBuilderId: event.sentenceBuilderId,
         status: event.status,
       );
+      profileStatisticsStore.markStale();
       emit(state.copyWith(
         status: Status.success,
         sentenceBuilderId: response.sentenceBuilderId,

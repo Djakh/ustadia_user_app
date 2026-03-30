@@ -1,4 +1,5 @@
 import 'package:ustadia_user_app/features/ask_ai/data/models/ai_chat_topic_model.dart';
+import 'package:ustadia_user_app/features/ask_ai/data/models/ai_chat_message_model.dart';
 
 abstract class AskAiEvent {
   const AskAiEvent();
@@ -49,4 +50,10 @@ class AskAiLivekitEventReported extends AskAiEvent {
 
   const AskAiLivekitEventReported(
       {required this.lastLivekitEvent, this.agentConnected, this.agentAudioActive});
+}
+
+class AskAiMessageReceived extends AskAiEvent {
+  final AiChatMessageModel message;
+
+  const AskAiMessageReceived({required this.message});
 }

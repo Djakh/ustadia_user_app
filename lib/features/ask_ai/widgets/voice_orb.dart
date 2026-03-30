@@ -23,14 +23,18 @@ class VoiceOrb extends StatefulWidget {
   State<VoiceOrb> createState() => VoiceOrbState();
 }
 
-class VoiceOrbState extends State<VoiceOrb> with SingleTickerProviderStateMixin {
+class VoiceOrbState extends State<VoiceOrb> with TickerProviderStateMixin {
   late final AnimationController orbController;
   late Animation<double> pulseAnimation;
+  late final AnimationController shimmerController;
 
   @override
   void initState() {
     super.initState();
-    orbController = AnimationController(vsync: this, duration: durationForState(widget.voiceUiState));
+    orbController =
+        AnimationController(vsync: this, duration: durationForState(widget.voiceUiState));
+    shimmerController =
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 1600))..repeat();
     pulseAnimation = Tween(begin: 0.96, end: 1.04)
         .animate(CurvedAnimation(parent: orbController, curve: Curves.easeInOut));
     orbController.repeat(reverse: true);
@@ -92,35 +96,54 @@ class VoiceOrbState extends State<VoiceOrb> with SingleTickerProviderStateMixin 
   @override
   void dispose() {
     orbController.dispose();
+    shimmerController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-      animation: orbController,
+      animation: Listenable.merge([orbController, shimmerController]),
       builder: (context, child) {
         final scaleValue = pulseAnimation.value + levelBoost();
         final colorValue = targetColor();
         final glowValue = 18 + (levelBoost() * 50);
+        final shimmerShift = (shimmerController.value * 2) - 1;
+        final ringScale = 1.08 + (levelBoost() * 0.8);
         return Transform.scale(
             scale: scaleValue,
-            child: AnimatedContainer(
-                duration: const Duration(milliseconds: 420),
-                curve: Curves.easeInOut,
-                width: widget.size,
-                height: widget.size,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: RadialGradient(colors: [
-                      colorValue.withOpacity(0.95),
-                      colorValue.withOpacity(0.35),
-                      colorValue.withOpacity(0.08)
-                    ], stops: const [0.2, 0.7, 1]),
-                    boxShadow: [
-                      BoxShadow(
-                          color: colorValue.withOpacity(0.45),
-                          blurRadius: glowValue,
-                          spreadRadius: 6)
-                    ])));
+            child: Stack(alignment: Alignment.center, children: [
+              Transform.scale(
+                  scale: ringScale,
+                  child: Container(
+                      width: widget.size,
+                      height: widget.size,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border:
+                              Border.all(color: colorValue.withValues(alpha: 0.18), width: 1.5)))),
+              AnimatedContainer(
+                  duration: const Duration(milliseconds: 420),
+                  curve: Curves.easeInOut,
+                  width: widget.size,
+                  height: widget.size,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient:
+                          RadialGradient(center: Alignment(shimmerShift * 0.35, -0.2), colors: [
+                        colorValue.withValues(alpha: 0.98),
+                        colorValue.withValues(alpha: 0.42),
+                        colorValue.withValues(alpha: 0.08)
+                      ], stops: const [
+                        0.16,
+                        0.62,
+                        1
+                      ]),
+                      boxShadow: [
+                        BoxShadow(
+                            color: colorValue.withValues(alpha: 0.45),
+                            blurRadius: glowValue,
+                            spreadRadius: 6)
+                      ]))
+            ]));
       });
 }

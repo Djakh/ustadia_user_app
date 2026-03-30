@@ -5,12 +5,15 @@ import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/features/practice/data/datasources/practice_remote_data_source.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_word_match_status_bloc/practice_word_match_status_event.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_word_match_status_bloc/practice_word_match_status_state.dart';
+import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 
 class PracticeWordMatchStatusBloc
     extends Bloc<PracticeWordMatchStatusEvent, PracticeWordMatchStatusState> {
   final PracticeRemoteDataSource practiceRemoteDataSource;
+  final ProfileStatisticsStore profileStatisticsStore;
 
-  PracticeWordMatchStatusBloc({required this.practiceRemoteDataSource})
+  PracticeWordMatchStatusBloc(
+      {required this.practiceRemoteDataSource, required this.profileStatisticsStore})
       : super(const PracticeWordMatchStatusState()) {
     on<PracticeWordMatchStatusRequested>(handleStatusRequested);
   }
@@ -32,6 +35,7 @@ class PracticeWordMatchStatusBloc
         wordMatchId: event.wordMatchId,
         status: event.status,
       );
+      profileStatisticsStore.markStale();
       emit(state.copyWith(
         status: Status.success,
         wordMatchId: response.wordMatchId,

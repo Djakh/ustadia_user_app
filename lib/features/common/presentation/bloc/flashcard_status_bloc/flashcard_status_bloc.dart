@@ -3,13 +3,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/features/common/data/repositories/flashcard_repository.dart';
+import 'package:ustadia_user_app/features/dashboard/data/services/current_unit_store.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/flashcard_status_bloc/flashcard_status_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/flashcard_status_bloc/flashcard_status_state.dart';
+import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 
 class FlashcardStatusBloc extends Bloc<FlashcardStatusEvent, FlashcardStatusState> {
   final FlashcardRepository flashcardRepository;
+  final ProfileStatisticsStore profileStatisticsStore;
+  final CurrentUnitStore currentUnitStore;
 
-  FlashcardStatusBloc({required this.flashcardRepository})
+  FlashcardStatusBloc(
+      {required this.flashcardRepository,
+      required this.profileStatisticsStore,
+      required this.currentUnitStore})
       : super(const FlashcardStatusState()) {
     on<FlashcardStatusRequested>(handleStatusRequested);
   }
@@ -30,6 +37,8 @@ class FlashcardStatusBloc extends Bloc<FlashcardStatusEvent, FlashcardStatusStat
         status: event.status,
         isPractice: event.isPractice,
       );
+      profileStatisticsStore.markStale();
+      currentUnitStore.markStale();
       emit(state.copyWith(
         status: Status.success,
         flashcardId: event.flashcardId,

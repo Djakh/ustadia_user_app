@@ -5,12 +5,15 @@ import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/features/practice/data/datasources/practice_remote_data_source.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_status_bloc/practice_listen_tap_status_event.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_status_bloc/practice_listen_tap_status_state.dart';
+import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 
 class PracticeListenTapStatusBloc
     extends Bloc<PracticeListenTapStatusEvent, PracticeListenTapStatusState> {
   final PracticeRemoteDataSource practiceRemoteDataSource;
+  final ProfileStatisticsStore profileStatisticsStore;
 
-  PracticeListenTapStatusBloc({required this.practiceRemoteDataSource})
+  PracticeListenTapStatusBloc(
+      {required this.practiceRemoteDataSource, required this.profileStatisticsStore})
       : super(const PracticeListenTapStatusState()) {
     on<PracticeListenTapStatusRequested>(handleStatusRequested);
   }
@@ -32,6 +35,7 @@ class PracticeListenTapStatusBloc
         listenTapId: event.listenTapId,
         status: event.status,
       );
+      profileStatisticsStore.markStale();
       emit(state.copyWith(
         status: Status.success,
         listenTapId: response.listenTapId,

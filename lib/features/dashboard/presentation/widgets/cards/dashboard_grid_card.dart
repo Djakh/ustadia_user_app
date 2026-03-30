@@ -9,6 +9,7 @@ class DashboardGridCard extends StatelessWidget {
   final double height;
   final String backImage;
   final Function() onTap;
+  final bool isEnabled;
   const DashboardGridCard(
       {super.key,
       required this.title,
@@ -16,23 +17,33 @@ class DashboardGridCard extends StatelessWidget {
       required this.cardColor,
       required this.height,
       required this.backImage,
-      required this.onTap});
+      required this.onTap,
+      this.isEnabled = true});
 
   /// --- Widgets ---
 
-  Widget _arrowButton() => Container(
+  Widget arrowButton() => Container(
       width: 32,
       height: 32,
-      decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(999)),
-      child: const Icon(Icons.arrow_forward, size: 20));
+      decoration: BoxDecoration(
+          color: isEnabled ? AppColors.white : AppColors.gray200,
+          borderRadius: BorderRadius.circular(999)),
+      child: Icon(Icons.arrow_forward, size: 20, color: isEnabled ? AppColors.black : AppColors.gray500));
+
+  Color titleColor() => isEnabled ? AppColors.black : AppColors.gray500;
+
+  Color subtitleColor() => isEnabled ? AppColors.gray700 : AppColors.gray500;
 
   Widget view(BuildContext context) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: Style.body2w6(context)),
+        Text(title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Style.body2w6(context).copyWith(color: titleColor())),
         const SizedBox(height: 4),
-        Text(subtitle, style: Style.small2w4(context, color: TextColorRole.greyColor)),
+        Text(subtitle, style: Style.small2w4(context).copyWith(color: subtitleColor())),
         const Spacer(),
-        Align(alignment: Alignment.bottomLeft, child: _arrowButton())
+        Align(alignment: Alignment.bottomLeft, child: arrowButton())
       ]);
 
   @override
@@ -43,7 +54,10 @@ class DashboardGridCard extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
               borderRadius: Style.border16,
-              color: cardColor,
-              image: DecorationImage(image: AssetImage(backImage), fit: BoxFit.fill)),
+              color: isEnabled ? cardColor : AppColors.gray100,
+              image: DecorationImage(
+                  image: AssetImage(backImage),
+                  fit: BoxFit.fill,
+                  opacity: isEnabled ? 1 : 0.18)),
           child: view(context)));
 }

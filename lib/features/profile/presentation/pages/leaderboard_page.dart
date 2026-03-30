@@ -88,15 +88,12 @@ class LeaderboardPageState extends State<LeaderboardPage> {
   Widget podiumRow(List<LeaderboardUserModel> users) {
     final topUsers = topThreeUsers(users);
     final podium = podiumItems(topUsers);
-    if (podium.length < 3) return const SizedBox.shrink();
+    if (podium.isEmpty) return const SizedBox.shrink();
     return Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          LeaderboardPodiumItem(podium: podium[0]),
-          LeaderboardPodiumItem(podium: podium[1]),
-          LeaderboardPodiumItem(podium: podium[2]),
-        ]);
+        children:
+            podium.map((item) => LeaderboardPodiumItem(podium: item)).toList());
   }
 
   Widget leaderboardList(List<LeaderboardUserModel> users) {

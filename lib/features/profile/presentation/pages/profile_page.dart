@@ -31,7 +31,7 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    statisticsStore.refresh();
+    statisticsStore.refreshIfNeeded();
   }
 
   /// --- Data ---

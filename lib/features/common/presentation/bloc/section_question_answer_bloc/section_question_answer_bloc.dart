@@ -4,6 +4,7 @@ import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/features/assignments/data/datasources/assignments_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
+import 'package:ustadia_user_app/features/dashboard/data/services/current_unit_store.dart';
 import 'package:ustadia_user_app/features/learn/data/datasources/learn_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_state.dart';
@@ -13,11 +14,13 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
   final LearnRemoteDataSource learnRemoteDataSource;
   final AssignmentsRemoteDataSource assignmentsRemoteDataSource;
   final ProfileStatisticsStore profileStatisticsStore;
+  final CurrentUnitStore currentUnitStore;
 
   QuestionAnswerBloc(
       {required this.learnRemoteDataSource,
       required this.assignmentsRemoteDataSource,
-      required this.profileStatisticsStore})
+      required this.profileStatisticsStore,
+      required this.currentUnitStore})
       : super(const QuestionAnswerState()) {
     on<QuestionAnswerSubmitted>(handleQuestionAnswerSubmitted);
   }
@@ -37,8 +40,8 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
         final success = await assignmentsRemoteDataSource.submitAssignmentAnswers(
             assignmentId: assignmentId, answers: answersPayload);
         if (success) {
+          markDerivedDataStale();
           emit(state.copyWith(status: Status.success, result: null, errorMessage: null));
-          await profileStatisticsStore.refresh();
         } else {
           emit(state.copyWith(status: Status.error, errorMessage: 'Request failed.'));
         }
@@ -55,13 +58,18 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
       final answersPayload = buildLessonAnswersPayload(event);
       await learnRemoteDataSource.submitLessonAnswers(
           lessonId: lessonId, unitId: unitId, answers: answersPayload);
+      markDerivedDataStale();
       emit(state.copyWith(status: Status.success, result: null, errorMessage: null));
-      await profileStatisticsStore.refresh();
     } on DioException catch (error) {
       emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.from(error)));
     } catch (_) {
       emit(state.copyWith(status: Status.error, errorMessage: 'Request failed.'));
     }
+  }
+
+  void markDerivedDataStale() {
+    profileStatisticsStore.markStale();
+    currentUnitStore.markStale();
   }
 
   List<Map<String, dynamic>> buildLessonAnswersPayload(QuestionAnswerSubmitted event) {

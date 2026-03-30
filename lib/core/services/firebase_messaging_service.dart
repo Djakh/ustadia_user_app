@@ -12,6 +12,11 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   debugPrint('FCM background message: ${message.messageId}');
 }
 
+@pragma('vm:entry-point')
+void onDidReceiveBackgroundNotificationResponse(NotificationResponse response) {
+  FirebaseMessagingService.openNotificationsPage();
+}
+
 class FirebaseMessagingService {
   FirebaseMessagingService._();
   static const _channelId = 'ustadia_general';
@@ -22,8 +27,14 @@ class FirebaseMessagingService {
 
   static Future<void> _initLocalNotifications() async {
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const settings = InitializationSettings(android: androidSettings);
-    await _localNotifications.initialize(settings);
+    const iosSettings = DarwinInitializationSettings(
+        requestAlertPermission: false,
+        requestBadgePermission: false,
+        requestSoundPermission: false);
+    const settings = InitializationSettings(android: androidSettings, iOS: iosSettings);
+    await _localNotifications.initialize(settings,
+        onDidReceiveNotificationResponse: (_) => openNotificationsPage(),
+        onDidReceiveBackgroundNotificationResponse: onDidReceiveBackgroundNotificationResponse);
     final androidPlugin = _localNotifications.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>();
     if (androidPlugin != null) {
@@ -37,18 +48,27 @@ class FirebaseMessagingService {
   }
 
   static Future<void> initialize() async {
-    if (!Platform.isAndroid) {
-      debugPrint('FCM init skipped: only Android is configured.');
-      return;
-    }
     await Firebase.initializeApp();
     await _initLocalNotifications();
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
     final messaging = FirebaseMessaging.instance;
-    await messaging.requestPermission(alert: true, badge: true, sound: true);
+    await messaging.setAutoInitEnabled(true);
+    final settings = await messaging.requestPermission(alert: true, badge: true, sound: true);
+    debugPrint('FCM permission status: ${settings.authorizationStatus}');
+    String? apnsToken;
+    if (Platform.isIOS) {
+      await messaging.setForegroundNotificationPresentationOptions(
+          alert: true, badge: true, sound: true);
+      try {
+        apnsToken = await messaging.getAPNSToken();
+        debugPrint('APNs token: $apnsToken');
+      } catch (error) {
+        debugPrint('APNs token is not available yet: $error');
+      }
+    }
 
-    final token = await messaging.getToken();
+    final token = await getToken(apnsToken: apnsToken);
     debugPrint('FCM token: $token');
     messaging.onTokenRefresh.listen((newToken) {
       debugPrint('FCM token refreshed: $newToken');
@@ -60,6 +80,7 @@ class FirebaseMessagingService {
       final title = notification?.title ?? message.data['title']?.toString();
       final body = notification?.body ?? message.data['body']?.toString();
       if (title == null && body == null) return;
+      if (Platform.isIOS) return;
       await _localNotifications.show(
         DateTime.now().millisecondsSinceEpoch ~/ 1000,
         title,
@@ -90,10 +111,18 @@ class FirebaseMessagingService {
     Future.microtask(() => appRouter.go(notificationsRoute));
   }
 
-  static Future<String?> getToken() async {
+  static Future<String?> getToken({String? apnsToken}) async {
     try {
+      if (Platform.isIOS) {
+        final currentApnsToken = apnsToken ?? await FirebaseMessaging.instance.getAPNSToken();
+        if (currentApnsToken == null || currentApnsToken.isEmpty) {
+          debugPrint('Skipping FCM token fetch because APNs token is not available yet.');
+          return null;
+        }
+      }
       return await FirebaseMessaging.instance.getToken();
-    } catch (_) {
+    } catch (error) {
+      debugPrint('Failed to get FCM token: $error');
       return null;
     }
   }
