@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
@@ -50,7 +49,6 @@ class LearnLessonsPageState extends State<LearnLessonsPage> {
       PrimaryListView(
           items: lessons,
           padding: Style.paddingPrimary,
-          shrinkWrap: true,
           separatorHeight: 12,
           onRefresh: () async {
             lessonsBloc.add(const LearnLessonsRequested());

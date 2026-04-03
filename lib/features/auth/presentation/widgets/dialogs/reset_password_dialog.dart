@@ -69,14 +69,14 @@ class ResetPasswordDialogState extends State<ResetPasswordDialog> {
       ? InputField.email(
           controller: widget.contactController,
           label: 'Email'.tr(),
-          hint: 'e.g. name@email.com',
+          hint: 'e.g. name@email.com'.tr(),
           readOnly: true,
-          errorText: showContactError ? 'Email is invalid.' : null)
+          errorText: showContactError ? 'Email is invalid.'.tr() : null)
       : InputField.primary(
           controller: widget.contactController,
           label: 'Phone number'.tr(),
           readOnly: true,
-          errorText: showContactError ? 'Phone number is invalid.' : null);
+          errorText: showContactError ? 'Phone number is invalid.'.tr() : null);
 
   Widget get passwordChecklist =>
       PasswordChecklist(issues: PasswordRules.issues(widget.passwordController.text));
@@ -90,16 +90,16 @@ class ResetPasswordDialogState extends State<ResetPasswordDialog> {
             InputField.primary(
                 controller: widget.otpController,
                 label: 'OTP'.tr(),
-                hint: 'Enter 6-digit OTP',
-                errorText: showOtpError ? 'OTP is required.' : null,
+                hint: 'Enter 6-digit OTP'.tr(),
+                errorText: showOtpError ? 'OTP is required.'.tr() : null,
                 onChanged: (value) => setState(() => showOtpError = false)),
             const SizedBox(height: 12),
             InputField.password(
                 controller: widget.passwordController,
                 label: 'New password'.tr(),
-                hint: 'Enter new password',
+                hint: 'Enter new password'.tr(),
                 obscure: true,
-                errorText: showPasswordError ? 'Password is not strong enough.' : null,
+                errorText: showPasswordError ? 'Password is not strong enough.'.tr() : null,
                 onChanged: (value) => setState(() => showPasswordError = false)),
             if (showPasswordError) passwordChecklist
           ]),
@@ -109,8 +109,8 @@ class ResetPasswordDialogState extends State<ResetPasswordDialog> {
                 builder: (context, state) => Button.primary(
                     onTap: submit,
                     text: 'Reset password'.tr(),
-                    isLoading: state.status == Status.loading &&
-                        state.action == widget.loadingAction))
+                    isLoading:
+                        state.status == Status.loading && state.action == widget.loadingAction))
           ]);
 }
 

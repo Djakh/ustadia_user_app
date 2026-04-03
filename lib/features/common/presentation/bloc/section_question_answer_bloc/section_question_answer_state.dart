@@ -17,11 +17,13 @@ class QuestionAnswerState extends Equatable {
     Status? status,
     LearnQuestionAnswerResultModel? result,
     String? errorMessage,
+    bool clearResult = false,
+    bool clearErrorMessage = false,
   }) {
     return QuestionAnswerState(
       status: status ?? this.status,
-      result: result ?? this.result,
-      errorMessage: errorMessage,
+      result: clearResult ? null : (result ?? this.result),
+      errorMessage: clearErrorMessage ? null : errorMessage,
     );
   }
 

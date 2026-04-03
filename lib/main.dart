@@ -16,5 +16,7 @@ Future<void> main() async {
       supportedLocales: const [Locale('en'), Locale('ru'), Locale('uz')],
       path: 'assets/translations',
       fallbackLocale: const Locale('en'),
+      useOnlyLangCode: true,
+      saveLocale: true,
       child: const AppRestart(child: UstadiaUserApp())));
 }

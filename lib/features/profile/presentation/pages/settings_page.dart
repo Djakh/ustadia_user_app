@@ -9,6 +9,8 @@ import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:ustadia_user_app/features/common/data/datasources/user_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/data/models/user_profile_model.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
 import 'package:ustadia_user_app/features/profile/data/models/settings_item_model.dart';
@@ -23,16 +25,16 @@ import 'package:ustadia_user_app/router.dart';
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
-  List<SettingsItemModel> get mainItems =>  [
-        SettingsItemModel(title: 'Account'.tr(), iconAsset: AppImages.settingsAccount),
-        SettingsItemModel(title: 'Learning preferences'.tr(), iconAsset: AppImages.settingsPreferences),
-        SettingsItemModel(title: 'Choose teacher'.tr(), iconAsset: AppImages.settingsAccount),
+  List<SettingsItemModel> get mainItems => [
+        SettingsItemModel(title: 'Account'.tr(), iconData: Icons.person),
+        SettingsItemModel(title: 'Language'.tr(), iconData: Icons.language_rounded),
+        SettingsItemModel(title: 'Choose teacher'.tr(), iconData: Icons.people),
         // SettingsItemModel(title: 'Notifications'.tr(), iconAsset: AppImages.settingsNotifications),
         // SettingsItemModel(title: 'Info'.tr(), iconAsset: AppImages.settingsInfo),
         // SettingsItemModel(title: 'Legal'.tr(), iconAsset: AppImages.settingsLegal),
       ];
 
-  SettingsItemModel get logoutItem =>  SettingsItemModel(
+  SettingsItemModel get logoutItem => SettingsItemModel(
         title: 'Log out'.tr(),
         iconAsset: AppImages.settingsSmallLogout,
         isDestructive: true,
@@ -66,6 +68,9 @@ class SettingsPage extends StatelessWidget {
       } catch (_) {}
     }
     await sl<AuthLocalDataSource>().clearAccessToken();
+    if (context.mounted) {
+      context.read<TeacherBloc>().add(const TeachersReset());
+    }
     if (!context.mounted) return;
     context.go(loginRoute);
   }

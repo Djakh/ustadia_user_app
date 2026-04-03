@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
@@ -37,8 +36,7 @@ class LearnUnitsPageState extends State<LearnUnitsPage> {
   void initState() {
     super.initState();
     if (widget.learnLessonModel.id.isNotEmpty &&
-        (unitsBloc.state.units.isEmpty ||
-            unitsBloc.state.lessonId != widget.learnLessonModel.id)) {
+        (unitsBloc.state.units.isEmpty || unitsBloc.state.lessonId != widget.learnLessonModel.id)) {
       unitsBloc.add(LearnUnitsRequested(lessonId: widget.learnLessonModel.id));
     }
   }
@@ -73,12 +71,19 @@ class LearnUnitsPageState extends State<LearnUnitsPage> {
       itemBuilder: (context, index) =>
           LearnUnitCard(unit: units[index], onTap: () => openUnit(context, units[index])));
 
-  Widget view(BuildContext context, List<LearnUnitModel> units) => ListView(children: [
+  Future<void> reloadUnits() async {
+    if (widget.learnLessonModel.id.isEmpty) return;
+    unitsBloc.add(LearnUnitsRequested(lessonId: widget.learnLessonModel.id));
+  }
+
+  Widget view(BuildContext context, List<LearnUnitModel> units) => RefreshIndicator(
+      onRefresh: reloadUnits,
+      child: ListView(physics: const AlwaysScrollableScrollPhysics(), children: [
         const SizedBox(height: 24),
         subtitleCard,
         const SizedBox(height: 12),
         grid(context, units)
-      ]);
+      ]));
 
   Widget get contentChecker =>
       BlocStatusView<LearnUnitsBloc, LearnUnitsState, List<LearnUnitModel>>(
@@ -92,15 +97,15 @@ class LearnUnitsPageState extends State<LearnUnitsPage> {
         isEmpty: (units) => units.isEmpty,
         keepDataOnLoading: false,
         empty: Center(child: Text('No units found'.tr())),
-        loading: Column(children: [
-          const SizedBox(height: 24),
-          const ShimmerList(
+        loading: const Column(children: [
+          SizedBox(height: 24),
+          ShimmerList(
               itemCount: 1,
               itemHeight: 54,
               padding: EdgeInsets.symmetric(horizontal: 16),
               borderRadius: BorderRadius.all(Radius.circular(12))),
-          const SizedBox(height: 12),
-          const ShimmerGrid(
+          SizedBox(height: 12),
+          ShimmerGrid(
               itemCount: 4,
               crossAxisCount: 2,
               childAspectRatio: 0.92,

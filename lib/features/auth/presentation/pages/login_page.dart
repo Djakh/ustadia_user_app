@@ -7,9 +7,11 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
+import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:ustadia_user_app/core/widgets/connection/reload_conntection_button.dart';
 import 'package:ustadia_user_app/core/widgets/inputs/input_field.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_login_bloc.dart';
@@ -88,7 +90,7 @@ class LoginPageState extends State<LoginPage> {
 
   /// --- Listeners ---
 
-  void authPasswordListener(context, state) {
+  void authPasswordListener(BuildContext context, AuthPasswordState state) {
     if (state.status == Status.success) {
       if (state.action == AuthPasswordAction.forgotPasswordEmail) {
         if (isForgotDialogOpen && Navigator.of(context).canPop()) {
@@ -145,7 +147,8 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
-  void userListener(context, state) {
+  void userListener(BuildContext context, UserState state) {
+    if (mounted) setState(() {});
     if (!isAwaitingUser) return;
     if (state.status == Status.success) {
       isAwaitingUser = false;
@@ -162,7 +165,8 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
-  void authLoginListener(context, state) {
+  void authLoginListener(BuildContext context, AuthLoginState state) {
+    if (mounted) setState(() {});
     if (state.status == Status.success) {
       saveRememberedCredentials();
       isAwaitingUser = true;
@@ -358,24 +362,24 @@ class LoginPageState extends State<LoginPage> {
   Widget get phoneTextField => InputField.phone(
       controller: phoneController,
       label: 'Phone number'.tr(),
-      errorText: showError ? 'Phone number is invalid.' : null,
+      errorText: showError ? 'Phone number is invalid.'.tr() : null,
       onChanged: (value) => setState(() => showError = false));
 
   Widget get emailTextField => InputField.email(
       controller: emailController,
       label: 'Email'.tr(),
-      hint: 'e.g. name@email.com',
-      errorText: showEmailError ? 'Email is invalid.' : null,
+      hint: 'e.g. name@email.com'.tr(),
+      errorText: showEmailError ? 'Email is invalid.'.tr() : null,
       onChanged: (value) => setState(() => showEmailError = false));
 
   Widget get passwordField => InputField.password(
       controller: passwordController,
       label: 'Password'.tr(),
-      hint: 'Enter your password',
+      hint: 'Enter your password'.tr(),
       obscure: !passwordVisible,
       showVisibilityToggle: true,
       onToggleVisibility: () => setState(() => passwordVisible = !passwordVisible),
-      errorText: showPasswordError ? 'Password is required.' : null,
+      errorText: showPasswordError ? 'Password is required.'.tr() : null,
       onChanged: (value) => setState(() => showPasswordError = false));
 
   Widget get divider => Row(children: [
@@ -391,12 +395,33 @@ class LoginPageState extends State<LoginPage> {
             style: Style.small3w4(context, color: TextColorRole.greyColor)),
         GestureDetector(
             onTap: goToSignup,
-            child: Text('Sign up'.tr(), style: Style.small3w5(context, color: TextColorRole.onSurface)))
+            child: Text('Sign up'.tr(),
+                style: Style.small3w5(context, color: TextColorRole.onSurface)))
       ]);
 
   List<Widget> get fields => isEmailLogin
       ? [emailTextField, const SizedBox(height: 12), passwordField]
       : [phoneTextField, const SizedBox(height: 12), passwordField];
+
+  bool get hasConnectionIssue =>
+      DioErrorMessage.isConnectionMessage(authLoginBloc.state.errorMessage) ||
+      DioErrorMessage.isConnectionMessage(userBloc.state.errorMessage);
+
+  bool get isAuthenticating =>
+      authLoginBloc.state.status == Status.loading ||
+      (isAwaitingUser && userBloc.state.status == Status.loading);
+
+  Future<void> retryConnection() async {
+    if (authLoginBloc.state.status == Status.success && isAwaitingUser) {
+      userBloc.add(const UserProfileRequested());
+      return;
+    }
+    onLogin();
+  }
+
+  Widget get reloadConnectionButton => hasConnectionIssue
+      ? ReloadConntectionButton(onReloadConnection: retryConnection)
+      : const SizedBox.shrink();
 
   Widget get view => PrimaryBackground(
       isHeader: false,
@@ -419,7 +444,7 @@ class LoginPageState extends State<LoginPage> {
             BlocBuilder<AuthLoginBloc, AuthLoginState>(
                 bloc: authLoginBloc,
                 builder: (context, state) => Button.primary(
-                    onTap: onLogin, text: 'Log in'.tr(), isLoading: state.status == Status.loading)),
+                    onTap: onLogin, text: 'Log in'.tr(), isLoading: isAuthenticating)),
             const SizedBox(height: 16),
             divider,
             const SizedBox(height: 16),
@@ -428,7 +453,11 @@ class LoginPageState extends State<LoginPage> {
                 builder: (context, state) => Button.border(
                     onTap: toggleLoginMethod,
                     text: isEmailLogin ? 'Log in with Phone'.tr() : 'Log in with Email'.tr(),
-                    isAvialable: state.status != Status.loading)),
+                    isAvialable: !isAuthenticating)),
+            if (hasConnectionIssue) ...[
+              const SizedBox(height: 12),
+              reloadConnectionButton,
+            ],
             const SizedBox(height: 16),
             signup
           ])));

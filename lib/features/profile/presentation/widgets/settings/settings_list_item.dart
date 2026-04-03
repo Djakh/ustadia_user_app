@@ -18,6 +18,12 @@ class SettingsListItem extends StatelessWidget {
 
   Color get iconBackground => item.isDestructive ? AppColors.redE2 : AppColors.greenE7;
 
+  Widget leadingIcon(BuildContext context) {
+    if (item.iconAsset != null) return SvgPicture.asset(item.iconAsset!);
+    return Icon(item.iconData,
+        size: 26, color: item.isDestructive ? AppColors.error : context.cs.primary);
+  }
+
   Expanded title(BuildContext context) => Expanded(
       child: Text(item.title,
           style: Style.bodyw4(context)
@@ -28,12 +34,8 @@ class SettingsListItem extends StatelessWidget {
         colorFilter:
             item.isDestructive ? const ColorFilter.mode(AppColors.error, BlendMode.srcIn) : null,
       );
-  Widget view(BuildContext context) => Row(children: [
-        SvgPicture.asset(item.iconAsset),
-        const SizedBox(width: 14),
-        title(context),
-        arrowIcon()
-      ]);
+  Widget view(BuildContext context) =>
+      Row(children: [leadingIcon(context), const SizedBox(width: 14), title(context), arrowIcon()]);
 
   Widget inkwell(BuildContext context) => InkWell(
       onTap: onTap,

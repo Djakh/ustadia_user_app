@@ -39,6 +39,10 @@ class _PracticeWordMatchSetsPageState extends State<PracticeWordMatchSetsPage> {
     context.push(wordMatchRoute, extra: set);
   }
 
+  Future<void> reloadSets() async {
+    setsBloc.add(const PracticeWordMatchSetsRequested());
+  }
+
   Widget setCard(BuildContext context, PracticeWordMatchSetModel set) => PrimaryBox(
       onTap: () => openSet(set),
       child: Row(children: [
@@ -54,18 +58,16 @@ class _PracticeWordMatchSetsPageState extends State<PracticeWordMatchSetsPage> {
         ]))
       ]));
 
-  Widget setsList(BuildContext context, List<PracticeWordMatchSetModel> sets) =>
-      ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          itemCount: sets.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          separatorBuilder: (_, __) => const SizedBox(height: 10),
-          itemBuilder: (context, index) => setCard(context, sets[index]));
+  Widget setsList(BuildContext context, List<PracticeWordMatchSetModel> sets) => ListView.separated(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      itemCount: sets.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      itemBuilder: (context, index) => setCard(context, sets[index]));
 
-  Widget get contentChecker =>
-      BlocStatusView<PracticeWordMatchSetsBloc, PracticeWordMatchSetsState,
-              List<PracticeWordMatchSetModel>>(
+  Widget get contentChecker => BlocStatusView<PracticeWordMatchSetsBloc, PracticeWordMatchSetsState,
+          List<PracticeWordMatchSetModel>>(
       bloc: setsBloc,
       statusOf: (s) => s.status,
       errorOf: (s) => s.errorMessage,
@@ -85,9 +87,11 @@ class _PracticeWordMatchSetsPageState extends State<PracticeWordMatchSetsPage> {
       backgroundColor: context.cs.surface,
       body: PrimaryBackground(
           title: 'Word match'.tr(),
-          child: ListView(children: [
-            const SizedBox(height: 16),
-            contentChecker,
-            const SizedBox(height: 80),
-          ])));
+          child: RefreshIndicator(
+              onRefresh: reloadSets,
+              child: ListView(physics: const AlwaysScrollableScrollPhysics(), children: [
+                const SizedBox(height: 16),
+                contentChecker,
+                const SizedBox(height: 80),
+              ]))));
 }

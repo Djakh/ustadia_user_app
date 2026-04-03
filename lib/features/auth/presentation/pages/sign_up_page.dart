@@ -6,9 +6,11 @@ import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
+import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:ustadia_user_app/core/widgets/connection/reload_conntection_button.dart';
 import 'package:ustadia_user_app/core/widgets/inputs/input_field.dart';
 import 'package:ustadia_user_app/core/validators/password_rules.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_register_bloc.dart';
@@ -65,7 +67,10 @@ class SignUpPageState extends State<SignUpPage> {
       extra: isEmailSignUp ? emailController.text.trim() : '+998 ${phoneController.text}');
 
   void goToOtpWithTempId(String tempId) => context.push(otpRoute,
-      extra: OtpVerificationParams(tempId: tempId, email: emailController.text.trim()));
+      extra: OtpVerificationParams(
+          tempId: tempId,
+          email: isEmailSignUp ? emailController.text.trim() : null,
+          phoneNumber: isEmailSignUp ? null : fullPhoneNumber));
 
   bool get isFullNameValid => fullNameController.text.trim().isNotEmpty;
 
@@ -136,6 +141,8 @@ class SignUpPageState extends State<SignUpPage> {
       isFullNameValid && isUsernameValid && isEmailValid && isPasswordStrong && passwordsMatch;
   bool get isPhoneFormValid =>
       isFullNameValid && isUsernameValid && isPhoneValid && isPasswordStrong && passwordsMatch;
+  bool get hasConnectionIssue =>
+      DioErrorMessage.isConnectionMessage(authRegisterBloc.state.errorMessage);
 
   /// --- Widgets ---
 
@@ -172,39 +179,40 @@ class SignUpPageState extends State<SignUpPage> {
         InputField.primary(
             controller: fullNameController,
             label: 'Full Name'.tr(),
-            hint: 'e.g. John Doe',
-            errorText: showFullNameError ? 'Full name is required.' : null,
+            hint: 'e.g. John Doe'.tr(),
+            errorText: showFullNameError ? 'Full name is required.'.tr() : null,
             onChanged: (value) => setState(() => showFullNameError = false)),
         const SizedBox(height: 12),
         InputField.primary(
             controller: usernameController,
             label: 'Username'.tr(),
-            hint: 'e.g. @johndoe',
-            errorText: showUsernameError ? 'Username is required.' : null,
+            hint: 'e.g. @johndoe'.tr(),
+            errorText: showUsernameError ? 'Username is required.'.tr() : null,
             onChanged: (value) => setState(() => showUsernameError = false)),
         const SizedBox(height: 12),
         if (!isEmailSignUp)
           InputField.phone(
               controller: phoneController,
               label: 'Phone number'.tr(),
-              errorText: showPhoneError ? 'Phone number is invalid.' : null,
+              errorText: showPhoneError ? 'Phone number is invalid.'.tr() : null,
               onChanged: (value) => setState(() => showPhoneError = false)),
         if (isEmailSignUp)
           InputField.email(
               controller: emailController,
               label: 'Email'.tr(),
-              hint: 'e.g. name@email.com',
-              errorText: showEmailError ? 'Email is invalid.' : null,
+              hint: 'e.g. name@email.com'.tr(),
+              errorText: showEmailError ? 'Email is invalid.'.tr() : null,
               onChanged: (value) => setState(() => showEmailError = false)),
         const SizedBox(height: 12),
         InputField.password(
             controller: passwordController,
             label: 'Password'.tr(),
-            hint: 'Must contain at least 11 characters',
+            hint: 'Must contain at least {count} characters.'
+                .tr(namedArgs: {'count': '${PasswordRules.minLength}'}),
             obscure: !passwordVisible,
             showVisibilityToggle: true,
             onToggleVisibility: () => setState(() => passwordVisible = !passwordVisible),
-            errorText: showPasswordError ? 'Password is not strong enough.' : null,
+            errorText: showPasswordError ? 'Password is not strong enough.'.tr() : null,
             onChanged: (value) => setState(() {
                   showPasswordError = false;
                   showConfirmError = false;
@@ -214,12 +222,13 @@ class SignUpPageState extends State<SignUpPage> {
         InputField.password(
             controller: confirmController,
             label: 'Confirm Password'.tr(),
-            hint: 'Must contain at least 11 characters',
+            hint: 'Must contain at least {count} characters.'
+                .tr(namedArgs: {'count': '${PasswordRules.minLength}'}),
             obscure: !confirmVisible,
             showVisibilityToggle: true,
             onToggleVisibility: () => setState(() => confirmVisible = !confirmVisible),
             errorText: showConfirmError && confirmController.text.isNotEmpty
-                ? 'Passwords do not match.'
+                ? 'Passwords do not match.'.tr()
                 : null,
             onChanged: (value) => setState(() => showConfirmError = false)),
       ]);
@@ -229,7 +238,8 @@ class SignUpPageState extends State<SignUpPage> {
             style: Style.small3w4(context, color: TextColorRole.greyColor)),
         GestureDetector(
             onTap: goToLogin,
-            child: Text('Log in'.tr(), style: Style.small3w5(context, color: TextColorRole.onSurface)))
+            child:
+                Text('Log in'.tr(), style: Style.small3w5(context, color: TextColorRole.onSurface)))
       ]);
 
   BlocBuilder<AuthRegisterBloc, AuthRegisterState> signUpButton() =>
@@ -243,7 +253,7 @@ class SignUpPageState extends State<SignUpPage> {
 
   Widget get signUpMethodButton => Button.border(
       onTap: toggleSignUpMethod,
-      text: isEmailSignUp ? 'Register with Phone' : 'Register with Email');
+      text: (isEmailSignUp ? 'Register with Phone' : 'Register with Email').tr());
 
   Widget get view => PrimaryBackground(
       isHeader: false,
@@ -259,6 +269,10 @@ class SignUpPageState extends State<SignUpPage> {
         form,
         const SizedBox(height: 20),
         signUpButton(),
+        if (hasConnectionIssue) ...[
+          const SizedBox(height: 12),
+          ReloadConntectionButton(onReloadConnection: () async => onSignUp()),
+        ],
         const SizedBox(height: 16),
         signUpMethodButton,
         const SizedBox(height: 16),
@@ -269,6 +283,7 @@ class SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) => BlocListener<AuthRegisterBloc, AuthRegisterState>(
       bloc: authRegisterBloc,
       listener: (context, state) {
+        if (mounted) setState(() {});
         if (state.status == Status.success && state.tempId != null) {
           goToOtpWithTempId(state.tempId!);
           return;

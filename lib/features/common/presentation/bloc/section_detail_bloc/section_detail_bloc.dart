@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
+import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/features/assignments/data/datasources/assignments_remote_data_source.dart';
 import 'package:ustadia_user_app/features/learn/data/datasources/learn_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
@@ -22,13 +23,12 @@ class SectionDetailBloc extends Bloc<SectionDetailEvent, SectionDetailState> {
     try {
       final fetched = event.source == SectionSource.assignment
           ? await assignmentsRemoteDataSource.fetchAssignmentSectionDetail(
-              assignmentId: _assignmentId(event),
-              sectionId: event.sectionId)
+              assignmentId: _assignmentId(event), sectionId: event.sectionId)
           : await learnRemoteDataSource.fetchSectionDetail(sectionId: event.sectionId);
       final updatedDetail = _applyLessonUnit(fetched, event.unitId, event.lessonId);
       emit(state.copyWith(status: Status.success, detail: updatedDetail, errorMessage: null));
     } catch (error) {
-      emit(state.copyWith(status: Status.error, errorMessage: error.toString()));
+      emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.fromUnknown(error)));
     }
   }
 

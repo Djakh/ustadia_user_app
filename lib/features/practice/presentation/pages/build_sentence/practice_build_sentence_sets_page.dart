@@ -39,12 +39,17 @@ class _PracticeBuildSentenceSetsPageState extends State<PracticeBuildSentenceSet
     context.push(buildSentenceRoute, extra: set);
   }
 
+  Future<void> reloadSets() async {
+    setsBloc.add(const PracticeSentenceBuilderSetsRequested());
+  }
+
   Widget setCard(BuildContext context, PracticeSentenceBuilderSetModel set) => PrimaryBox(
       onTap: () => openSet(set),
       child: Row(children: [
         ClipRRect(
             borderRadius: Style.border12,
-            child: Image.asset(AppImages.buildTheSentence, height: 56, width: 56, fit: BoxFit.cover)),
+            child:
+                Image.asset(AppImages.buildTheSentence, height: 56, width: 56, fit: BoxFit.cover)),
         const SizedBox(width: 12),
         Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -63,9 +68,8 @@ class _PracticeBuildSentenceSetsPageState extends State<PracticeBuildSentenceSet
           separatorBuilder: (_, __) => const SizedBox(height: 10),
           itemBuilder: (context, index) => setCard(context, sets[index]));
 
-  Widget get contentChecker =>
-      BlocStatusView<PracticeSentenceBuilderSetsBloc, PracticeSentenceBuilderSetsState,
-              List<PracticeSentenceBuilderSetModel>>(
+  Widget get contentChecker => BlocStatusView<PracticeSentenceBuilderSetsBloc,
+          PracticeSentenceBuilderSetsState, List<PracticeSentenceBuilderSetModel>>(
       bloc: setsBloc,
       statusOf: (s) => s.status,
       errorOf: (s) => s.errorMessage,
@@ -85,9 +89,11 @@ class _PracticeBuildSentenceSetsPageState extends State<PracticeBuildSentenceSet
       backgroundColor: context.cs.surface,
       body: PrimaryBackground(
           title: 'Build the sentence'.tr(),
-          child: ListView(children: [
-            const SizedBox(height: 16),
-            contentChecker,
-            const SizedBox(height: 80),
-          ])));
+          child: RefreshIndicator(
+              onRefresh: reloadSets,
+              child: ListView(physics: const AlwaysScrollableScrollPhysics(), children: [
+                const SizedBox(height: 16),
+                contentChecker,
+                const SizedBox(height: 80),
+              ]))));
 }

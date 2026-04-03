@@ -57,7 +57,6 @@ class EditAccountPageState extends State<EditAccountPage> {
   void dispose() {
     firstNameController.dispose();
     lastNameController.dispose();
-    imageUploadBloc.close();
     super.dispose();
   }
 

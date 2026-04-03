@@ -40,6 +40,10 @@ class _PracticeFlashcardSetsPageState extends State<PracticeFlashcardSetsPage> {
     context.push(flashcardSprintRoute, extra: FlashcardSprintParams(set: set, isPractice: true));
   }
 
+  Future<void> reloadSets() async {
+    setsBloc.add(const PracticeFlashcardSetsRequested());
+  }
+
   Widget setCard(BuildContext context, LearnFlashcardSetModel set) => PrimaryBox(
       onTap: () => openSet(set),
       child: Row(children: [
@@ -85,9 +89,11 @@ class _PracticeFlashcardSetsPageState extends State<PracticeFlashcardSetsPage> {
       backgroundColor: context.cs.surface,
       body: PrimaryBackground(
           title: 'Flashcard sprint'.tr(),
-          child: ListView(children: [
-            const SizedBox(height: 16),
-            contentChecker,
-            const SizedBox(height: 80),
-          ])));
+          child: RefreshIndicator(
+              onRefresh: reloadSets,
+              child: ListView(physics: const AlwaysScrollableScrollPhysics(), children: [
+                const SizedBox(height: 16),
+                contentChecker,
+                const SizedBox(height: 80),
+              ]))));
 }

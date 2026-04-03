@@ -6,6 +6,7 @@ import 'package:ustadia_user_app/features/assignments/data/datasources/assignmen
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/dashboard/data/services/current_unit_store.dart';
 import 'package:ustadia_user_app/features/learn/data/datasources/learn_remote_data_source.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_question_answer_result_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_state.dart';
 import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
@@ -23,17 +24,29 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
       required this.currentUnitStore})
       : super(const QuestionAnswerState()) {
     on<QuestionAnswerSubmitted>(handleQuestionAnswerSubmitted);
+    on<QuestionAnswerReset>(handleQuestionAnswerReset);
+  }
+
+  void handleQuestionAnswerReset(QuestionAnswerReset event, Emitter<QuestionAnswerState> emit) {
+    emit(const QuestionAnswerState());
   }
 
   Future<void> handleQuestionAnswerSubmitted(
       QuestionAnswerSubmitted event, Emitter<QuestionAnswerState> emit) async {
-    emit(state.copyWith(status: Status.loading, errorMessage: null));
+    emit(state.copyWith(
+      status: Status.loading,
+      clearResult: true,
+      clearErrorMessage: true,
+    ));
     try {
       if (event.source == SectionSource.assignment) {
         final assignmentId = event.assignmentId;
         if (assignmentId == null || assignmentId.isEmpty) {
           emit(state.copyWith(
-              status: Status.error, errorMessage: 'Assignment id is missing.'));
+            status: Status.error,
+            errorMessage: 'Assignment id is missing.',
+            clearResult: true,
+          ));
           return;
         }
         final answersPayload = buildAssignmentAnswersPayload(event);
@@ -41,9 +54,17 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
             assignmentId: assignmentId, answers: answersPayload);
         if (success) {
           markDerivedDataStale();
-          emit(state.copyWith(status: Status.success, result: null, errorMessage: null));
+          emit(state.copyWith(
+            status: Status.success,
+            clearResult: true,
+            clearErrorMessage: true,
+          ));
         } else {
-          emit(state.copyWith(status: Status.error, errorMessage: 'Request failed.'));
+          emit(state.copyWith(
+            status: Status.error,
+            errorMessage: 'Request failed.',
+            clearResult: true,
+          ));
         }
         return;
       }
@@ -52,18 +73,34 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
       final lessonId = event.lessonId;
       if (unitId == null || unitId.isEmpty || lessonId == null || lessonId.isEmpty) {
         emit(state.copyWith(
-            status: Status.error, errorMessage: 'Lesson or unit id is missing.'));
+          status: Status.error,
+          errorMessage: 'Lesson or unit id is missing.',
+          clearResult: true,
+        ));
         return;
       }
       final answersPayload = buildLessonAnswersPayload(event);
-      await learnRemoteDataSource.submitLessonAnswers(
+      final response = await learnRemoteDataSource.submitLessonAnswers(
           lessonId: lessonId, unitId: unitId, answers: answersPayload);
       markDerivedDataStale();
-      emit(state.copyWith(status: Status.success, result: null, errorMessage: null));
+      final extracted = _extractLearnResult(response);
+      emit(state.copyWith(
+        status: Status.success,
+        result: extracted,
+        clearErrorMessage: true,
+      ));
     } on DioException catch (error) {
-      emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.from(error)));
+      emit(state.copyWith(
+        status: Status.error,
+        errorMessage: DioErrorMessage.from(error),
+        clearResult: true,
+      ));
     } catch (_) {
-      emit(state.copyWith(status: Status.error, errorMessage: 'Request failed.'));
+      emit(state.copyWith(
+        status: Status.error,
+        errorMessage: 'Request failed.',
+        clearResult: true,
+      ));
     }
   }
 
@@ -131,4 +168,24 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
     answers.add(payload);
     return answers;
   }
+
+  LearnQuestionAnswerResultModel? _extractLearnResult(Map<String, dynamic> response) {
+    final direct = _asMap(response['data']) ?? _asMap(response['result']);
+    if (direct != null) {
+      return LearnQuestionAnswerResultModel.fromJson(direct);
+    }
+    if (response.containsKey('question_id') || response.containsKey('is_correct')) {
+      return LearnQuestionAnswerResultModel.fromJson(response);
+    }
+    final items = response['data'];
+    if (items is List) {
+      for (final item in items) {
+        final map = _asMap(item);
+        if (map != null) return LearnQuestionAnswerResultModel.fromJson(map);
+      }
+    }
+    return null;
+  }
+
+  Map<String, dynamic>? _asMap(dynamic value) => value is Map<String, dynamic> ? value : null;
 }

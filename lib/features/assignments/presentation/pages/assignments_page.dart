@@ -51,6 +51,10 @@ class AssignmentsPageState extends State<AssignmentsPage> {
 
   void onSelectedTabIndex(int index) => setState(() => selectedTabIndex = index);
 
+  Future<void> reloadAssignments() async {
+    assignmentsBloc.add(const AssignmentsRequested());
+  }
+
   Future<void> openAssignmentSections(AssignmentModel assignment) async {
     final result = await context.push(assignmentsSectionsRoute,
         extra: AssignmentSectionsParams(assignment: assignment));
@@ -77,8 +81,7 @@ class AssignmentsPageState extends State<AssignmentsPage> {
   Widget emptyState(BuildContext context, String label) => Center(
       child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 32),
-          child: Text(label.tr(),
-              style: Style.bodyw4(context, color: TextColorRole.greyColor))));
+          child: Text(label.tr(), style: Style.bodyw4(context, color: TextColorRole.greyColor))));
 
   Widget activeTabView(BuildContext context, List<AssignmentModel> assignments) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -104,7 +107,7 @@ class AssignmentsPageState extends State<AssignmentsPage> {
 
   Widget body(BuildContext context) => PrimaryBackground(
       title: 'Assignments'.tr(),
-      isScrollable: true,
+      isScrollable: false,
       child: BlocStatusView<AssignmentsBloc, AssignmentsState, List<AssignmentModel>>(
           bloc: assignmentsBloc,
           statusOf: (state) => state.status,
@@ -120,8 +123,9 @@ class AssignmentsPageState extends State<AssignmentsPage> {
             ShimmerList(
                 itemCount: 3, itemHeight: 160, borderRadius: BorderRadius.all(Radius.circular(24)))
           ]),
-          builder: (context, data) =>
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          builder: (context, data) => RefreshIndicator(
+              onRefresh: reloadAssignments,
+              child: ListView(physics: const AlwaysScrollableScrollPhysics(), children: [
                 const SizedBox(height: 24),
                 tabSelector(),
                 const SizedBox(height: 20),
@@ -130,7 +134,7 @@ class AssignmentsPageState extends State<AssignmentsPage> {
                 else
                   completedTabView(context, data),
                 const SizedBox(height: 80)
-              ])));
+              ]))));
 
   @override
   Widget build(BuildContext context) =>

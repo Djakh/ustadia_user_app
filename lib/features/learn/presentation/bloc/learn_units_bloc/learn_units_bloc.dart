@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
+import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/features/learn/data/datasources/learn_remote_data_source.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_units_bloc/learn_units_event.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_units_bloc/learn_units_state.dart';
@@ -20,7 +21,7 @@ class LearnUnitsBloc extends Bloc<LearnUnitsEvent, LearnUnitsState> {
       emit(state.copyWith(
           status: Status.success, units: units, errorMessage: null, lessonId: event.lessonId));
     } catch (error) {
-      emit(state.copyWith(status: Status.error, errorMessage: error.toString()));
+      emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.fromUnknown(error)));
     }
   }
 }

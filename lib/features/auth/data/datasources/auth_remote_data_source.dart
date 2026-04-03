@@ -19,31 +19,26 @@ class AuthRemoteDataSource {
         type: DioExceptionType.badResponse);
   }
 
-  Future<AuthLoginResponse> loginWithEmail({
-    required String email,
-    required String password
-  }) async {
+  Future<AuthLoginResponse> loginWithEmail(
+      {required String email, required String password}) async {
     final response = await dio.post('/auth/login',
         data: {'email': email, 'password': password}, options: requestOptions);
     checkResponse(response);
     return AuthLoginResponse.fromJson(response.data as Map<String, dynamic>);
   }
 
-  Future<AuthLoginResponse> loginWithPhone({required String phoneNumber, required String password}) async {
+  Future<AuthLoginResponse> loginWithPhone(
+      {required String phoneNumber, required String password}) async {
     final response = await dio.post('/auth/login',
-        data: {
-          'identifier': phoneNumber,
-          'phoneNumber': phoneNumber,
-          'password': password
-        },
+        data: {'identifier': phoneNumber, 'phoneNumber': phoneNumber, 'password': password},
         options: requestOptions);
     checkResponse(response);
     return AuthLoginResponse.fromJson(response.data as Map<String, dynamic>);
   }
 
   Future<String> forgotPassword({required String email}) async {
-    final response = await dio.post('/auth/forgot-password',
-        data: {'email': email}, options: requestOptions);
+    final response =
+        await dio.post('/auth/forgot-password', data: {'email': email}, options: requestOptions);
     checkResponse(response);
     final data = response.data as Map<String, dynamic>;
     return data['message']?.toString() ?? '';
@@ -52,8 +47,7 @@ class AuthRemoteDataSource {
   Future<String> resetPassword(
       {required String email, required String otp, required String newPassword}) async {
     final response = await dio.post('/auth/reset-password',
-        data: {'email': email, 'otp': otp, 'newPassword': newPassword},
-        options: requestOptions);
+        data: {'email': email, 'otp': otp, 'newPassword': newPassword}, options: requestOptions);
     checkResponse(response);
     final data = response.data as Map<String, dynamic>;
     return data['message']?.toString() ?? '';
@@ -121,5 +115,13 @@ class AuthRemoteDataSource {
     checkResponse(response);
     final data = response.data as Map<String, dynamic>;
     return data['access_token']?.toString() ?? '';
+  }
+
+  Future<String> resendOtp({required String tempId}) async {
+    final response =
+        await dio.post('/auth/resend-otp', data: {'tempId': tempId}, options: requestOptions);
+    checkResponse(response);
+    final data = response.data as Map<String, dynamic>;
+    return data['message']?.toString() ?? '';
   }
 }

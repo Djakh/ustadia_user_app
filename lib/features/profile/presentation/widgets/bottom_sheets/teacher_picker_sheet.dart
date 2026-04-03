@@ -41,7 +41,8 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
   @override
   void initState() {
     selectedTeacherModel = getSelectedTeacher;
-    teachersList = [systemTeacher, ...context.read<TeacherBloc>().state.teachers];
+    teachersList = [systemTeacher];
+    context.read<TeacherBloc>().add(const TeachersRequested());
     super.initState();
   }
 

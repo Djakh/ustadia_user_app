@@ -11,6 +11,10 @@ class TeachersRequested extends TeacherEvent {
   const TeachersRequested();
 }
 
+class TeachersReset extends TeacherEvent {
+  const TeachersReset();
+}
+
 class TeacherSwapRequested extends TeacherEvent {
   final String? teacherId;
 

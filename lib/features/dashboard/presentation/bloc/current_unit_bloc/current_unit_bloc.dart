@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
+import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/bloc/current_unit_bloc/current_unit_event.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/bloc/current_unit_bloc/current_unit_state.dart';
 import 'package:ustadia_user_app/features/learn/data/datasources/learn_remote_data_source.dart';
@@ -18,7 +19,7 @@ class CurrentUnitBloc extends Bloc<CurrentUnitEvent, CurrentUnitState> {
       final unit = await learnRemoteDataSource.fetchCurrentUnit();
       emit(state.copyWith(status: Status.success, unit: unit, errorMessage: null));
     } catch (error) {
-      emit(state.copyWith(status: Status.error, errorMessage: error.toString()));
+      emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.fromUnknown(error)));
     }
   }
 }

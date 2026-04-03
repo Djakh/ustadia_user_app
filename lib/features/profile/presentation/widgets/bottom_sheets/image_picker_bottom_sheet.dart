@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,30 +15,30 @@ class ImagePickerBottomSheet extends StatelessWidget {
 
   /// --- Methods ----
 
-  Future<void> pickFromGallery() async {
+  void showMessage(String text) {
+    ScaffoldMessenger.of(sheetContext).showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  Future<void> pickImage(ImageSource source) async {
     try {
-      final result = await FilePicker.platform.pickFiles(type: FileType.image);
-      if (result == null || result.files.isEmpty) return;
-      final path = result.files.single.path;
-      if (path == null || path.isEmpty) return;
+      final picker = ImagePicker();
+      final file = await picker.pickImage(source: source, imageQuality: 90);
+      if (file == null || file.path.isEmpty) return;
       if (!sheetContext.mounted) return;
-      sheetContext.read<FileUploadBloc>().add(ImageUploadRequested(filePath: path));
+      sheetContext.read<FileUploadBloc>().add(ImageUploadRequested(filePath: file.path));
+      Navigator.of(sheetContext).pop();
     } on MissingPluginException {
-      ScaffoldMessenger.of(sheetContext).showSnackBar(SnackBar(
-          content: Text('File picker is not available on this device. Try a real device.'.tr())));
+      showMessage('Image picker is not available on this device. Try a real device.'.tr());
+    } on PlatformException catch (error) {
+      showMessage(error.message?.trim().isNotEmpty == true
+          ? error.message!
+          : 'Unable to access photos or camera. Please check permissions and try again.'.tr());
     }
-    Navigator.of(sheetContext).pop();
   }
 
-  Future<void> pickFromCamera() async {
-    final picker = ImagePicker();
-    final file = await picker.pickImage(source: ImageSource.camera, imageQuality: 90);
-    if (file == null) return;
-    if (!sheetContext.mounted) return;
+  Future<void> pickFromGallery() => pickImage(ImageSource.gallery);
 
-    sheetContext.read<FileUploadBloc>().add(ImageUploadRequested(filePath: file.path));
-    Navigator.of(sheetContext).pop();
-  }
+  Future<void> pickFromCamera() => pickImage(ImageSource.camera);
 
   /// --- Widgets ----
 

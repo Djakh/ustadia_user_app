@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
+import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/core/pagination/pagination_meta.dart';
 import 'package:ustadia_user_app/features/learn/data/datasources/learn_remote_data_source.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections_bloc/learn_sections_event.dart';
@@ -32,7 +33,7 @@ class LearnSectionsBloc extends Bloc<LearnSectionsEvent, LearnSectionsState> {
           errorMessage: null,
           unitId: event.unitId));
     } catch (error) {
-      emit(state.copyWith(status: Status.error, errorMessage: error.toString()));
+      emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.fromUnknown(error)));
     }
   }
 
@@ -42,9 +43,7 @@ class LearnSectionsBloc extends Bloc<LearnSectionsEvent, LearnSectionsState> {
     emit(state.copyWith(isLoadingMore: true));
     try {
       final result = await learnRemoteDataSource.fetchSections(
-          unitId: event.unitId,
-          page: state.pagination.page + 1,
-          limit: state.pagination.limit);
+          unitId: event.unitId, page: state.pagination.page + 1, limit: state.pagination.limit);
       final merged = [...state.sections, ...result.items];
       emit(state.copyWith(
           status: Status.success,
@@ -53,7 +52,7 @@ class LearnSectionsBloc extends Bloc<LearnSectionsEvent, LearnSectionsState> {
           isLoadingMore: false,
           errorMessage: null));
     } catch (error) {
-      emit(state.copyWith(isLoadingMore: false, errorMessage: error.toString()));
+      emit(state.copyWith(isLoadingMore: false, errorMessage: DioErrorMessage.fromUnknown(error)));
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_answer_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 
@@ -43,11 +44,30 @@ class SectionQuestionModel {
       String? assignmentId,
       String? unitId,
       String? lessonId}) {
+    final rawAnswers =
+        (json['answers'] as List<dynamic>?)?.whereType<Map<String, dynamic>>().toList() ?? const [];
     final answers = (json['answers'] as List<dynamic>?)
         ?.whereType<Map<String, dynamic>>()
         .map(SectionAnswerModel.fromJson)
         .toList();
     answers?.sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
+    final questionType = json['type']?.toString() ?? '';
+    final hasChoiceAnswers = rawAnswers.isNotEmpty &&
+        (questionType.toLowerCase() == 'multiple-choice' ||
+            questionType.toLowerCase() == 'single-choice');
+    final parsedCorrectCount = answers?.where((answer) => answer.isCorrect).length ?? 0;
+    if (kDebugMode && hasChoiceAnswers && parsedCorrectCount == 0) {
+      debugPrint('[MalformedQuestion] questionId=${json['id']} type=$questionType '
+          'has answers but no correct option in payload. '
+          'rawAnswers=${rawAnswers.map((answer) => {
+                'id': answer['id'],
+                'text': answer['answer_text'],
+                'is_correct': answer['is_correct'],
+                'isCorrect': answer['isCorrect'],
+                'correct': answer['correct'],
+                'user_selected': answer['user_selected'],
+              }).toList()}');
+    }
     final blankAnswers = (json['blank_answers'] as List<dynamic>?)
             ?.whereType<Map<String, dynamic>>()
             .map(SectionBlankAnswer.fromJson)
@@ -74,7 +94,7 @@ class SectionQuestionModel {
       blankAnswers: blankAnswers,
       userBlankAnswers: userBlankAnswers,
       source: source,
-      questionType: json['type']?.toString() ?? '',
+      questionType: questionType,
       maxSelections: _toInt(json['max_selections']),
     );
   }

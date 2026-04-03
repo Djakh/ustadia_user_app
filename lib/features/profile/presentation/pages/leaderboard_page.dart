@@ -92,8 +92,12 @@ class LeaderboardPageState extends State<LeaderboardPage> {
     return Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children:
-            podium.map((item) => LeaderboardPodiumItem(podium: item)).toList());
+        children: podium
+            .map((item) => Expanded(
+                    child: LeaderboardPodiumItem(
+                  podium: item,
+                )))
+            .toList());
   }
 
   Widget leaderboardList(List<LeaderboardUserModel> users) {
@@ -119,20 +123,22 @@ class LeaderboardPageState extends State<LeaderboardPage> {
         ],
       );
 
-  Widget get content => BlocStatusView<LeaderboardBloc, LeaderboardState, List<LeaderboardUserModel>>(
-      bloc: leaderboardBloc,
-      statusOf: (state) => state.status,
-      errorOf: (state) => state.errorMessage,
-      data: usersForSelectedRange,
-      isEmpty: (users) => users.isEmpty,
-      empty: Center(child: Text('No data found'.tr())),
-      loading: const Center(child: CircularProgressIndicator()),
-      builder: (context, users) => dataView(users),
-      listener: (context, state) {
-        if (state.status == Status.error && state.errorMessage != null) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-        }
-      });
+  Widget get content =>
+      BlocStatusView<LeaderboardBloc, LeaderboardState, List<LeaderboardUserModel>>(
+          bloc: leaderboardBloc,
+          statusOf: (state) => state.status,
+          errorOf: (state) => state.errorMessage,
+          data: usersForSelectedRange,
+          isEmpty: (users) => users.isEmpty,
+          empty: Center(child: Text('No data found'.tr())),
+          loading: const Center(child: CircularProgressIndicator()),
+          builder: (context, users) => dataView(users),
+          listener: (context, state) {
+            if (state.status == Status.error && state.errorMessage != null) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+            }
+          });
 
   @override
   Widget build(BuildContext context) => Scaffold(

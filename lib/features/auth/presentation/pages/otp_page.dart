@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/services.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
+import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ustadia_user_app/core/widgets/connection/reload_conntection_button.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_bloc.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_event.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_verify_state.dart';
@@ -17,6 +20,7 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/use
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
+import 'package:ustadia_user_app/size_config.dart';
 
 class OtpPage extends StatefulWidget {
   final String contact;
@@ -81,11 +85,14 @@ class OtpPageState extends State<OtpPage> {
   }
 
   void onResend() {
+    final params = widget.verificationParams;
+    if (params == null) return;
     for (final controller in codes) {
       controller.clear();
     }
+    setState(() {});
     nodes.first.requestFocus();
-    startTimer();
+    authVerifyBloc.add(AuthResendOtpRequested(tempId: params.tempId));
   }
 
   void onConfirm() {
@@ -95,12 +102,16 @@ class OtpPageState extends State<OtpPage> {
       return;
     }
     if (authVerifyBloc.state.status == Status.loading) return;
-    authVerifyBloc.add(AuthVerifyOtpRequested(
-        tempId: widget.verificationParams!.tempId, otp: codeValue));
+    authVerifyBloc
+        .add(AuthVerifyOtpRequested(tempId: widget.verificationParams!.tempId, otp: codeValue));
   }
 
   void onDigitChanged(int index, String value) {
     final cleaned = value.replaceAll(RegExp(r'\D'), '');
+    if (cleaned.length > 1) {
+      _applyBulkCode(cleaned, startIndex: index);
+      return;
+    }
     codes[index].text = cleaned.isEmpty ? '' : cleaned.substring(cleaned.length - 1);
     codes[index].selection =
         TextSelection.fromPosition(TextPosition(offset: codes[index].text.length));
@@ -113,17 +124,69 @@ class OtpPageState extends State<OtpPage> {
     setState(() {});
   }
 
+  void _applyBulkCode(String value, {int startIndex = 0}) {
+    final digits = value.replaceAll(RegExp(r'\D'), '');
+    if (digits.isEmpty) return;
+    for (var i = 0; i < codeLength; i++) {
+      final targetIndex = startIndex + i;
+      if (targetIndex >= codeLength) break;
+      codes[targetIndex].text = i < digits.length ? digits[i] : '';
+      codes[targetIndex].selection =
+          TextSelection.fromPosition(TextPosition(offset: codes[targetIndex].text.length));
+    }
+    final nextIndex = (startIndex + digits.length).clamp(0, codeLength - 1);
+    if (digits.length >= codeLength - startIndex) {
+      FocusScope.of(context).unfocus();
+    } else {
+      nodes[nextIndex].requestFocus();
+    }
+    setState(() {});
+  }
+
   String get timerLabel {
     final minutes = (secondsLeft ~/ 60).toString().padLeft(2, '0');
     final seconds = (secondsLeft % 60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
   }
 
+  bool get hasConnectionIssue =>
+      DioErrorMessage.isConnectionMessage(authVerifyBloc.state.errorMessage) ||
+      DioErrorMessage.isConnectionMessage(userBloc.state.errorMessage);
+
+  bool get isAuthenticating =>
+      authVerifyBloc.state.status == Status.loading ||
+      (isAwaitingUser && userBloc.state.status == Status.loading);
+
+  bool get isResendingOtp =>
+      authVerifyBloc.state.status == Status.loading &&
+      authVerifyBloc.state.action == AuthVerifyAction.resendOtp;
+
+  Future<void> retryConnection() async {
+    if (isAwaitingUser) {
+      userBloc.add(const UserProfileRequested());
+      return;
+    }
+    onConfirm();
+  }
+
+  String localizedOtpMessage(String message) {
+    final normalized = message.trim().toLowerCase();
+    if (normalized == 'otp resent') return 'OTP resent'.tr();
+    if (normalized.contains('temp id') ||
+        (normalized.contains('otp') &&
+            (normalized.contains('expired') || normalized.contains('invalid')))) {
+      return 'Expired or invalid OTP.'.tr();
+    }
+    return message.tr();
+  }
+
   /// --- Widgets ---
 
   Widget get contactText => Text.rich(TextSpan(children: [
         TextSpan(
-          text: 'Enter the 6-digit OTP sent to your email to complete sign-up verification, '.tr(),
+          text: widget.verificationParams?.isPhoneVerification == true
+              ? 'Enter the 6-digit OTP sent to your phone to complete sign-up verification, '.tr()
+              : 'Enter the 6-digit OTP sent to your email to complete sign-up verification, '.tr(),
           style: Style.small3w4(context, color: TextColorRole.greyColor),
         ),
         TextSpan(
@@ -136,15 +199,18 @@ class OtpPageState extends State<OtpPage> {
       borderRadius: Style.border10, borderSide: BorderSide(color: color, width: 1.4));
 
   Widget otpBox(int index) => SizedBox(
-      width: 48,
-      height: 40,
+      width: SizeConfig.rw * 56,
+      height: SizeConfig.rh * 50,
       child: TextField(
           controller: codes[index],
           focusNode: nodes[index],
           keyboardType: TextInputType.number,
+          textInputAction: index == codeLength - 1 ? TextInputAction.done : TextInputAction.next,
           textAlign: TextAlign.center,
           style: Style.body2w6(context),
           maxLength: 1,
+          autofillHints: const [AutofillHints.oneTimeCode],
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           decoration: InputDecoration(
               counterText: '',
               filled: true,
@@ -159,8 +225,9 @@ class OtpPageState extends State<OtpPage> {
       children: List.generate(codeLength, (index) => otpBox(index)));
 
   Widget get resendButton => TextButton(
-      onPressed: secondsLeft == 0 ? onResend : null,
-      child: Text(secondsLeft == 0 ? 'Resend' : timerLabel,
+      onPressed: secondsLeft == 0 && !isResendingOtp ? onResend : null,
+      child: Text(
+          secondsLeft == 0 ? (isResendingOtp ? 'Sending...'.tr() : 'Resend'.tr()) : timerLabel,
           style: Style.small3w5(context,
                   color: secondsLeft == 0 ? TextColorRole.onSurface : TextColorRole.greyColor)
               .copyWith(color: secondsLeft == 0 ? context.cs.primary : context.cs.onSurface)));
@@ -171,22 +238,21 @@ class OtpPageState extends State<OtpPage> {
         resendButton
       ]);
 
-  Widget get confirmButton =>
-      SafeArea(
-          child: BlocBuilder<AuthVerifyBloc, AuthVerifyState>(
-              bloc: authVerifyBloc,
-              builder: (context, state) => Button.primary(
-                  onTap: onConfirm,
-                  isAvialable:
-                      isComplete && state.status != Status.loading,
-                  isLoading: state.status == Status.loading,
-                  text: 'Confirm'.tr())));
+  Widget get confirmButton => SafeArea(
+      child: BlocBuilder<AuthVerifyBloc, AuthVerifyState>(
+          bloc: authVerifyBloc,
+          builder: (context, state) => Button.primary(
+              onTap: onConfirm,
+              isAvialable: isComplete && !isAuthenticating,
+              isLoading: isAuthenticating,
+              text: 'Confirm'.tr())));
 
   Widget get view => PrimaryBackground(
       isScrollable: true,
       child: Padding(
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          child: AutofillGroup(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             const SizedBox(height: 20),
             Text('Enter OTP'.tr(), style: Style.body2w6(context)),
             const SizedBox(height: 4),
@@ -196,28 +262,41 @@ class OtpPageState extends State<OtpPage> {
             resend,
             const SizedBox(height: 24),
             confirmButton,
+            if (hasConnectionIssue) ...[
+              const SizedBox(height: 12),
+              ReloadConntectionButton(onReloadConnection: retryConnection),
+            ],
             const SizedBox(height: 12)
-          ])));
+          ]))));
 
   @override
-  Widget build(BuildContext context) => MultiBlocListener(
-      listeners: [
+  Widget build(BuildContext context) => MultiBlocListener(listeners: [
         BlocListener<AuthVerifyBloc, AuthVerifyState>(
             bloc: authVerifyBloc,
             listener: (context, state) {
-              if (state.status == Status.success) {
+              if (mounted) setState(() {});
+              if (state.status == Status.success && state.action == AuthVerifyAction.resendOtp) {
+                startTimer();
+                if (state.message != null && state.message!.isNotEmpty) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(localizedOtpMessage(state.message!))));
+                }
+                return;
+              }
+              if (state.status == Status.success && state.action == AuthVerifyAction.verifyOtp) {
                 isAwaitingUser = true;
                 userBloc.add(const UserProfileRequested());
                 return;
               }
               if (state.status == Status.error && state.errorMessage != null) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(localizedOtpMessage(state.errorMessage!))));
               }
             }),
         BlocListener<UserBloc, UserState>(
             bloc: userBloc,
             listener: (context, state) {
+              if (mounted) setState(() {});
               if (!isAwaitingUser) return;
               if (state.status == Status.success) {
                 isAwaitingUser = false;
@@ -234,6 +313,5 @@ class OtpPageState extends State<OtpPage> {
                     .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
               }
             })
-      ],
-      child: Scaffold(backgroundColor: context.cs.surface, body: view));
+      ], child: Scaffold(backgroundColor: context.cs.surface, body: view));
 }

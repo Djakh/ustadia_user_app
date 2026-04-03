@@ -20,24 +20,70 @@ class AuthVerifyBloc extends Bloc<AuthVerifyEvent, AuthVerifyState> {
       required this.userRemoteDataSource})
       : super(const AuthVerifyState()) {
     on<AuthVerifyOtpRequested>(handleVerifyOtp);
+    on<AuthResendOtpRequested>(handleResendOtp);
   }
 
-  Future<void> handleVerifyOtp(
-      AuthVerifyOtpRequested event, Emitter<AuthVerifyState> emit) async {
-    emit(state.copyWith(status: Status.loading, errorMessage: null));
+  Future<void> handleVerifyOtp(AuthVerifyOtpRequested event, Emitter<AuthVerifyState> emit) async {
+    emit(state.copyWith(
+        status: Status.loading,
+        action: AuthVerifyAction.verifyOtp,
+        errorMessage: null,
+        clearMessage: true));
     try {
       final accessToken =
           await authRemoteDataSource.verifyOtp(tempId: event.tempId, otp: event.otp);
       await authLocalDataSource.setAccessToken(accessToken);
       await _registerDeviceToken();
       emit(state.copyWith(
-          status: Status.success, accessToken: accessToken, errorMessage: null));
+          status: Status.success,
+          action: AuthVerifyAction.verifyOtp,
+          accessToken: accessToken,
+          errorMessage: null,
+          clearMessage: true));
     } on DioException catch (error) {
       emit(state.copyWith(
-          status: Status.error, errorMessage: DioErrorMessage.from(error)));
+          status: Status.error,
+          action: AuthVerifyAction.verifyOtp,
+          errorMessage: DioErrorMessage.from(error),
+          clearMessage: true));
     } catch (error) {
       emit(state.copyWith(
-          status: Status.error, errorMessage: 'Request failed. Please try again.'));
+          status: Status.error,
+          action: AuthVerifyAction.verifyOtp,
+          errorMessage: 'Request failed. Please try again.',
+          clearMessage: true));
+    }
+  }
+
+  Future<void> handleResendOtp(AuthResendOtpRequested event, Emitter<AuthVerifyState> emit) async {
+    emit(state.copyWith(
+        status: Status.loading,
+        action: AuthVerifyAction.resendOtp,
+        errorMessage: null,
+        clearAccessToken: true,
+        clearMessage: true));
+    try {
+      final message = await authRemoteDataSource.resendOtp(tempId: event.tempId);
+      emit(state.copyWith(
+          status: Status.success,
+          action: AuthVerifyAction.resendOtp,
+          message: message,
+          errorMessage: null,
+          clearAccessToken: true));
+    } on DioException catch (error) {
+      emit(state.copyWith(
+          status: Status.error,
+          action: AuthVerifyAction.resendOtp,
+          errorMessage: DioErrorMessage.from(error),
+          clearAccessToken: true,
+          clearMessage: true));
+    } catch (error) {
+      emit(state.copyWith(
+          status: Status.error,
+          action: AuthVerifyAction.resendOtp,
+          errorMessage: 'Request failed. Please try again.',
+          clearAccessToken: true,
+          clearMessage: true));
     }
   }
 
