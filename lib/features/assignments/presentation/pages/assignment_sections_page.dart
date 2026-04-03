@@ -51,8 +51,9 @@ class AssignmentSectionsPageState extends State<AssignmentSectionsPage> {
       if (!mounted) return;
       setState(() => errorMessage = error.toString());
     } finally {
-      if (!mounted) return;
-      setState(() => isLoading = false);
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
     }
   }
 
@@ -86,6 +87,8 @@ class AssignmentSectionsPageState extends State<AssignmentSectionsPage> {
     }
   }
 
+  Future<void> reloadSections() => loadSections(forceRefresh: true);
+
   Widget sectionList() => Column(
       children: sections
           .map((section) => Padding(
@@ -96,34 +99,36 @@ class AssignmentSectionsPageState extends State<AssignmentSectionsPage> {
 
   Widget body(BuildContext context) => PrimaryBackground(
       title: assignment.title,
-      isScrollable: true,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const SizedBox(height: 24),
-        Text(assignment.description,
-            style: Style.bodyw4(context, color: TextColorRole.greyColor)),
-        const SizedBox(height: 20),
-        if (isLoading)
-          const ShimmerList(
-              itemCount: 4,
-              itemHeight: 110,
-              separatorHeight: 12,
-              borderRadius: BorderRadius.all(Radius.circular(24)))
-        else if (errorMessage != null)
-          Center(
-              child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 32),
-                  child: Text(errorMessage!,
-                      style: Style.bodyw4(context, color: TextColorRole.greyColor))))
-        else if (sections.isEmpty)
-          Center(
-              child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 32),
-                  child: Text('No sections yet'.tr(),
-                      style: Style.bodyw4(context, color: TextColorRole.greyColor))))
-        else
-          sectionList(),
-        const SizedBox(height: 80)
-      ]));
+      isScrollable: false,
+      child: RefreshIndicator(
+          onRefresh: reloadSections,
+          child: ListView(physics: const AlwaysScrollableScrollPhysics(), children: [
+            const SizedBox(height: 24),
+            Text(assignment.description,
+                style: Style.bodyw4(context, color: TextColorRole.greyColor)),
+            const SizedBox(height: 20),
+            if (isLoading)
+              const ShimmerList(
+                  itemCount: 4,
+                  itemHeight: 110,
+                  separatorHeight: 12,
+                  borderRadius: BorderRadius.all(Radius.circular(24)))
+            else if (errorMessage != null)
+              Center(
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 32),
+                      child: Text(errorMessage!,
+                          style: Style.bodyw4(context, color: TextColorRole.greyColor))))
+            else if (sections.isEmpty)
+              Center(
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 32),
+                      child: Text('No sections yet'.tr(),
+                          style: Style.bodyw4(context, color: TextColorRole.greyColor))))
+            else
+              sectionList(),
+            const SizedBox(height: 80)
+          ])));
 
   @override
   Widget build(BuildContext context) => WillPopScope(
@@ -132,7 +137,5 @@ class AssignmentSectionsPageState extends State<AssignmentSectionsPage> {
         context.pop(shouldRefreshParent ? true : null);
         return false;
       },
-      child: Scaffold(
-          backgroundColor: context.cs.surface,
-          body: SafeArea(child: body(context))));
+      child: Scaffold(backgroundColor: context.cs.surface, body: SafeArea(child: body(context))));
 }

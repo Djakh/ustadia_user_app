@@ -182,6 +182,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
 
   Widget get view => PrimaryBackground(
       header: header,
+      headerTooltipText: widget.flashcardSetModel.title,
       child: Column(children: [
         const SizedBox(height: 24),
         flashCard,
@@ -193,6 +194,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
 
   Widget get emptyView => PrimaryBackground(
       header: header,
+      headerTooltipText: widget.flashcardSetModel.title,
       child: Center(
           child: Text('No flashcards found.'.tr(),
               style: Style.bodyw5(context, color: TextColorRole.greyColor))));

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
+import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/datasources/intro_survey_remote_data_source.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/bloc/intro_survey_event.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/bloc/intro_survey_state.dart';
@@ -19,7 +20,7 @@ class IntroSurveyBloc extends Bloc<IntroSurveyEvent, IntroSurveyState> {
       final questions = await introSurveyRemoteDataSource.fetchQuestions();
       emit(state.copyWith(status: Status.success, questions: questions, errorMessage: null));
     } catch (error) {
-      emit(state.copyWith(status: Status.error, errorMessage: error.toString()));
+      emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.fromUnknown(error)));
     }
   }
 
@@ -47,7 +48,7 @@ class IntroSurveyBloc extends Bloc<IntroSurveyEvent, IntroSurveyState> {
       emit(state.copyWith(
           submissionStatus: Status.error,
           submissionQuestionId: event.questionId,
-          submissionErrorMessage: error.toString()));
+          submissionErrorMessage: DioErrorMessage.fromUnknown(error)));
     }
   }
 }

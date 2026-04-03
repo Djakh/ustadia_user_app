@@ -16,3 +16,12 @@ class AuthVerifyOtpRequested extends AuthVerifyEvent {
   @override
   List<Object?> get props => [tempId, otp];
 }
+
+class AuthResendOtpRequested extends AuthVerifyEvent {
+  final String tempId;
+
+  const AuthResendOtpRequested({required this.tempId});
+
+  @override
+  List<Object?> get props => [tempId];
+}

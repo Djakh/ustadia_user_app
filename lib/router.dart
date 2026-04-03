@@ -180,7 +180,7 @@ final appRouter = GoRouter(
       builder: (context, state) {
         final extra = state.extra;
         if (extra is OtpVerificationParams) {
-          return OtpPage(contact: extra.email, verificationParams: extra);
+          return OtpPage(contact: extra.contact, verificationParams: extra);
         }
         return OtpPage(contact: (extra as String?) ?? '');
       },

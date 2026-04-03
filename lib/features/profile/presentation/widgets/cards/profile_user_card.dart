@@ -24,24 +24,26 @@ class ProfileUserCard extends StatelessWidget {
   Row xpWidget(BuildContext context, String xp) => Row(children: [
         Image.asset(AppImages.xpLightningOrange),
         const SizedBox(width: 2),
-        Text('{xp} XP'.tr(namedArgs: {'xp': '$xp'}),
+        Text('{xp} XP'.tr(namedArgs: {'xp': xp}),
             style: Style.smallw6(context).copyWith(color: AppColors.orange033)),
         const SizedBox(width: 8),
-        Text('Keep motivated.'.tr(), style: Style.smallw6(context, color: TextColorRole.greyColor))
+        Expanded(
+            child: Text('Keep motivated.'.tr(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Style.smallw6(context, color: TextColorRole.greyColor)))
       ]);
 
   Column userInfo(BuildContext context, String name, String xp) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(name, style: Style.body3w7(context)),
+        Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: Style.body3w7(context)),
         const SizedBox(height: 4),
         xpWidget(context, xp)
       ]);
 
   Widget view(BuildContext context, UserState state) {
     final profile = state.profile;
-    final name = profile == null
-        ? 'User'
-        : '${profile.firstName} ${profile.lastName}'.trim();
+    final name = profile == null ? 'User' : '${profile.firstName} ${profile.lastName}'.trim();
     final xp = profile?.xp ?? '0';
     final imageUrl = fullImageUrl(profile?.profilePictureUrl);
     return Row(children: [
@@ -52,7 +54,7 @@ class ProfileUserCard extends StatelessWidget {
                   extra: ProfileImageViewParams(imageUrl: imageUrl)),
           child: UserAvatar(radius: 30, imageUrl: imageUrl.isEmpty ? null : imageUrl)),
       const SizedBox(width: 12),
-      userInfo(context, name, xp)
+      Expanded(child: userInfo(context, name, xp))
     ]);
   }
 

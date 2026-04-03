@@ -16,14 +16,18 @@ class LeaderBoardCard extends StatelessWidget {
 
   Widget leaderboardTitleAndSub(BuildContext context) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Leaderboard'.tr(), style: Style.body3w7(context)),
+        Text('Leaderboard'.tr(),
+            maxLines: 1, overflow: TextOverflow.ellipsis, style: Style.body3w7(context)),
         Text('See how you compare this week.'.tr(),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: Style.bodyw4(context, color: TextColorRole.greyColor)),
       ]);
 
   Row leaderboardTitleAndSubAndCub(BuildContext context) =>
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        leaderboardTitleAndSub(context),
+        Expanded(child: leaderboardTitleAndSub(context)),
+        const SizedBox(width: 12),
         Image.asset(AppImages.profileCupIcon, width: 48, height: 48)
       ]);
 
@@ -39,11 +43,11 @@ class LeaderBoardCard extends StatelessWidget {
       decoration: BoxDecoration(color: AppColors.grayFB, borderRadius: Style.border16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text('Your rank this week: {rank}'.tr(namedArgs: {'rank': weeklyRankLabel(state)}),
-            style: Style.bodyw5(context)),
+            maxLines: 1, overflow: TextOverflow.ellipsis, style: Style.bodyw5(context)),
       ]));
 
-  Widget leadboardButton(BuildContext context) =>
-      Button.primary(onTap: () => context.push(leaderboardRoute), text: 'View full leaderboard'.tr());
+  Widget leadboardButton(BuildContext context) => Button.primary(
+      onTap: () => context.push(leaderboardRoute), text: 'View full leaderboard'.tr());
 
   Widget view(BuildContext context, UserState state) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

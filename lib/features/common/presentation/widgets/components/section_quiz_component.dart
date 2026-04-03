@@ -42,6 +42,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   @override
   void initState() {
     questions = widget.questions;
+    answerBloc.add(const QuestionAnswerReset());
     _resetBlankControllers();
     shortAnswerController.addListener(_handleInputChanged);
     super.initState();
@@ -61,6 +62,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   void didUpdateWidget(covariant SectionQuizComponent oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.questions != widget.questions) {
+      answerBloc.add(const QuestionAnswerReset());
       questions = widget.questions;
       questionIndex = 0;
       correctCount = 0;
@@ -213,6 +215,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   void goNextQuestion() {
     if (questionIndex == questions.length - 1) return widget.onFinish(correctCount);
 
+    answerBloc.add(const QuestionAnswerReset());
     questionIndex++;
     selectedIndex = null;
     selectedIndices.clear();
@@ -249,28 +252,49 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   bool isSelectedIndex(int index) =>
       isMultipleChoice ? selectedIndices.contains(index) : selectedIndex == index;
 
-  Color optionFillColor(BuildContext context, int index) {
+  Set<String> effectiveCorrectAnswerIds(QuestionAnswerState answerState) {
+    final idsFromQuestion = currentAnswers.where((a) => a.isCorrect).map((a) => a.id).toSet();
+    if (idsFromQuestion.isNotEmpty) return idsFromQuestion;
+    final idsFromResult = <String>{...answerState.result?.correctAnswerIds ?? const []};
+    final singleId = answerState.result?.correctAnswerId;
+    if (singleId != null && singleId.isNotEmpty) idsFromResult.add(singleId);
+    return idsFromResult;
+  }
+
+  bool isCorrectAnswerIndex(int index, QuestionAnswerState answerState) {
+    final ids = effectiveCorrectAnswerIds(answerState);
+    if (ids.isNotEmpty) return ids.contains(currentAnswers[index].id);
+    return currentAnswers[index].isCorrect;
+  }
+
+  bool get hasMalformedChoiceQuestion {
+    if (isFillBlank || isShortAnswer || currentAnswers.isEmpty) return false;
+    return currentAnswers.every((answer) => !answer.isCorrect);
+  }
+
+  Color optionFillColor(BuildContext context, int index, QuestionAnswerState answerState) {
     if (!hasSubmitted) return context.cs.surface;
     if (!isSelectedIndex(index)) return context.cs.surface;
-    if (currentAnswers[index].isCorrect) return AppColors.primary;
+    if (isCorrectAnswerIndex(index, answerState)) return AppColors.primary;
     return AppColors.error;
   }
 
-  Color optionTextColor(BuildContext context, int index) {
-    final fill = optionFillColor(context, index);
+  Color optionTextColor(BuildContext context, int index, QuestionAnswerState answerState) {
+    final fill = optionFillColor(context, index, answerState);
     if (fill == AppColors.primary || fill == AppColors.error) return context.cs.onPrimary;
     return context.cs.onSurface;
   }
 
-  Button optionItem(int index) {
-    final fill = optionFillColor(context, index);
+  Button optionItem(int index, QuestionAnswerState answerState) {
+    final fill = optionFillColor(context, index, answerState);
     final isFilled = fill == AppColors.primary || fill == AppColors.error;
-    final isCorrect = currentAnswers[index].isCorrect;
+    final isCorrect = isCorrectAnswerIndex(index, answerState);
     final showCheck = hasSubmitted && isCorrect;
     final checkColor = isFilled ? AppColors.white : AppColors.primary;
     final label = Stack(alignment: Alignment.center, children: [
       Text(currentAnswers[index].answerText,
-          style: Style.bodyw5(context).copyWith(color: optionTextColor(context, index)),
+          style:
+              Style.bodyw5(context).copyWith(color: optionTextColor(context, index, answerState)),
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis),
       if (showCheck)
@@ -288,11 +312,11 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
         child: label);
   }
 
-  List<Widget> get optionsList => List.generate(
+  List<Widget> optionsList(QuestionAnswerState answerState) => List.generate(
       currentAnswers.length,
       (index) => Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
-            child: optionItem(index),
+            child: optionItem(index, answerState),
           ));
 
   Widget fillBlankView() => Column(
@@ -322,6 +346,16 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
         isAvialable: canSubmit && !answerState.status.isLoading);
   }
 
+  Widget malformedQuestionWarning(BuildContext context) => Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+          color: AppColors.redE2,
+          borderRadius: Style.border12,
+          border: Border.all(color: AppColors.error.withValues(alpha: 0.25))),
+      child: Text('Question data is incomplete. No correct answer was provided by the server.'.tr(),
+          style: Style.small3w4(context).copyWith(color: AppColors.error)));
+
   Widget get view => BlocBuilder<QuestionAnswerBloc, QuestionAnswerState>(
       bloc: answerBloc,
       builder: (context, answerState) => Column(children: [
@@ -331,12 +365,16 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
             ...isShownHeaderWidget,
             QuestionsCard(currentQuestion: currentQuestion),
             const SizedBox(height: 20),
+            if (hasMalformedChoiceQuestion) ...[
+              malformedQuestionWarning(context),
+              const SizedBox(height: 12),
+            ],
             if (isFillBlank)
               fillBlankView()
             else if (isShortAnswer)
               shortAnswerView()
             else if (currentAnswers.isNotEmpty)
-              ...optionsList
+              ...optionsList(answerState)
             else
               Text('No answers available.'.tr(),
                   style: Style.small3w4(context, color: TextColorRole.greyColor)),
@@ -356,7 +394,8 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
         listener: (context, state) {
           if (state.status.isSuccess) {
             if (!hasSubmitted) {
-              if (submitWasCorrect == true) correctCount++;
+              final backendWasCorrect = state.result?.isCorrect;
+              if ((backendWasCorrect ?? submitWasCorrect) == true) correctCount++;
               hasSubmitted = true;
               setState(() {});
             }

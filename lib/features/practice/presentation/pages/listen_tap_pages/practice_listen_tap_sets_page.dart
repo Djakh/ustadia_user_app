@@ -39,6 +39,10 @@ class _PracticeListenTapSetsPageState extends State<PracticeListenTapSetsPage> {
     context.push(listenTapRoute, extra: set);
   }
 
+  Future<void> reloadSets() async {
+    setsBloc.add(const PracticeListenTapSetsRequested());
+  }
+
   Widget setCard(BuildContext context, PracticeListenTapSetModel set) => PrimaryBox(
       onTap: () => openSet(set),
       child: Row(children: [
@@ -83,9 +87,11 @@ class _PracticeListenTapSetsPageState extends State<PracticeListenTapSetsPage> {
       backgroundColor: context.cs.surface,
       body: PrimaryBackground(
           title: 'Listen & Tap'.tr(),
-          child: ListView(children: [
-            const SizedBox(height: 16),
-            contentChecker,
-            const SizedBox(height: 80),
-          ])));
+          child: RefreshIndicator(
+              onRefresh: reloadSets,
+              child: ListView(physics: const AlwaysScrollableScrollPhysics(), children: [
+                const SizedBox(height: 16),
+                contentChecker,
+                const SizedBox(height: 80),
+              ]))));
 }

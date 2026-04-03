@@ -61,9 +61,12 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
 
   /// --- Widgets ---
   Widget get header => Column(children: [
-        Text(widget.sectionModel.title, style: Style.body2w6(context)),
+        Text(widget.sectionModel.title,
+            maxLines: 1, overflow: TextOverflow.ellipsis, style: Style.body2w6(context)),
         const SizedBox(height: 2),
         Text(widget.sectionModel.sectionType.name.toUpperCase(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: Style.small3w4(context, color: TextColorRole.greyColor))
       ]);
 
@@ -88,6 +91,7 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
       backgroundColor: context.cs.surface,
       body: PrimaryBackground(
           header: header,
+          headerTooltipText: widget.sectionModel.title,
           isHeader: stage != GrammarSectionStage.result,
           isScrollable: stage == GrammarSectionStage.quiz,
           child: BlocBuilder<SectionDetailBloc, SectionDetailState>(

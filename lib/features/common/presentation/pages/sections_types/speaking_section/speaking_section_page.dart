@@ -248,12 +248,10 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
 
   Row progressHeaderInfo(int totalQuestions) =>
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text('Question {current}'.tr(namedArgs: {
-          'current': '${questionIndex + 1}'
-        }), style: Style.small2w4(context, color: TextColorRole.greyColor)),
-        Text('Total: {total} Questions'.tr(namedArgs: {
-          'total': '$totalQuestions'
-        }), style: Style.small2w4(context))
+        Text('Question {current}'.tr(namedArgs: {'current': '${questionIndex + 1}'}),
+            style: Style.small2w4(context, color: TextColorRole.greyColor)),
+        Text('Total: {total} Questions'.tr(namedArgs: {'total': '$totalQuestions'}),
+            style: Style.small2w4(context))
       ]);
 
   Widget progressHeader(int totalQuestions) => Column(children: [
@@ -307,5 +305,8 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
           child: Scaffold(
               backgroundColor: context.cs.surface,
               body: PrimaryBackground(
-                  title: widget.sectionModel.title, isScrollable: false, child: bodyChecker)));
+                  title: widget.sectionModel.title,
+                  headerTooltipText: widget.sectionModel.title,
+                  isScrollable: false,
+                  child: bodyChecker)));
 }

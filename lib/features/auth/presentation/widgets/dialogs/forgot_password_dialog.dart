@@ -34,8 +34,7 @@ class ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
 
   bool get isValid {
     if (isEmail) {
-      return RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
-          .hasMatch(widget.controller.text.trim());
+      return RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(widget.controller.text.trim());
     }
     return widget.controller.text.replaceAll(RegExp(r'\D'), '').length >= 9;
   }
@@ -58,26 +57,26 @@ class ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
       ? InputField.email(
           controller: widget.controller,
           label: 'Email'.tr(),
-          hint: 'e.g. name@email.com',
-          errorText: showError ? 'Email is invalid.' : null,
+          hint: 'e.g. name@email.com'.tr(),
+          errorText: showError ? 'Email is invalid.'.tr() : null,
           onChanged: (value) => setState(() => showError = false))
       : InputField.phone(
           controller: widget.controller,
           label: 'Phone number'.tr(),
-          errorText: showError ? 'Phone number is invalid.' : null,
+          errorText: showError ? 'Phone number is invalid.'.tr() : null,
           onChanged: (value) => setState(() => showError = false));
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-      title: Text('Forgot password'.tr()),
-      content: Column(mainAxisSize: MainAxisSize.min, children: [inputField]),
-      actions: [
-        BlocBuilder<AuthPasswordBloc, AuthPasswordState>(
-            bloc: widget.authPasswordBloc,
-            builder: (context, state) => Button.primary(
-                onTap: submit,
-                text: 'Send OTP'.tr(),
-                isLoading:
-                    state.status == Status.loading && state.action == widget.loadingAction))
-      ]);
+          title: Text('Forgot password'.tr()),
+          content: Column(mainAxisSize: MainAxisSize.min, children: [inputField]),
+          actions: [
+            BlocBuilder<AuthPasswordBloc, AuthPasswordState>(
+                bloc: widget.authPasswordBloc,
+                builder: (context, state) => Button.primary(
+                    onTap: submit,
+                    text: 'Send OTP'.tr(),
+                    isLoading:
+                        state.status == Status.loading && state.action == widget.loadingAction))
+          ]);
 }

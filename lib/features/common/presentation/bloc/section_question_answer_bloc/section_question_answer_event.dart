@@ -36,6 +36,21 @@ class QuestionAnswerSubmitted extends SectionQuestionAnswerEvent {
       this.source = SectionSource.learn});
 
   @override
-  List<Object?> get props =>
-      [sectionId, questionId, assignmentId, answerId, answerIds, userInputText, userAudioId, blankAnswers, unitId, lessonId, source];
+  List<Object?> get props => [
+        sectionId,
+        questionId,
+        assignmentId,
+        answerId,
+        answerIds,
+        userInputText,
+        userAudioId,
+        blankAnswers,
+        unitId,
+        lessonId,
+        source
+      ];
+}
+
+class QuestionAnswerReset extends SectionQuestionAnswerEvent {
+  const QuestionAnswerReset();
 }

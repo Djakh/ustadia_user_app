@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:ustadia_user_app/features/assignments/data/models/assignment_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 
@@ -7,8 +8,11 @@ class AssignmentsRemoteDataSource {
 
   AssignmentsRemoteDataSource({required this.dio});
 
+  Options get freshRequestOptions =>
+      CacheOptions(policy: CachePolicy.noCache, store: MemCacheStore()).toOptions();
+
   Future<List<AssignmentModel>> fetchAssignments() async {
-    final response = await dio.get('/students/assignments');
+    final response = await dio.get('/students/assignments', options: freshRequestOptions);
     final data = response.data;
     final items =
         data is List ? data : (data as Map<String, dynamic>)['items'] as List<dynamic>? ?? [];
@@ -17,14 +21,15 @@ class AssignmentsRemoteDataSource {
 
   Future<SectionModel> fetchAssignmentSectionDetail(
       {required String assignmentId, required String sectionId}) async {
-    final response =
-        await dio.get('/students/assignments/$assignmentId/sections/$sectionId');
+    final response = await dio.get('/students/assignments/$assignmentId/sections/$sectionId',
+        options: freshRequestOptions);
     final data = response.data as Map<String, dynamic>;
     return SectionModel.fromJson(data);
   }
 
   Future<List<SectionModel>> fetchAssignmentSections({required String assignmentId}) async {
-    final response = await dio.get('/students/assignments/$assignmentId/sections');
+    final response =
+        await dio.get('/students/assignments/$assignmentId/sections', options: freshRequestOptions);
     final data = response.data;
     final items =
         data is List ? data : (data as Map<String, dynamic>)['data'] as List<dynamic>? ?? [];

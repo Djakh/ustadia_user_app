@@ -15,7 +15,12 @@ class TeacherBloc extends Bloc<TeacherEvent, TeacherState> {
   TeacherBloc({required this.userRemoteDataSource, required this.authLocalDataSource})
       : super(const TeacherState()) {
     on<TeachersRequested>(handleTeachersRequested);
+    on<TeachersReset>(handleTeachersReset);
     on<TeacherSwapRequested>(handleTeacherSwapRequested);
+  }
+
+  void handleTeachersReset(TeachersReset event, Emitter<TeacherState> emit) {
+    emit(const TeacherState());
   }
 
   Future<void> handleTeachersRequested(TeachersRequested event, Emitter<TeacherState> emit) async {

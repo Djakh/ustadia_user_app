@@ -9,6 +9,7 @@ class PrimaryBackground extends StatefulWidget {
   final Widget? header;
   final EdgeInsets? padding;
   final String? title;
+  final String? headerTooltipText;
   final bool isHeader;
   final bool isScrollable;
   final Color? backgroundColor;
@@ -18,6 +19,7 @@ class PrimaryBackground extends StatefulWidget {
       required this.child,
       this.padding,
       this.title,
+      this.headerTooltipText,
       this.isHeader = true,
       this.header,
       this.isScrollable = false,
@@ -88,16 +90,30 @@ class _PrimaryBackgroundState extends State<PrimaryBackground> {
                   child: Center(child: backButtonIcon))))
       : const SizedBox(width: 40, height: 40);
 
-  Widget titleWidget(BuildContext context) => Padding(
+  Widget titleWidget(BuildContext context) => Text(widget.title ?? '',
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.center,
+      style: Style.body3w7(context));
+
+  String? get resolvedHeaderTooltipText {
+    final explicit = widget.headerTooltipText?.trim();
+    if (explicit != null && explicit.isNotEmpty) return explicit;
+    final title = widget.title?.trim();
+    if (title != null && title.isNotEmpty) return title;
+    return null;
+  }
+
+  Widget centerWidget(BuildContext context) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: 56),
       child: Center(
-          child: Text(widget.title ?? '',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: Style.body3w7(context))));
-
-  Widget centerWidget(BuildContext context) => widget.header ?? titleWidget(context);
+          child: Tooltip(
+              message: resolvedHeaderTooltipText ?? '',
+              triggerMode: TooltipTriggerMode.longPress,
+              waitDuration: Duration.zero,
+              preferBelow: false,
+              excludeFromSemantics: true,
+              child: widget.header ?? titleWidget(context))));
 
   Widget backButtonAndCenterWidget(BuildContext context) => IntrinsicHeight(
           child: Stack(alignment: Alignment.center, children: [
@@ -105,10 +121,13 @@ class _PrimaryBackgroundState extends State<PrimaryBackground> {
         centerWidget(context)
       ]));
 
-  Widget get scrollableChild => SingleChildScrollView(child: widget.child);
+  Widget scrollableChild(BoxConstraints constraints) => SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight), child: widget.child));
 
-  Widget get checkScrollabilityChild =>
-      widget.isScrollable ? SingleChildScrollView(child: widget.child) : widget.child;
+  Widget checkScrollabilityChild(BoxConstraints constraints) =>
+      widget.isScrollable ? scrollableChild(constraints) : widget.child;
 
   Widget view(BuildContext context) => SafeArea(
       child: Container(
@@ -117,13 +136,12 @@ class _PrimaryBackgroundState extends State<PrimaryBackground> {
           decoration: BoxDecoration(
               color: widget.backgroundColor ?? context.cs.secondaryContainer,
               borderRadius: Style.border24),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch, // ✅ THIS FIXES IT
-
-              children: [
-                if (widget.isHeader) backButtonAndCenterWidget(context),
-                Expanded(child: checkScrollabilityChild)
-              ])));
+          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            if (widget.isHeader) backButtonAndCenterWidget(context),
+            Expanded(
+                child: LayoutBuilder(
+                    builder: (context, constraints) => checkScrollabilityChild(constraints)))
+          ])));
 
   @override
   Widget build(BuildContext context) => view(context);

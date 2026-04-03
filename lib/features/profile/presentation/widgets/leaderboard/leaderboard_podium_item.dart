@@ -30,10 +30,15 @@ class LeaderboardPodiumItem extends StatelessWidget {
   Widget podiumImage() => SvgPicture.asset(podium.placeAsset);
 
   Column view(BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           UserAvatar(radius: avatarRadius, imageUrl: podium.user.avatarUrl),
           const SizedBox(height: 8),
-          Text(podium.user.name, style: Style.small3w4(context)),
+          Text(podium.user.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: Style.small3w4(context)),
           const SizedBox(height: 4),
           xpChip(context),
           const SizedBox(height: 8),
@@ -42,5 +47,5 @@ class LeaderboardPodiumItem extends StatelessWidget {
       );
 
   @override
-  Widget build(BuildContext context) => view(context);
+  Widget build(BuildContext context) => SizedBox(width: double.infinity, child: view(context));
 }
