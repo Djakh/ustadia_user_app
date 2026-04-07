@@ -4,11 +4,11 @@ import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/text/html_text.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 
-class ReadingSectionLesson extends StatelessWidget {
+class ReadingSectionIntro extends StatelessWidget {
   final SectionModel sectionModel;
   final Function() changeStage;
   final bool isLoading;
-  const ReadingSectionLesson(
+  const ReadingSectionIntro(
       {super.key, required this.sectionModel, required this.changeStage, required this.isLoading});
 
   /// --- Widgets ---

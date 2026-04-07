@@ -166,6 +166,48 @@ final _practiceKey = GlobalKey<NavigatorState>(debugLabel: 'practice');
 final _askAiKey = GlobalKey<NavigatorState>(debugLabel: 'askAi');
 final _profileKey = GlobalKey<NavigatorState>(debugLabel: 'profile');
 
+final Map<String, SectionModel> _sectionRouteCache = {};
+
+SectionModel _placeholderSectionModel(SectionType type) => SectionModel(
+    id: '',
+    unitId: '',
+    lessonId: '',
+    title: switch (type) {
+      SectionType.listening => 'Listening'.tr(),
+      SectionType.reading => 'Reading'.tr(),
+      SectionType.speaking => 'Speaking'.tr(),
+      SectionType.grammar => 'Grammar'.tr(),
+      SectionType.writing => 'Writing'.tr(),
+      SectionType.vocabulary => 'Vocabulary'.tr(),
+    },
+    content: type == SectionType.reading ? 'No data found'.tr() : '',
+    orderIndex: 0,
+    totalQuestions: 0,
+    answeredQuestions: 0,
+    assignmentId: null,
+    audioFileId: null,
+    audioFile: null,
+    flashCardSetId: null,
+    flashCardSet: null,
+    unitIsPublished: null,
+    lessonIsPublic: null,
+    questions: const [],
+    iconAsset: type.iconAsset,
+    progressState: SectionProgressState.inProgress,
+    sectionType: type,
+    sectionStringType: type.name,
+    isLocked: false,
+    source: SectionSource.learn);
+
+SectionModel _resolveSectionModel(GoRouterState state, SectionType type) {
+  final extra = state.extra;
+  if (extra is SectionModel) {
+    _sectionRouteCache[state.fullPath ?? state.matchedLocation] = extra;
+    return extra;
+  }
+  return _sectionRouteCache[state.fullPath ?? state.matchedLocation] ?? _placeholderSectionModel(type);
+}
+
 final appRouter = GoRouter(
   navigatorKey: _rootKey,
   initialLocation: splashRoute,
@@ -309,28 +351,28 @@ final appRouter = GoRouter(
                         GoRoute(
                             path: learnListeningPath,
                             parentNavigatorKey: _rootKey,
-                            builder: (context, state) =>
-                                ListeningSectionPage(sectionModel: state.extra as SectionModel)),
+                            builder: (context, state) => ListeningSectionPage(
+                                sectionModel: _resolveSectionModel(state, SectionType.listening))),
                         GoRoute(
                             path: learnReadingPath,
                             parentNavigatorKey: _rootKey,
-                            builder: (context, state) =>
-                                ReadingSectionPage(sectionModel: state.extra as SectionModel)),
+                            builder: (context, state) => ReadingSectionPage(
+                                sectionModel: _resolveSectionModel(state, SectionType.reading))),
                         GoRoute(
                             path: learnSpeakingPath,
                             parentNavigatorKey: _rootKey,
-                            builder: (context, state) =>
-                                SpeakingSectionPage(sectionModel: state.extra as SectionModel)),
+                            builder: (context, state) => SpeakingSectionPage(
+                                sectionModel: _resolveSectionModel(state, SectionType.speaking))),
                         GoRoute(
                             path: learnGrammarPath,
                             parentNavigatorKey: _rootKey,
-                            builder: (context, state) =>
-                                GrammarSectionPage(sectionModel: state.extra as SectionModel)),
+                            builder: (context, state) => GrammarSectionPage(
+                                sectionModel: _resolveSectionModel(state, SectionType.grammar))),
                         GoRoute(
                             path: learnWritingPath,
                             parentNavigatorKey: _rootKey,
-                            builder: (context, state) =>
-                                WritingSectionPage(sectionModel: state.extra as SectionModel)),
+                            builder: (context, state) => WritingSectionPage(
+                                sectionModel: _resolveSectionModel(state, SectionType.writing))),
                       ]),
                 ]),
           ],
