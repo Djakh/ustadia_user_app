@@ -17,8 +17,13 @@ class SectionQuizComponent extends StatefulWidget {
   final List<SectionQuestionModel> questions;
   final ValueChanged<int> onFinish;
   final Widget? headerWidget;
+  final Widget Function(BuildContext context, bool isResultState, Color panelColor)? panelActionBuilder;
   const SectionQuizComponent(
-      {super.key, required this.questions, required this.onFinish, this.headerWidget});
+      {super.key,
+      required this.questions,
+      required this.onFinish,
+      this.headerWidget,
+      this.panelActionBuilder});
 
   @override
   State<SectionQuizComponent> createState() => _SectionQuizComponentState();
@@ -453,6 +458,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     final subtitle = resultPanelSubtitle(answerState);
     final bottomInset = MediaQuery.of(context).padding.bottom;
     final textColor = resultPanelTextColor(context);
+    final panelAction = widget.panelActionBuilder?.call(context, isResultState, panelColor);
     return SizedBox(
         width: double.infinity,
         child: Container(
@@ -466,14 +472,18 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
                   height: 72,
                   child: isResultState
                       ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          Row(children: [
+                          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                             Icon(resultPanelIcon(answerState), color: textColor, size: 26),
                             const SizedBox(width: 10),
                             Expanded(
                                 child: Text(resultPanelTitle(answerState),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: Style.body2w6(context).copyWith(color: textColor)))
+                                    style: Style.body2w6(context).copyWith(color: textColor))),
+                            if (panelAction != null) ...[
+                              const SizedBox(width: 12),
+                              panelAction,
+                            ]
                           ]),
                           const SizedBox(height: 10),
                           Expanded(
@@ -483,10 +493,17 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
                                   style: Style.bodyw4(context)
                                       .copyWith(color: AppColors.white.withValues(alpha: 0.92))))
                         ])
-                      : Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(subtitle ?? '',
-                              style: Style.bodyw4(context).copyWith(color: textColor)))),
+                      : Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Expanded(
+                              child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(subtitle ?? '',
+                                      style: Style.bodyw4(context).copyWith(color: textColor)))),
+                          if (panelAction != null) ...[
+                            const SizedBox(width: 12),
+                            panelAction,
+                          ]
+                        ])),
               const SizedBox(height: 18),
               actionButtons(answerState)
             ])));
