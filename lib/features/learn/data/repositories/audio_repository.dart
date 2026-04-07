@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:ustadia_user_app/core/network/api_url_resolver.dart';
 
 abstract class AudioRepository {
   Future<String> downloadAudio(String audioUrl);
@@ -14,9 +15,8 @@ class AudioRepositoryImpl implements AudioRepository {
 
   @override
   Future<String> downloadAudio(String audioUrl) async {
-    final localAudioUrl = audioUrl.startsWith('http')
-        ? audioUrl
-        : 'https://backend.ustadia.findecor.io$audioUrl';
+    final localAudioUrl =
+        resolveApiAssetUrl(audioUrl, baseUrl: dio.options.baseUrl);
     final directory = await getTemporaryDirectory();
     final fileName = Uri.parse(localAudioUrl).pathSegments.last;
     final safeFileName =

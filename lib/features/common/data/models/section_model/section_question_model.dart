@@ -13,6 +13,7 @@ class SectionQuestionModel {
   final String difficulty;
   final int orderIndex;
   final int xp;
+  final bool? isAnswered;
   final List<SectionAnswerModel>? answers;
   final int numberOfBlanks;
   final List<SectionBlankAnswer> blankAnswers;
@@ -31,6 +32,7 @@ class SectionQuestionModel {
       required this.difficulty,
       required this.orderIndex,
       required this.xp,
+      required this.isAnswered,
       required this.answers,
       required this.numberOfBlanks,
       required this.blankAnswers,
@@ -89,6 +91,8 @@ class SectionQuestionModel {
       difficulty: json['difficulty']?.toString() ?? '',
       orderIndex: _toInt(json['order_index']),
       xp: _toInt(json['xp']),
+      isAnswered: _toBoolOrNull(
+          json['is_answered'] ?? json['isAnswered'] ?? json['isCompleted'] ?? json['completed']),
       answers: answers,
       numberOfBlanks: _toInt(json['number_of_blanks']),
       blankAnswers: blankAnswers,
@@ -116,6 +120,7 @@ class SectionQuestionModel {
         difficulty: difficulty,
         orderIndex: orderIndex,
         xp: xp,
+        isAnswered: isAnswered,
         answers: answers ?? this.answers,
         numberOfBlanks: numberOfBlanks,
         blankAnswers: blankAnswers ?? this.blankAnswers,
@@ -129,6 +134,16 @@ class SectionQuestionModel {
     if (value == null) return fallback;
     if (value is int) return value;
     return int.tryParse(value.toString()) ?? fallback;
+  }
+
+  static bool? _toBoolOrNull(dynamic value) {
+    if (value == null) return null;
+    if (value is bool) return value;
+    if (value is num) return value != 0;
+    final normalized = value.toString().trim().toLowerCase();
+    if (normalized == 'true' || normalized == '1') return true;
+    if (normalized == 'false' || normalized == '0') return false;
+    return null;
   }
 }
 

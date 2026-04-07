@@ -48,7 +48,7 @@ class AssignmentSectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => InkWell(
-      onTap: isCompleted ? null : onTap,
+      onTap: onTap,
       borderRadius: Style.border24,
       child: Container(
           padding: const EdgeInsets.all(16),

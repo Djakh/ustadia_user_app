@@ -6,8 +6,10 @@ import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/network/api_url_resolver.dart';
 import 'package:ustadia_user_app/core/widgets/cached_images/avatars/user_avatar.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:ustadia_user_app/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
@@ -37,9 +39,10 @@ class _DashboardPageState extends State<DashboardPage> {
 
   /// --- Widgets ---
   String fullImageUrl(String? url) {
-    if (url == null || url.isEmpty) return '';
-    if (url.startsWith('http')) return url;
-    return 'https://backend.ustadia.findecor.io$url';
+    return resolveApiAssetUrl(
+      url,
+      baseUrl: sl<AuthRemoteDataSource>().dio.options.baseUrl,
+    );
   }
 
   Widget userAvatar(String? imageUrl) => GestureDetector(

@@ -55,10 +55,16 @@ class PracticeRemoteDataSource {
   Future<PracticeSentenceBuilderStatusResponse> updateSentenceBuilderStatus({
     required String sentenceBuilderId,
     required String status,
+    required int correctAnswers,
+    required int wrongAnswers,
   }) async {
     final response = await dio.patch(
       '/students/practice/sentence-builder/$sentenceBuilderId/status',
-      data: {'status': status},
+      data: {
+        'status': status,
+        'correctAnswers': correctAnswers,
+        'wrongAnswers': wrongAnswers,
+      },
     );
     final data = response.data as Map<String, dynamic>;
     return PracticeSentenceBuilderStatusResponse.fromJson(data);
@@ -67,10 +73,16 @@ class PracticeRemoteDataSource {
   Future<PracticeWordMatchStatusResponse> updateWordMatchStatus({
     required String wordMatchId,
     required String status,
+    required int correctAnswers,
+    required int wrongAnswers,
   }) async {
     final response = await dio.patch(
       '/students/practice/word-match/$wordMatchId/status',
-      data: {'status': status},
+      data: {
+        'status': status,
+        'correctAnswers': correctAnswers,
+        'wrongAnswers': wrongAnswers,
+      },
     );
     final data = response.data as Map<String, dynamic>;
     return PracticeWordMatchStatusResponse.fromJson(data);
@@ -79,10 +91,16 @@ class PracticeRemoteDataSource {
   Future<PracticeListenTapStatusResponse> updateListenTapStatus({
     required String listenTapId,
     required String status,
+    required int correctAnswers,
+    required int wrongAnswers,
   }) async {
     final response = await dio.patch(
       '/students/practice/listen-tap/$listenTapId/status',
-      data: {'status': status},
+      data: {
+        'status': status,
+        'correctAnswers': correctAnswers,
+        'wrongAnswers': wrongAnswers,
+      },
     );
     final data = response.data as Map<String, dynamic>;
     return PracticeListenTapStatusResponse.fromJson(data);

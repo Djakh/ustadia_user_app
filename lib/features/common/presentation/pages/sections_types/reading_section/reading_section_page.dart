@@ -31,6 +31,9 @@ class ReadingSectionPageState extends State<ReadingSectionPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.sectionModel.progressState == SectionProgressState.completed) {
+      stage = ReadingSectionStage.result;
+    }
     if (widget.sectionModel.id.isNotEmpty) {
       detailBloc.add(SectionDetailRequested(
           sectionId: widget.sectionModel.id,
@@ -82,7 +85,9 @@ class ReadingSectionPageState extends State<ReadingSectionPage> {
           isLoading: isLoading);
     if (stage == ReadingSectionStage.quiz)
       return SectionQuizComponent(questions: state.detail?.questions ?? [], onFinish: finishQuiz);
-    if (stage == ReadingSectionStage.result) return const QuizResultComponent();
+    if (stage == ReadingSectionStage.result) {
+      return QuizResultComponent(sectionModel: widget.sectionModel);
+    }
     return ReadingSectionLesson(
         sectionModel: widget.sectionModel,
         changeStage: () => changeStage(state),
@@ -95,8 +100,14 @@ class ReadingSectionPageState extends State<ReadingSectionPage> {
       body: PrimaryBackground(
           header: header,
           headerTooltipText: widget.sectionModel.title,
+          padding: stage == ReadingSectionStage.quiz ? EdgeInsets.zero : null,
+          margin: stage == ReadingSectionStage.quiz
+              ? const EdgeInsets.fromLTRB(8, 8, 8, 0)
+              : null,
+          applyBottomSafeArea: stage != ReadingSectionStage.quiz,
           isHeader: stage != ReadingSectionStage.result,
-          isScrollable: stage == ReadingSectionStage.quiz,
+          isScrollable: false,
+          alwaysScrollable: false,
           child: BlocBuilder<SectionDetailBloc, SectionDetailState>(
               bloc: detailBloc, builder: (context, state) => body(context, state))));
 }

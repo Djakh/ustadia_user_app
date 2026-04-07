@@ -27,14 +27,20 @@ class DioClient {
         // ignore: avoid_print
         print('[DIO] accessToken: $accessToken');
       }
+      _logRequestBody(options);
       return handler.next(options);
     }, onResponse: (response, handler) {
       _logResponsePretty(response);
       return handler.next(response);
+    }, onError: (error, handler) {
+      if (error.response != null) {
+        _logResponsePretty(error.response!);
+      }
+      return handler.next(error);
     }));
     dio.interceptors.add(
       LogInterceptor(
-        requestBody: true,
+        requestBody: false,
         responseBody: false,
         logPrint: (obj) => _log(obj.toString()),
       ),
@@ -66,6 +72,27 @@ class DioClient {
     }
     // ignore: avoid_print
     print('[DIO] Response Pretty:\\n$output');
+  }
+
+  static void _logRequestBody(RequestOptions options) {
+    final method = options.method.toUpperCase();
+    final body = options.data;
+    if (body == null || method == 'GET') {
+      _log('request body: none');
+      return;
+    }
+    String output;
+    if (body is String) {
+      final decoded = _tryDecodeJson(body);
+      output = decoded != null
+          ? const JsonEncoder.withIndent('  ').convert(_sanitizeForLog(decoded))
+          : _singleLine(body);
+    } else if (body is Map || body is List) {
+      output = const JsonEncoder.withIndent('  ').convert(_sanitizeForLog(body));
+    } else {
+      output = body.toString();
+    }
+    _log('request body:\\n$output');
   }
 
   static dynamic _tryDecodeJson(String value) {

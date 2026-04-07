@@ -74,13 +74,14 @@ class ProfilePageState extends State<ProfilePage> {
   Widget headerIcon(IconData icon, AlignmentGeometry alignment, Function() onPressed) => Align(
       alignment: alignment, child: IconButton(onPressed: onPressed, icon: Icon(icon, size: 22)));
 
-  Widget header(BuildContext context) => IntrinsicHeight(
-          child: Stack(alignment: Alignment.center, children: [
+  Widget header(BuildContext context) =>
+      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         headerIcon(
             Icons.notifications, Alignment.centerLeft, () => context.push(notificationsRoute)),
         Text('Profile'.tr(), style: Style.body2w6(context)),
         headerIcon(Icons.settings, Alignment.centerRight, () => context.push(settingsRoute))
-      ]));
+      ]);
+
   Widget statsWidgetRow(ProfileStatsModel firstStatsModel, ProfileStatsModel secondStatsModel) =>
       Row(children: [
         ProfileStatCard(profileStatsModel: firstStatsModel),
@@ -144,5 +145,6 @@ class ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: PrimaryBackground(isScrollable: true, header: header(context), child: view(context)));
+      body: PrimaryBackground(
+          isScrollable: true, header: header(context), headerHorPadding: 0, child: view(context)));
 }

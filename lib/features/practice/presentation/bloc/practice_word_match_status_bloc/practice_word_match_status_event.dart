@@ -10,9 +10,16 @@ abstract class PracticeWordMatchStatusEvent extends Equatable {
 class PracticeWordMatchStatusRequested extends PracticeWordMatchStatusEvent {
   final String wordMatchId;
   final String status;
+  final int correctAnswers;
+  final int wrongAnswers;
 
-  const PracticeWordMatchStatusRequested({required this.wordMatchId, required this.status});
+  const PracticeWordMatchStatusRequested({
+    required this.wordMatchId,
+    required this.status,
+    required this.correctAnswers,
+    required this.wrongAnswers,
+  });
 
   @override
-  List<Object?> get props => [wordMatchId, status];
+  List<Object?> get props => [wordMatchId, status, correctAnswers, wrongAnswers];
 }

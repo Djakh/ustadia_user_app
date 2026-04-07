@@ -34,6 +34,8 @@ class PracticeListenTapStatusBloc
       final response = await practiceRemoteDataSource.updateListenTapStatus(
         listenTapId: event.listenTapId,
         status: event.status,
+        correctAnswers: event.correctAnswers,
+        wrongAnswers: event.wrongAnswers,
       );
       profileStatisticsStore.markStale();
       emit(state.copyWith(

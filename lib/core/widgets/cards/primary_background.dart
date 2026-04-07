@@ -11,9 +11,13 @@ class PrimaryBackground extends StatefulWidget {
   final String? title;
   final String? headerTooltipText;
   final bool isHeader;
+  final double? headerHorPadding;
   final bool isScrollable;
+  final bool alwaysScrollable;
   final Color? backgroundColor;
   final VoidCallback? onBack;
+  final bool applyBottomSafeArea;
+  final EdgeInsets? margin;
   const PrimaryBackground(
       {super.key,
       required this.child,
@@ -23,8 +27,12 @@ class PrimaryBackground extends StatefulWidget {
       this.isHeader = true,
       this.header,
       this.isScrollable = false,
+      this.alwaysScrollable = true,
       this.backgroundColor,
-      this.onBack});
+      this.onBack,
+      this.headerHorPadding,
+      this.applyBottomSafeArea = true,
+      this.margin});
 
   @override
   State<PrimaryBackground> createState() => _PrimaryBackgroundState();
@@ -105,7 +113,7 @@ class _PrimaryBackgroundState extends State<PrimaryBackground> {
   }
 
   Widget centerWidget(BuildContext context) => Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 56),
+      padding: EdgeInsets.symmetric(horizontal: widget.headerHorPadding ?? 56),
       child: Center(
           child: Tooltip(
               message: resolvedHeaderTooltipText ?? '',
@@ -122,7 +130,9 @@ class _PrimaryBackgroundState extends State<PrimaryBackground> {
       ]));
 
   Widget scrollableChild(BoxConstraints constraints) => SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
+      physics: widget.alwaysScrollable
+          ? const AlwaysScrollableScrollPhysics()
+          : const ClampingScrollPhysics(),
       child: ConstrainedBox(
           constraints: BoxConstraints(minHeight: constraints.maxHeight), child: widget.child));
 
@@ -130,8 +140,9 @@ class _PrimaryBackgroundState extends State<PrimaryBackground> {
       widget.isScrollable ? scrollableChild(constraints) : widget.child;
 
   Widget view(BuildContext context) => SafeArea(
+      bottom: widget.applyBottomSafeArea,
       child: Container(
-          margin: const EdgeInsets.all(8),
+          margin: widget.margin ?? const EdgeInsets.all(8),
           padding: widget.padding ?? const EdgeInsets.all(12),
           decoration: BoxDecoration(
               color: widget.backgroundColor ?? context.cs.secondaryContainer,

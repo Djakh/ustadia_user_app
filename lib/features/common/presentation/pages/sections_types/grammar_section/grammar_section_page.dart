@@ -31,6 +31,9 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.sectionModel.progressState == SectionProgressState.completed) {
+      stage = GrammarSectionStage.result;
+    }
     if (widget.sectionModel.id.isNotEmpty) {
       detailBloc.add(SectionDetailRequested(
           sectionId: widget.sectionModel.id,
@@ -79,7 +82,9 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
           isLoading: isLoading);
     if (stage == GrammarSectionStage.quiz)
       return SectionQuizComponent(questions: state.detail?.questions ?? [], onFinish: finishQuiz);
-    if (stage == GrammarSectionStage.result) return const QuizResultComponent();
+    if (stage == GrammarSectionStage.result) {
+      return QuizResultComponent(sectionModel: widget.sectionModel);
+    }
     return GrammarSectionIntro(
         sectionModel: widget.sectionModel,
         changeStage: () => changeStage(state),
@@ -92,8 +97,14 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
       body: PrimaryBackground(
           header: header,
           headerTooltipText: widget.sectionModel.title,
+          padding: stage == GrammarSectionStage.quiz ? EdgeInsets.zero : null,
+          margin: stage == GrammarSectionStage.quiz
+              ? const EdgeInsets.fromLTRB(8, 8, 8, 0)
+              : null,
+          applyBottomSafeArea: stage != GrammarSectionStage.quiz,
           isHeader: stage != GrammarSectionStage.result,
-          isScrollable: stage == GrammarSectionStage.quiz,
+          isScrollable: false,
+          alwaysScrollable: false,
           child: BlocBuilder<SectionDetailBloc, SectionDetailState>(
               bloc: detailBloc, builder: (context, state) => body(context, state))));
 }

@@ -50,15 +50,25 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
           return;
         }
         final answersPayload = buildAssignmentAnswersPayload(event);
-        final success = await assignmentsRemoteDataSource.submitAssignmentAnswers(
+        final response = await assignmentsRemoteDataSource.submitAssignmentAnswers(
             assignmentId: assignmentId, answers: answersPayload);
-        if (success) {
+        final extracted = _extractLearnResult(response, event.questionId);
+        final hasResults = response['results'] is List;
+        if (hasResults || extracted != null) {
           markDerivedDataStale();
-          emit(state.copyWith(
-            status: Status.success,
-            clearResult: true,
-            clearErrorMessage: true,
-          ));
+          if (extracted != null && extracted.success == false) {
+            emit(state.copyWith(
+              status: Status.error,
+              result: extracted,
+              errorMessage: extracted.error ?? 'Request failed.',
+            ));
+          } else {
+            emit(state.copyWith(
+              status: Status.success,
+              result: extracted,
+              clearErrorMessage: true,
+            ));
+          }
         } else {
           emit(state.copyWith(
             status: Status.error,
@@ -83,7 +93,7 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
       final response = await learnRemoteDataSource.submitLessonAnswers(
           lessonId: lessonId, unitId: unitId, answers: answersPayload);
       markDerivedDataStale();
-      final extracted = _extractLearnResult(response);
+      final extracted = _extractLearnResult(response, event.questionId);
       emit(state.copyWith(
         status: Status.success,
         result: extracted,
@@ -169,10 +179,23 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
     return answers;
   }
 
-  LearnQuestionAnswerResultModel? _extractLearnResult(Map<String, dynamic> response) {
+  LearnQuestionAnswerResultModel? _extractLearnResult(
+      Map<String, dynamic> response, String questionId) {
     final direct = _asMap(response['data']) ?? _asMap(response['result']);
     if (direct != null) {
       return LearnQuestionAnswerResultModel.fromJson(direct);
+    }
+    final results = response['results'];
+    if (results is List) {
+      final parsedResults = results
+          .map(_asMap)
+          .whereType<Map<String, dynamic>>()
+          .map(LearnQuestionAnswerResultModel.fromJson)
+          .toList();
+      for (final result in parsedResults) {
+        if (result.questionId == questionId) return result;
+      }
+      if (parsedResults.isNotEmpty) return parsedResults.first;
     }
     if (response.containsKey('question_id') || response.containsKey('is_correct')) {
       return LearnQuestionAnswerResultModel.fromJson(response);

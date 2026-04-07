@@ -34,6 +34,8 @@ class PracticeSentenceBuilderStatusBloc
       final response = await practiceRemoteDataSource.updateSentenceBuilderStatus(
         sentenceBuilderId: event.sentenceBuilderId,
         status: event.status,
+        correctAnswers: event.correctAnswers,
+        wrongAnswers: event.wrongAnswers,
       );
       profileStatisticsStore.markStale();
       emit(state.copyWith(

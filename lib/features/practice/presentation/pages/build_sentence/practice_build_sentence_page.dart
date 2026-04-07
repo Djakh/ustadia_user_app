@@ -24,6 +24,7 @@ class _PracticeBuildSentencePageState extends State<PracticeBuildSentencePage> {
   final PracticeSentenceBuilderStatusBloc statusBloc = sl<PracticeSentenceBuilderStatusBloc>();
   final ProfileStatisticsStore statisticsStore = sl<ProfileStatisticsStore>();
   bool showResult = false;
+  int wrongAttempts = 0;
 
   /// --- Data ---
 
@@ -43,8 +44,13 @@ class _PracticeBuildSentencePageState extends State<PracticeBuildSentencePage> {
 
   void submitCompleted() {
     statusBloc.add(PracticeSentenceBuilderStatusRequested(
-        sentenceBuilderId: widget.set.id, status: 'completed'));
+        sentenceBuilderId: widget.set.id,
+        status: 'completed',
+        correctAnswers: 1,
+        wrongAnswers: wrongAttempts));
   }
+
+  void onWrongAttempt() => setState(() => wrongAttempts++);
 
   /// --- Widgets ---
 
@@ -54,7 +60,9 @@ class _PracticeBuildSentencePageState extends State<PracticeBuildSentencePage> {
           child: correctOrder.isEmpty
               ? Text('No questions found'.tr())
               : PracticeBuildSentenceContent(
-                  correctOrder: correctOrder, onCompleted: submitCompleted)));
+                  correctOrder: correctOrder,
+                  onCompleted: submitCompleted,
+                  onWrongAttempt: onWrongAttempt)));
 
   @override
   Widget build(BuildContext context) => BlocListener<PracticeSentenceBuilderStatusBloc,

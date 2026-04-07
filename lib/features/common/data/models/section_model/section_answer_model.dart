@@ -3,6 +3,7 @@ class SectionAnswerModel {
   final String questionId;
   final String answerText;
   final bool isCorrect;
+  final bool userSelected;
   final int orderIndex;
 
   const SectionAnswerModel(
@@ -10,6 +11,7 @@ class SectionAnswerModel {
       required this.questionId,
       required this.answerText,
       required this.isCorrect,
+      required this.userSelected,
       required this.orderIndex});
 
   factory SectionAnswerModel.fromJson(Map<String, dynamic> json) => SectionAnswerModel(
@@ -18,6 +20,7 @@ class SectionAnswerModel {
           json['question_id']?.toString() ?? json['assignment_question_id']?.toString() ?? '',
       answerText: json['answer_text']?.toString() ?? '',
       isCorrect: _extractIsCorrect(json),
+      userSelected: _toBool(json['user_selected']),
       orderIndex: _toInt(json['order_index']));
 
   static int _toInt(dynamic value, {int fallback = 0}) {
