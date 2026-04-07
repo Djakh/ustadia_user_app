@@ -53,6 +53,9 @@ class WritingSectionPageState extends State<WritingSectionPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.sectionModel.progressState == SectionProgressState.completed) {
+      stage = WritingSectionStage.result;
+    }
     if (widget.sectionModel.id.isNotEmpty) {
       getSectionDetails();
     }
@@ -182,7 +185,11 @@ class WritingSectionPageState extends State<WritingSectionPage> {
     if (stage == WritingSectionStage.input) return inputView;
     if (stage == WritingSectionStage.result)
       return BlocBuilder<QuestionAnswerBloc, QuestionAnswerState>(
-          bloc: answerBloc, builder: (context, state) => const QuizResultComponent());
+          bloc: answerBloc,
+          builder: (context, state) => QuizResultComponent(
+              sectionModel: widget.sectionModel,
+              aiFeedback: state.result?.aiFeedback,
+              feedback: state.result?.error));
 
     return const SizedBox();
   }

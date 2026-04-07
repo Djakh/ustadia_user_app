@@ -55,6 +55,9 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.sectionModel.progressState == SectionProgressState.completed) {
+      stage = SpeakingSectionStage.result;
+    }
     if (widget.sectionModel.id.isNotEmpty) {
       detailBloc.add(SectionDetailRequested(
           sectionId: widget.sectionModel.id,
@@ -286,7 +289,7 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
       bloc: detailBloc,
       builder: (context, state) {
         if (stage == SpeakingSectionStage.result) {
-          return const QuizResultComponent();
+          return QuizResultComponent(sectionModel: widget.sectionModel);
         }
         if (state.status.isLoading && state.detail == null) {
           return const PrimaryLoadingIndicator();

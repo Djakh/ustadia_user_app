@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
+import 'package:ustadia_user_app/core/network/api_url_resolver.dart';
 import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
 import 'package:ustadia_user_app/core/widgets/cached_images/cached_images_primary/cached_image_primary.dart';
 import 'package:ustadia_user_app/core/widgets/progress_bars/circle_progress_badge.dart';
+import 'package:ustadia_user_app/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
+import 'package:ustadia_user_app/injection_container.dart';
 
 class LearnLessonCard extends StatelessWidget {
   final LearnLessonModel lessonModel;
@@ -14,10 +17,10 @@ class LearnLessonCard extends StatelessWidget {
   const LearnLessonCard({super.key, required this.lessonModel, required this.onTap});
 
   String get fullImageUrl {
-    final url = lessonModel.imageUrl;
-    if (url == null || url.isEmpty) return '';
-    if (url.startsWith('http')) return url;
-    return 'https://backend.ustadia.findecor.io$url';
+    return resolveApiAssetUrl(
+      lessonModel.imageUrl,
+      baseUrl: sl<AuthRemoteDataSource>().dio.options.baseUrl,
+    );
   }
 
   /// --- Getters ---

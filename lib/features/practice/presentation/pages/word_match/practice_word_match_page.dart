@@ -24,6 +24,7 @@ class _PracticeWordMatchPageState extends State<PracticeWordMatchPage> {
   final PracticeWordMatchStatusBloc statusBloc = sl<PracticeWordMatchStatusBloc>();
   final ProfileStatisticsStore statisticsStore = sl<ProfileStatisticsStore>();
   bool showResult = false;
+  int wrongAttempts = 0;
 
   /// --- Data ---
 
@@ -46,9 +47,14 @@ class _PracticeWordMatchPageState extends State<PracticeWordMatchPage> {
   }
 
   void submitCompleted() {
-    statusBloc.add(
-        PracticeWordMatchStatusRequested(wordMatchId: widget.set.id, status: 'completed'));
+    statusBloc.add(PracticeWordMatchStatusRequested(
+        wordMatchId: widget.set.id,
+        status: 'completed',
+        correctAnswers: 1,
+        wrongAnswers: wrongAttempts));
   }
+
+  void onWrongAttempt() => setState(() => wrongAttempts++);
 
   /// --- Widgets ---
 
@@ -56,7 +62,11 @@ class _PracticeWordMatchPageState extends State<PracticeWordMatchPage> {
       title: widget.set.title.isEmpty ? 'Word match' : widget.set.title,
       child: Column(children: [
         const SizedBox(height: 24),
-        PracticeWordMatchContent(sources: sources, targets: targets, onCompleted: submitCompleted),
+        PracticeWordMatchContent(
+            sources: sources,
+            targets: targets,
+            onCompleted: submitCompleted,
+            onWrongAttempt: onWrongAttempt),
       ]));
 
   @override

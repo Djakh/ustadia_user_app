@@ -16,17 +16,17 @@ class PracticePage extends StatelessWidget {
   List<ActivityModel> get activities => [
         ActivityModel(
             title: 'Flashcard sprint'.tr(),
-            description: 'Flip cards to review words',
+            description: 'Flip cards to review words'.tr(),
             image: AppImages.flashcardSprint,
             route: flashcardSprintRoute),
         ActivityModel(
             title: 'Word match'.tr(),
-            description: 'Match words & meanings',
+            description: 'Match words & meanings'.tr(),
             image: AppImages.worldMatch,
             route: wordMatchRoute),
         ActivityModel(
             title: 'Build the sentence'.tr(),
-            description: 'Put words in order',
+            description: 'Put words in order'.tr(),
             image: AppImages.buildTheSentence,
             route: buildSentenceRoute),
         // ActivityModel(
@@ -36,7 +36,7 @@ class PracticePage extends StatelessWidget {
         //     route: writingAssessmentRoute),
         ActivityModel(
             title: 'Listen & Tap'.tr(),
-            description: 'Train your ear with audio',
+            description: 'Train your ear with audio'.tr(),
             image: AppImages.listenTap,
             route: listenTapSetsRoute),
         // ActivityModel(

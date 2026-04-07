@@ -34,6 +34,8 @@ class PracticeWordMatchStatusBloc
       final response = await practiceRemoteDataSource.updateWordMatchStatus(
         wordMatchId: event.wordMatchId,
         status: event.status,
+        correctAnswers: event.correctAnswers,
+        wrongAnswers: event.wrongAnswers,
       );
       profileStatisticsStore.markStale();
       emit(state.copyWith(

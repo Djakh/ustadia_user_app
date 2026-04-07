@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:ustadia_user_app/core/pagination/pagination_meta.dart';
 import 'package:ustadia_user_app/core/pagination/pagination_result.dart';
+import 'package:ustadia_user_app/features/common/data/models/section_model/section_stats_model.dart';
 import 'package:ustadia_user_app/features/dashboard/data/models/current_unit_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_lesson_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
@@ -54,7 +55,12 @@ class LearnRemoteDataSource {
     final response = await dio.get('/students/sections/$sectionId');
     final data = response.data as Map<String, dynamic>;
     return SectionModel.fromJson(data);
-    
+  }
+
+  Future<SectionStatsModel> fetchSectionStats({required String sectionId}) async {
+    final response = await dio.get('/students/sections/$sectionId/stats');
+    final data = response.data as Map<String, dynamic>;
+    return SectionStatsModel.fromJson(data);
   }
 
   Future<Map<String, dynamic>> submitLessonAnswers(

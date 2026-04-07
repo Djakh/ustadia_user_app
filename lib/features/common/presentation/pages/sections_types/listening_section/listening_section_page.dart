@@ -32,6 +32,9 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.sectionModel.progressState == SectionProgressState.completed) {
+      stage = ListeningSectionStage.result;
+    }
     if (widget.sectionModel.id.isNotEmpty) {
       detailBloc.add(SectionDetailRequested(
           sectionId: widget.sectionModel.id,
@@ -85,7 +88,9 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
           questions: state.detail?.questions ?? [],
           headerWidget: AudioCard(sectionModel: widget.sectionModel),
           onFinish: finishQuiz);
-    if (stage == ListeningSectionStage.result) return const QuizResultComponent();
+    if (stage == ListeningSectionStage.result) {
+      return QuizResultComponent(sectionModel: widget.sectionModel);
+    }
     return ListeningSectionIntro(
         sectionModel: widget.sectionModel,
         changeStage: () => changeStage(state),
@@ -98,8 +103,14 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
       body: PrimaryBackground(
           header: header,
           headerTooltipText: widget.sectionModel.title,
+          padding: stage == ListeningSectionStage.quiz ? EdgeInsets.zero : null,
+          margin: stage == ListeningSectionStage.quiz
+              ? const EdgeInsets.fromLTRB(8, 8, 8, 0)
+              : null,
+          applyBottomSafeArea: stage != ListeningSectionStage.quiz,
           isHeader: stage != ListeningSectionStage.result,
-          isScrollable: stage == ListeningSectionStage.quiz,
+          isScrollable: false,
+          alwaysScrollable: false,
           child: BlocBuilder<SectionDetailBloc, SectionDetailState>(
               bloc: detailBloc, builder: (context, state) => body(context, state))));
 }

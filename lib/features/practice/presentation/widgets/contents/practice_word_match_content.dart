@@ -10,8 +10,13 @@ class PracticeWordMatchContent extends StatefulWidget {
   final List<PracticeWordMatchCardData> sources;
   final List<PracticeWordMatchCardData> targets;
   final VoidCallback? onCompleted;
+  final VoidCallback? onWrongAttempt;
   const PracticeWordMatchContent(
-      {super.key, required this.sources, required this.targets, this.onCompleted});
+      {super.key,
+      required this.sources,
+      required this.targets,
+      this.onCompleted,
+      this.onWrongAttempt});
 
   @override
   State<PracticeWordMatchContent> createState() => PracticeWordMatchContentState();
@@ -77,6 +82,7 @@ class PracticeWordMatchContentState extends State<PracticeWordMatchContent> {
       states[second] = WordMatchCardState.wrong;
       _lock = true;
     });
+    widget.onWrongAttempt?.call();
 
     Future.delayed(const Duration(milliseconds: 600), () {
       if (!mounted) return;

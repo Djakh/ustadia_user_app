@@ -73,7 +73,8 @@ class AssignmentSectionsPageState extends State<AssignmentSectionsPage> {
         navigation = context.push(learnGrammarRoute, extra: sectionModel);
         break;
       case SectionType.vocabulary:
-        navigation = context.push(learnReadingRoute, extra: sectionModel);
+        if (sectionModel.flashCardSet == null) return;
+        navigation = context.push(flashcardSprintRoute, extra: sectionModel.flashCardSet!);
         break;
       case SectionType.writing:
         navigation = context.push(learnWritingRoute, extra: sectionModel);
@@ -89,6 +90,8 @@ class AssignmentSectionsPageState extends State<AssignmentSectionsPage> {
 
   Future<void> reloadSections() => loadSections(forceRefresh: true);
 
+  void closePage() => context.pop(shouldRefreshParent ? true : null);
+
   Widget sectionList() => Column(
       children: sections
           .map((section) => Padding(
@@ -99,6 +102,7 @@ class AssignmentSectionsPageState extends State<AssignmentSectionsPage> {
 
   Widget body(BuildContext context) => PrimaryBackground(
       title: assignment.title,
+      onBack: closePage,
       isScrollable: false,
       child: RefreshIndicator(
           onRefresh: reloadSections,
@@ -134,7 +138,7 @@ class AssignmentSectionsPageState extends State<AssignmentSectionsPage> {
   Widget build(BuildContext context) => WillPopScope(
       onWillPop: () async {
         if (!context.mounted) return false;
-        context.pop(shouldRefreshParent ? true : null);
+        closePage();
         return false;
       },
       child: Scaffold(backgroundColor: context.cs.surface, body: SafeArea(child: body(context))));

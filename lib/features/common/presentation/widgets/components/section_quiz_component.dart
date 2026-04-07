@@ -30,7 +30,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   int questionIndex = 0;
   int correctCount = 0;
   bool hasSubmitted = false;
-  bool? submitWasCorrect;
+  bool showCorrectAnswer = false;
 
   int? selectedIndex;
   final Set<int> selectedIndices = {};
@@ -43,7 +43,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   void initState() {
     questions = widget.questions;
     answerBloc.add(const QuestionAnswerReset());
-    _resetBlankControllers();
+    _syncQuestionState();
     shortAnswerController.addListener(_handleInputChanged);
     super.initState();
   }
@@ -66,12 +66,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       questions = widget.questions;
       questionIndex = 0;
       correctCount = 0;
-      hasSubmitted = false;
-      submitWasCorrect = null;
-      selectedIndex = null;
-      selectedIndices.clear();
-      _resetBlankControllers();
-      shortAnswerController.clear();
+      _syncQuestionState();
     }
   }
 
@@ -79,6 +74,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   SectionQuestionModel get currentQuestion => questions[questionIndex];
   List<SectionAnswerModel> get currentAnswers => currentQuestion.answers ?? [];
   String get questionType => currentQuestion.questionType.toLowerCase();
+  bool get isReviewMode => currentQuestion.isAnswered == true;
 
   bool get isMultipleChoice => questionType == 'multiple-choice';
   bool get isShortAnswer => questionType == 'short-answer';
@@ -102,9 +98,31 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     final count = blanksCount;
     for (var i = 0; i < count; i++) {
       final controller = TextEditingController();
+      if (currentQuestion.userBlankAnswers.length > i) {
+        controller.text = currentQuestion.userBlankAnswers[i].answer ?? '';
+      }
       controller.addListener(_handleInputChanged);
       blankControllers.add(controller);
     }
+  }
+
+  void _syncQuestionState() {
+    selectedIndex = null;
+    selectedIndices.clear();
+    hasSubmitted = isReviewMode;
+    showCorrectAnswer = false;
+
+    for (var i = 0; i < currentAnswers.length; i++) {
+      if (!currentAnswers[i].userSelected) continue;
+      if (isMultipleChoice) {
+        selectedIndices.add(i);
+      } else {
+        selectedIndex = i;
+      }
+    }
+
+    _resetBlankControllers();
+    shortAnswerController.clear();
   }
 
   void _handleInputChanged() {
@@ -119,7 +137,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   }
 
   void onSelectAnswerOption(int index) {
-    if (hasSubmitted) return;
+    if (hasSubmitted || isReviewMode) return;
     if (answerBloc.state.status.isLoading) return;
     if (currentAnswers.isEmpty) return;
     if (isMultipleChoice) {
@@ -144,25 +162,15 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     return selectedIndex != null;
   }
 
-  bool evaluateMultipleChoiceCorrect(List<String> selectedAnswerIds) {
-    final correctIds = currentAnswers.where((a) => a.isCorrect).map((a) => a.id).toSet();
-    final selectedSet = selectedAnswerIds.toSet();
-    return correctIds.isNotEmpty &&
-        selectedSet.length == correctIds.length &&
-        selectedSet.containsAll(correctIds);
-  }
-
   void submitCurrentAnswer() {
     if (!isReadyToSubmit) return;
     if (answerBloc.state.status.isLoading) return;
-    submitWasCorrect = null;
     if (isMultipleChoice) {
       final selectedAnswerIds = selectedIndices
           .map((index) => currentAnswers[index].id)
           .where((id) => id.isNotEmpty)
           .toList();
       if (selectedAnswerIds.isEmpty) return;
-      submitWasCorrect = evaluateMultipleChoiceCorrect(selectedAnswerIds);
       answerBloc.add(QuestionAnswerSubmitted(
           sectionId: currentQuestion.sectionId,
           questionId: currentQuestion.id,
@@ -199,7 +207,6 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
           lessonId: currentQuestion.lessonId,
           source: currentQuestion.source));
     } else if (selectedIndex != null && currentAnswers.isNotEmpty) {
-      submitWasCorrect = currentAnswers[selectedIndex!].isCorrect;
       answerBloc.add(QuestionAnswerSubmitted(
           sectionId: currentQuestion.sectionId,
           questionId: currentQuestion.id,
@@ -217,12 +224,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
 
     answerBloc.add(const QuestionAnswerReset());
     questionIndex++;
-    selectedIndex = null;
-    selectedIndices.clear();
-    _resetBlankControllers();
-    shortAnswerController.clear();
-    hasSubmitted = false;
-    submitWasCorrect = null;
+    _syncQuestionState();
 
     setState(() {});
   }
@@ -252,9 +254,22 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   bool isSelectedIndex(int index) =>
       isMultipleChoice ? selectedIndices.contains(index) : selectedIndex == index;
 
+  bool get hasResultForCurrentQuestion {
+    final result = answerBloc.state.result;
+    return result != null &&
+        result.questionId.isNotEmpty &&
+        result.questionId == currentQuestion.id;
+  }
+
   Set<String> effectiveCorrectAnswerIds(QuestionAnswerState answerState) {
-    final idsFromQuestion = currentAnswers.where((a) => a.isCorrect).map((a) => a.id).toSet();
-    if (idsFromQuestion.isNotEmpty) return idsFromQuestion;
+    if (isReviewMode) {
+      return currentAnswers
+          .where((answer) => answer.isCorrect)
+          .map((answer) => answer.id)
+          .where((id) => id.isNotEmpty)
+          .toSet();
+    }
+    if (!hasResultForCurrentQuestion) return const {};
     final idsFromResult = <String>{...answerState.result?.correctAnswerIds ?? const []};
     final singleId = answerState.result?.correctAnswerId;
     if (singleId != null && singleId.isNotEmpty) idsFromResult.add(singleId);
@@ -263,14 +278,14 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
 
   bool isCorrectAnswerIndex(int index, QuestionAnswerState answerState) {
     final ids = effectiveCorrectAnswerIds(answerState);
-    if (ids.isNotEmpty) return ids.contains(currentAnswers[index].id);
-    return currentAnswers[index].isCorrect;
+    return ids.contains(currentAnswers[index].id);
   }
 
-  bool get hasMalformedChoiceQuestion {
-    if (isFillBlank || isShortAnswer || currentAnswers.isEmpty) return false;
-    return currentAnswers.every((answer) => !answer.isCorrect);
-  }
+  bool get hasMalformedChoiceQuestion =>
+      !isReviewMode &&
+      (questionType == 'multiple-choice' || questionType == 'single-choice') &&
+      currentAnswers.isNotEmpty &&
+      currentAnswers.every((answer) => !answer.isCorrect);
 
   Color optionFillColor(BuildContext context, int index, QuestionAnswerState answerState) {
     if (!hasSubmitted) return context.cs.surface;
@@ -279,9 +294,16 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     return AppColors.error;
   }
 
+  Color optionBorderColor(BuildContext context, int index, QuestionAnswerState answerState) {
+    if (!hasSubmitted && isSelectedIndex(index)) return AppColors.primary;
+    if (showCorrectAnswer && isCorrectAnswerIndex(index, answerState)) return AppColors.orange033;
+    return AppColors.transparent;
+  }
+
   Color optionTextColor(BuildContext context, int index, QuestionAnswerState answerState) {
     final fill = optionFillColor(context, index, answerState);
     if (fill == AppColors.primary || fill == AppColors.error) return context.cs.onPrimary;
+    if (showCorrectAnswer && isCorrectAnswerIndex(index, answerState)) return AppColors.orange033;
     return context.cs.onSurface;
   }
 
@@ -289,7 +311,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     final fill = optionFillColor(context, index, answerState);
     final isFilled = fill == AppColors.primary || fill == AppColors.error;
     final isCorrect = isCorrectAnswerIndex(index, answerState);
-    final showCheck = hasSubmitted && isCorrect;
+    final showCheck = hasSubmitted && showCorrectAnswer && isCorrect;
     final checkColor = isFilled ? AppColors.white : AppColors.primary;
     final label = Stack(alignment: Alignment.center, children: [
       Text(currentAnswers[index].answerText,
@@ -307,8 +329,8 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     return Button.border(
         onTap: () => onSelectAnswerOption(index),
         color: context.cs.surface,
-        borderColor:
-            !hasSubmitted && isSelectedIndex(index) ? AppColors.primary : AppColors.transparent,
+        borderColor: optionBorderColor(context, index, answerState),
+        borderWidth: showCorrectAnswer && isCorrect ? 1.5 : 1,
         child: label);
   }
 
@@ -325,6 +347,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
           (index) => Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: TextField(
+                  readOnly: isReviewMode,
                   controller: blankControllers[index],
                   decoration: InputDecoration(
                       hintText: 'Blank {number}'.tr(namedArgs: {'number': '${index + 1}'}),
@@ -332,18 +355,141 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
 
   Widget shortAnswerView() => TextField(
       controller: shortAnswerController,
+      readOnly: isReviewMode,
       maxLines: 4,
       decoration: InputDecoration(
           hintText: 'Type your answer'.tr(),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))));
 
+  bool get canRevealCorrectAnswer =>
+      hasSubmitted &&
+      !questionWasCorrect(answerBloc.state) &&
+      currentAnswers.isNotEmpty &&
+      effectiveCorrectAnswerIds(answerBloc.state).isNotEmpty &&
+      !showCorrectAnswer;
+
+  bool get isResultState => hasSubmitted || isReviewMode;
+
+  bool questionWasCorrect(QuestionAnswerState answerState) {
+    if (isReviewMode) {
+      final correctIds = effectiveCorrectAnswerIds(answerState);
+      if (correctIds.isEmpty) return false;
+      final selectedIds = currentAnswers
+          .where((answer) => answer.userSelected)
+          .map((answer) => answer.id)
+          .where((id) => id.isNotEmpty)
+          .toSet();
+      return selectedIds.isNotEmpty &&
+          selectedIds.length == correctIds.length &&
+          selectedIds.containsAll(correctIds);
+    }
+    return answerState.result?.questionId == currentQuestion.id && answerState.result?.isCorrect == true;
+  }
+
+  Color resultPanelColor(QuestionAnswerState answerState) =>
+      questionWasCorrect(answerState) ? AppColors.primary : AppColors.error;
+
+  Color resultPanelTextColor(BuildContext context) =>
+      isResultState ? AppColors.white : context.cs.onSurface;
+
+  IconData resultPanelIcon(QuestionAnswerState answerState) =>
+      questionWasCorrect(answerState) ? Icons.check_circle_rounded : Icons.error_outline_rounded;
+
+  String resultPanelTitle(QuestionAnswerState answerState) =>
+      questionWasCorrect(answerState) ? 'Your answer was correct'.tr() : 'Your answer was incorrect'.tr();
+
+  String? resultPanelSubtitle(QuestionAnswerState answerState) {
+    if (!isResultState) {
+      return isReadyToSubmit
+          ? 'Tap submit to check your answer.'.tr()
+          : 'Choose an answer to continue.'.tr();
+    }
+    if (questionWasCorrect(answerState)) {
+      return 'Tap continue to move to the next question.'.tr();
+    }
+    if (showCorrectAnswer && effectiveCorrectAnswerIds(answerState).isNotEmpty) {
+      return 'The correct answer is now marked for review.'.tr();
+    }
+    if (canRevealCorrectAnswer) {
+      return 'Tap the eye button to view the correct answer.'.tr();
+    }
+    return null;
+  }
+
+  Widget showAnswerButton(QuestionAnswerState answerState) => Button.border(
+      onTap: () => setState(() => showCorrectAnswer = true),
+      height: 52,
+      color: AppColors.white,
+      borderColor: isResultState
+          ? AppColors.white.withValues(alpha: 0.75)
+          : AppColors.orange033.withValues(alpha: 0.35),
+      child: Icon(Icons.visibility_rounded,
+          size: 20,
+          color: isResultState ? resultPanelColor(answerState) : AppColors.orange033));
+
   Widget submitButton(QuestionAnswerState answerState) {
     final canSubmit = hasSubmitted ? true : isReadyToSubmit;
-    final label = hasSubmitted ? 'Continue' : 'Submit';
+    final label = hasSubmitted || isReviewMode ? 'Continue' : 'Submit';
     return Button.primary(
-        onTap: hasSubmitted ? goNextQuestion : submitCurrentAnswer,
+        onTap: hasSubmitted || isReviewMode ? goNextQuestion : submitCurrentAnswer,
         text: label.tr(),
-        isAvialable: canSubmit && !answerState.status.isLoading);
+        color: isResultState ? AppColors.white : null,
+        textColor: isResultState ? resultPanelColor(answerState) : null,
+        isLoading: !isReviewMode && answerState.status.isLoading,
+        isAvialable: canSubmit);
+  }
+
+  Widget actionButtons(QuestionAnswerState answerState) {
+    if (!canRevealCorrectAnswer) return submitButton(answerState);
+    return Row(children: [
+      SizedBox(width: 84, child: showAnswerButton(answerState)),
+      const SizedBox(width: 12),
+      Expanded(child: submitButton(answerState))
+    ]);
+  }
+
+  Widget bottomResultPanel(BuildContext context, QuestionAnswerState answerState) {
+    final panelColor = isResultState ? resultPanelColor(answerState) : AppColors.white;
+    final subtitle = resultPanelSubtitle(answerState);
+    final bottomInset = MediaQuery.of(context).padding.bottom;
+    final textColor = resultPanelTextColor(context);
+    return SizedBox(
+        width: double.infinity,
+        child: Container(
+            padding: EdgeInsets.fromLTRB(18, 18, 18, 20 + bottomInset),
+            decoration: BoxDecoration(
+                color: panelColor,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+              ),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              SizedBox(
+                  height: 72,
+                  child: isResultState
+                      ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Row(children: [
+                            Icon(resultPanelIcon(answerState), color: textColor, size: 26),
+                            const SizedBox(width: 10),
+                            Expanded(
+                                child: Text(resultPanelTitle(answerState),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Style.body2w6(context).copyWith(color: textColor)))
+                          ]),
+                          const SizedBox(height: 10),
+                          Expanded(
+                              child: Text(subtitle ?? '',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Style.bodyw4(context)
+                                      .copyWith(color: AppColors.white.withValues(alpha: 0.92))))
+                        ])
+                      : Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(subtitle ?? '',
+                              style: Style.bodyw4(context).copyWith(color: textColor)))),
+              const SizedBox(height: 18),
+              actionButtons(answerState)
+            ])));
   }
 
   Widget malformedQuestionWarning(BuildContext context) => Container(
@@ -356,31 +502,45 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       child: Text('Question data is incomplete. No correct answer was provided by the server.'.tr(),
           style: Style.small3w4(context).copyWith(color: AppColors.error)));
 
-  Widget get view => BlocBuilder<QuestionAnswerBloc, QuestionAnswerState>(
-      bloc: answerBloc,
-      builder: (context, answerState) => Column(children: [
-            const SizedBox(height: 24),
-            progressHeader,
-            const SizedBox(height: 24),
-            ...isShownHeaderWidget,
-            QuestionsCard(currentQuestion: currentQuestion),
-            const SizedBox(height: 20),
-            if (hasMalformedChoiceQuestion) ...[
-              malformedQuestionWarning(context),
-              const SizedBox(height: 12),
-            ],
-            if (isFillBlank)
-              fillBlankView()
-            else if (isShortAnswer)
-              shortAnswerView()
-            else if (currentAnswers.isNotEmpty)
-              ...optionsList(answerState)
-            else
-              Text('No answers available.'.tr(),
-                  style: Style.small3w4(context, color: TextColorRole.greyColor)),
-            const SizedBox(height: 20),
-            submitButton(answerState)
-          ]));
+  Widget scrollContent(QuestionAnswerState answerState, double bottomSpacerHeight) => ListView(
+      padding: EdgeInsets.only(bottom: bottomSpacerHeight),
+      physics: const ClampingScrollPhysics(),
+      children: [
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Column(children: [
+              const SizedBox(height: 24),
+              progressHeader,
+              const SizedBox(height: 24),
+              ...isShownHeaderWidget,
+              QuestionsCard(currentQuestion: currentQuestion),
+              const SizedBox(height: 20),
+              // if (hasMalformedChoiceQuestion) ...[
+              //   malformedQuestionWarning(context),
+              //   const SizedBox(height: 12),
+              // ],
+              if (isFillBlank)
+                fillBlankView()
+              else if (isShortAnswer)
+                shortAnswerView()
+              else if (currentAnswers.isNotEmpty)
+                ...optionsList(answerState)
+              else
+                Text('No answers available.'.tr(),
+                    style: Style.small3w4(context, color: TextColorRole.greyColor)),
+            ]))
+      ]);
+
+  Widget get view => LayoutBuilder(
+      builder: (context, constraints) => BlocBuilder<QuestionAnswerBloc, QuestionAnswerState>(
+          bloc: answerBloc,
+          builder: (context, answerState) {
+            final panelHeight = 210.0 + MediaQuery.of(context).padding.bottom;
+            return Stack(children: [
+              Positioned.fill(child: scrollContent(answerState, panelHeight + 16)),
+              Positioned(left: 0, right: 0, bottom: 0, child: bottomResultPanel(context, answerState))
+            ]);
+          }));
 
   @override
   Widget build(BuildContext context) {
@@ -394,8 +554,10 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
         listener: (context, state) {
           if (state.status.isSuccess) {
             if (!hasSubmitted) {
-              final backendWasCorrect = state.result?.isCorrect;
-              if ((backendWasCorrect ?? submitWasCorrect) == true) correctCount++;
+              if (state.result?.questionId == currentQuestion.id &&
+                  state.result?.isCorrect == true) {
+                correctCount++;
+              }
               hasSubmitted = true;
               setState(() {});
             }

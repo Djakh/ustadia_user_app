@@ -71,8 +71,7 @@ class LearnSectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PrimaryBox(
       padding: const EdgeInsets.all(16),
-      //onTap: onTap,
-      onTap: isLocked || isCompleted ? null : onTap,
+      onTap: isLocked ? null : onTap,
       boxShadow: const [BoxShadow(color: AppColors.shadow, blurRadius: 12, offset: Offset(0, 6))],
       child: view(context));
 }

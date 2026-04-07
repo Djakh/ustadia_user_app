@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:ustadia_user_app/features/assignments/data/models/assignment_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
+import 'package:ustadia_user_app/features/common/data/models/section_model/section_stats_model.dart';
 
 class AssignmentsRemoteDataSource {
   final Dio dio;
@@ -36,12 +37,20 @@ class AssignmentsRemoteDataSource {
     return items.whereType<Map<String, dynamic>>().map(SectionModel.fromJson).toList();
   }
 
-  Future<bool> submitAssignmentAnswers(
+  Future<SectionStatsModel> fetchAssignmentSectionStats(
+      {required String assignmentId, required String sectionId}) async {
+    final response = await dio.get('/students/assignments/$assignmentId/sections/$sectionId/stats',
+        options: freshRequestOptions);
+    final data = response.data as Map<String, dynamic>;
+    return SectionStatsModel.fromJson(data);
+  }
+
+  Future<Map<String, dynamic>> submitAssignmentAnswers(
       {required String assignmentId, required List<Map<String, dynamic>> answers}) async {
     final response =
         await dio.post('/students/assignments/$assignmentId/submit', data: {'answers': answers});
     final data = response.data;
-    if (data is Map<String, dynamic>) return data['success'] == true;
-    return false;
+    if (data is Map<String, dynamic>) return data;
+    return const {};
   }
 }
