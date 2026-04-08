@@ -22,6 +22,7 @@ class VoiceCallNotifier extends ChangeNotifier {
   Room? room;
   EventsListener<RoomEvent>? livekitListener;
   AudioVisualizer? assistantAudioVisualizer;
+  String? assistantTrackSid;
 
   VoiceUiState voiceUiState = VoiceUiState.connecting;
   bool isConnecting = false;
@@ -46,6 +47,7 @@ class VoiceCallNotifier extends ChangeNotifier {
   Timer? speakingSilenceTimer;
   Timer? levelJitterTimer;
   Timer? assistantAudioLockTimer;
+  int connectAttemptId = 0;
 
   VoiceCallNotifier({required this.aiChatRemoteDataSource, required this.topicId});
 
@@ -54,39 +56,45 @@ class VoiceCallNotifier extends ChangeNotifier {
   bool get canStartUserTurn =>
       isConnected && !isConnecting && voiceUiState != VoiceUiState.connecting;
 
+  bool isActiveConnectAttempt(int attemptId) => !isDisposed && attemptId == connectAttemptId;
+
   Future<void> connect() async {
     if (isDisposed || isConnecting || isConnected) return;
+    final attemptId = ++connectAttemptId;
     isConnecting = true;
     errorMessage = null;
     setVoiceState(VoiceUiState.connecting);
     debugPrint('[Voice] connecting...');
 
     final permissionStatus = await Permission.microphone.request();
+    if (!isActiveConnectAttempt(attemptId)) return;
     if (!permissionStatus.isGranted) {
       if (permissionStatus.isPermanentlyDenied) {
         await openAppSettings();
       }
       errorMessage = 'Microphone permission denied'.tr();
       setVoiceState(VoiceUiState.error);
-      isConnecting = false;
-      notifyListeners();
+      if (isActiveConnectAttempt(attemptId)) {
+        isConnecting = false;
+        notifyListeners();
+      }
       return;
     }
 
     try {
       await VoiceAgentAudioRouteService.instance.startSession(reason: 'before_livekit_connect');
       final tokenModel = await aiChatRemoteDataSource.fetchLivekitToken(topicId: topicId);
-      if (isDisposed) return;
-      final nextRoom = room ??
-          Room(
-              roomOptions: const RoomOptions(
-                  adaptiveStream: true,
-                  dynacast: true,
-                  defaultAudioOutputOptions: AudioOutputOptions(speakerOn: true)));
+      if (!isActiveConnectAttempt(attemptId)) return;
+      final nextRoom = Room(
+          roomOptions: const RoomOptions(
+              adaptiveStream: true,
+              dynacast: true,
+              defaultAudioOutputOptions: AudioOutputOptions(speakerOn: true)));
       listenToRoomEvents(nextRoom);
       await nextRoom.connect(tokenModel.url, tokenModel.token);
-      if (isDisposed) {
+      if (!isActiveConnectAttempt(attemptId)) {
         await nextRoom.disconnect();
+        nextRoom.dispose();
         return;
       }
       await nextRoom.localParticipant?.setMicrophoneEnabled(false);
@@ -114,13 +122,16 @@ class VoiceCallNotifier extends ChangeNotifier {
       userSpeaking = false;
       agentAudioActive = false;
     } finally {
-      isConnecting = false;
-      notifyListeners();
+      if (isActiveConnectAttempt(attemptId)) {
+        isConnecting = false;
+        notifyListeners();
+      }
     }
   }
 
   Future<void> disconnect() async {
     debugPrint('[Voice] disconnecting...');
+    connectAttemptId++;
     thinkingTimer?.cancel();
     speakingSilenceTimer?.cancel();
     assistantAudioLockTimer?.cancel();
@@ -180,7 +191,8 @@ class VoiceCallNotifier extends ChangeNotifier {
       setVoiceState(VoiceUiState.listening);
       return;
     }
-    if (!assistantAudioLocked && voiceUiState != VoiceUiState.error) setVoiceState(VoiceUiState.listening);
+    if (!assistantAudioLocked && voiceUiState != VoiceUiState.error)
+      setVoiceState(VoiceUiState.listening);
     notifyListeners();
   }
 
@@ -323,8 +335,11 @@ class VoiceCallNotifier extends ChangeNotifier {
         if (event.participant.identity.isNotEmpty) {
           currentAgentIdentity = event.participant.identity;
         }
-        await track.start();
-        await attachAssistantAudioVisualizer(track);
+        if (assistantTrackSid != publication.sid) {
+          assistantTrackSid = publication.sid;
+          await track.start();
+          await attachAssistantAudioVisualizer(track);
+        }
         debugPrint('[LiveKit] audio playback started');
         await applyPlaybackMode(reason: 'remote_audio_track_subscribed');
         agentAudioActive = true;
@@ -340,6 +355,9 @@ class VoiceCallNotifier extends ChangeNotifier {
       setLastEvent('Track unsubscribed: ${event.publication.sid}');
       agentAudioActive = agentAudioActiveValue(nextRoom);
       if (event.track is RemoteAudioTrack) {
+        if (assistantTrackSid == event.publication.sid) {
+          assistantTrackSid = null;
+        }
         disposeAssistantAudioVisualizer();
         clearAssistantAudioLock();
       }
@@ -475,6 +493,7 @@ class VoiceCallNotifier extends ChangeNotifier {
   void resetState() {
     assistantAudioLockTimer?.cancel();
     disposeAssistantAudioVisualizer();
+    assistantTrackSid = null;
     agentConnected = false;
     agentAudioActive = false;
     agentAudioPlaying = false;

@@ -38,56 +38,70 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// --- Widgets ---
-  Widget _item(IconData icon, bool selected, String label) =>
-      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Icon(icon, color: selected ? context.cs.primary : AppColors.gray8C, size: 26),
-        const SizedBox(height: 4),
-        Text(label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Style.small2w5(context,
-                color: selected ? TextColorRole.primaryColor : TextColorRole.greyColor))
-      ]);
+  Widget _item(IconData icon, bool selected, String label, double itemWidth) {
+    final compact = itemWidth < 68;
+    final iconSize = compact ? 22.0 : 24.0;
+    final textStyle = Style.small2w5(context,
+            color: selected ? TextColorRole.primaryColor : TextColorRole.greyColor)
+        .copyWith(fontSize: compact ? 10 : 12, height: 1);
 
-  BottomNavigationBarItem _itemBox(bool selected, IconData icon, String label) =>
-      BottomNavigationBarItem(
-          label: '',
-          icon: Center(
-              child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 220),
-                  curve: Curves.easeOut,
-                  width: 80,
-                  height: 74,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                      color:
-                          selected ? AppColors.primary.withValues(alpha: 0.08) : Colors.transparent,
-                      shape: BoxShape.circle),
-                  child: _item(icon, selected, label))));
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: selected ? context.cs.primary : AppColors.gray8C, size: iconSize),
+          SizedBox(height: compact ? 2 : 4),
+          SizedBox(
+              width: itemWidth - 12,
+              child: Text(label,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: textStyle))
+        ]);
+  }
 
-  Widget get bottomNavigationBar => ClipRRect(
-        borderRadius: BorderRadius.circular(70),
-        child: BottomNavigationBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          type: BottomNavigationBarType.fixed,
-          currentIndex: navigationIndex,
-          onTap: onSelectBottomNavigation,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          selectedItemColor: context.cs.primary,
-          unselectedItemColor: AppColors.gray8C,
-          selectedFontSize: 0,
-          unselectedFontSize: 0,
-          items: [
-            _itemBox(navigationIndex == 0, Icons.home_rounded, 'Home'.tr()),
-            _itemBox(navigationIndex == 1, Icons.menu_book_rounded, 'Learn'.tr()),
-            _itemBox(navigationIndex == 2, Icons.extension_rounded, 'Practice'.tr()),
-            _itemBox(navigationIndex == 3, Icons.auto_awesome_rounded, 'ai_chat'.tr()),
-            _itemBox(navigationIndex == 4, Icons.person_rounded, 'Profile'.tr()),
-          ],
-        ),
-      );
+  Widget _itemBox(int index, IconData icon, String label, double itemWidth) {
+    final selected = navigationIndex == index;
+    final compact = itemWidth < 68;
+    final horizontalInset = compact ? 3.0 : 5.0;
+    final boxWidth = (itemWidth - horizontalInset * 2).clamp(48.0, 66.0);
+    final boxHeight = compact ? 54.0 : 58.0;
+
+    return Expanded(
+        child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalInset),
+            child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                    borderRadius: BorderRadius.circular(boxHeight / 2),
+                    onTap: () => onSelectBottomNavigation(index),
+                    child: Center(
+                        child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 220),
+                            curve: Curves.easeOut,
+                            width: boxWidth,
+                            height: boxHeight,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: compact ? 4 : 6, vertical: compact ? 5 : 6),
+                            decoration: BoxDecoration(
+                                color: selected
+                                    ? AppColors.primary.withValues(alpha: 0.08)
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(boxHeight / 2)),
+                            child: _item(icon, selected, label, boxWidth)))))));
+  }
+
+  Widget get bottomNavigationBar => LayoutBuilder(builder: (context, constraints) {
+        final itemWidth = constraints.maxWidth / 5;
+        return Row(children: [
+          _itemBox(0, Icons.home_rounded, 'Home'.tr(), itemWidth),
+          _itemBox(1, Icons.menu_book_rounded, 'Learn'.tr(), itemWidth),
+          _itemBox(2, Icons.extension_rounded, 'Practice'.tr(), itemWidth),
+          _itemBox(3, Icons.auto_awesome_rounded, 'ai_chat'.tr(), itemWidth),
+          _itemBox(4, Icons.person_rounded, 'Profile'.tr(), itemWidth)
+        ]);
+      });
 
   Widget get bottomNavigationBarBox => Container(
       height: 84,
