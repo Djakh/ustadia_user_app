@@ -12,10 +12,11 @@ import 'package:ustadia_user_app/features/ask_ai/presentation/bloc/ask_ai_bloc/a
 import 'package:ustadia_user_app/features/ask_ai/presentation/bloc/ask_ai_bloc/ask_ai_event.dart';
 import 'package:ustadia_user_app/features/ask_ai/presentation/bloc/ask_ai_bloc/ask_ai_state.dart';
 import 'package:ustadia_user_app/features/ask_ai/presentation/widgets/ask_ai_conversation_content.dart';
-import 'package:ustadia_user_app/features/ask_ai/presentation/widgets/ask_ai_microphone_button.dart';
 import 'package:ustadia_user_app/features/ask_ai/presentation/widgets/ask_ai_messages_panel.dart';
 import 'package:ustadia_user_app/features/ask_ai/presentation/widgets/ask_ai_page_app_bar.dart';
+import 'package:ustadia_user_app/features/ask_ai/presentation/widgets/ask_ai_text_message_composer.dart';
 import 'package:ustadia_user_app/features/ask_ai/presentation/widgets/ask_ai_voice_agent_section.dart';
+import 'package:ustadia_user_app/features/ask_ai/presentation/widgets/ask_ai_voice_controls.dart';
 import 'package:ustadia_user_app/features/ask_ai/state/voice_call_notifier.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:ustadia_user_app/injection_container.dart';
@@ -31,11 +32,14 @@ class VoiceAgentPage extends StatefulWidget {
 
 class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObserver {
   static const double messagesTopPadding = 204;
-  static const double messagesBottomPadding = 132;
+  static const double voiceControlsBottomPadding = 132;
+  static const double textComposerBottomPadding = 148;
   static const Duration assistantResponseTimeout = Duration(seconds: 10);
   static const int maxInitialAssistantSyncAttempts = 12;
 
   final ScrollController scrollController = ScrollController();
+  final TextEditingController messageController = TextEditingController();
+  final FocusNode messageFocusNode = FocusNode();
   late final VoiceCallNotifier voiceCallNotifier;
 
   io.Socket? socket;
@@ -52,6 +56,7 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
   bool initialAssistantSyncCompleted = false;
   int initialAssistantSyncAttempts = 0;
   bool lastAssistantSpeaking = false;
+  bool textComposerVisible = false;
   static const int pageLimit = 50;
 
   @override
@@ -81,6 +86,8 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
     assistantTurnMessagesSyncTimer?.cancel();
     scrollController.removeListener(onScroll);
     scrollController.dispose();
+    messageController.dispose();
+    messageFocusNode.dispose();
     disconnectSocket();
     voiceCallNotifier.removeListener(handleVoiceNotifierChanged);
     voiceCallNotifier.disconnect();
@@ -90,14 +97,18 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+    if (state == AppLifecycleState.paused) {
       disconnectSocket();
       voiceCallNotifier.onAppPaused();
       return;
     }
     if (state == AppLifecycleState.resumed) {
       connectSocket();
-      connectVoice();
+      if (voiceCallNotifier.isConnected) {
+        voiceCallNotifier.onAppResumed();
+      } else {
+        connectVoice();
+      }
     }
   }
 
@@ -140,6 +151,7 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
         '$baseUrl/ai-chat',
         io.OptionBuilder()
             .setTransports(['websocket'])
+            .setPath('/socket.io')
             .disableAutoConnect()
             .setExtraHeaders({'Authorization': 'Bearer $token'})
             .build());
@@ -153,10 +165,21 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
       if (!mounted) return;
       setState(() => socketConnected = false);
     });
+    nextSocket.onConnectError((error) {
+      debugPrint('[AskAiSocket] connect_error: $error');
+      if (!mounted) return;
+      setState(() => socketConnected = false);
+    });
     nextSocket.on('ai_chat_connected', (_) {
       if (!mounted) return;
       setState(() => socketConnected = true);
       scheduleInitialMessagesSync();
+    });
+    nextSocket.on('ai_chat_error', (error) {
+      debugPrint('[AskAiSocket] ai_chat_error: $error');
+      if (mounted && waitingForAssistantResponse) {
+        clearAssistantWaitingState();
+      }
     });
     nextSocket.on('newMessage', (payload) {
       if (payload is! Map) return;
@@ -209,7 +232,9 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
       clearAssistantWaitingState();
       scheduleInitialMessagesSync();
     }
-    if (lastAssistantSpeaking && !voiceCallNotifier.assistantSpeaking && !initialAssistantSyncCompleted) {
+    if (lastAssistantSpeaking &&
+        !voiceCallNotifier.assistantSpeaking &&
+        !initialAssistantSyncCompleted) {
       scheduleInitialMessagesSync();
     }
     if (lastAssistantSpeaking && !voiceCallNotifier.assistantSpeaking) {
@@ -298,6 +323,25 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
     }
   }
 
+  Future<void> sendTextMessage() async {
+    final transcript = messageController.text.trim();
+    final languageCode = context.locale.languageCode;
+    if (transcript.isEmpty) return;
+    if (voiceCallNotifier.micEnabled) {
+      await voiceCallNotifier.setMicrophoneEnabled(false);
+    }
+    final currentSocket = socket;
+    if (currentSocket?.connected != true) {
+      connectSocket();
+      return;
+    }
+    currentSocket!.emit('sendMessage',
+        {'topicId': widget.topic.id, 'transcript': transcript, 'language': languageCode});
+    messageController.clear();
+    messageFocusNode.unfocus();
+    startAssistantWaitingState();
+  }
+
   void startAssistantWaitingState() {
     assistantResponseTimer?.cancel();
     if (voiceCallNotifier.micEnabled) {
@@ -325,6 +369,12 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
       !waitingForAssistantResponse &&
       (voiceCallNotifier.micEnabled ||
           (voiceCallNotifier.isConnected && !voiceCallNotifier.isConnecting));
+
+  bool get canSendTextMessage =>
+      socketConnected && !waitingForAssistantResponse && !voiceCallNotifier.assistantSpeaking;
+
+  double get activeMessagesBottomPadding =>
+      textComposerVisible ? textComposerBottomPadding : voiceControlsBottomPadding;
 
   String microphoneButtonText() {
     if (voiceCallNotifier.isConnecting) return 'Connecting...'.tr();
@@ -363,6 +413,25 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
     final statusValue = statusText(voiceState);
     final errorValue = voiceCallNotifier.errorMessage;
     return voiceState == VoiceUiState.error && errorValue != null ? errorValue : statusValue;
+  }
+
+  void showTextComposer() {
+    if (voiceCallNotifier.micEnabled) {
+      unawaited(voiceCallNotifier.setMicrophoneEnabled(false));
+    }
+    if (!textComposerVisible && mounted) {
+      setState(() => textComposerVisible = true);
+    }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (!mounted || !textComposerVisible) return;
+      messageFocusNode.requestFocus();
+    });
+  }
+
+  void showVoiceControls() {
+    messageFocusNode.unfocus();
+    if (!textComposerVisible || !mounted) return;
+    setState(() => textComposerVisible = false);
   }
 
   void handleMessagesStateChanged(AskAiState state) {
@@ -404,7 +473,7 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
           isPaginating: isPaginating,
           showTypingIndicator: waitingForAssistantResponse,
           topPadding: messagesTopPadding,
-          bottomPadding: messagesBottomPadding,
+          bottomPadding: activeMessagesBottomPadding,
           errorMessage:
               state.messagesStatus.isError && state.messages.isEmpty ? state.errorMessage : null));
 
@@ -413,7 +482,7 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
       builder: (context, state) => AskAiConversationContent(
           messagesPanel: messagesPanel(state),
           voiceAgentSection: voiceAgentSection,
-          microphoneButton: microphoneButton));
+          bottomControl: bottomControl));
 
   Widget get body => SafeArea(child: conversationBody());
 
@@ -424,13 +493,31 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
           voiceUiState: voiceCallNotifier.voiceUiState,
           statusText: displayStatusText(voiceCallNotifier.voiceUiState)));
 
-  Widget get microphoneButton => AnimatedBuilder(
+  Widget get voiceControls => AnimatedBuilder(
       animation: voiceCallNotifier,
-      builder: (context, child) => AskAiMicrophoneButton(
+      builder: (context, child) => AskAiVoiceControls(
+          key: const ValueKey('voice_controls'),
           isConnecting: voiceCallNotifier.isConnecting,
           isRecording: voiceCallNotifier.micEnabled && !waitingForAssistantResponse,
           labelText: microphoneButtonText(),
-          onTap: canTapMicrophone ? onMicTap : null));
+          onMicrophoneTap: canTapMicrophone ? onMicTap : null,
+          onKeyboardTap: showTextComposer));
+
+  Widget get textMessageComposer => AnimatedBuilder(
+      animation: voiceCallNotifier,
+      builder: (context, child) => AskAiTextMessageComposer(
+          key: const ValueKey('text_composer'),
+          controller: messageController,
+          focusNode: messageFocusNode,
+          canSend: canSendTextMessage,
+          onSend: sendTextMessage,
+          onVoiceModeTap: showVoiceControls));
+
+  Widget get bottomControl => AnimatedSwitcher(
+      duration: const Duration(milliseconds: 220),
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeOutCubic,
+      child: textComposerVisible ? textMessageComposer : voiceControls);
 
   @override
   Widget build(BuildContext context) => PopScope(
