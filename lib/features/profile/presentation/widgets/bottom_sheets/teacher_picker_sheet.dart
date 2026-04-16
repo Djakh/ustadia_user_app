@@ -26,12 +26,6 @@ class TeacherPickerSheet extends StatefulWidget {
 }
 
 class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
-  final TeacherModel systemTeacher = const TeacherModel(
-      id: "",
-      teacherId: null,
-      firstName: "System",
-      lastName: "lessons",
-      teacherClass: TeacherClassModel(name: "Default"));
   TeacherModel? selectedTeacherModel;
   bool isLoading = false;
   List<TeacherModel> teachersList = [];
@@ -47,6 +41,13 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
   }
 
   /// --- Getters ---
+
+  TeacherModel get systemTeacher => TeacherModel(
+      id: "",
+      teacherId: null,
+      firstName: 'System'.tr(),
+      lastName: 'lessons'.tr(),
+      teacherClass: TeacherClassModel(name: 'Default'.tr()));
 
   TeacherModel get getSelectedTeacher => widget.userModel.currentTeacher ?? systemTeacher;
 
