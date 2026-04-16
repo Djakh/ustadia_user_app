@@ -21,6 +21,8 @@ class AskAiTopicsPage extends StatefulWidget {
 }
 
 class _AskAiTopicsPageState extends State<AskAiTopicsPage> {
+  bool isOpeningVoiceAgent = false;
+
   /// --- Life cycle ---
 
   @override
@@ -33,8 +35,18 @@ class _AskAiTopicsPageState extends State<AskAiTopicsPage> {
   }
 
   /// --- Methods ---
-  void openTopicVoiceAgent(BuildContext context, AiChatTopicModel topic) {
-    context.push(askAiVoiceAgentRoute, extra: topic);
+  Future<void> openTopicVoiceAgent(BuildContext context, AiChatTopicModel topic) async {
+    if (isOpeningVoiceAgent) return;
+    setState(() => isOpeningVoiceAgent = true);
+    try {
+      await context.push(askAiVoiceAgentRoute, extra: topic);
+    } finally {
+      if (mounted) {
+        setState(() => isOpeningVoiceAgent = false);
+      } else {
+        isOpeningVoiceAgent = false;
+      }
+    }
   }
 
   /// --- Widgets ---

@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 
 class PasswordRules {
-  static const int minLength = 11;
+  static const int minLength = 8;
 
   static bool hasMinLength(String value) => value.length >= minLength;
 

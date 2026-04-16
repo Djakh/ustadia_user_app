@@ -15,6 +15,7 @@ class VoiceCallNotifier extends ChangeNotifier {
   static const String agentParticipantIdentity = 'ustadia-bot';
   static const double assistantSpeakingThreshold = 0.01;
   static const double assistantVisualizerThreshold = 0.08;
+  static const double levelNotifyThreshold = 0.035;
 
   final AiChatRemoteDataSource aiChatRemoteDataSource;
   final String topicId;
@@ -22,11 +23,13 @@ class VoiceCallNotifier extends ChangeNotifier {
   Room? room;
   EventsListener<RoomEvent>? livekitListener;
   AudioVisualizer? assistantAudioVisualizer;
+  CancelListenFunc? assistantAudioVisualizerSubscription;
   String? assistantTrackSid;
 
   VoiceUiState voiceUiState = VoiceUiState.connecting;
   bool isConnecting = false;
   bool isDisposed = false;
+  bool isMicrophoneTransitioning = false;
   bool micEnabled = false;
   bool speakerEnabled = false;
   bool agentConnected = false;
@@ -45,9 +48,9 @@ class VoiceCallNotifier extends ChangeNotifier {
   String? errorMessage;
   Timer? thinkingTimer;
   Timer? speakingSilenceTimer;
-  Timer? levelJitterTimer;
   Timer? assistantAudioLockTimer;
   int connectAttemptId = 0;
+  Future<void>? disconnectOperation;
 
   VoiceCallNotifier({required this.aiChatRemoteDataSource, required this.topicId});
 
@@ -58,28 +61,24 @@ class VoiceCallNotifier extends ChangeNotifier {
 
   bool isActiveConnectAttempt(int attemptId) => !isDisposed && attemptId == connectAttemptId;
 
+  void notifySafely() {
+    if (!isDisposed) notifyListeners();
+  }
+
   Future<void> connect() async {
-    if (isDisposed || isConnecting || isConnected) return;
+    if (isDisposed || isConnecting || isConnected || disconnectOperation != null) return;
+    final micPermission = await Permission.microphone.request();
+    if (micPermission.isDenied || micPermission.isPermanentlyDenied) {
+      errorMessage = 'Microphone permission denied'.tr();
+      setVoiceState(VoiceUiState.error);
+      notifySafely();
+      return;
+    }
     final attemptId = ++connectAttemptId;
     isConnecting = true;
     errorMessage = null;
     setVoiceState(VoiceUiState.connecting);
     debugPrint('[Voice] connecting...');
-
-    final permissionStatus = await Permission.microphone.request();
-    if (!isActiveConnectAttempt(attemptId)) return;
-    if (!permissionStatus.isGranted) {
-      if (permissionStatus.isPermanentlyDenied) {
-        await openAppSettings();
-      }
-      errorMessage = 'Microphone permission denied'.tr();
-      setVoiceState(VoiceUiState.error);
-      if (isActiveConnectAttempt(attemptId)) {
-        isConnecting = false;
-        notifyListeners();
-      }
-      return;
-    }
 
     try {
       await VoiceAgentAudioRouteService.instance.startSession(reason: 'before_livekit_connect');
@@ -97,10 +96,15 @@ class VoiceCallNotifier extends ChangeNotifier {
         nextRoom.dispose();
         return;
       }
-      await nextRoom.localParticipant?.setMicrophoneEnabled(false);
+      if (room != null && room != nextRoom) {
+        unawaited(room!.disconnect());
+        room!.dispose();
+      }
       room = nextRoom;
-      await ensureMicrophoneTrackUnpublished();
-      await applyPlaybackMode(reason: 'after_livekit_connect');
+      await nextRoom.localParticipant?.setMicrophoneEnabled(false);
+      await Future.delayed(const Duration(milliseconds: 300));
+      if (!isActiveConnectAttempt(attemptId)) return;
+      await applyCaptureMode(reason: 'after_livekit_connect');
       micEnabled = false;
       speakerEnabled = true;
       assistantAudioLocked = false;
@@ -124,12 +128,26 @@ class VoiceCallNotifier extends ChangeNotifier {
     } finally {
       if (isActiveConnectAttempt(attemptId)) {
         isConnecting = false;
-        notifyListeners();
+        notifySafely();
       }
     }
   }
 
   Future<void> disconnect() async {
+    final ongoingDisconnect = disconnectOperation;
+    if (ongoingDisconnect != null) {
+      await ongoingDisconnect;
+      return;
+    }
+    final operation = disconnectInternal();
+    disconnectOperation = operation;
+    await operation;
+    if (identical(disconnectOperation, operation)) {
+      disconnectOperation = null;
+    }
+  }
+
+  Future<void> disconnectInternal() async {
     debugPrint('[Voice] disconnecting...');
     connectAttemptId++;
     thinkingTimer?.cancel();
@@ -137,19 +155,20 @@ class VoiceCallNotifier extends ChangeNotifier {
     assistantAudioLockTimer?.cancel();
     await disposeAssistantAudioVisualizer();
     isConnecting = false;
-    if (room == null) {
+    livekitListener?.dispose();
+    livekitListener = null;
+    final roomValue = room;
+    room = null;
+    if (roomValue == null) {
       resetState();
       return;
     }
     try {
-      await room!.localParticipant?.setMicrophoneEnabled(false);
-      await room!.disconnect();
+      await roomValue.localParticipant?.setMicrophoneEnabled(false);
+      await roomValue.disconnect();
     } finally {
       await VoiceAgentAudioRouteService.instance.stopSession(reason: 'voice_session_disconnected');
-      livekitListener?.dispose();
-      livekitListener = null;
-      room?.dispose();
-      room = null;
+      roomValue.dispose();
       resetState();
       debugPrint('[Voice] disconnected');
     }
@@ -162,11 +181,12 @@ class VoiceCallNotifier extends ChangeNotifier {
   Future<void> onAppResumed() async {
     if (!isConnected) return;
     await applyCurrentAudioMode(reason: 'app_resumed');
-    notifyListeners();
+    await room?.setSpeakerOn(true, forceSpeakerOutput: true);
+    notifySafely();
   }
 
   Future<void> toggleMicrophone() async {
-    if (!isConnected || room == null || isConnecting) return;
+    if (!isConnected || room == null || isConnecting || isMicrophoneTransitioning) return;
     if (!micEnabled && !canStartUserTurn) return;
     await setMicrophoneEnabled(!micEnabled);
   }
@@ -174,56 +194,70 @@ class VoiceCallNotifier extends ChangeNotifier {
   Future<void> setMicrophoneEnabled(bool enabled) async {
     if (!isConnected || room == null) return;
     if (enabled && !canStartUserTurn) return;
-    if (enabled) {
-      await applyCaptureMode(reason: 'microphone_enabled');
-      await room!.localParticipant?.setMicrophoneEnabled(true);
-    } else {
-      await room!.localParticipant?.setMicrophoneEnabled(false);
-      await ensureMicrophoneTrackUnpublished();
-      await applyPlaybackMode(reason: 'microphone_disabled');
-    }
+    if (micEnabled == enabled && !isMicrophoneTransitioning) return;
+    final previousMicEnabled = micEnabled;
+    final previousUserSpeaking = userSpeaking;
+    final previousLocalSpeaking = localSpeaking;
+    final previousLocalAudioLevel = localAudioLevel;
+    final previousUserTurnHasSpeech = userTurnHasSpeech;
+    final previousVoiceUiState = voiceUiState;
+
+    isMicrophoneTransitioning = true;
     micEnabled = enabled;
     userSpeaking = false;
     localSpeaking = false;
     localAudioLevel = 0;
     if (enabled) {
       userTurnHasSpeech = false;
-      setVoiceState(VoiceUiState.listening);
-      return;
+      if (voiceUiState != VoiceUiState.error) {
+        voiceUiState = VoiceUiState.listening;
+      }
+      notifySafely();
+    } else {
+      if (!assistantAudioLocked && voiceUiState != VoiceUiState.error) {
+        voiceUiState = VoiceUiState.listening;
+      }
+      notifySafely();
     }
-    if (!assistantAudioLocked && voiceUiState != VoiceUiState.error)
-      setVoiceState(VoiceUiState.listening);
-    notifyListeners();
+    try {
+      if (enabled) {
+        await room!.localParticipant?.setMicrophoneEnabled(true);
+      } else {
+        await room!.localParticipant?.setMicrophoneEnabled(false);
+      }
+    } catch (error) {
+      micEnabled = previousMicEnabled;
+      userSpeaking = previousUserSpeaking;
+      localSpeaking = previousLocalSpeaking;
+      localAudioLevel = previousLocalAudioLevel;
+      userTurnHasSpeech = previousUserTurnHasSpeech;
+      voiceUiState = previousVoiceUiState;
+      rethrow;
+    } finally {
+      isMicrophoneTransitioning = false;
+      notifySafely();
+    }
   }
 
   Future<void> stopMicrophoneForAssistant() async {
-    if (!micEnabled || room == null) return;
+    if (!micEnabled || room == null || isMicrophoneTransitioning) return;
+    isMicrophoneTransitioning = true;
     micEnabled = false;
     userSpeaking = false;
     localSpeaking = false;
     localAudioLevel = 0;
     userTurnHasSpeech = false;
-    notifyListeners();
-    await room!.localParticipant?.setMicrophoneEnabled(false);
-    await ensureMicrophoneTrackUnpublished();
-    await applyPlaybackMode(reason: 'assistant_turn_started');
-  }
-
-  Future<void> ensureMicrophoneTrackUnpublished() async {
-    final roomValue = room;
-    if (roomValue == null) return;
-    final localParticipant = roomValue.localParticipant;
-    final publication = localParticipant?.getTrackPublicationBySource(TrackSource.microphone);
-    if (publication == null) return;
-    await localParticipant?.removePublishedTrack(publication.sid);
+    notifySafely();
+    try {
+      await room!.localParticipant?.setMicrophoneEnabled(false);
+    } finally {
+      isMicrophoneTransitioning = false;
+      notifySafely();
+    }
   }
 
   Future<void> applyCurrentAudioMode({required String reason}) async {
-    if (micEnabled) {
-      await applyCaptureMode(reason: reason);
-      return;
-    }
-    await applyPlaybackMode(reason: reason);
+    await applyCaptureMode(reason: reason);
   }
 
   Future<void> applyPlaybackMode({required String reason}) async {
@@ -250,18 +284,21 @@ class VoiceCallNotifier extends ChangeNotifier {
     }
     final nextVisualizer = createVisualizer(track,
         options: const AudioVisualizerOptions(barCount: 7, centeredBands: true));
-    nextVisualizer.events.listen((event) {
+    assistantAudioVisualizerSubscription = nextVisualizer.events.listen((event) {
       final nextLevel = visualizerLevel(event.event);
-      agentAudioLevel = nextLevel;
-      if (nextLevel < assistantVisualizerThreshold) {
-        notifyListeners();
+      final visibleLevel = nextLevel < assistantVisualizerThreshold ? 0.0 : nextLevel;
+      final levelChanged = (agentAudioLevel - visibleLevel).abs() > levelNotifyThreshold;
+      agentAudioLevel = visibleLevel;
+      if (visibleLevel <= 0) {
+        if (levelChanged) notifySafely();
         return;
       }
       refreshAssistantAudioLock();
       if (voiceUiState != VoiceUiState.error) {
-        setVoiceState(VoiceUiState.speaking);
-      } else {
-        notifyListeners();
+        final stateChanged = setVoiceState(VoiceUiState.speaking);
+        if (!stateChanged && levelChanged) notifySafely();
+      } else if (levelChanged) {
+        notifySafely();
       }
     });
     assistantAudioVisualizer = nextVisualizer;
@@ -269,6 +306,10 @@ class VoiceCallNotifier extends ChangeNotifier {
   }
 
   Future<void> disposeAssistantAudioVisualizer() async {
+    if (assistantAudioVisualizerSubscription != null) {
+      await assistantAudioVisualizerSubscription!.call();
+    }
+    assistantAudioVisualizerSubscription = null;
     final visualizer = assistantAudioVisualizer;
     assistantAudioVisualizer = null;
     if (visualizer == null) return;
@@ -290,10 +331,10 @@ class VoiceCallNotifier extends ChangeNotifier {
   void listenToRoomEvents(Room nextRoom) {
     livekitListener?.dispose();
     livekitListener = nextRoom.createListener();
-    livekitListener!.on<RoomConnectedEvent>((event) {
+    livekitListener!.on<RoomConnectedEvent>((event) async {
       debugPrint('[LiveKit] room connected');
-      room?.setSpeakerOn(true, forceSpeakerOutput: true);
-      VoiceAgentAudioRouteService.instance.enterPlaybackMode(reason: 'room_connected_event');
+      await VoiceAgentAudioRouteService.instance.enterCaptureMode(reason: 'room_connected_event');
+      await nextRoom.setSpeakerOn(true, forceSpeakerOutput: true);
       speakerEnabled = true;
       participantsCount = roomParticipantsCount(nextRoom);
       setLastEvent('Room connected');
@@ -305,7 +346,7 @@ class VoiceCallNotifier extends ChangeNotifier {
       clearAssistantAudioLock();
       userSpeaking = false;
       agentAudioActive = false;
-      notifyListeners();
+      notifySafely();
     });
     livekitListener!.on<ParticipantConnectedEvent>((event) {
       debugPrint('[LiveKit] participant joined: ${event.participant.identity}');
@@ -315,14 +356,14 @@ class VoiceCallNotifier extends ChangeNotifier {
       }
       agentConnected = true;
       setLastEvent('Participant joined: ${event.participant.identity}');
-      notifyListeners();
+      notifySafely();
     });
     livekitListener!.on<ParticipantDisconnectedEvent>((event) {
       debugPrint('[LiveKit] participant left: ${event.participant.identity}');
       participantsCount = roomParticipantsCount(nextRoom);
       agentConnected = agentConnectedValue(nextRoom);
       setLastEvent('Participant left: ${event.participant.identity}');
-      notifyListeners();
+      notifySafely();
     });
     livekitListener!.on<TrackSubscribedEvent>((event) async {
       final track = event.track;
@@ -341,14 +382,13 @@ class VoiceCallNotifier extends ChangeNotifier {
           await attachAssistantAudioVisualizer(track);
         }
         debugPrint('[LiveKit] audio playback started');
-        await applyPlaybackMode(reason: 'remote_audio_track_subscribed');
         agentAudioActive = true;
         agentConnected = true;
         speakingSilenceTimer?.cancel();
       }
       setLastEvent(
           'Track subscribed: ${event.participant.identity} ${publication.sid} ${publication.kind.name}');
-      notifyListeners();
+      notifySafely();
     });
     livekitListener!.on<TrackUnsubscribedEvent>((event) {
       debugPrint('[LiveKit] track unsubscribed: ${event.publication.sid}');
@@ -362,7 +402,7 @@ class VoiceCallNotifier extends ChangeNotifier {
         clearAssistantAudioLock();
       }
       if (!agentAudioActive) startListeningTransition();
-      notifyListeners();
+      notifySafely();
     });
     livekitListener!.on<LocalTrackPublishedEvent>((event) {
       debugPrint('[LiveKit] local track published: ${event.publication.sid}');
@@ -374,6 +414,7 @@ class VoiceCallNotifier extends ChangeNotifier {
   }
 
   void handleActiveSpeakers(List<Participant> speakers) {
+    if (isDisposed) return;
     final roomValue = room;
     if (roomValue == null) return;
     final localParticipant = roomValue.localParticipant;
@@ -393,8 +434,11 @@ class VoiceCallNotifier extends ChangeNotifier {
       }
     }
 
+    final levelChanged = (localLevel - localAudioLevel).abs() > 0.02;
+    final speakingChanged = localActive != userSpeaking;
     localAudioLevel = localLevel;
     userSpeaking = localActive;
+    if (!levelChanged && !speakingChanged) return;
 
     bool stateChanged = false;
     if (localActive) {
@@ -415,11 +459,7 @@ class VoiceCallNotifier extends ChangeNotifier {
     } else if (!assistantAudioLocked && agentAudioPlaying) {
       startListeningTransition();
     }
-
-    updateLevelJitter();
-    debugPrint(
-        '[VoiceUI] assistantLevel=${agentAudioLevel.toStringAsFixed(2)} userLevel=${localAudioLevel.toStringAsFixed(2)} assistantLocked=$assistantAudioLocked userSpeaking=$userSpeaking');
-    if (!stateChanged) notifyListeners();
+    if (!stateChanged) notifySafely();
   }
 
   void startThinkingTransition() {
@@ -440,16 +480,18 @@ class VoiceCallNotifier extends ChangeNotifier {
   }
 
   bool setVoiceState(VoiceUiState nextState) {
+    if (isDisposed) return false;
     if (voiceUiState == nextState) return false;
     voiceUiState = nextState;
     debugPrint('[VoiceUI] state -> $voiceUiState');
-    notifyListeners();
+    notifySafely();
     return true;
   }
 
   void setLastEvent(String value) {
+    if (isDisposed) return;
     lastLivekitEvent = value;
-    notifyListeners();
+    notifySafely();
   }
 
   double normalizedAssistantLevel(double rawLevel) {
@@ -459,6 +501,7 @@ class VoiceCallNotifier extends ChangeNotifier {
   }
 
   void refreshAssistantAudioLock() {
+    if (isDisposed) return;
     assistantAudioLockTimer?.cancel();
     assistantAudioLocked = true;
     assistantSpeaking = true;
@@ -467,6 +510,7 @@ class VoiceCallNotifier extends ChangeNotifier {
   }
 
   void releaseAssistantAudioLock() {
+    if (isDisposed) return;
     assistantAudioLocked = false;
     assistantSpeaking = false;
     agentAudioPlaying = false;
@@ -474,7 +518,7 @@ class VoiceCallNotifier extends ChangeNotifier {
       setVoiceState(VoiceUiState.listening);
       return;
     }
-    notifyListeners();
+    notifySafely();
   }
 
   void clearAssistantAudioLock() {
@@ -491,6 +535,7 @@ class VoiceCallNotifier extends ChangeNotifier {
   }
 
   void resetState() {
+    if (isDisposed) return;
     assistantAudioLockTimer?.cancel();
     disposeAssistantAudioVisualizer();
     assistantTrackSid = null;
@@ -511,7 +556,7 @@ class VoiceCallNotifier extends ChangeNotifier {
     voiceUiState = VoiceUiState.connecting;
     lastLivekitEvent = '';
     errorMessage = null;
-    notifyListeners();
+    notifySafely();
   }
 
   int roomParticipantsCount(Room? roomValue) {
@@ -543,39 +588,64 @@ class VoiceCallNotifier extends ChangeNotifier {
 
   @override
   void dispose() {
+    if (isDisposed) {
+      super.dispose();
+      return;
+    }
     isDisposed = true;
     thinkingTimer?.cancel();
     speakingSilenceTimer?.cancel();
-    levelJitterTimer?.cancel();
     assistantAudioLockTimer?.cancel();
-    unawaited(disposeAssistantAudioVisualizer());
-    if (room != null) {
-      unawaited(room!.disconnect());
-    }
-    livekitListener?.dispose();
-    room?.dispose();
-    super.dispose();
-  }
-
-  void updateLevelJitter() {
-    if (!assistantSpeaking && !userSpeaking) {
-      levelJitterTimer?.cancel();
-      return;
-    }
-    if (levelJitterTimer != null) return;
-    levelJitterTimer = Timer.periodic(const Duration(milliseconds: 120), (timer) {
-      if (!assistantSpeaking && !userSpeaking) {
-        timer.cancel();
-        levelJitterTimer = null;
-        return;
+    thinkingTimer = null;
+    speakingSilenceTimer = null;
+    assistantAudioLockTimer = null;
+    connectAttemptId++;
+    disconnectOperation = null;
+    final currentListener = livekitListener;
+    livekitListener = null;
+    final roomValue = room;
+    room = null;
+    final currentVisualizer = assistantAudioVisualizer;
+    assistantAudioVisualizer = null;
+    final currentVisualizerSubscription = assistantAudioVisualizerSubscription;
+    assistantAudioVisualizerSubscription = null;
+    assistantTrackSid = null;
+    agentConnected = false;
+    agentAudioActive = false;
+    agentAudioPlaying = false;
+    assistantSpeaking = false;
+    assistantAudioLocked = false;
+    userSpeaking = false;
+    userTurnHasSpeech = false;
+    currentAgentIdentity = null;
+    micEnabled = false;
+    speakerEnabled = false;
+    participantsCount = 0;
+    agentAudioLevel = 0;
+    localAudioLevel = 0;
+    localSpeaking = false;
+    lastLivekitEvent = '';
+    Future<void>(() async {
+      currentListener?.dispose();
+      if (currentVisualizerSubscription != null) {
+        await currentVisualizerSubscription();
       }
-      if (assistantSpeaking && agentAudioLevel < 0.02) {
-        agentAudioLevel = 0.15 + (timer.tick % 5) * 0.03;
+      if (currentVisualizer != null) {
+        await currentVisualizer.stop();
+        currentVisualizer.dispose();
       }
-      if (userSpeaking && localAudioLevel < 0.02) {
-        localAudioLevel = 0.12 + (timer.tick % 5) * 0.025;
+      if (roomValue != null) {
+        try {
+          await roomValue.localParticipant?.setMicrophoneEnabled(false);
+          await roomValue.disconnect();
+        } finally {
+          roomValue.dispose();
+          await VoiceAgentAudioRouteService.instance.stopSession(reason: 'voice_session_disposed');
+        }
+      } else {
+        await VoiceAgentAudioRouteService.instance.stopSession(reason: 'voice_session_disposed');
       }
-      notifyListeners();
     });
+    super.dispose();
   }
 }
