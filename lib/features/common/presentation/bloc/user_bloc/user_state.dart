@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/features/common/data/models/user_profile_model.dart';
 
+const userStateProfileUnchanged = Object();
+
 class UserState extends Equatable {
   final Status status;
   final UserProfileModel? profile;
@@ -9,9 +11,14 @@ class UserState extends Equatable {
 
   const UserState({this.status = Status.initial, this.profile, this.errorMessage});
 
-  UserState copyWith({Status? status, UserProfileModel? profile, String? errorMessage}) {
+  UserState copyWith(
+      {Status? status, Object? profile = userStateProfileUnchanged, String? errorMessage}) {
     return UserState(
-        status: status ?? this.status, profile: profile ?? this.profile, errorMessage: errorMessage);
+        status: status ?? this.status,
+        profile: identical(profile, userStateProfileUnchanged)
+            ? this.profile
+            : profile as UserProfileModel?,
+        errorMessage: errorMessage);
   }
 
   @override

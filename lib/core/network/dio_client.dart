@@ -5,7 +5,10 @@ import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 class DioClient {
   DioClient._();
 
-  static Dio create({String? baseUrl, String Function()? accessTokenGetter}) {
+  static Dio create(
+      {String? baseUrl,
+      String Function()? accessTokenGetter,
+      Future<void> Function()? onUnauthorized}) {
     final options = BaseOptions(
       baseUrl: baseUrl ?? 'https://jsonplaceholder.typicode.com',
       connectTimeout: const Duration(seconds: 10),
@@ -32,9 +35,19 @@ class DioClient {
     }, onResponse: (response, handler) {
       _logResponsePretty(response);
       return handler.next(response);
-    }, onError: (error, handler) {
+    }, onError: (error, handler) async {
       if (error.response != null) {
         _logResponsePretty(error.response!);
+      }
+      final isUnauthorized = error.response?.statusCode == 401;
+      final shouldSkipUnauthorizedLogout =
+          error.requestOptions.extra['skipUnauthorizedLogout'] == true;
+      final accessToken = accessTokenGetter?.call() ?? '';
+      if (isUnauthorized &&
+          !shouldSkipUnauthorizedLogout &&
+          accessToken.isNotEmpty &&
+          onUnauthorized != null) {
+        await onUnauthorized();
       }
       return handler.next(error);
     }));

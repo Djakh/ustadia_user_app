@@ -5,12 +5,14 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/loading/shimmer_grid.dart';
+import 'package:ustadia_user_app/features/common/data/models/user_profile_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
 import 'package:ustadia_user_app/features/profile/data/models/profile_badge_model.dart';
 import 'package:ustadia_user_app/features/profile/data/models/profile_statistics_model.dart';
 import 'package:ustadia_user_app/features/profile/data/models/profile_stats_model.dart';
 import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
+import 'package:ustadia_user_app/features/profile/presentation/widgets/bottom_sheets/level_picker_sheet.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/badge_item_card.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/leaderboard_card.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/profile_stats_card.dart';
@@ -36,7 +38,8 @@ class ProfilePageState extends State<ProfilePage> {
 
   /// --- Data ---
 
-  List<ProfileStatsModel> stats(ProfileStatisticsModel? statistics, String languageCode) {
+  List<ProfileStatsModel> stats(
+      ProfileStatisticsModel? statistics, String languageCode, bool canChangeLevel) {
     final levelName = statistics?.level.name.forLanguage(languageCode);
     final level = levelName != null && levelName.isNotEmpty ? levelName : '-';
     final totalCompleted = statistics?.totalCompletedTasks.toString() ?? '-';
@@ -48,7 +51,10 @@ class ProfilePageState extends State<ProfilePage> {
 
     return [
       ProfileStatsModel(
-          icon: AppImages.profileLevelCardIcon, title: 'Current level'.tr(), value: level),
+          icon: AppImages.profileLevelCardIcon,
+          title: 'Current level'.tr(),
+          value: level,
+          subtitle: canChangeLevel ? 'Change level'.tr() : null),
       ProfileStatsModel(
           icon: AppImages.profileStreakCardIcon,
           title: 'Completed tasks'.tr(),
@@ -71,6 +77,18 @@ class ProfilePageState extends State<ProfilePage> {
 
   /// --- Widgets ---
 
+  bool canChangeLevel(UserProfileModel? profile) {
+    final teacherId = profile?.currentTeacher?.teacherId;
+    return teacherId == null || teacherId.isEmpty;
+  }
+
+  Future<void> showLevelPicker(UserProfileModel userModel) => showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useRootNavigator: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => LevelPickerSheet(userModel: userModel));
+
   Widget headerIcon(IconData icon, AlignmentGeometry alignment, Function() onPressed) => Align(
       alignment: alignment, child: IconButton(onPressed: onPressed, icon: Icon(icon, size: 22)));
 
@@ -82,17 +100,21 @@ class ProfilePageState extends State<ProfilePage> {
         headerIcon(Icons.settings, Alignment.centerRight, () => context.push(settingsRoute))
       ]);
 
-  Widget statsWidgetRow(ProfileStatsModel firstStatsModel, ProfileStatsModel secondStatsModel) =>
+  Widget statsWidgetRow(ProfileStatsModel firstStatsModel, ProfileStatsModel secondStatsModel,
+          {VoidCallback? onFirstTap}) =>
       Row(children: [
-        ProfileStatCard(profileStatsModel: firstStatsModel),
+        ProfileStatCard(profileStatsModel: firstStatsModel, onTap: onFirstTap),
         const SizedBox(width: 12),
         ProfileStatCard(profileStatsModel: secondStatsModel)
       ]);
 
-  Widget statsWidgetList(ProfileStatisticsModel? data, String languageCode) {
-    final items = stats(data, languageCode);
+  Widget statsWidgetList(
+      ProfileStatisticsModel? data, String languageCode, UserProfileModel? profile) {
+    final isLevelChangeAvailable = canChangeLevel(profile);
+    final items = stats(data, languageCode, isLevelChangeAvailable);
     return Column(children: [
-      statsWidgetRow(items[0], items[1]),
+      statsWidgetRow(items[0], items[1],
+          onFirstTap: isLevelChangeAvailable && profile != null ? () => showLevelPicker(profile) : null),
       const SizedBox(height: 12),
       statsWidgetRow(items[2], items[3])
     ]);
@@ -115,7 +137,7 @@ class ProfilePageState extends State<ProfilePage> {
                         padding: EdgeInsets.zero,
                         borderRadius: BorderRadius.all(Radius.circular(20)));
                   }
-                  return statsWidgetList(data, languageCode);
+                  return statsWidgetList(data, languageCode, userState.profile);
                 }));
       });
 

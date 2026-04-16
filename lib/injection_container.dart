@@ -43,8 +43,10 @@ import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_se
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_word_match_sets_bloc/practice_word_match_sets_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_word_match_status_bloc/practice_word_match_status_bloc.dart';
 import 'package:ustadia_user_app/features/profile/data/datasources/leaderboard_remote_data_source.dart';
+import 'package:ustadia_user_app/features/profile/data/services/public_levels_store.dart';
 import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 import 'package:ustadia_user_app/features/profile/presentation/bloc/leaderboard_bloc/leaderboard_bloc.dart';
+import 'package:ustadia_user_app/core/services/session_logout_service.dart';
 
 import 'core/network/dio_client.dart';
 
@@ -56,14 +58,27 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<SharedPreferences>(() => prefs);
   sl.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSource(prefs: sl()));
   sl.registerLazySingleton<Dio>(
-      () => DioClient.create(accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken()));
+      () => DioClient.create(
+          accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken(),
+          onUnauthorized: () => SessionLogoutService.logout(
+              authLocalDataSource: sl<AuthLocalDataSource>(),
+              userRemoteDataSource: sl.isRegistered<UserRemoteDataSource>()
+                  ? sl<UserRemoteDataSource>()
+                  : null,
+              unregisterDevice: false)));
 
   // Features - Auth
   sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSource(
       dio: DioClient.create(
-       baseUrl: 'https://backend.ustadia.findecor.io',
-       //  baseUrl: 'https://dev.backend.ustadia.findecor.io',
-          accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken())));
+          //baseUrl: 'https://backend.ustadia.findecor.io',
+          baseUrl: 'https://dev.backend.ustadia.findecor.io',
+          accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken(),
+          onUnauthorized: () => SessionLogoutService.logout(
+              authLocalDataSource: sl<AuthLocalDataSource>(),
+              userRemoteDataSource: sl.isRegistered<UserRemoteDataSource>()
+                  ? sl<UserRemoteDataSource>()
+                  : null,
+              unregisterDevice: false))));
   sl.registerFactory(() => AuthLoginBloc(
       authRemoteDataSource: sl(), authLocalDataSource: sl(), userRemoteDataSource: sl()));
   sl.registerFactory(() => AuthPasswordBloc(authRemoteDataSource: sl()));
@@ -76,6 +91,7 @@ Future<void> initDependencies() async {
       () => UserRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
   sl.registerLazySingleton<ProfileStatisticsStore>(
       () => ProfileStatisticsStore(userRemoteDataSource: sl()));
+  sl.registerLazySingleton<PublicLevelsStore>(() => PublicLevelsStore(userRemoteDataSource: sl()));
   sl.registerLazySingleton<LeaderboardRemoteDataSource>(
       () => LeaderboardRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
   sl.registerLazySingleton<UserBloc>(() => UserBloc(userRemoteDataSource: sl()));

@@ -6,7 +6,8 @@ import 'package:ustadia_user_app/features/profile/data/models/profile_stats_mode
 
 class ProfileStatCard extends StatelessWidget {
   final ProfileStatsModel profileStatsModel;
-  const ProfileStatCard({super.key, required this.profileStatsModel});
+  final VoidCallback? onTap;
+  const ProfileStatCard({super.key, required this.profileStatsModel, this.onTap});
 
   Widget get image => Container(
       decoration: const BoxDecoration(color: AppColors.gray100, shape: BoxShape.circle),
@@ -21,20 +22,34 @@ class ProfileStatCard extends StatelessWidget {
             Text(profileStatsModel.title,
                 style: Style.small3w5(context, color: TextColorRole.greyColor)),
             const SizedBox(height: 4),
-            Text(profileStatsModel.value, style: Style.small3w7(context))
+            Text(profileStatsModel.value, style: Style.small3w7(context)),
+            if (profileStatsModel.subtitle != null &&
+                profileStatsModel.subtitle!.trim().isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Text(profileStatsModel.subtitle!,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Style.small3w5(context,
+                      color: onTap != null ? TextColorRole.primaryColor : TextColorRole.greyColor))
+            ]
           ]);
 
   @override
   Widget build(BuildContext context) => Expanded(
-        child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            height: 140,
-            decoration: BoxDecoration(
-                color: context.cs.surface,
+        child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+                onTap: onTap,
                 borderRadius: Style.border24,
-                boxShadow: const [
-                  BoxShadow(color: AppColors.gray400, blurRadius: 0.4, offset: Offset(0, 1))
-                ]),
-            child: view(context)),
+                child: Ink(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    height: 140,
+                    decoration: BoxDecoration(
+                        color: context.cs.surface,
+                        borderRadius: Style.border24,
+                        boxShadow: const [
+                          BoxShadow(color: AppColors.gray400, blurRadius: 0.4, offset: Offset(0, 1))
+                        ]),
+                    child: view(context)))),
       );
 }
