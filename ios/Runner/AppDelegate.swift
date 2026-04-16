@@ -8,6 +8,10 @@ import UserNotifications
 @main
 @objc class AppDelegate: FlutterAppDelegate {
   let voiceAgentAudioRouteController = VoiceAgentAudioRouteController()
+  let voiceAgentAudioRouteQueue = DispatchQueue(
+    label: "uz.ustadia.user.audio_route",
+    qos: .userInitiated
+  )
 
   override func application(
     _ application: UIApplication,
@@ -35,17 +39,27 @@ import UserNotifications
     let arguments = call.arguments as? [String: Any]
     let reason = arguments?["reason"] as? String ?? "unknown"
 
-    switch call.method {
-    case "startVoiceAgentSession":
-      result(voiceAgentAudioRouteController.startVoiceAgentSession(reason: reason))
-    case "enterVoiceAgentPlaybackMode":
-      result(voiceAgentAudioRouteController.enterPlaybackMode(reason: reason))
-    case "enterVoiceAgentCaptureMode":
-      result(voiceAgentAudioRouteController.enterCaptureMode(reason: reason))
-    case "stopVoiceAgentSession":
-      result(voiceAgentAudioRouteController.stopVoiceAgentSession(reason: reason))
-    default:
-      result(FlutterMethodNotImplemented)
+    voiceAgentAudioRouteQueue.async { [weak self] in
+      guard let self else { return }
+      let response: Any
+      switch call.method {
+      case "startVoiceAgentSession":
+        response = self.voiceAgentAudioRouteController.startVoiceAgentSession(reason: reason)
+      case "enterVoiceAgentPlaybackMode":
+        response = self.voiceAgentAudioRouteController.enterPlaybackMode(reason: reason)
+      case "enterVoiceAgentCaptureMode":
+        response = self.voiceAgentAudioRouteController.enterCaptureMode(reason: reason)
+      case "stopVoiceAgentSession":
+        response = self.voiceAgentAudioRouteController.stopVoiceAgentSession(reason: reason)
+      default:
+        DispatchQueue.main.async {
+          result(FlutterMethodNotImplemented)
+        }
+        return
+      }
+      DispatchQueue.main.async {
+        result(response)
+      }
     }
   }
 
@@ -131,22 +145,11 @@ final class VoiceAgentAudioRouteController {
   }
 
   func applyCurrentRoute(reason: String) {
-    if currentRouteMode == .capture {
-      configureCaptureRoute(reason: reason)
-      return
-    }
-    configurePlaybackRoute(reason: reason)
+    configureCaptureRoute(reason: reason)
   }
 
   func configurePlaybackRoute(reason: String) {
-    do {
-      try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.allowAirPlay])
-      try audioSession.setActive(true)
-      try audioSession.overrideOutputAudioPort(.none)
-    } catch {
-      NSLog("[VoiceAgentAudioRoute] configure playback failed for \(reason): \(error.localizedDescription)")
-    }
-    logAudioRoute(reason: reason)
+    configureCaptureRoute(reason: reason)
   }
 
   func configureCaptureRoute(reason: String) {

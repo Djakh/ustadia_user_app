@@ -14,9 +14,13 @@ import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class MainActivity : FlutterFragmentActivity() {
   lateinit var voiceAgentAudioRouteController: VoiceAgentAudioRouteController
+  val audioRouteExecutor: ExecutorService = Executors.newSingleThreadExecutor()
+  val mainHandler = Handler(Looper.getMainLooper())
 
   override fun onCreate(savedInstanceState: Bundle?) {
     enableEdgeToEdge()
@@ -34,17 +38,28 @@ class MainActivity : FlutterFragmentActivity() {
 
   fun handleAudioRouteMethodCall(call: MethodCall, result: MethodChannel.Result) {
     val reason = call.argument<String>("reason") ?: "unknown"
-    when (call.method) {
-      "startVoiceAgentSession" -> result.success(voiceAgentAudioRouteController.startVoiceAgentSession(reason))
-      "enterVoiceAgentPlaybackMode" -> result.success(voiceAgentAudioRouteController.enterPlaybackMode(reason))
-      "enterVoiceAgentCaptureMode" -> result.success(voiceAgentAudioRouteController.enterCaptureMode(reason))
-      "stopVoiceAgentSession" -> result.success(voiceAgentAudioRouteController.stopVoiceAgentSession(reason))
-      else -> result.notImplemented()
+    audioRouteExecutor.execute {
+      val response: Any? =
+          when (call.method) {
+            "startVoiceAgentSession" -> voiceAgentAudioRouteController.startVoiceAgentSession(reason)
+            "enterVoiceAgentPlaybackMode" -> voiceAgentAudioRouteController.enterPlaybackMode(reason)
+            "enterVoiceAgentCaptureMode" -> voiceAgentAudioRouteController.enterCaptureMode(reason)
+            "stopVoiceAgentSession" -> voiceAgentAudioRouteController.stopVoiceAgentSession(reason)
+            else -> null
+          }
+      mainHandler.post {
+        if (response == null) {
+          result.notImplemented()
+        } else {
+          result.success(response)
+        }
+      }
     }
   }
 
   override fun onDestroy() {
     voiceAgentAudioRouteController.stopVoiceAgentSession("activity_destroyed")
+    audioRouteExecutor.shutdown()
     super.onDestroy()
   }
 }
@@ -144,26 +159,11 @@ class VoiceAgentAudioRouteController(context: Context) {
   }
 
   fun applyCurrentRoute(reason: String) {
-    if (currentRouteMode == VoiceAgentRouteMode.capture) {
-      applyCaptureRoute(reason)
-      return
-    }
     applyPlaybackRoute(reason)
   }
 
   fun applyPlaybackRoute(reason: String) {
-    val externalOutputConnected = hasExternalOutputRoute()
-    audioManager.mode = AudioManager.MODE_NORMAL
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-      audioManager.clearCommunicationDevice()
-    }
-
-    if (!externalOutputConnected) {
-      audioManager.isSpeakerphoneOn = true
-    }
-
-    logAudioRoute(reason)
+    applyCaptureRoute(reason)
   }
 
   fun applyCaptureRoute(reason: String) {

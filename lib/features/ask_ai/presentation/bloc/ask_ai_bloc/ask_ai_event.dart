@@ -23,35 +23,6 @@ class AskAiMessagesRequested extends AskAiEvent {
   const AskAiMessagesRequested({required this.topicId, required this.page, required this.limit});
 }
 
-class AskAiVoiceConnectRequested extends AskAiEvent {
-  const AskAiVoiceConnectRequested();
-}
-
-class AskAiVoiceDisconnectRequested extends AskAiEvent {
-  const AskAiVoiceDisconnectRequested();
-}
-
-class AskAiVoiceMicToggled extends AskAiEvent {
-  const AskAiVoiceMicToggled();
-}
-
-class AskAiVoiceSpeakerToggled extends AskAiEvent {
-  const AskAiVoiceSpeakerToggled();
-}
-
-class AskAiRoomUpdated extends AskAiEvent {
-  const AskAiRoomUpdated();
-}
-
-class AskAiLivekitEventReported extends AskAiEvent {
-  final String lastLivekitEvent;
-  final bool? agentConnected;
-  final bool? agentAudioActive;
-
-  const AskAiLivekitEventReported(
-      {required this.lastLivekitEvent, this.agentConnected, this.agentAudioActive});
-}
-
 class AskAiMessageReceived extends AskAiEvent {
   final AiChatMessageModel message;
 
