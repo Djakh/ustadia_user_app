@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
-import 'package:ustadia_user_app/core/services/firebase_messaging_service.dart';
+import 'package:ustadia_user_app/core/services/session_logout_service.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/inputs/input_field.dart';
@@ -20,7 +19,6 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/use
 import 'package:ustadia_user_app/features/profile/presentation/widgets/profile_editable_avatar.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/settings/settings_action_dialog.dart';
 import 'package:ustadia_user_app/injection_container.dart';
-import 'package:ustadia_user_app/router.dart';
 
 class EditAccountPage extends StatefulWidget {
   const EditAccountPage({super.key});
@@ -118,21 +116,9 @@ class EditAccountPageState extends State<EditAccountPage> {
         firstName: firstName, lastName: lastName, profilePictureId: uploadedImageId));
   }
 
-  void logout() async {
-    final token = await FirebaseMessagingService.getToken();
-    final deviceType = FirebaseMessagingService.deviceType();
-    if (token != null && token.isNotEmpty) {
-      try {
-        await sl<UserRemoteDataSource>().unregisterDevice(
-          token: token,
-          deviceType: deviceType,
-        );
-      } catch (_) {}
-    }
-    await sl<AuthLocalDataSource>().clearAccessToken();
-    if (!mounted) return;
-    context.go(loginRoute);
-  }
+  void logout() async => SessionLogoutService.logout(
+      authLocalDataSource: sl<AuthLocalDataSource>(),
+      userRemoteDataSource: sl<UserRemoteDataSource>());
 
   void confirmDelete() {
     userBloc.add(const UserProfileDelete());

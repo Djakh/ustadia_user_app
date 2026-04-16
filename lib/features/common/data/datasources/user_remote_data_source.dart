@@ -15,6 +15,16 @@ class UserRemoteDataSource {
     return UserProfileModel.fromJson(data);
   }
 
+  Future<List<UserLevelModel>> fetchPublicLevels() async {
+    final response = await dio.get('/difficulty-levels/public');
+    final data = response.data;
+    final items = data is List ? data : const [];
+    return items
+        .whereType<Map<String, dynamic>>()
+        .map(UserLevelModel.fromJson)
+        .toList();
+  }
+
   Future<UserProfileModel> updateProfile(
       {required String firstName,
       required String lastName,
@@ -27,6 +37,12 @@ class UserRemoteDataSource {
     final response = await dio.patch('/users/profile?intro=true&statistics=true', data: data);
     final responseData = response.data as Map<String, dynamic>;
     return UserProfileModel.fromJson(responseData);
+  }
+
+  Future<UserProfileModel> updateProfileLevel({required String levelId}) async {
+    final response = await dio.patch('/users/profile/level', data: {'levelId': levelId});
+    final data = response.data as Map<String, dynamic>;
+    return UserProfileModel.fromJson(data);
   }
 
   Future<void> deleteProfile() async {
@@ -58,10 +74,13 @@ class UserRemoteDataSource {
     await dio.post('/users/devices', data: {'token': token, 'deviceType': deviceType});
   }
 
-  Future<void> unregisterDevice({String? token, String? deviceType}) async {
+  Future<void> unregisterDevice(
+      {String? token, String? deviceType, bool skipUnauthorizedLogout = false}) async {
     final data = <String, dynamic>{};
     if (token != null && token.isNotEmpty) data['token'] = token;
     if (deviceType != null && deviceType.isNotEmpty) data['deviceType'] = deviceType;
-    await dio.delete('/users/devices', data: data.isEmpty ? null : data);
+    await dio.delete('/users/devices',
+        data: data.isEmpty ? null : data,
+        options: Options(extra: {'skipUnauthorizedLogout': skipUnauthorizedLogout}));
   }
 }

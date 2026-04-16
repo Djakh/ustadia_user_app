@@ -67,6 +67,40 @@ class UserLevelModel {
       teacherId: json['teacher_id']?.toString(),
       createdAt: json['created_at']?.toString() ?? '',
       updatedAt: json['updated_at']?.toString() ?? '');
+
+  String nameForLanguage(String languageCode) {
+    final normalized = languageCode.toLowerCase();
+    if (normalized.startsWith('ru')) return name['ru']?.trim().isNotEmpty == true ? name['ru']! : fallbackName;
+    if (normalized.startsWith('uz')) return name['uz']?.trim().isNotEmpty == true ? name['uz']! : fallbackName;
+    return name['en']?.trim().isNotEmpty == true ? name['en']! : fallbackName;
+  }
+
+  String descriptionForLanguage(String languageCode) {
+    final normalized = languageCode.toLowerCase();
+    if (normalized.startsWith('ru')) {
+      return description['ru']?.trim().isNotEmpty == true ? description['ru']! : fallbackDescription;
+    }
+    if (normalized.startsWith('uz')) {
+      return description['uz']?.trim().isNotEmpty == true ? description['uz']! : fallbackDescription;
+    }
+    return description['en']?.trim().isNotEmpty == true ? description['en']! : fallbackDescription;
+  }
+
+  String get fallbackName {
+    for (final value in [name['en'], name['ru'], name['uz']]) {
+      final text = value?.trim() ?? '';
+      if (text.isNotEmpty) return text;
+    }
+    return '';
+  }
+
+  String get fallbackDescription {
+    for (final value in [description['en'], description['ru'], description['uz']]) {
+      final text = value?.trim() ?? '';
+      if (text.isNotEmpty) return text;
+    }
+    return '';
+  }
 }
 
 class UserProfileBreakdownModel {

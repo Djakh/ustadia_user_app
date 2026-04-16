@@ -10,6 +10,12 @@ class AppRestart extends StatefulWidget {
     state?.restart();
   }
 
+  static void restartFromNavigatorKey(GlobalKey<NavigatorState> navigatorKey) {
+    final context = navigatorKey.currentContext;
+    if (context == null) return;
+    restart(context);
+  }
+
   @override
   State<AppRestart> createState() => _AppRestartState();
 }

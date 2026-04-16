@@ -4,13 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
-import 'package:ustadia_user_app/core/services/firebase_messaging_service.dart';
+import 'package:ustadia_user_app/core/services/session_logout_service.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:ustadia_user_app/features/common/data/datasources/user_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/data/models/user_profile_model.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_bloc.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
 import 'package:ustadia_user_app/features/profile/data/models/settings_item_model.dart';
@@ -51,28 +49,15 @@ class SettingsPage extends StatelessWidget {
           actionText: 'Yes, Logout',
           onConfirm: () {
             Navigator.of(dialogContext).pop();
-            logout(context);
+            logout();
           }),
     );
   }
 
-  Future<void> logout(BuildContext context) async {
-    final token = await FirebaseMessagingService.getToken();
-    final deviceType = FirebaseMessagingService.deviceType();
-    if (token != null && token.isNotEmpty) {
-      try {
-        await sl<UserRemoteDataSource>().unregisterDevice(
-          token: token,
-          deviceType: deviceType,
-        );
-      } catch (_) {}
-    }
-    await sl<AuthLocalDataSource>().clearAccessToken();
-    if (context.mounted) {
-      context.read<TeacherBloc>().add(const TeachersReset());
-    }
-    if (!context.mounted) return;
-    context.go(loginRoute);
+  Future<void> logout() async {
+    await SessionLogoutService.logout(
+        authLocalDataSource: sl<AuthLocalDataSource>(),
+        userRemoteDataSource: sl<UserRemoteDataSource>());
   }
 
   void goToNotifications(BuildContext context) => context.push(settingsNotificationsRoute);
