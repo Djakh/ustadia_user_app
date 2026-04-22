@@ -70,8 +70,8 @@ Future<void> initDependencies() async {
   // Features - Auth
   sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSource(
       dio: DioClient.create(
-          //baseUrl: 'https://backend.ustadia.findecor.io',
-          baseUrl: 'https://dev.backend.ustadia.findecor.io',
+       //   baseUrl: 'https://backend.ustadia.findecor.io',
+           baseUrl: 'https://dev.backend.ustadia.findecor.io',
           accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken(),
           onUnauthorized: () => SessionLogoutService.logout(
               authLocalDataSource: sl<AuthLocalDataSource>(),

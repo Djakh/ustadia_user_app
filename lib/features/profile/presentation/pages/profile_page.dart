@@ -39,9 +39,9 @@ class ProfilePageState extends State<ProfilePage> {
   /// --- Data ---
 
   List<ProfileStatsModel> stats(
-      ProfileStatisticsModel? statistics, String languageCode, bool canChangeLevel) {
-    final levelName = statistics?.level.name.forLanguage(languageCode);
-    final level = levelName != null && levelName.isNotEmpty ? levelName : '-';
+      ProfileStatisticsModel? statistics, String languageCode, UserProfileModel? profile) {
+    final canUpdateLevel = canChangeLevel(profile);
+    final level = currentLevelText(statistics, languageCode, profile);
     final totalCompleted = statistics?.totalCompletedTasks.toString() ?? '-';
     final totalVocabulary = statistics?.totalVocabulary.toString() ?? '-';
     final breakdown = statistics?.breakdown;
@@ -54,7 +54,7 @@ class ProfilePageState extends State<ProfilePage> {
           icon: AppImages.profileLevelCardIcon,
           title: 'Current level'.tr(),
           value: level,
-          subtitle: canChangeLevel ? 'Change level'.tr() : null),
+          subtitle: canUpdateLevel ? 'Change level'.tr() : null),
       ProfileStatsModel(
           icon: AppImages.profileStreakCardIcon,
           title: 'Completed tasks'.tr(),
@@ -78,8 +78,25 @@ class ProfilePageState extends State<ProfilePage> {
   /// --- Widgets ---
 
   bool canChangeLevel(UserProfileModel? profile) {
-    final teacherId = profile?.currentTeacher?.teacherId;
-    return teacherId == null || teacherId.isEmpty;
+    final currentTeacher = profile?.currentTeacher;
+    if (currentTeacher == null) return true;
+    return isBlankTeacherId(currentTeacher.id) && isBlankTeacherId(currentTeacher.teacherId);
+  }
+
+  bool isBlankTeacherId(String? value) {
+    final normalized = value?.trim().toLowerCase();
+    return normalized == null || normalized.isEmpty || normalized == 'null';
+  }
+
+  String currentLevelText(
+      ProfileStatisticsModel? statistics, String languageCode, UserProfileModel? profile) {
+    if (!canChangeLevel(profile)) {
+      final teacherLevel = profile?.currentTeacher?.level?.nameForLanguage(languageCode).trim();
+      if (teacherLevel != null && teacherLevel.isNotEmpty) return teacherLevel;
+    }
+
+    final levelName = statistics?.level.name.forLanguage(languageCode).trim();
+    return levelName != null && levelName.isNotEmpty ? levelName : '-';
   }
 
   Future<void> showLevelPicker(UserProfileModel userModel) => showModalBottomSheet(
@@ -88,6 +105,15 @@ class ProfilePageState extends State<ProfilePage> {
       useRootNavigator: true,
       backgroundColor: Colors.transparent,
       builder: (_) => LevelPickerSheet(userModel: userModel));
+
+  void onLevelCardTap(UserProfileModel? profile) {
+    if (profile != null && canChangeLevel(profile)) {
+      showLevelPicker(profile);
+      return;
+    }
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Level can be changed only in system lessons'.tr())));
+  }
 
   Widget headerIcon(IconData icon, AlignmentGeometry alignment, Function() onPressed) => Align(
       alignment: alignment, child: IconButton(onPressed: onPressed, icon: Icon(icon, size: 22)));
@@ -110,18 +136,22 @@ class ProfilePageState extends State<ProfilePage> {
 
   Widget statsWidgetList(
       ProfileStatisticsModel? data, String languageCode, UserProfileModel? profile) {
-    final isLevelChangeAvailable = canChangeLevel(profile);
-    final items = stats(data, languageCode, isLevelChangeAvailable);
+    final items = stats(data, languageCode, profile);
     return Column(children: [
-      statsWidgetRow(items[0], items[1],
-          onFirstTap: isLevelChangeAvailable && profile != null ? () => showLevelPicker(profile) : null),
+      statsWidgetRow(items[0], items[1], onFirstTap: () => onLevelCardTap(profile)),
       const SizedBox(height: 12),
       statsWidgetRow(items[2], items[3])
     ]);
   }
 
   Widget statsGrid(BuildContext context) => BlocBuilder<UserBloc, UserState>(
-      buildWhen: (prev, next) => prev.profile?.language != next.profile?.language,
+      buildWhen: (prev, next) =>
+          prev.profile?.language != next.profile?.language ||
+          prev.profile?.currentTeacher?.id != next.profile?.currentTeacher?.id ||
+          prev.profile?.currentTeacher?.teacherId != next.profile?.currentTeacher?.teacherId ||
+          prev.profile?.currentTeacher?.level?.id != next.profile?.currentTeacher?.level?.id ||
+          prev.profile?.currentTeacher?.level?.fallbackName !=
+              next.profile?.currentTeacher?.level?.fallbackName,
       builder: (context, userState) {
         final languageCode = userState.profile?.language ?? context.locale.languageCode;
         return ValueListenableBuilder<ProfileStatisticsModel?>(

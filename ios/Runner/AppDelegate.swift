@@ -35,7 +35,7 @@ import UserNotifications
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
-  func handleAudioRouteMethodCall(call: FlutterMethodCall, result: FlutterResult) {
+  func handleAudioRouteMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
     let arguments = call.arguments as? [String: Any]
     let reason = arguments?["reason"] as? String ?? "unknown"
 

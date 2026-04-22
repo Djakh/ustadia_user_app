@@ -21,6 +21,16 @@ class LearnFlashcardSetModel {
     required this.notRevealedCount,
   });
 
+  const LearnFlashcardSetModel.empty()
+      : id = '',
+        title = '',
+        description = '',
+        flashcards = const [],
+        difficulty = null,
+        totalFlashcards = 0,
+        revealedCount = 0,
+        notRevealedCount = 0;
+
   factory LearnFlashcardSetModel.fromJson(Map<String, dynamic> json) {
     final items = (json['flashcards'] as List<dynamic>?)
             ?.whereType<Map<String, dynamic>>()

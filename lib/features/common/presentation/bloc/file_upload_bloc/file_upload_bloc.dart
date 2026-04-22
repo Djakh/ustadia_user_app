@@ -17,7 +17,16 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       ImageUploadRequested event, Emitter<FileUploadState> emit) async {
     emit(state.copyWith(status: Status.loading, errorMessage: null));
     try {
-      final uploadedFile = await uploadRemoteDataSource.uploadImage(event.filePath);
+      if ((event.filePath == null || event.filePath!.isEmpty) &&
+          (event.bytes == null || event.bytes!.isEmpty)) {
+        emit(state.copyWith(status: Status.error, errorMessage: 'Selected file is not available.'));
+        return;
+      }
+      final uploadedFile = await uploadRemoteDataSource.uploadImage(
+        event.filePath,
+        fileName: event.fileName,
+        bytes: event.bytes,
+      );
       emit(state.copyWith(status: Status.success, uploadedFile: uploadedFile));
     } on DioException catch (error) {
       emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.from(error)));

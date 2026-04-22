@@ -6,7 +6,9 @@ import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/listviews/paginated_list_view.dart';
 import 'package:ustadia_user_app/core/widgets/loading/shimmer_list.dart';
+import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_set_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
+import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_page.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_sections_params.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections_bloc/learn_sections_bloc.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections_bloc/learn_sections_event.dart';
@@ -62,8 +64,17 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
         navigation = context.push(learnGrammarRoute, extra: sectionModel);
         break;
       case SectionType.vocabulary:
-        if (sectionModel.flashCardSet == null) return;
-        navigation = context.push(flashcardSprintRoute, extra: sectionModel.flashCardSet!);
+        if (sectionModel.flashCardSet == null &&
+            sectionModel.progressState != SectionProgressState.completed) {
+          return;
+        }
+        navigation = context.push(
+          flashcardSprintRoute,
+          extra: FlashcardSprintParams(
+            set: sectionModel.flashCardSet ?? const LearnFlashcardSetModel.empty(),
+            sectionModel: sectionModel,
+          ),
+        );
         break;
       case SectionType.writing:
         navigation = context.push(learnWritingRoute, extra: sectionModel);

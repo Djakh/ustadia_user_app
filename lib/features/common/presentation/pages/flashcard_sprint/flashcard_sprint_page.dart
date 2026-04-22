@@ -6,11 +6,13 @@ import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_set_model.dart';
+import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/flashcard_status_bloc/flashcard_status_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/flashcard_status_bloc/flashcard_status_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/flashcard_status_bloc/flashcard_status_state.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_result_page.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/flashcard_view.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 enum FlashcardSprintStage { cards, result }
@@ -18,17 +20,24 @@ enum FlashcardSprintStage { cards, result }
 class FlashcardSprintParams {
   final LearnFlashcardSetModel set;
   final bool isPractice;
+  final SectionModel? sectionModel;
 
-  const FlashcardSprintParams({required this.set, required this.isPractice});
+  const FlashcardSprintParams({
+    required this.set,
+    this.isPractice = false,
+    this.sectionModel,
+  });
 }
 
 class FlashcardSprintPage extends StatefulWidget {
   final LearnFlashcardSetModel flashcardSetModel;
   final bool isPractice;
+  final SectionModel? sectionModel;
   const FlashcardSprintPage({
     super.key,
     required this.flashcardSetModel,
     this.isPractice = false,
+    this.sectionModel,
   });
 
   @override
@@ -51,6 +60,15 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   bool get hasSeenMeaning => _seenMeaning.contains(index);
   bool get isSubmitting => statusBloc.state.status.isLoading;
   bool get shouldShowMeaning => showMeaning || isSubmitting;
+  bool get isSectionVocabulary => widget.sectionModel != null && !widget.isPractice;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.sectionModel?.progressState == SectionProgressState.completed) {
+      stage = FlashcardSprintStage.result;
+    }
+  }
 
   @override
   void dispose() {
@@ -190,7 +208,16 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
         controls(context)
       ]));
 
-  Widget get resultView => FlashcardSprintResultView(stats: resultStats);
+  Widget get resultView {
+    final sectionModel = widget.sectionModel;
+    if (isSectionVocabulary && sectionModel != null) {
+      return PrimaryBackground(
+          isHeader: false,
+          isScrollable: false,
+          child: QuizResultComponent(sectionModel: sectionModel));
+    }
+    return FlashcardSprintResultView(stats: resultStats);
+  }
 
   Widget get emptyView => PrimaryBackground(
       header: header,
@@ -205,9 +232,9 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
       listener: (context, state) => _handleStatusUpdate(state),
       builder: (context, state) => Scaffold(
           backgroundColor: context.cs.surface,
-          body: cards.isEmpty
-              ? emptyView
-              : stage == FlashcardSprintStage.result
-                  ? resultView
+          body: stage == FlashcardSprintStage.result
+              ? resultView
+              : cards.isEmpty
+                  ? emptyView
                   : view));
 }
