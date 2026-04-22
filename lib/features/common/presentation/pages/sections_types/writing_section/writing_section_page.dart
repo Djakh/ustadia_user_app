@@ -14,6 +14,9 @@ import 'package:ustadia_user_app/features/common/data/models/section_model/secti
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_state.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_event.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_state.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_state.dart';
@@ -37,6 +40,7 @@ class WritingSectionPage extends StatefulWidget {
 class WritingSectionPageState extends State<WritingSectionPage> {
   final SectionDetailBloc detailBloc = sl<SectionDetailBloc>();
   final QuestionAnswerBloc answerBloc = sl<QuestionAnswerBloc>();
+  final FileUploadBloc uploadBloc = sl<FileUploadBloc>();
   WritingSectionStage stage = WritingSectionStage.lesson;
   LearnWritingMethodType? selectedMethod;
   final TextEditingController inputController = TextEditingController();
@@ -47,12 +51,14 @@ class WritingSectionPageState extends State<WritingSectionPage> {
     inputController.dispose();
     detailBloc.close();
     answerBloc.close();
+    uploadBloc.close();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+    inputController.addListener(updateSubmitAvailability);
     if (widget.sectionModel.progressState == SectionProgressState.completed) {
       stage = WritingSectionStage.result;
     }
@@ -72,6 +78,16 @@ class WritingSectionPageState extends State<WritingSectionPage> {
     }
   }
 
+  void fileUploadListener(context, FileUploadState state) {
+    if (state.status.isError && state.errorMessage != null) {
+      final message = state.errorMessage == 'Selected file is not available.'
+          ? 'Selected file is not available.'.tr()
+          : state.errorMessage!;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    }
+    if (mounted) setState(() {});
+  }
+
   /// --- Methods ---
 
   void getSectionDetails() => detailBloc.add(SectionDetailRequested(
@@ -86,7 +102,14 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       final result = await FilePicker.platform.pickFiles(withData: true);
       if (result == null) return;
       if (!mounted) return;
-      setState(() => stage = WritingSectionStage.result);
+      final file = result.files.single;
+      setState(() {
+        selectedMethod = LearnWritingMethodType.upload;
+        stage = WritingSectionStage.input;
+      });
+      uploadBloc.add(
+        ImageUploadRequested(filePath: file.path, fileName: file.name, bytes: file.bytes),
+      );
     } on MissingPluginException {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -110,6 +133,21 @@ class WritingSectionPageState extends State<WritingSectionPage> {
     selectMethod(methodType);
   }
 
+  void updateSubmitAvailability() {
+    if (selectedMethod == LearnWritingMethodType.inApp && mounted) setState(() {});
+  }
+
+  bool canSubmit(QuestionAnswerState answerState, FileUploadState uploadState) {
+    if (answerState.status.isLoading) return false;
+    if (selectedMethod == LearnWritingMethodType.inApp) {
+      return inputController.text.trim().isNotEmpty;
+    }
+    if (selectedMethod == LearnWritingMethodType.upload) {
+      return uploadState.status.isSuccess && uploadState.uploadedFile?.id.isNotEmpty == true;
+    }
+    return false;
+  }
+
   void submit() {
     final detail = detailBloc.state.detail;
     final question = detail != null && detail.questions.isNotEmpty ? detail.questions.first : null;
@@ -118,13 +156,25 @@ class WritingSectionPageState extends State<WritingSectionPage> {
           .showSnackBar(SnackBar(content: Text('Question is not available yet.'.tr())));
       return;
     }
+    final uploadedFile = uploadBloc.state.uploadedFile;
+    if (selectedMethod == LearnWritingMethodType.inApp && inputController.text.trim().isEmpty) {
+      return;
+    }
+    if (selectedMethod == LearnWritingMethodType.upload &&
+        (uploadedFile == null || uploadedFile.id.isEmpty)) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Please upload a file first.'.tr())));
+      return;
+    }
     answerBloc.add(QuestionAnswerSubmitted(
         sectionId: widget.sectionModel.id,
         questionId: question.id,
         assignmentId: question.assignmentId,
         unitId: question.unitId,
         lessonId: question.lessonId,
-        userInputText: inputController.text.trim(),
+        userInputText:
+            selectedMethod == LearnWritingMethodType.inApp ? inputController.text.trim() : null,
+        userAudioId: selectedMethod == LearnWritingMethodType.upload ? uploadedFile?.id : null,
         source: question.source));
   }
 
@@ -158,16 +208,58 @@ class WritingSectionPageState extends State<WritingSectionPage> {
         controller: inputController,
         maxLines: 8,
         inputBorderRadius: Style.border24,
-        hint: inputPlaceholder,
+        hint: inputPlaceholder.tr(),
       );
 
   Widget get inputView => BlocBuilder<QuestionAnswerBloc, QuestionAnswerState>(
       bloc: answerBloc,
-      builder: (context, state) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            inputField,
-            const Spacer(),
-            Button.primary(onTap: submit, isLoading: state.status.isLoading, text: 'Submit'.tr())
-          ]));
+      builder: (context, answerState) => BlocBuilder<FileUploadBloc, FileUploadState>(
+          bloc: uploadBloc,
+          builder: (context, uploadState) {
+            final isUpload = selectedMethod == LearnWritingMethodType.upload;
+            return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              if (isUpload) uploadView(uploadState) else inputField,
+              const Spacer(),
+              Button.primary(
+                  onTap: submit,
+                  isLoading: answerState.status.isLoading,
+                  isAvialable: canSubmit(answerState, uploadState),
+                  text: 'Submit'.tr())
+            ]);
+          }));
+
+  Widget uploadView(FileUploadState state) {
+    final uploadedFile = state.uploadedFile;
+    final title = state.status.isLoading
+        ? 'Uploading file...'.tr()
+        : uploadedFile != null
+            ? 'File uploaded'.tr()
+            : 'No file uploaded'.tr();
+    final subtitle = state.status.isLoading
+        ? 'Please wait until the upload finishes.'.tr()
+        : uploadedFile?.filename ?? 'Choose an image or document to submit.'.tr();
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(color: context.cs.surface, borderRadius: Style.border24),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(title, style: Style.body2w6(context)),
+            const SizedBox(height: 8),
+            Text(subtitle, style: Style.bodyw4(context, color: TextColorRole.greyColor)),
+            const SizedBox(height: 16),
+            Button.border(
+                onTap: pickUploadFile,
+                isLoading: state.status.isLoading,
+                text: uploadedFile == null ? 'Choose file'.tr() : 'Choose another file'.tr(),
+                borderColor: context.cs.primary,
+                textColor: context.cs.primary)
+          ]),
+    );
+  }
 
   Widget get lessonView => BlocBuilder<SectionDetailBloc, SectionDetailState>(
       bloc: detailBloc,
@@ -204,15 +296,19 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       ]);
 
   @override
-  Widget build(BuildContext context) => BlocListener<QuestionAnswerBloc, QuestionAnswerState>(
-      bloc: answerBloc,
-      listener: questionAnswerListener,
-      child: Scaffold(
-          backgroundColor: context.cs.surface,
-          body: PrimaryBackground(
-              header: header,
-              headerTooltipText: widget.sectionModel.title,
-              isHeader: stage != WritingSectionStage.result,
-              isScrollable: false,
-              child: view)));
+  Widget build(BuildContext context) => MultiBlocListener(
+          listeners: [
+            BlocListener<QuestionAnswerBloc, QuestionAnswerState>(
+                bloc: answerBloc, listener: questionAnswerListener),
+            BlocListener<FileUploadBloc, FileUploadState>(
+                bloc: uploadBloc, listener: fileUploadListener),
+          ],
+          child: Scaffold(
+              backgroundColor: context.cs.surface,
+              body: PrimaryBackground(
+                  header: header,
+                  headerTooltipText: widget.sectionModel.title,
+                  isHeader: stage != WritingSectionStage.result,
+                  isScrollable: false,
+                  child: view)));
 }

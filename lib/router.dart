@@ -205,7 +205,8 @@ SectionModel _resolveSectionModel(GoRouterState state, SectionType type) {
     _sectionRouteCache[state.fullPath ?? state.matchedLocation] = extra;
     return extra;
   }
-  return _sectionRouteCache[state.fullPath ?? state.matchedLocation] ?? _placeholderSectionModel(type);
+  return _sectionRouteCache[state.fullPath ?? state.matchedLocation] ??
+      _placeholderSectionModel(type);
 }
 
 final appRouter = GoRouter(
@@ -242,7 +243,15 @@ final appRouter = GoRouter(
         builder: (context, state) {
           final extra = state.extra;
           if (extra is FlashcardSprintParams) {
-            return FlashcardSprintPage(flashcardSetModel: extra.set, isPractice: extra.isPractice);
+            return FlashcardSprintPage(
+                flashcardSetModel: extra.set,
+                isPractice: extra.isPractice,
+                sectionModel: extra.sectionModel);
+          }
+          if (extra is SectionModel && extra.sectionType == SectionType.vocabulary) {
+            return FlashcardSprintPage(
+                flashcardSetModel: extra.flashCardSet ?? const LearnFlashcardSetModel.empty(),
+                sectionModel: extra);
           }
           if (extra is LearnFlashcardSetModel) {
             return FlashcardSprintPage(flashcardSetModel: extra);

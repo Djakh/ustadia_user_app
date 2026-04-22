@@ -81,35 +81,47 @@ class _QuizResultComponentState extends State<QuizResultComponent> {
       stats?.unansweredQuestions ?? ((total - answered) < 0 ? 0 : total - answered);
   int get pending => stats?.pending ?? 0;
   double get scoreRatio => total > 0 ? correct / total : 0;
-
-  bool get isSuccessState => answered > 0 && incorrect == 0;
-  bool get isFailureState => incorrect > 0 && correct == 0;
+  bool get isVocabulary => widget.sectionModel?.sectionType == SectionType.vocabulary;
 
   Color get accentColor {
-    if (isSuccessState) return AppColors.success;
-    if (isFailureState) return AppColors.error;
-    return AppColors.orange033;
+    if (scoreRatio >= 1) return AppColors.success;
+    if (scoreRatio >= 0.8) return AppColors.primary;
+    if (scoreRatio >= 0.7) return AppColors.green00;
+    if (scoreRatio >= 0.5) return AppColors.warning;
+    if (scoreRatio >= 0.3) return AppColors.orange033;
+    return AppColors.error;
   }
 
   IconData get resultIcon {
-    if (isSuccessState) return Icons.check_circle_rounded;
-    if (isFailureState) return Icons.cancel_rounded;
-    return Icons.info_rounded;
+    if (scoreRatio >= 1) return Icons.verified_rounded;
+    if (scoreRatio >= 0.8) return Icons.check_circle_rounded;
+    if (scoreRatio >= 0.7) return Icons.thumb_up_alt_rounded;
+    if (scoreRatio >= 0.5) return Icons.info_rounded;
+    if (scoreRatio >= 0.3) return Icons.error_outline_rounded;
+    return Icons.cancel_rounded;
   }
 
   String get resultTitle {
-    if (total > 0 && correct == total) return 'Perfect score!'.tr();
-    if (scoreRatio >= 0.7) return 'Great job!'.tr();
-    if (scoreRatio >= 0.4) return 'Good effort!'.tr();
-    if (isFailureState) return 'Incorrect answer'.tr();
-    return 'Keep practicing!'.tr();
+    if (total <= 0) return 'Task completed!'.tr();
+    if (scoreRatio >= 1) return 'Excellent!'.tr();
+    if (scoreRatio >= 0.8) return 'Great job!'.tr();
+    if (scoreRatio >= 0.7) return 'Good job!'.tr();
+    if (scoreRatio >= 0.5) return 'Good effort!'.tr();
+    if (scoreRatio >= 0.3) return 'Keep practicing!'.tr();
+    return 'Needs practice!'.tr();
   }
 
   String get subtitleText {
     if (total <= 0) return 'Task completed!'.tr();
-    return '{correct} of {all} correct'
-        .tr(namedArgs: {'correct': '$correct', 'all': '$total'});
+    if (isVocabulary) {
+      return '{known} of {all} known'.tr(namedArgs: {'known': '$correct', 'all': '$total'});
+    }
+    return '{correct} of {all} correct'.tr(namedArgs: {'correct': '$correct', 'all': '$total'});
   }
+
+  String get correctLabel => isVocabulary ? 'Known'.tr() : 'Correct'.tr();
+
+  String get incorrectLabel => isVocabulary ? 'Unknown'.tr() : 'Incorrect'.tr();
 
   Widget feedbackHeader(String title, BuildContext context) => Row(children: [
         SvgPicture.asset(AppImages.feedbackIcon),
@@ -173,14 +185,14 @@ class _QuizResultComponentState extends State<QuizResultComponent> {
         Row(children: [
           Expanded(
               child: resultStatCard(context,
-                  label: 'Correct'.tr(),
+                  label: correctLabel,
                   value: '$correct',
                   color: AppColors.primary,
                   icon: Icons.check_circle_rounded)),
           const SizedBox(width: 12),
           Expanded(
               child: resultStatCard(context,
-                  label: 'Incorrect'.tr(),
+                  label: incorrectLabel,
                   value: '$incorrect',
                   color: AppColors.error,
                   icon: Icons.cancel_rounded)),

@@ -1,10 +1,12 @@
+import 'package:ustadia_user_app/features/common/data/models/user_profile_model.dart';
+
 class TeacherClassModel {
   final String? id;
   final String? name;
 
   const TeacherClassModel({
-     this.id,
-     this.name,
+    this.id,
+    this.name,
   });
 
   factory TeacherClassModel.fromJson(Map<String, dynamic> json) => TeacherClassModel(
@@ -20,7 +22,7 @@ class TeacherModel {
   final String? lastName;
   final String? email;
   final String? profilePicture;
-  final String? level;
+  final UserLevelModel? level;
   final TeacherClassModel? teacherClass;
   final bool? isActive;
   final DateTime? createdAt;
@@ -47,7 +49,7 @@ class TeacherModel {
     String? lastName,
     String? email,
     String? profilePicture,
-    String? level,
+    UserLevelModel? level,
     TeacherClassModel? teacherClass,
     bool? isActive,
     DateTime? createdAt,
@@ -73,11 +75,27 @@ class TeacherModel {
         lastName: json['lastName']?.toString() ?? '',
         email: json['email']?.toString() ?? '',
         profilePicture: json['profilePicture']?.toString(),
-        level: json['level']?.toString() ?? '',
+        level: parseLevel(json['level']),
         teacherClass: json['class'] is Map<String, dynamic>
             ? TeacherClassModel.fromJson(json['class'] as Map<String, dynamic>)
             : null,
         isActive: json['isActive'] == true,
         createdAt: DateTime.tryParse(json['created_at']?.toString() ?? ''),
       );
+
+  static UserLevelModel? parseLevel(dynamic value) {
+    if (value is Map<String, dynamic>) return UserLevelModel.fromJson(value);
+
+    final levelName = value?.toString().trim() ?? '';
+    if (levelName.isEmpty || levelName.toLowerCase() == 'null') return null;
+
+    return UserLevelModel(
+        id: '',
+        name: {'en': levelName, 'ru': levelName, 'uz': levelName},
+        description: const {},
+        isPublic: false,
+        teacherId: null,
+        createdAt: '',
+        updatedAt: '');
+  }
 }
