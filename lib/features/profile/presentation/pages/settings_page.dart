@@ -86,6 +86,7 @@ class SettingsPage extends StatelessWidget {
   }
 
   /// --- Widgets ---
+  
   Widget itemsList(BuildContext context) => BlocBuilder<UserBloc, UserState>(
       builder: (context, state) => state.profile == null
           ? const SizedBox()

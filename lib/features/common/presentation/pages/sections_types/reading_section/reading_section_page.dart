@@ -41,7 +41,9 @@ class ReadingSectionPageState extends State<ReadingSectionPage> {
           source: widget.sectionModel.source,
           unitId: widget.sectionModel.unitId,
           lessonId: widget.sectionModel.lessonId,
-          assignmentId: widget.sectionModel.assignmentId));
+          assignmentId: widget.sectionModel.assignmentId,
+          mockExamId: widget.sectionModel.mockId,
+          mockAttemptId: widget.sectionModel.mockAttemptId));
     }
   }
 
@@ -58,10 +60,16 @@ class ReadingSectionPageState extends State<ReadingSectionPage> {
     setState(() => stage = ReadingSectionStage.quiz);
   }
 
-  void finishQuiz(int correct) => setState(() {
-        correctCount = correct;
-        stage = ReadingSectionStage.result;
-      });
+  void finishQuiz(int correct) {
+    if (widget.sectionModel.source == SectionSource.mockExam) {
+      Navigator.of(context).pop(true);
+      return;
+    }
+    setState(() {
+      correctCount = correct;
+      stage = ReadingSectionStage.result;
+    });
+  }
 
   Future<void> showReadingPassageSheet(String content) => showModalBottomSheet(
       context: context,
@@ -87,8 +95,7 @@ class ReadingSectionPageState extends State<ReadingSectionPage> {
                     const SizedBox(height: 18),
                     Row(children: [
                       Expanded(
-                          child:
-                              Text('Read passage'.tr(), style: Style.body2w6(sheetContext))),
+                          child: Text('Read passage'.tr(), style: Style.body2w6(sheetContext))),
                       IconButton(
                           onPressed: () => Navigator.of(sheetContext).pop(),
                           icon: const Icon(Icons.close_rounded))
@@ -133,7 +140,7 @@ class ReadingSectionPageState extends State<ReadingSectionPage> {
         Text(widget.sectionModel.title,
             maxLines: 1, overflow: TextOverflow.ellipsis, style: Style.body2w6(context)),
         const SizedBox(height: 2),
-        Text(widget.sectionModel.sectionType.name.toUpperCase(),
+        Text(widget.sectionModel.sectionTypeLabel.toUpperCase(),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Style.small3w4(context, color: TextColorRole.greyColor))
@@ -141,6 +148,16 @@ class ReadingSectionPageState extends State<ReadingSectionPage> {
 
   Widget body(BuildContext context, SectionDetailState state) {
     final isLoading = state.status.isLoading || state.detail == null;
+    if (widget.sectionModel.source == SectionSource.mockExam &&
+        state.detail?.progressState == SectionProgressState.completed) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) Navigator.of(context).pop(true);
+      });
+      return const SizedBox.shrink();
+    }
+    if (state.detail?.progressState == SectionProgressState.completed) {
+      return QuizResultComponent(sectionModel: widget.sectionModel);
+    }
     if (stage == ReadingSectionStage.lesson)
       return ReadingSectionIntro(
           sectionModel: widget.sectionModel,

@@ -4,7 +4,10 @@ import 'package:ustadia_user_app/features/assignments/data/models/assignment_typ
 
 class AssignmentThemeCatalog {
   static AssignmentTypeTheme themeForType(String type) {
-    switch (type) {
+    final normalized = type.trim().toLowerCase();
+    if (normalized.startsWith('writing')) return writing;
+    if (normalized.startsWith('speaking')) return speaking;
+    switch (normalized) {
       case 'listening':
         return listening;
       case 'reading':

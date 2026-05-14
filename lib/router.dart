@@ -30,6 +30,12 @@ import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dar
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_lessons_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_sections_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_units_page.dart';
+import 'package:ustadia_user_app/features/mock_exam/presentation/pages/mock_exam_history_page.dart';
+import 'package:ustadia_user_app/features/mock_exam/presentation/pages/mock_exam_list_page.dart';
+import 'package:ustadia_user_app/features/mock_exam/presentation/pages/mock_exam_result_page.dart';
+import 'package:ustadia_user_app/features/mock_exam/presentation/pages/mock_exam_sections_page.dart';
+import 'package:ustadia_user_app/features/mock_exam/data/models/mock_exam_attempt_model.dart';
+import 'package:ustadia_user_app/features/mock_exam/data/models/mock_exam_model.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:ustadia_user_app/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:ustadia_user_app/features/practice/data/models/practice_listen_tap_set_model.dart';
@@ -98,6 +104,10 @@ const learnWritingPath = 'writing';
 const learnWritingRoute = '$learnUnitsRoute/$learnWritingPath';
 
 const flashcardSprintPath = 'flashcard-sprint';
+const mockExamPath = 'mock-exam';
+const mockExamHistoryPath = 'history';
+const mockExamSectionsPath = ':mockExamId';
+const mockExamResultPath = ':mockExamId/result/:attemptId';
 
 const practiceRoute = '$homeRoute/practice';
 const askAiTopicsRoute = '$homeRoute/ask-ai';
@@ -135,6 +145,11 @@ const editAccountPath = 'edit-account';
 /// Absolute helpers for pushing from anywhere (always start with '/')
 /// --------------------
 const flashcardSprintRoute = '/$flashcardSprintPath';
+const mockExamRoute = '/$mockExamPath';
+const mockExamHistoryRoute = '$mockExamRoute/$mockExamHistoryPath';
+String mockExamSectionsRoute(String mockExamId) => '$mockExamRoute/$mockExamId';
+String mockExamResultRoute(String mockExamId, String attemptId) =>
+    '$mockExamRoute/$mockExamId/result/$attemptId';
 const wordMatchRoute = '$practiceRoute/$wordMatchPath';
 const buildSentenceRoute = '$practiceRoute/$buildSentencePath';
 const writingAssessmentRoute = '$practiceRoute/$writingAssessmentPath';
@@ -229,6 +244,37 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(path: signUpRoute, builder: (_, __) => const SignUpPage()),
+    GoRoute(
+      path: mockExamRoute,
+      parentNavigatorKey: _rootKey,
+      builder: (context, state) => const MockExamListPage(),
+      routes: [
+        GoRoute(
+            path: mockExamHistoryPath,
+            parentNavigatorKey: _rootKey,
+            builder: (context, state) => const MockExamHistoryPage()),
+        GoRoute(
+            path: mockExamResultPath,
+            parentNavigatorKey: _rootKey,
+            builder: (context, state) {
+              final extra = state.extra;
+              return MockExamResultPage(
+                  mockExamId: state.pathParameters['mockExamId'] ?? '',
+                  attemptId: state.pathParameters['attemptId'] ?? '',
+                  exam: extra is MockExamModel ? extra : null,
+                  titleOverride: extra is MockExamHistoryModel ? extra.mockExamTitle : null);
+            }),
+        GoRoute(
+            path: mockExamSectionsPath,
+            parentNavigatorKey: _rootKey,
+            builder: (context, state) {
+              final extra = state.extra;
+              return MockExamSectionsPage(
+                  mockExamId: state.pathParameters['mockExamId'] ?? '',
+                  exam: extra is MockExamModel ? extra : null);
+            })
+      ],
+    ),
     GoRoute(
         path: profileImageViewRoute,
         parentNavigatorKey: _rootKey,

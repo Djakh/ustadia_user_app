@@ -10,11 +10,15 @@ class SectionDetailRequested extends SectionDetailEvent {
   final String? unitId;
   final String? lessonId;
   final String? assignmentId;
+  final String? mockExamId;
+  final String? mockAttemptId;
 
   const SectionDetailRequested(
       {required this.sectionId,
       this.source = SectionSource.learn,
       this.unitId,
       this.lessonId,
-      this.assignmentId});
+      this.assignmentId,
+      this.mockExamId,
+      this.mockAttemptId});
 }

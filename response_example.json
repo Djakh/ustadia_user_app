@@ -1,87 +1,104 @@
 [
   {
-    "id": "550e8400-e29b-41d4-a716-446655440000",
-    "name": {
-      "en": "Beginner",
-      "ru": "Начинающий",
-      "uz": "Yangi boshlovchi"
-    },
-    "description": {
-      "en": "Beginner level for absolute beginners with no prior language knowledge",
-      "ru": "Уровень начинающих для абсолютных новичков без предварительных знаний языка",
-      "uz": "Yangi boshlovchilar uchun oldindan hech qanday til bilimisiz bo'lganlar uchun"
-    },
-    "isPublic": true,
-    "teacher_id": null,
-    "created_at": "2026-02-06T05:10:16.547Z",
-    "updated_at": "2026-02-06T05:10:16.547Z"
+    "id": "51358353-b83a-443d-8079-d8616b8a807b",
+    "title": "IELTS Academic Mock Test 1",
+    "description": "Full-length IELTS Academic mock test covering all four sections",
+    "time_limit_minutes": 180,
+    "is_active": true,
+    "assignment": {
+      "id": "ce7d2475-21a4-4613-bd29-7924d2aecc44",
+      "start_time": "2026-05-06T11:13:55.575Z",
+      "end_time": "2026-05-16T11:13:55.575Z",
+      "status": "started",
+      "finished": true,
+      "attempt": {
+        "id": "8ff7ad4f-5dd1-47f4-a29e-3591c5735b0b",
+        "status": "finished",
+        "is_started": true,
+        "is_finished": true,
+        "started_at": "2026-05-11T12:11:59.651Z",
+        "finished_at": "2026-05-11T12:12:01.727Z",
+        "current_component_id": "8d8e1744-038e-4c8c-9f0e-87a73f05e491",
+        "current_sub_section_id": "bb407580-30be-48ec-b995-a295fad41504"
+      }
+    }
   },
   {
-    "id": "a7b8c9d0-e1f2-41d4-a716-446655440001",
-    "name": {
-      "en": "Elementary",
-      "ru": "Элементарный",
-      "uz": "Boshlangʻich"
-    },
-    "description": {
-      "en": "Elementary level for beginners learning basic vocabulary and simple sentence structures",
-      "ru": "Элементарный уровень для начинающих изучение базовой лексики и простых структур предложений",
-      "uz": "Boshlangʻich daraja - asosiy leksika va oddiy gaplarni oʻrganayotgan boshlangʻich oʻquvchilar uchun"
-    },
-    "isPublic": true,
-    "teacher_id": null,
-    "created_at": "2026-02-06T05:10:16.563Z",
-    "updated_at": "2026-02-06T05:10:16.563Z"
+    "id": "29571f22-4d3e-4ee5-bfea-22bd91d57b65",
+    "title": "IELTS General Training Mock Test 1",
+    "description": "Full-length IELTS General Training mock test covering all four sections",
+    "time_limit_minutes": 180,
+    "is_active": true,
+    "assignment": {
+      "id": "7f720b41-0c0b-4c19-b5a8-f706efd09c13",
+      "start_time": "2026-05-06T11:13:55.575Z",
+      "end_time": "2026-05-16T11:13:55.575Z",
+      "status": "started",
+      "finished": false,
+      "attempt": {
+        "id": "643d34bd-6463-47be-a041-c45edd5f6da1",
+        "status": "started",
+        "is_started": true,
+        "is_finished": false,
+        "started_at": "2026-05-13T12:16:01.190Z",
+        "finished_at": null,
+        "current_component_id": "bc376e1b-ef0d-4914-84fd-2e0153ebaf9f",
+        "current_sub_section_id": "be7600f7-3991-4517-bf71-34212dd8dd5b"
+      }
+    }
   },
   {
-    "id": "c7b8c9d0-e1f2-41d4-a716-446655440003",
-    "name": {
-      "en": "Intermediate",
-      "ru": "Промежуточный",
-      "uz": "Oʻrta"
-    },
-    "description": {
-      "en": "Intermediate level for students comfortable with standard language usage and more varied topics",
-      "ru": "Промежуточный уровень для студентов, удобных со стандартным использованием языка и более разнообразными темами",
-      "uz": "Oʻrta daraja - standart til foydalanishiga oʻzboshimchas va koʻplab mavzularga mos keluvchi talabalar uchun"
-    },
-    "isPublic": true,
-    "teacher_id": null,
-    "created_at": "2026-02-06T05:10:16.577Z",
-    "updated_at": "2026-02-06T05:10:16.577Z"
+    "id": "0ba87a5f-c6fd-4818-9eab-28f8094fdfc2",
+    "title": "IELTS Academic Mock Test 2",
+    "description": "Second IELTS Academic mock test with different questions",
+    "time_limit_minutes": 180,
+    "is_active": true,
+    "assignment": {
+      "id": "648a1f1e-819c-4c25-9f8f-0bf1b361cd1d",
+      "start_time": "2026-05-06T11:13:55.575Z",
+      "end_time": "2026-05-16T11:13:55.575Z",
+      "status": "assigned",
+      "finished": false,
+      "attempt": null
+    }
   },
   {
-    "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-    "name": {
-      "en": "Pre-Intermediate",
-      "ru": "Допромежуточный",
-      "uz": "Oʻrta-oldi"
-    },
-    "description": {
-      "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
-      "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
-      "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
-    },
-    "isPublic": true,
-    "teacher_id": null,
-    "created_at": "2026-02-06T05:10:16.570Z",
-    "updated_at": "2026-02-06T05:10:16.570Z"
+    "id": "47c93d46-7395-48b6-8564-fc9866eb501f",
+    "title": "IELTS Speaking Practice Test",
+    "description": "Focused speaking practice test with 3 parts",
+    "time_limit_minutes": 15,
+    "is_active": true,
+    "assignment": {
+      "id": "b766c6d1-7fc9-4020-84c8-62bc5ac4f09f",
+      "start_time": "2026-05-06T11:13:55.575Z",
+      "end_time": "2026-05-16T11:13:55.575Z",
+      "status": "assigned",
+      "finished": false,
+      "attempt": null
+    }
   },
   {
-    "id": "d7b8c9d0-e1f2-41d4-a716-446655440004",
-    "name": {
-      "en": "Upper-Intermediate",
-      "ru": "Выше среднего",
-      "uz": "Yuqori oʻrta"
-    },
-    "description": {
-      "en": "Upper-Intermediate level for advanced learners tackling nuanced language and complex discourse",
-      "ru": "Выше среднего уровень для продвинутых учащихся, решающих сложные языковые нюансы и сложный дискурс",
-      "uz": "Yuqori oʻrta daraja - murakkabroq til nюanslari va murakkab diskursni oʻrganayotgan qoʻshma talabalar uchun"
-    },
-    "isPublic": true,
-    "teacher_id": null,
-    "created_at": "2026-02-06T05:10:16.584Z",
-    "updated_at": "2026-02-06T05:10:16.584Z"
+    "id": "3d6341dc-12a3-4b30-bb05-7b21618608cd",
+    "title": "IELTS Writing Practice Test",
+    "description": "Focused writing practice test with Task 1 and Task 2",
+    "time_limit_minutes": 60,
+    "is_active": true,
+    "assignment": {
+      "id": "a42b668c-75ef-4e67-890d-132b5d0347ce",
+      "start_time": "2026-05-06T11:13:55.575Z",
+      "end_time": "2026-05-16T11:13:55.575Z",
+      "status": "started",
+      "finished": false,
+      "attempt": {
+        "id": "d8d48637-89ce-41a9-a870-fd00cd5b3dd7",
+        "status": "started",
+        "is_started": true,
+        "is_finished": false,
+        "started_at": "2026-05-13T11:52:16.931Z",
+        "finished_at": null,
+        "current_component_id": "5d658771-f9ca-4a74-935d-fa43ff8c8ab5",
+        "current_sub_section_id": "fec1cbcb-89fd-4e88-bc9d-58157b064dfa"
+      }
+    }
   }
 ]

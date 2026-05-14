@@ -41,7 +41,9 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
           source: widget.sectionModel.source,
           unitId: widget.sectionModel.unitId,
           lessonId: widget.sectionModel.lessonId,
-          assignmentId: widget.sectionModel.assignmentId));
+          assignmentId: widget.sectionModel.assignmentId,
+          mockExamId: widget.sectionModel.mockId,
+          mockAttemptId: widget.sectionModel.mockAttemptId));
     }
   }
 
@@ -58,10 +60,16 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
     setState(() => stage = ListeningSectionStage.quiz);
   }
 
-  void finishQuiz(int correct) => setState(() {
-        correctCount = correct;
-        stage = ListeningSectionStage.result;
-      });
+  void finishQuiz(int correct) {
+    if (widget.sectionModel.source == SectionSource.mockExam) {
+      Navigator.of(context).pop(true);
+      return;
+    }
+    setState(() {
+      correctCount = correct;
+      stage = ListeningSectionStage.result;
+    });
+  }
 
   /// --- Widgets  ---
 
@@ -70,7 +78,7 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
         Text(widget.sectionModel.title,
             maxLines: 1, overflow: TextOverflow.ellipsis, style: Style.body2w6(context)),
         const SizedBox(height: 2),
-        Text(widget.sectionModel.sectionType.name.toUpperCase(),
+        Text(widget.sectionModel.sectionTypeLabel.toUpperCase(),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Style.small3w4(context, color: TextColorRole.greyColor))
@@ -78,6 +86,16 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
 
   Widget body(BuildContext context, SectionDetailState state) {
     final isLoading = state.status.isLoading || state.detail == null;
+    if (widget.sectionModel.source == SectionSource.mockExam &&
+        state.detail?.progressState == SectionProgressState.completed) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) Navigator.of(context).pop(true);
+      });
+      return const SizedBox.shrink();
+    }
+    if (state.detail?.progressState == SectionProgressState.completed) {
+      return QuizResultComponent(sectionModel: widget.sectionModel);
+    }
     if (stage == ListeningSectionStage.lesson)
       return ListeningSectionIntro(
           sectionModel: widget.sectionModel,
@@ -104,9 +122,8 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
           header: header,
           headerTooltipText: widget.sectionModel.title,
           padding: stage == ListeningSectionStage.quiz ? EdgeInsets.zero : null,
-          margin: stage == ListeningSectionStage.quiz
-              ? const EdgeInsets.fromLTRB(8, 8, 8, 0)
-              : null,
+          margin:
+              stage == ListeningSectionStage.quiz ? const EdgeInsets.fromLTRB(8, 8, 8, 0) : null,
           applyBottomSafeArea: stage != ListeningSectionStage.quiz,
           isHeader: stage != ListeningSectionStage.result,
           isScrollable: false,

@@ -20,7 +20,7 @@ class DashboardQuickGridList extends StatelessWidget {
   static const double tallHeight = 140;
 
   /// --- Methods ---
-  void goToPractice(BuildContext context) => NavigationShellScope.of(context).goBranch(2);
+  void goToMockExam(BuildContext context) => context.push(mockExamRoute);
   void goToAssignments(BuildContext context) => context.push(assignmentsRoute);
 
   void goToChatWithAi(BuildContext context) => NavigationShellScope.of(context).goBranch(3);
@@ -45,12 +45,12 @@ class DashboardQuickGridList extends StatelessWidget {
 
   Widget lessonAndChat(BuildContext context) => Column(children: [
         DashboardGridCard(
-            title: 'Practice'.tr(),
-            subtitle: 'Games & Quizzes'.tr(),
+            title: 'Mock exam'.tr(),
+            subtitle: 'IELTS mock tests'.tr(),
             cardColor: AppColors.orangeBE,
             height: 118,
             backImage: AppImages.lessonCardBack,
-            onTap: () => goToPractice(context)),
+            onTap: () => goToMockExam(context)),
         const SizedBox(height: 12),
         DashboardGridCard(
             title: 'Chat with AI'.tr(),
@@ -81,9 +81,7 @@ class DashboardQuickGridList extends StatelessWidget {
       ]);
 
   @override
-  Widget build(BuildContext context) => BlocBuilder<UserBloc, UserState>(
-      builder: (context, state) {
-        final _ = context.locale;
+  Widget build(BuildContext context) => BlocBuilder<UserBloc, UserState>(builder: (context, state) {
         return Row(children: [
           Expanded(child: lessonAndChat(context)),
           const SizedBox(width: 10),

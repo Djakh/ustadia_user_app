@@ -69,7 +69,11 @@ class DioClient {
 
   static void _logResponsePretty(Response<dynamic> response) {
     final data = response.data;
-    if (data == null) return;
+    if (data == null) {
+      // ignore: avoid_print
+      print('[DIO] Response Pretty: status=${response.statusCode}, body: none');
+      return;
+    }
     String output;
     if (data is String) {
       final decoded = _tryDecodeJson(data);

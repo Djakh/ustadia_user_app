@@ -12,6 +12,7 @@ import 'package:ustadia_user_app/features/assignments/data/datasources/assignmen
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_stats_model.dart';
 import 'package:ustadia_user_app/features/learn/data/datasources/learn_remote_data_source.dart';
+import 'package:ustadia_user_app/features/mock_exam/data/datasources/mock_exam_remote_data_source.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 class QuizResultComponent extends StatefulWidget {
@@ -57,10 +58,7 @@ class _QuizResultComponentState extends State<QuizResultComponent> {
       errorMessage = null;
     });
     try {
-      final loaded = sectionModel.source == SectionSource.assignment
-          ? await sl<AssignmentsRemoteDataSource>().fetchAssignmentSectionStats(
-              assignmentId: sectionModel.assignmentId ?? '', sectionId: sectionModel.id)
-          : await sl<LearnRemoteDataSource>().fetchSectionStats(sectionId: sectionModel.id);
+      final loaded = await loadSectionStats(sectionModel);
       if (!mounted) return;
       setState(() => stats = loaded);
     } catch (error) {
@@ -72,6 +70,20 @@ class _QuizResultComponentState extends State<QuizResultComponent> {
   }
 
   void backToTopic(BuildContext context) => context.pop(true);
+
+  Future<SectionStatsModel> loadSectionStats(SectionModel sectionModel) {
+    if (sectionModel.source == SectionSource.assignment) {
+      return sl<AssignmentsRemoteDataSource>().fetchAssignmentSectionStats(
+          assignmentId: sectionModel.assignmentId ?? '', sectionId: sectionModel.id);
+    }
+    if (sectionModel.source == SectionSource.mockExam) {
+      return sl<MockExamRemoteDataSource>().fetchMockExamSectionStats(
+          mockExamId: sectionModel.mockId ?? '',
+          attemptId: sectionModel.mockAttemptId ?? '',
+          sectionId: sectionModel.id);
+    }
+    return sl<LearnRemoteDataSource>().fetchSectionStats(sectionId: sectionModel.id);
+  }
 
   int get total => stats?.totalQuestions ?? widget.all ?? 0;
   int get correct => stats?.correct ?? widget.correctOnes ?? 0;

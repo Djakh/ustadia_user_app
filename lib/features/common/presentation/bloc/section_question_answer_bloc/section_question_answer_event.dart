@@ -13,6 +13,8 @@ class QuestionAnswerSubmitted extends SectionQuestionAnswerEvent {
   final String sectionId;
   final String questionId;
   final String? assignmentId;
+  final String? mockExamId;
+  final String? mockAttemptId;
   final String? answerId;
   final List<String> answerIds;
   final String? userInputText;
@@ -26,6 +28,8 @@ class QuestionAnswerSubmitted extends SectionQuestionAnswerEvent {
       {required this.sectionId,
       required this.questionId,
       this.assignmentId,
+      this.mockExamId,
+      this.mockAttemptId,
       this.answerId,
       this.answerIds = const [],
       this.userInputText,
@@ -40,6 +44,8 @@ class QuestionAnswerSubmitted extends SectionQuestionAnswerEvent {
         sectionId,
         questionId,
         assignmentId,
+        mockExamId,
+        mockAttemptId,
         answerId,
         answerIds,
         userInputText,
