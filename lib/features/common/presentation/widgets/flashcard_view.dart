@@ -48,7 +48,7 @@ class FlashcardView extends StatelessWidget {
         children: [
           Text('${'Meaning'.tr()}:', style: Style.small3w4(context)),
           const SizedBox(height: 12),
-          flashcard.back == null
+          isLoading || flashcard.back == null
               ? const PrimaryLoadingIndicator()
               : Text(flashcard.back!, textAlign: TextAlign.center, style: Style.body3w4(context))
         ],

@@ -24,6 +24,7 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/section_detai
 import 'package:ustadia_user_app/features/learn/presentation/widgets/banners/learn_speaking_status_banner.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/buttons/learn_speaking_mic_button.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/cards/learn_speaking_prompt_card.dart';
+import 'package:ustadia_user_app/features/mock_exam/data/datasources/mock_exam_remote_data_source.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 enum SpeakingSectionStage { ready, listening, checking, result }
@@ -64,7 +65,9 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
           source: widget.sectionModel.source,
           unitId: widget.sectionModel.unitId,
           lessonId: widget.sectionModel.lessonId,
-          assignmentId: widget.sectionModel.assignmentId));
+          assignmentId: widget.sectionModel.assignmentId,
+          mockExamId: widget.sectionModel.mockId,
+          mockAttemptId: widget.sectionModel.mockAttemptId));
     }
   }
 
@@ -115,6 +118,8 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
           sectionId: currentQuestion.sectionId,
           questionId: currentQuestion.id,
           assignmentId: currentQuestion.assignmentId,
+          mockExamId: currentQuestion.mockExamId,
+          mockAttemptId: currentQuestion.mockAttemptId,
           unitId: currentQuestion.unitId,
           lessonId: currentQuestion.lessonId,
           userAudioId: state.uploadedFile!.id,
@@ -187,9 +192,14 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
     setState(() {});
   }
 
-  void nextOrFinish(int totalQuestions) {
+  void nextOrFinish(int totalQuestions) async {
     final isLast = questionIndex == totalQuestions - 1;
     if (isLast) {
+      await finishMockExamSectionIfNeeded();
+      if (widget.sectionModel.source == SectionSource.mockExam && mounted) {
+        Navigator.of(context).pop(true);
+        return;
+      }
       setStage(SpeakingSectionStage.result);
       setState(() {});
       return;
@@ -199,6 +209,17 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
     setStage(SpeakingSectionStage.ready);
     remainingDuration = maxSpeakingDuration;
     setState(() {});
+  }
+
+  Future<void> finishMockExamSectionIfNeeded() async {
+    if (widget.sectionModel.source != SectionSource.mockExam) return;
+    final mockExamId = widget.sectionModel.mockId;
+    final attemptId = widget.sectionModel.mockAttemptId;
+    if (mockExamId == null || mockExamId.isEmpty || attemptId == null || attemptId.isEmpty) return;
+    try {
+      await sl<MockExamRemoteDataSource>().finishMockExamSection(
+          mockExamId: mockExamId, attemptId: attemptId, sectionId: widget.sectionModel.id);
+    } catch (_) {}
   }
 
   Future<void> stopAndCheck(SectionDetailState state) async {
@@ -288,6 +309,9 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
   Widget get bodyChecker => BlocBuilder<SectionDetailBloc, SectionDetailState>(
       bloc: detailBloc,
       builder: (context, state) {
+        if (state.detail?.progressState == SectionProgressState.completed) {
+          return QuizResultComponent(sectionModel: widget.sectionModel);
+        }
         if (stage == SpeakingSectionStage.result) {
           return QuizResultComponent(sectionModel: widget.sectionModel);
         }

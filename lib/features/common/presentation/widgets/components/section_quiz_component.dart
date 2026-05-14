@@ -6,18 +6,21 @@ import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_answer_model.dart';
+import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_question_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_state.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/cards/quiz_card.dart';
+import 'package:ustadia_user_app/features/mock_exam/data/datasources/mock_exam_remote_data_source.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 class SectionQuizComponent extends StatefulWidget {
   final List<SectionQuestionModel> questions;
   final ValueChanged<int> onFinish;
   final Widget? headerWidget;
-  final Widget Function(BuildContext context, bool isResultState, Color panelColor)? panelActionBuilder;
+  final Widget Function(BuildContext context, bool isResultState, Color panelColor)?
+      panelActionBuilder;
   const SectionQuizComponent(
       {super.key,
       required this.questions,
@@ -48,7 +51,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   void initState() {
     questions = widget.questions;
     answerBloc.add(const QuestionAnswerReset());
-    _syncQuestionState();
+    if (questions.isNotEmpty) _syncQuestionState();
     shortAnswerController.addListener(_handleInputChanged);
     super.initState();
   }
@@ -71,7 +74,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       questions = widget.questions;
       questionIndex = 0;
       correctCount = 0;
-      _syncQuestionState();
+      if (questions.isNotEmpty) _syncQuestionState();
     }
   }
 
@@ -80,6 +83,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   List<SectionAnswerModel> get currentAnswers => currentQuestion.answers ?? [];
   String get questionType => currentQuestion.questionType.toLowerCase();
   bool get isReviewMode => currentQuestion.isAnswered == true;
+  bool get isMockExam => currentQuestion.source == SectionSource.mockExam;
 
   bool get isMultipleChoice => questionType == 'multiple-choice';
   bool get isShortAnswer => questionType == 'short-answer';
@@ -112,6 +116,15 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   }
 
   void _syncQuestionState() {
+    if (questions.isEmpty) {
+      selectedIndex = null;
+      selectedIndices.clear();
+      hasSubmitted = false;
+      showCorrectAnswer = false;
+      _resetBlankControllers();
+      shortAnswerController.clear();
+      return;
+    }
     selectedIndex = null;
     selectedIndices.clear();
     hasSubmitted = isReviewMode;
@@ -181,6 +194,8 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
           questionId: currentQuestion.id,
           answerIds: selectedAnswerIds,
           assignmentId: currentQuestion.assignmentId,
+          mockExamId: currentQuestion.mockExamId,
+          mockAttemptId: currentQuestion.mockAttemptId,
           unitId: currentQuestion.unitId,
           lessonId: currentQuestion.lessonId,
           source: currentQuestion.source));
@@ -197,6 +212,8 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
           questionId: currentQuestion.id,
           blankAnswers: blanks,
           assignmentId: currentQuestion.assignmentId,
+          mockExamId: currentQuestion.mockExamId,
+          mockAttemptId: currentQuestion.mockAttemptId,
           unitId: currentQuestion.unitId,
           lessonId: currentQuestion.lessonId,
           source: currentQuestion.source));
@@ -208,6 +225,8 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
           questionId: currentQuestion.id,
           userInputText: text,
           assignmentId: currentQuestion.assignmentId,
+          mockExamId: currentQuestion.mockExamId,
+          mockAttemptId: currentQuestion.mockAttemptId,
           unitId: currentQuestion.unitId,
           lessonId: currentQuestion.lessonId,
           source: currentQuestion.source));
@@ -218,14 +237,30 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
           answerId: currentAnswers[selectedIndex!].id,
           answerIds: const [],
           assignmentId: currentQuestion.assignmentId,
+          mockExamId: currentQuestion.mockExamId,
+          mockAttemptId: currentQuestion.mockAttemptId,
           unitId: currentQuestion.unitId,
           lessonId: currentQuestion.lessonId,
           source: currentQuestion.source));
     }
   }
 
-  void goNextQuestion() {
-    if (questionIndex == questions.length - 1) return widget.onFinish(correctCount);
+  Future<void> finishMockExamSectionIfNeeded() async {
+    if (currentQuestion.source != SectionSource.mockExam) return;
+    final mockExamId = currentQuestion.mockExamId;
+    final attemptId = currentQuestion.mockAttemptId;
+    if (mockExamId == null || mockExamId.isEmpty || attemptId == null || attemptId.isEmpty) return;
+    try {
+      await sl<MockExamRemoteDataSource>().finishMockExamSection(
+          mockExamId: mockExamId, attemptId: attemptId, sectionId: currentQuestion.sectionId);
+    } catch (_) {}
+  }
+
+  Future<void> goNextQuestion() async {
+    if (questionIndex == questions.length - 1) {
+      await finishMockExamSectionIfNeeded();
+      return widget.onFinish(correctCount);
+    }
 
     answerBloc.add(const QuestionAnswerReset());
     questionIndex++;
@@ -295,12 +330,15 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   Color optionFillColor(BuildContext context, int index, QuestionAnswerState answerState) {
     if (!hasSubmitted) return context.cs.surface;
     if (!isSelectedIndex(index)) return context.cs.surface;
+    if (isMockExam) return context.cs.surface;
     if (isCorrectAnswerIndex(index, answerState)) return AppColors.primary;
     return AppColors.error;
   }
 
   Color optionBorderColor(BuildContext context, int index, QuestionAnswerState answerState) {
     if (!hasSubmitted && isSelectedIndex(index)) return AppColors.primary;
+    if (isMockExam && isSelectedIndex(index)) return AppColors.primary;
+    if (isMockExam) return AppColors.transparent;
     if (showCorrectAnswer && isCorrectAnswerIndex(index, answerState)) return AppColors.orange033;
     return AppColors.transparent;
   }
@@ -335,7 +373,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
         onTap: () => onSelectAnswerOption(index),
         color: context.cs.surface,
         borderColor: optionBorderColor(context, index, answerState),
-        borderWidth: showCorrectAnswer && isCorrect ? 1.5 : 1,
+        borderWidth: isSelectedIndex(index) || showCorrectAnswer && isCorrect ? 1.5 : 1,
         child: label);
   }
 
@@ -367,6 +405,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))));
 
   bool get canRevealCorrectAnswer =>
+      !isMockExam &&
       hasSubmitted &&
       !questionWasCorrect(answerBloc.state) &&
       currentAnswers.isNotEmpty &&
@@ -388,26 +427,40 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
           selectedIds.length == correctIds.length &&
           selectedIds.containsAll(correctIds);
     }
-    return answerState.result?.questionId == currentQuestion.id && answerState.result?.isCorrect == true;
+    return answerState.result?.questionId == currentQuestion.id &&
+        answerState.result?.isCorrect == true;
   }
 
-  Color resultPanelColor(QuestionAnswerState answerState) =>
-      questionWasCorrect(answerState) ? AppColors.primary : AppColors.error;
+  Color resultPanelColor(QuestionAnswerState answerState) => isMockExam
+      ? AppColors.white
+      : questionWasCorrect(answerState)
+          ? AppColors.primary
+          : AppColors.error;
 
   Color resultPanelTextColor(BuildContext context) =>
-      isResultState ? AppColors.white : context.cs.onSurface;
+      isResultState && !isMockExam ? AppColors.white : context.cs.onSurface;
 
-  IconData resultPanelIcon(QuestionAnswerState answerState) =>
-      questionWasCorrect(answerState) ? Icons.check_circle_rounded : Icons.error_outline_rounded;
+  IconData resultPanelIcon(QuestionAnswerState answerState) => isMockExam
+      ? Icons.check_circle_rounded
+      : questionWasCorrect(answerState)
+          ? Icons.check_circle_rounded
+          : Icons.error_outline_rounded;
 
-  String resultPanelTitle(QuestionAnswerState answerState) =>
-      questionWasCorrect(answerState) ? 'Your answer was correct'.tr() : 'Your answer was incorrect'.tr();
+  String resultPanelTitle(QuestionAnswerState answerState) {
+    if (isMockExam) return 'Answer saved'.tr();
+    return questionWasCorrect(answerState)
+        ? 'Your answer was correct'.tr()
+        : 'Your answer was incorrect'.tr();
+  }
 
   String? resultPanelSubtitle(QuestionAnswerState answerState) {
     if (!isResultState) {
       return isReadyToSubmit
           ? 'Tap submit to check your answer.'.tr()
           : 'Choose an answer to continue.'.tr();
+    }
+    if (isMockExam) {
+      return 'Tap continue to move to the next question.'.tr();
     }
     if (questionWasCorrect(answerState)) {
       return 'Tap continue to move to the next question.'.tr();
@@ -429,8 +482,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
           ? AppColors.white.withValues(alpha: 0.75)
           : AppColors.orange033.withValues(alpha: 0.35),
       child: Icon(Icons.visibility_rounded,
-          size: 20,
-          color: isResultState ? resultPanelColor(answerState) : AppColors.orange033));
+          size: 20, color: isResultState ? resultPanelColor(answerState) : AppColors.orange033));
 
   Widget submitButton(QuestionAnswerState answerState) {
     final canSubmit = hasSubmitted ? true : isReadyToSubmit;
@@ -438,8 +490,8 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     return Button.primary(
         onTap: hasSubmitted || isReviewMode ? goNextQuestion : submitCurrentAnswer,
         text: label.tr(),
-        color: isResultState ? AppColors.white : null,
-        textColor: isResultState ? resultPanelColor(answerState) : null,
+        color: isResultState && !isMockExam ? AppColors.white : null,
+        textColor: isResultState && !isMockExam ? resultPanelColor(answerState) : null,
         isLoading: !isReviewMode && answerState.status.isLoading,
         isAvialable: canSubmit);
   }
@@ -464,9 +516,12 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
         child: Container(
             padding: EdgeInsets.fromLTRB(18, 18, 18, 20 + bottomInset),
             decoration: BoxDecoration(
-                color: panelColor,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-              ),
+              color: panelColor,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+              border: isResultState && isMockExam
+                  ? Border.all(color: AppColors.primary, width: 1.5)
+                  : null,
+            ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               SizedBox(
                   height: 72,
@@ -490,8 +545,10 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
                               child: Text(subtitle ?? '',
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
-                                  style: Style.bodyw4(context)
-                                      .copyWith(color: AppColors.white.withValues(alpha: 0.92))))
+                                  style: Style.bodyw4(context).copyWith(
+                                      color: isMockExam
+                                          ? context.cs.onSurface.withValues(alpha: 0.72)
+                                          : AppColors.white.withValues(alpha: 0.92))))
                         ])
                       : Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Expanded(
@@ -520,33 +577,33 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
           style: Style.small3w4(context).copyWith(color: AppColors.error)));
 
   Widget scrollContent(QuestionAnswerState answerState, double bottomSpacerHeight) => ListView(
-      padding: EdgeInsets.only(bottom: bottomSpacerHeight),
-      physics: const ClampingScrollPhysics(),
-      children: [
-        Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Column(children: [
-              const SizedBox(height: 24),
-              progressHeader,
-              const SizedBox(height: 24),
-              ...isShownHeaderWidget,
-              QuestionsCard(currentQuestion: currentQuestion),
-              const SizedBox(height: 20),
-              // if (hasMalformedChoiceQuestion) ...[
-              //   malformedQuestionWarning(context),
-              //   const SizedBox(height: 12),
-              // ],
-              if (isFillBlank)
-                fillBlankView()
-              else if (isShortAnswer)
-                shortAnswerView()
-              else if (currentAnswers.isNotEmpty)
-                ...optionsList(answerState)
-              else
-                Text('No answers available.'.tr(),
-                    style: Style.small3w4(context, color: TextColorRole.greyColor)),
-            ]))
-      ]);
+          padding: EdgeInsets.only(bottom: bottomSpacerHeight),
+          physics: const ClampingScrollPhysics(),
+          children: [
+            Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Column(children: [
+                  const SizedBox(height: 24),
+                  progressHeader,
+                  const SizedBox(height: 24),
+                  ...isShownHeaderWidget,
+                  QuestionsCard(currentQuestion: currentQuestion),
+                  const SizedBox(height: 20),
+                  // if (hasMalformedChoiceQuestion) ...[
+                  //   malformedQuestionWarning(context),
+                  //   const SizedBox(height: 12),
+                  // ],
+                  if (isFillBlank)
+                    fillBlankView()
+                  else if (isShortAnswer)
+                    shortAnswerView()
+                  else if (currentAnswers.isNotEmpty)
+                    ...optionsList(answerState)
+                  else
+                    Text('No answers available.'.tr(),
+                        style: Style.small3w4(context, color: TextColorRole.greyColor)),
+                ]))
+          ]);
 
   Widget get view => LayoutBuilder(
       builder: (context, constraints) => BlocBuilder<QuestionAnswerBloc, QuestionAnswerState>(
@@ -555,7 +612,8 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
             final panelHeight = 210.0 + MediaQuery.of(context).padding.bottom;
             return Stack(children: [
               Positioned.fill(child: scrollContent(answerState, panelHeight + 16)),
-              Positioned(left: 0, right: 0, bottom: 0, child: bottomResultPanel(context, answerState))
+              Positioned(
+                  left: 0, right: 0, bottom: 0, child: bottomResultPanel(context, answerState))
             ]);
           }));
 
@@ -571,7 +629,8 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
         listener: (context, state) {
           if (state.status.isSuccess) {
             if (!hasSubmitted) {
-              if (state.result?.questionId == currentQuestion.id &&
+              if (!isMockExam &&
+                  state.result?.questionId == currentQuestion.id &&
                   state.result?.isCorrect == true) {
                 correctCount++;
               }

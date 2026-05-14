@@ -9,17 +9,20 @@ import 'package:ustadia_user_app/features/learn/data/datasources/learn_remote_da
 import 'package:ustadia_user_app/features/learn/data/models/learn_question_answer_result_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_state.dart';
+import 'package:ustadia_user_app/features/mock_exam/data/datasources/mock_exam_remote_data_source.dart';
 import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 
 class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswerState> {
   final LearnRemoteDataSource learnRemoteDataSource;
   final AssignmentsRemoteDataSource assignmentsRemoteDataSource;
+  final MockExamRemoteDataSource mockExamRemoteDataSource;
   final ProfileStatisticsStore profileStatisticsStore;
   final CurrentUnitStore currentUnitStore;
 
   QuestionAnswerBloc(
       {required this.learnRemoteDataSource,
       required this.assignmentsRemoteDataSource,
+      required this.mockExamRemoteDataSource,
       required this.profileStatisticsStore,
       required this.currentUnitStore})
       : super(const QuestionAnswerState()) {
@@ -39,6 +42,47 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
       clearErrorMessage: true,
     ));
     try {
+      if (event.source == SectionSource.mockExam) {
+        final mockExamId = event.mockExamId;
+        if (mockExamId == null || mockExamId.isEmpty) {
+          emit(state.copyWith(
+            status: Status.error,
+            errorMessage: 'Mock exam id is missing.',
+            clearResult: true,
+          ));
+          return;
+        }
+        final mockAttemptId = event.mockAttemptId;
+        if (mockAttemptId == null || mockAttemptId.isEmpty) {
+          emit(state.copyWith(
+            status: Status.error,
+            errorMessage: 'Mock exam attempt id is missing.',
+            clearResult: true,
+          ));
+          return;
+        }
+        if (event.sectionId.isEmpty) {
+          emit(state.copyWith(
+            status: Status.error,
+            errorMessage: 'Mock exam section id is missing.',
+            clearResult: true,
+          ));
+          return;
+        }
+        final response = await mockExamRemoteDataSource.submitMockExamAnswer(
+            mockExamId: mockExamId,
+            attemptId: mockAttemptId,
+            sectionId: event.sectionId,
+            answer: buildMockExamAnswerPayload(event));
+        final extracted = _extractLearnResult(response, event.questionId);
+        emit(state.copyWith(
+          status: Status.success,
+          result: extracted,
+          clearErrorMessage: true,
+        ));
+        return;
+      }
+
       if (event.source == SectionSource.assignment) {
         final assignmentId = event.assignmentId;
         if (assignmentId == null || assignmentId.isEmpty) {
@@ -117,6 +161,30 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
   void markDerivedDataStale() {
     profileStatisticsStore.markStale();
     currentUnitStore.markStale();
+  }
+
+  Map<String, dynamic> buildMockExamAnswerPayload(QuestionAnswerSubmitted event) {
+    final blankAnswers = event.blankAnswers
+        .map((item) => item.answer ?? '')
+        .where((answer) => answer.trim().isNotEmpty)
+        .toList();
+    if (blankAnswers.isNotEmpty) {
+      return {'question_id': event.questionId, 'blank_answers': blankAnswers};
+    }
+    if (event.answerIds.isNotEmpty) {
+      return {'question_id': event.questionId, 'selected_answer_id': event.answerIds.first};
+    }
+    if (event.answerId != null && event.answerId!.isNotEmpty) {
+      return {'question_id': event.questionId, 'selected_answer_id': event.answerId};
+    }
+    final payload = <String, dynamic>{'question_id': event.questionId};
+    if (event.userInputText != null && event.userInputText!.trim().isNotEmpty) {
+      payload['answer_text'] = event.userInputText!.trim();
+    }
+    if (event.userAudioId != null && event.userAudioId!.trim().isNotEmpty) {
+      payload['audio_file_id'] = event.userAudioId!.trim();
+    }
+    return payload;
   }
 
   List<Map<String, dynamic>> buildLessonAnswersPayload(QuestionAnswerSubmitted event) {

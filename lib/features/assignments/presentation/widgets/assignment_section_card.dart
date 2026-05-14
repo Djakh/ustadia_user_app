@@ -11,10 +11,7 @@ class AssignmentSectionCard extends StatelessWidget {
 
   const AssignmentSectionCard({super.key, required this.section, required this.onTap});
 
-  String get sectionTypeLabel {
-    if (section.sectionStringType == null || section.sectionStringType!.isEmpty) return 'Section';
-    return section.sectionStringType![0].toUpperCase() + section.sectionStringType!.substring(1);
-  }
+  String get sectionTypeLabel => section.sectionTypeLabel;
 
   String get durationLabel =>
       section.timeLimit != null && section.timeLimit! > 0 ? '${section.timeLimit}m' : '-';

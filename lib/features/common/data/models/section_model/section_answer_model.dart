@@ -14,14 +14,16 @@ class SectionAnswerModel {
       required this.userSelected,
       required this.orderIndex});
 
-  factory SectionAnswerModel.fromJson(Map<String, dynamic> json) => SectionAnswerModel(
-      id: json['id']?.toString() ?? '',
-      questionId:
-          json['question_id']?.toString() ?? json['assignment_question_id']?.toString() ?? '',
-      answerText: json['answer_text']?.toString() ?? '',
-      isCorrect: _extractIsCorrect(json),
-      userSelected: _toBool(json['user_selected']),
-      orderIndex: _toInt(json['order_index']));
+  factory SectionAnswerModel.fromJson(Map<String, dynamic> json, {String? selectedAnswerId}) =>
+      SectionAnswerModel(
+          id: json['id']?.toString() ?? '',
+          questionId:
+              json['question_id']?.toString() ?? json['assignment_question_id']?.toString() ?? '',
+          answerText: json['answer_text']?.toString() ?? '',
+          isCorrect: _extractIsCorrect(json),
+          userSelected: _toBool(json['user_selected']) ||
+              (selectedAnswerId != null && selectedAnswerId == json['id']?.toString()),
+          orderIndex: _toInt(json['order_index']));
 
   static int _toInt(dynamic value, {int fallback = 0}) {
     if (value == null) return fallback;

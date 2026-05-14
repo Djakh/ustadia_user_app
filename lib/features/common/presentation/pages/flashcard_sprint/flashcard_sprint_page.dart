@@ -59,7 +59,8 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   String get progress => 'Card ${index + 1}/${cards.length}';
   bool get hasSeenMeaning => _seenMeaning.contains(index);
   bool get isSubmitting => statusBloc.state.status.isLoading;
-  bool get shouldShowMeaning => showMeaning || isSubmitting;
+  bool get isCurrentMeaningLoading => isSubmitting && statusBloc.state.flashcardId == current.id;
+  bool get shouldShowMeaning => showMeaning;
   bool get isSectionVocabulary => widget.sectionModel != null && !widget.isPractice;
 
   @override
@@ -182,7 +183,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
       flashcard: current,
       showMeaning: shouldShowMeaning,
       onToggle: toggleFace,
-      isLoading: isSubmitting);
+      isLoading: isCurrentMeaningLoading);
 
   Widget controls(BuildContext context) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),

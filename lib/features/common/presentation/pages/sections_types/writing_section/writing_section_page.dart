@@ -24,6 +24,7 @@ import 'package:ustadia_user_app/features/common/presentation/pages/sections_typ
 import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_writing_method.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/bottom_sheets/learn_writing_bottom_sheet.dart';
+import 'package:ustadia_user_app/features/mock_exam/data/datasources/mock_exam_remote_data_source.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 enum WritingSectionStage { lesson, input, result }
@@ -69,13 +70,29 @@ class WritingSectionPageState extends State<WritingSectionPage> {
 
   /// --- Listeners ---
 
-  void questionAnswerListener(context, state) {
+  void questionAnswerListener(context, state) async {
     if (state.status.isError && state.errorMessage != null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
     }
     if (state.status.isSuccess) {
+      await finishMockExamSectionIfNeeded();
+      if (widget.sectionModel.source == SectionSource.mockExam && mounted) {
+        Navigator.of(context).pop(true);
+        return;
+      }
       setState(() => stage = WritingSectionStage.result);
     }
+  }
+
+  Future<void> finishMockExamSectionIfNeeded() async {
+    if (widget.sectionModel.source != SectionSource.mockExam) return;
+    final mockExamId = widget.sectionModel.mockId;
+    final attemptId = widget.sectionModel.mockAttemptId;
+    if (mockExamId == null || mockExamId.isEmpty || attemptId == null || attemptId.isEmpty) return;
+    try {
+      await sl<MockExamRemoteDataSource>().finishMockExamSection(
+          mockExamId: mockExamId, attemptId: attemptId, sectionId: widget.sectionModel.id);
+    } catch (_) {}
   }
 
   void fileUploadListener(context, FileUploadState state) {
@@ -95,7 +112,9 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       source: widget.sectionModel.source,
       unitId: widget.sectionModel.unitId,
       lessonId: widget.sectionModel.lessonId,
-      assignmentId: widget.sectionModel.assignmentId));
+      assignmentId: widget.sectionModel.assignmentId,
+      mockExamId: widget.sectionModel.mockId,
+      mockAttemptId: widget.sectionModel.mockAttemptId));
 
   Future<void> pickUploadFile() async {
     try {
@@ -170,6 +189,8 @@ class WritingSectionPageState extends State<WritingSectionPage> {
         sectionId: widget.sectionModel.id,
         questionId: question.id,
         assignmentId: question.assignmentId,
+        mockExamId: question.mockExamId,
+        mockAttemptId: question.mockAttemptId,
         unitId: question.unitId,
         lessonId: question.lessonId,
         userInputText:
@@ -191,7 +212,7 @@ class WritingSectionPageState extends State<WritingSectionPage> {
         Text(widget.sectionModel.title,
             maxLines: 1, overflow: TextOverflow.ellipsis, style: Style.body2w6(context)),
         const SizedBox(height: 2),
-        Text(widget.sectionModel.sectionType.name.toUpperCase(),
+        Text(widget.sectionModel.sectionTypeLabel.toUpperCase(),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Style.small3w4(context, color: TextColorRole.greyColor))
@@ -264,6 +285,9 @@ class WritingSectionPageState extends State<WritingSectionPage> {
   Widget get lessonView => BlocBuilder<SectionDetailBloc, SectionDetailState>(
       bloc: detailBloc,
       builder: (context, state) {
+        if (state.detail?.progressState == SectionProgressState.completed) {
+          return QuizResultComponent(sectionModel: widget.sectionModel);
+        }
         if (state.status.isSuccess && state.detail != null)
           return WritingSectionLesson(
               sectionDetailModel: state.detail!, onTapContinue: showMethodSheet);

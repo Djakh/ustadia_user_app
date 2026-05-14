@@ -40,7 +40,9 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
           source: widget.sectionModel.source,
           unitId: widget.sectionModel.unitId,
           lessonId: widget.sectionModel.lessonId,
-          assignmentId: widget.sectionModel.assignmentId));
+          assignmentId: widget.sectionModel.assignmentId,
+          mockExamId: widget.sectionModel.mockId,
+          mockAttemptId: widget.sectionModel.mockAttemptId));
     }
   }
 
@@ -57,17 +59,23 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
     setState(() => stage = GrammarSectionStage.quiz);
   }
 
-  void finishQuiz(int correct) => setState(() {
-        correctCount = correct;
-        stage = GrammarSectionStage.result;
-      });
+  void finishQuiz(int correct) {
+    if (widget.sectionModel.source == SectionSource.mockExam) {
+      Navigator.of(context).pop(true);
+      return;
+    }
+    setState(() {
+      correctCount = correct;
+      stage = GrammarSectionStage.result;
+    });
+  }
 
   /// --- Widgets ---
   Widget get header => Column(children: [
         Text(widget.sectionModel.title,
             maxLines: 1, overflow: TextOverflow.ellipsis, style: Style.body2w6(context)),
         const SizedBox(height: 2),
-        Text(widget.sectionModel.sectionType.name.toUpperCase(),
+        Text(widget.sectionModel.sectionTypeLabel.toUpperCase(),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Style.small3w4(context, color: TextColorRole.greyColor))
@@ -75,6 +83,16 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
 
   Widget body(BuildContext context, SectionDetailState state) {
     final isLoading = state.status.isLoading || state.detail == null;
+    if (widget.sectionModel.source == SectionSource.mockExam &&
+        state.detail?.progressState == SectionProgressState.completed) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) Navigator.of(context).pop(true);
+      });
+      return const SizedBox.shrink();
+    }
+    if (state.detail?.progressState == SectionProgressState.completed) {
+      return QuizResultComponent(sectionModel: widget.sectionModel);
+    }
     if (stage == GrammarSectionStage.intro)
       return GrammarSectionIntro(
           sectionModel: widget.sectionModel,
@@ -98,9 +116,7 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
           header: header,
           headerTooltipText: widget.sectionModel.title,
           padding: stage == GrammarSectionStage.quiz ? EdgeInsets.zero : null,
-          margin: stage == GrammarSectionStage.quiz
-              ? const EdgeInsets.fromLTRB(8, 8, 8, 0)
-              : null,
+          margin: stage == GrammarSectionStage.quiz ? const EdgeInsets.fromLTRB(8, 8, 8, 0) : null,
           applyBottomSafeArea: stage != GrammarSectionStage.quiz,
           isHeader: stage != GrammarSectionStage.result,
           isScrollable: false,

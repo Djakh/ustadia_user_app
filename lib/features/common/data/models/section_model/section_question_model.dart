@@ -6,6 +6,8 @@ class SectionQuestionModel {
   final String id;
   final String sectionId;
   final String? assignmentId;
+  final String? mockExamId;
+  final String? mockAttemptId;
   final String? unitId;
   final String? lessonId;
   final String title;
@@ -25,6 +27,8 @@ class SectionQuestionModel {
       {required this.id,
       required this.sectionId,
       required this.assignmentId,
+      required this.mockExamId,
+      required this.mockAttemptId,
       required this.unitId,
       required this.lessonId,
       required this.title,
@@ -44,13 +48,18 @@ class SectionQuestionModel {
   factory SectionQuestionModel.fromJson(Map<String, dynamic> json,
       {SectionSource source = SectionSource.learn,
       String? assignmentId,
+      String? mockExamId,
+      String? mockAttemptId,
+      String? sectionId,
       String? unitId,
       String? lessonId}) {
-    final rawAnswers =
-        (json['answers'] as List<dynamic>?)?.whereType<Map<String, dynamic>>().toList() ?? const [];
-    final answers = (json['answers'] as List<dynamic>?)
+    final answersJson = json['answers'] ?? json['answer_options'];
+    final answersList = answersJson is List ? answersJson : null;
+    final rawAnswers = answersList?.whereType<Map<String, dynamic>>().toList() ?? const [];
+    final answers = answersList
         ?.whereType<Map<String, dynamic>>()
-        .map(SectionAnswerModel.fromJson)
+        .map((answer) => SectionAnswerModel.fromJson(answer,
+            selectedAnswerId: selectedAnswerId(json['studentAnswer'])))
         .toList();
     answers?.sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
     final questionType = json['type']?.toString() ?? '';
@@ -79,15 +88,24 @@ class SectionQuestionModel {
             ?.whereType<Map<String, dynamic>>()
             .map(SectionBlankAnswer.fromJson)
             .toList() ??
-        const [];
+        studentBlankAnswers(json['studentAnswer']);
     return SectionQuestionModel(
       id: json['id']?.toString() ?? '',
-      sectionId: json['section_id']?.toString() ?? json['assignment_section_id']?.toString() ?? '',
+      sectionId: json['section_id']?.toString() ??
+          json['assignment_section_id']?.toString() ??
+          json['sectionId']?.toString() ??
+          json['mock_section_id']?.toString() ??
+          json['sub_section_id']?.toString() ??
+          json['subSectionId']?.toString() ??
+          sectionId ??
+          '',
       assignmentId: assignmentId,
+      mockExamId: mockExamId,
+      mockAttemptId: mockAttemptId,
       unitId: unitId,
       lessonId: lessonId,
-      title: json['title']?.toString() ?? '',
-      description: json['description']?.toString(),
+      title: json['title']?.toString() ?? json['content']?.toString() ?? '',
+      description: json['description']?.toString() ?? json['content']?.toString(),
       difficulty: json['difficulty']?.toString() ?? '',
       orderIndex: _toInt(json['order_index']),
       xp: _toInt(json['xp']),
@@ -106,6 +124,8 @@ class SectionQuestionModel {
   SectionQuestionModel copyWith(
       {String? unitId,
       String? lessonId,
+      String? mockExamId,
+      String? mockAttemptId,
       List<SectionAnswerModel>? answers,
       List<SectionBlankAnswer>? blankAnswers,
       List<SectionBlankAnswer>? userBlankAnswers}) {
@@ -113,6 +133,8 @@ class SectionQuestionModel {
         id: id,
         sectionId: sectionId,
         assignmentId: assignmentId,
+        mockExamId: mockExamId ?? this.mockExamId,
+        mockAttemptId: mockAttemptId ?? this.mockAttemptId,
         unitId: unitId ?? this.unitId,
         lessonId: lessonId ?? this.lessonId,
         title: title,
@@ -144,6 +166,21 @@ class SectionQuestionModel {
     if (normalized == 'true' || normalized == '1') return true;
     if (normalized == 'false' || normalized == '0') return false;
     return null;
+  }
+
+  static String? selectedAnswerId(dynamic studentAnswer) {
+    if (studentAnswer is! Map<String, dynamic>) return null;
+    return studentAnswer['selected_answer_id']?.toString() ??
+        studentAnswer['selectedAnswerId']?.toString() ??
+        studentAnswer['answer_id']?.toString() ??
+        studentAnswer['answerId']?.toString();
+  }
+
+  static List<SectionBlankAnswer> studentBlankAnswers(dynamic studentAnswer) {
+    if (studentAnswer is! Map<String, dynamic>) return const [];
+    final blanks = studentAnswer['blank_answers'] ?? studentAnswer['blankAnswers'];
+    if (blanks is! List) return const [];
+    return blanks.whereType<Map<String, dynamic>>().map(SectionBlankAnswer.fromJson).toList();
   }
 }
 
