@@ -9,6 +9,7 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/section_detai
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_state.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/listening_section/listening_section_intro.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_quiz_component.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_timer_badge.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/cards/audio_card.dart';
 import 'package:ustadia_user_app/injection_container.dart';
@@ -71,6 +72,45 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
     });
   }
 
+  void closeMockExamSectionOnTimerExpired() {
+    if (widget.sectionModel.source != SectionSource.mockExam || !mounted) return;
+    Navigator.of(context).pop(true);
+  }
+
+  Widget quizHeaderWidget(SectionDetailState state) {
+    final detail = state.detail;
+    return Column(children: [
+      if (detail?.timeRemainingSeconds != null) ...[
+        SectionTimerBadge(
+            timeRemainingSeconds: detail?.timeRemainingSeconds,
+            onExpired: closeMockExamSectionOnTimerExpired),
+        const SizedBox(height: 12)
+      ],
+      AudioCard(sectionModel: state.detail ?? widget.sectionModel)
+    ]);
+  }
+
+  Widget timerBadge(SectionDetailState state) {
+    final detail = state.detail;
+    if (detail?.timeRemainingSeconds == null) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+        padding: const EdgeInsets.only(top: 20, bottom: 12),
+        child: SectionTimerBadge(
+            timeRemainingSeconds: detail?.timeRemainingSeconds,
+            onExpired: closeMockExamSectionOnTimerExpired));
+  }
+
+  Widget introView(SectionDetailState state, bool isLoading) => Column(children: [
+        timerBadge(state),
+        Expanded(
+            child: ListeningSectionIntro(
+                sectionModel: state.detail ?? widget.sectionModel,
+                changeStage: () => changeStage(state),
+                isLoading: isLoading))
+      ]);
+
   /// --- Widgets  ---
 
   /// --- Widgets ---
@@ -96,23 +136,16 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
     if (state.detail?.progressState == SectionProgressState.completed) {
       return QuizResultComponent(sectionModel: widget.sectionModel);
     }
-    if (stage == ListeningSectionStage.lesson)
-      return ListeningSectionIntro(
-          sectionModel: widget.sectionModel,
-          changeStage: () => changeStage(state),
-          isLoading: isLoading);
+    if (stage == ListeningSectionStage.lesson) return introView(state, isLoading);
     if (stage == ListeningSectionStage.quiz)
       return SectionQuizComponent(
           questions: state.detail?.questions ?? [],
-          headerWidget: AudioCard(sectionModel: widget.sectionModel),
+          headerWidget: quizHeaderWidget(state),
           onFinish: finishQuiz);
     if (stage == ListeningSectionStage.result) {
       return QuizResultComponent(sectionModel: widget.sectionModel);
     }
-    return ListeningSectionIntro(
-        sectionModel: widget.sectionModel,
-        changeStage: () => changeStage(state),
-        isLoading: isLoading);
+    return introView(state, isLoading);
   }
 
   @override

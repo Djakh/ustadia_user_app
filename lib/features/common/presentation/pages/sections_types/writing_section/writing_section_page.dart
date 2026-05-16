@@ -20,6 +20,7 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_b
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_state.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_timer_badge.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/writing_section/writing_section_lesson.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_writing_method.dart';
@@ -93,6 +94,11 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       await sl<MockExamRemoteDataSource>().finishMockExamSection(
           mockExamId: mockExamId, attemptId: attemptId, sectionId: widget.sectionModel.id);
     } catch (_) {}
+  }
+
+  void closeMockExamSectionOnTimerExpired() {
+    if (widget.sectionModel.source != SectionSource.mockExam || !mounted) return;
+    Navigator.of(context).pop(true);
   }
 
   void fileUploadListener(context, FileUploadState state) {
@@ -296,7 +302,7 @@ class WritingSectionPageState extends State<WritingSectionPage> {
         return ReloadConntectionButton(onReloadConnection: getSectionDetails);
       });
 
-  Widget get bodyChecker {
+  Widget bodyChecker(SectionDetailState detailState) {
     if (stage == WritingSectionStage.lesson) return lessonView;
     if (stage == WritingSectionStage.input) return inputView;
     if (stage == WritingSectionStage.result)
@@ -310,13 +316,26 @@ class WritingSectionPageState extends State<WritingSectionPage> {
     return const SizedBox();
   }
 
-  Widget get view => Column(children: [
+  Widget timerBadge(SectionDetailState state) {
+    final detail = state.detail;
+    if (detail?.timeRemainingSeconds == null) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: SectionTimerBadge(
+            timeRemainingSeconds: detail?.timeRemainingSeconds,
+            onExpired: closeMockExamSectionOnTimerExpired));
+  }
+
+  Widget view(SectionDetailState detailState) => Column(children: [
         const SizedBox(height: 24),
+        timerBadge(detailState),
         if (stage != WritingSectionStage.result) ...[
           Flexible(child: sectionContentView),
           const SizedBox(height: 16),
         ],
-        Expanded(child: bodyChecker)
+        Expanded(child: bodyChecker(detailState))
       ]);
 
   @override
@@ -334,5 +353,6 @@ class WritingSectionPageState extends State<WritingSectionPage> {
                   headerTooltipText: widget.sectionModel.title,
                   isHeader: stage != WritingSectionStage.result,
                   isScrollable: false,
-                  child: view)));
+                  child: BlocBuilder<SectionDetailBloc, SectionDetailState>(
+                      bloc: detailBloc, builder: (context, state) => view(state)))));
 }

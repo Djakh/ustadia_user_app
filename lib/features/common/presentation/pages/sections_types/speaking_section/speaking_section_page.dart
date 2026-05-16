@@ -21,6 +21,7 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/section_quest
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_state.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_timer_badge.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/banners/learn_speaking_status_banner.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/buttons/learn_speaking_mic_button.dart';
 import 'package:ustadia_user_app/features/learn/presentation/widgets/cards/learn_speaking_prompt_card.dart';
@@ -222,6 +223,11 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
     } catch (_) {}
   }
 
+  void closeMockExamSectionOnTimerExpired() {
+    if (widget.sectionModel.source != SectionSource.mockExam || !mounted) return;
+    Navigator.of(context).pop(true);
+  }
+
   Future<void> stopAndCheck(SectionDetailState state) async {
     if (isStopping) return;
     isStopping = true;
@@ -287,12 +293,24 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
   Widget get countdownText => Text(formatDuration(remainingDuration),
       style: Style.small3w4(context, color: TextColorRole.greyColor));
 
+  Widget sectionTimer(SectionDetailState state) {
+    final detail = state.detail;
+    if (detail?.timeRemainingSeconds == null) {
+      return const SizedBox.shrink();
+    }
+    return SectionTimerBadge(
+        timeRemainingSeconds: detail?.timeRemainingSeconds,
+        onExpired: closeMockExamSectionOnTimerExpired);
+  }
+
   Widget speakingView(SectionDetailState state) => getQuestionsList(state).isEmpty
       ? Center(
           child: Text('No questions available.'.tr(),
               style: Style.bodyw5(context, color: TextColorRole.greyColor)))
       : Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           const SizedBox(height: 24),
+          sectionTimer(state),
+          if (state.detail?.timeRemainingSeconds != null) const SizedBox(height: 16),
           progressHeader(getQuestionsList(state).length),
           const SizedBox(height: 24),
           LearnSpeakingPromptCard(prompt: currentQuestionFor(state)?.title ?? ''),

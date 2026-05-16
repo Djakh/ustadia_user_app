@@ -125,9 +125,12 @@ class SectionModel {
     final questionsJson = json['questions'];
     final totalQuestions = toInt(json['totalQuestions'] ??
         json['taskCount'] ??
+        json['questions_count'] ??
         (questionsJson is List ? questionsJson.length : null));
-    final answeredQuestionsValue =
-        json['answeredQuestions'] ?? json['CompletedTaskCount'] ?? json['completedTaskCount'];
+    final answeredQuestionsValue = json['answeredQuestions'] ??
+        json['CompletedTaskCount'] ??
+        json['completedTaskCount'] ??
+        json['answered_questions_count'];
     final answeredQuestions = answeredQuestionsValue == null ? null : toInt(answeredQuestionsValue);
     final type = SectionTypeX.fromApi(json['type']?.toString() ?? '');
     final assignmentId = json['assignment_id']?.toString();
@@ -158,7 +161,9 @@ class SectionModel {
     final isAvailable = _toBool(json['is_available'], fallback: status != 'locked');
     SectionProgressState progressState = _toBool(json['isLocked']) || status == 'locked'
         ? SectionProgressState.locked
-        : _toBool(json['isCompleted'] ?? json['is_completed']) || status == 'completed'
+        : _toBool(json['isCompleted'] ?? json['is_completed']) ||
+                status == 'completed' ||
+                status == 'expired'
             ? SectionProgressState.completed
             : SectionProgressState.inProgress;
 

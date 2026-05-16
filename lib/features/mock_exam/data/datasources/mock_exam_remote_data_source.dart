@@ -76,11 +76,20 @@ class MockExamRemoteDataSource {
     required String attemptId,
     required String sectionId,
   }) async {
-    final response = await dio.get('$baseUrl/$mockExamId/attempts/$attemptId/sections/$sectionId',
+    final response = await dio.post(
+        '$baseUrl/$mockExamId/attempts/$attemptId/sections/$sectionId/start',
         options: freshRequestOptions);
     final data = response.data as Map<String, dynamic>;
-    final sectionData =
-        data['section'] is Map<String, dynamic> ? data['section'] as Map<String, dynamic> : data;
+    final sectionData = data['section'] is Map<String, dynamic>
+        ? Map<String, dynamic>.from(data['section'] as Map<String, dynamic>)
+        : data['sub_section'] is Map<String, dynamic>
+            ? Map<String, dynamic>.from(data['sub_section'] as Map<String, dynamic>)
+            : Map<String, dynamic>.from(data);
+    sectionData['questions'] ??= data['questions'];
+    sectionData['time_remaining_seconds'] ??= data['time_remaining_seconds'];
+    sectionData['time_limit_seconds'] ??= data['time_limit_seconds'];
+    sectionData['deadline_at'] ??= data['deadline_at'];
+    sectionData['status'] ??= data['status'];
     return SectionModel.fromJson(sectionData,
         source: SectionSource.mockExam, mockId: mockExamId, mockAttemptId: attemptId);
   }

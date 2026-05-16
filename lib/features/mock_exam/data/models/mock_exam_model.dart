@@ -186,8 +186,7 @@ class MockExamModel {
             const [],
         deadlineAt: !isFinished && hasStarted
             ? deadlineFromRemainingTime(
-                timeRemainingSeconds: timeRemainingSeconds ?? assign?.timeRemainingSeconds,
-                timeLimitMinutes: timeLimit)
+                timeRemainingSeconds: timeRemainingSeconds ?? assign?.timeRemainingSeconds)
             : null);
   }
 
@@ -235,12 +234,9 @@ bool mockExamModelBool(dynamic value, {bool fallback = false}) {
   return fallback;
 }
 
-DateTime? deadlineFromRemainingTime({int? timeRemainingSeconds, int? timeLimitMinutes}) {
+DateTime? deadlineFromRemainingTime({int? timeRemainingSeconds}) {
   if (timeRemainingSeconds != null) {
     return DateTime.now().add(Duration(seconds: timeRemainingSeconds));
-  }
-  if (timeLimitMinutes != null) {
-    return DateTime.now().add(Duration(minutes: timeLimitMinutes));
   }
   return null;
 }
