@@ -28,6 +28,8 @@ class MockExamListPageState extends State<MockExamListPage> {
   final MockExamListBloc examsBloc = sl<MockExamListBloc>();
   Timer? countdownTimer;
   DateTime? lastExpiredRefreshAt;
+  GoRouter? router;
+  bool wasVisible = false;
 
   @override
   void initState() {
@@ -39,7 +41,31 @@ class MockExamListPageState extends State<MockExamListPage> {
   @override
   void dispose() {
     countdownTimer?.cancel();
+    router?.routerDelegate.removeListener(onRouteChanged);
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final currentRouter = GoRouter.of(context);
+    if (router == currentRouter) return;
+    router?.routerDelegate.removeListener(onRouteChanged);
+    router = currentRouter;
+    wasVisible = isCurrentRoute;
+    router?.routerDelegate.addListener(onRouteChanged);
+  }
+
+  bool get isCurrentRoute {
+    final location = router?.routerDelegate.currentConfiguration.uri.path ?? '';
+    return location == mockExamRoute;
+  }
+
+  void onRouteChanged() {
+    if (!mounted) return;
+    final isVisible = isCurrentRoute;
+    if (isVisible && !wasVisible) refreshExams();
+    wasVisible = isVisible;
   }
 
   void startCountdownTimer() {
@@ -61,13 +87,18 @@ class MockExamListPageState extends State<MockExamListPage> {
         now.difference(lastExpiredRefreshAt!) >= const Duration(seconds: 5);
     if (canRefresh) {
       lastExpiredRefreshAt = now;
-      examsBloc.add(const MockExamListRequested());
+      refreshExams(resetExpiredRefreshAt: false);
     }
   }
 
   Future<void> reloadExams() async {
     lastExpiredRefreshAt = null;
     examsBloc.add(const MockExamListRequested());
+  }
+
+  Future<void> refreshExams({bool resetExpiredRefreshAt = true}) async {
+    if (resetExpiredRefreshAt) lastExpiredRefreshAt = null;
+    examsBloc.add(const MockExamListRequested(showLoading: false));
   }
 
   void loadMoreExams() {
@@ -89,7 +120,7 @@ class MockExamListPageState extends State<MockExamListPage> {
     }
     await context.push(mockExamSectionsRoute(exam.id), extra: exam);
     if (!mounted) return;
-    reloadExams();
+    refreshExams();
   }
 
   Widget examsList(BuildContext context, List<MockExamModel> exams, MockExamListState state) =>

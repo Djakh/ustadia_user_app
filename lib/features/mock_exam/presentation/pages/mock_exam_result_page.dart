@@ -7,6 +7,8 @@ import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_
 import 'package:ustadia_user_app/features/mock_exam/data/datasources/mock_exam_remote_data_source.dart';
 import 'package:ustadia_user_app/features/mock_exam/data/models/mock_exam_attempt_model.dart';
 import 'package:ustadia_user_app/features/mock_exam/data/models/mock_exam_model.dart';
+import 'package:ustadia_user_app/features/mock_exam/presentation/bloc/mock_exam_list_bloc/mock_exam_list_bloc.dart';
+import 'package:ustadia_user_app/features/mock_exam/presentation/bloc/mock_exam_list_bloc/mock_exam_list_event.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 class MockExamResultPage extends StatefulWidget {
@@ -33,6 +35,12 @@ class MockExamResultPageState extends State<MockExamResultPage> {
   void initState() {
     super.initState();
     resultFuture = fetchResult();
+    resultFuture.then((_) => refreshMockExamList());
+  }
+
+  void refreshMockExamList() {
+    if (!sl.isRegistered<MockExamListBloc>()) return;
+    sl<MockExamListBloc>().add(const MockExamListRequested());
   }
 
   Future<MockExamResultModel> fetchResult() => sl<MockExamRemoteDataSource>()

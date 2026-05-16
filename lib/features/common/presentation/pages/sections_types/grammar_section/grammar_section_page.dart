@@ -6,6 +6,7 @@ import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/grammar_section/grammar_section_intro.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_quiz_component.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_timer_badge.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_event.dart';
@@ -70,6 +71,40 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
     });
   }
 
+  void closeMockExamSectionOnTimerExpired() {
+    if (widget.sectionModel.source != SectionSource.mockExam || !mounted) return;
+    Navigator.of(context).pop(true);
+  }
+
+  Widget? quizHeaderWidget(SectionDetailState state) {
+    final detail = state.detail;
+    if (detail?.timeRemainingSeconds == null) return null;
+    return SectionTimerBadge(
+        timeRemainingSeconds: detail?.timeRemainingSeconds,
+        onExpired: closeMockExamSectionOnTimerExpired);
+  }
+
+  Widget timerBadge(SectionDetailState state) {
+    final detail = state.detail;
+    if (detail?.timeRemainingSeconds == null) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+        padding: const EdgeInsets.only(top: 20, bottom: 12),
+        child: SectionTimerBadge(
+            timeRemainingSeconds: detail?.timeRemainingSeconds,
+            onExpired: closeMockExamSectionOnTimerExpired));
+  }
+
+  Widget introView(SectionDetailState state, bool isLoading) => Column(children: [
+        timerBadge(state),
+        Expanded(
+            child: GrammarSectionIntro(
+                sectionModel: state.detail ?? widget.sectionModel,
+                changeStage: () => changeStage(state),
+                isLoading: isLoading))
+      ]);
+
   /// --- Widgets ---
   Widget get header => Column(children: [
         Text(widget.sectionModel.title,
@@ -93,20 +128,16 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
     if (state.detail?.progressState == SectionProgressState.completed) {
       return QuizResultComponent(sectionModel: widget.sectionModel);
     }
-    if (stage == GrammarSectionStage.intro)
-      return GrammarSectionIntro(
-          sectionModel: widget.sectionModel,
-          changeStage: () => changeStage(state),
-          isLoading: isLoading);
+    if (stage == GrammarSectionStage.intro) return introView(state, isLoading);
     if (stage == GrammarSectionStage.quiz)
-      return SectionQuizComponent(questions: state.detail?.questions ?? [], onFinish: finishQuiz);
+      return SectionQuizComponent(
+          questions: state.detail?.questions ?? [],
+          headerWidget: quizHeaderWidget(state),
+          onFinish: finishQuiz);
     if (stage == GrammarSectionStage.result) {
       return QuizResultComponent(sectionModel: widget.sectionModel);
     }
-    return GrammarSectionIntro(
-        sectionModel: widget.sectionModel,
-        changeStage: () => changeStage(state),
-        isLoading: isLoading);
+    return introView(state, isLoading);
   }
 
   @override

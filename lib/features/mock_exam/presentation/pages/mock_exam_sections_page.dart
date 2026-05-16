@@ -12,6 +12,7 @@ import 'package:ustadia_user_app/core/widgets/loading/shimmer_list.dart';
 import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_set_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_page.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_timer_badge.dart';
 import 'package:ustadia_user_app/features/mock_exam/data/models/mock_exam_attempt_model.dart';
 import 'package:ustadia_user_app/features/mock_exam/data/models/mock_exam_model.dart';
 import 'package:ustadia_user_app/features/mock_exam/presentation/bloc/mock_exam_sections_bloc/mock_exam_sections_bloc.dart';
@@ -37,6 +38,7 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
   DateTime? attemptDeadlineAt;
   String deadlineAttemptId = '';
   bool didNavigateAway = false;
+  bool isRefreshingAttempt = false;
 
   @override
   void initState() {
@@ -51,7 +53,7 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
     super.dispose();
   }
 
-  DateTime? get deadlineAt => attemptDeadlineAt ?? widget.exam?.deadlineAt;
+  DateTime? get deadlineAt => attemptDeadlineAt;
 
   Duration get remainingDuration {
     final deadline = deadlineAt;
@@ -70,11 +72,12 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
 
   void syncAttemptDeadline(MockExamAttemptModel attempt) {
     if (attempt.attemptId.isEmpty || attempt.isFinished) return;
-    if (attempt.timeRemainingSeconds == null || deadlineAttemptId == attempt.attemptId) return;
+    if (attempt.timeRemainingSeconds == null) return;
     if (attempt.timeRemainingSeconds == 0) {
       openExamListAfterTimeout();
       return;
     }
+    if (deadlineAttemptId == attempt.attemptId) return;
     deadlineAttemptId = attempt.attemptId;
     attemptDeadlineAt = DateTime.now().add(Duration(seconds: attempt.timeRemainingSeconds!));
     startCountdownTimer();
@@ -107,6 +110,13 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
   void loadAttempt() {
     if (widget.mockExamId.isEmpty) return;
     sectionsBloc.add(MockExamSectionsRequested(mockExamId: widget.mockExamId, exam: widget.exam));
+  }
+
+  void refreshAttempt() {
+    if (widget.mockExamId.isEmpty || isRefreshingAttempt) return;
+    isRefreshingAttempt = true;
+    sectionsBloc.add(MockExamSectionsRequested(
+        mockExamId: widget.mockExamId, exam: widget.exam, showLoading: false));
   }
 
   Future<void> reloadAttempt() async => loadAttempt();
@@ -149,9 +159,9 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
         navigation = context.push(learnWritingRoute, extra: section);
         break;
     }
-    final result = await navigation;
+    await navigation;
     if (!mounted) return;
-    if (result == true) loadAttempt();
+    refreshAttempt();
   }
 
   void finishExam(MockExamSectionsState state) {
@@ -163,6 +173,7 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
 
   void listenState(BuildContext context, MockExamSectionsState state) {
     if (state.actionStatus.isError && state.errorMessage != null) {
+      isRefreshingAttempt = false;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
     }
     if (state.result != null && state.actionStatus.isSuccess) {
@@ -170,6 +181,7 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
     }
     final attempt = state.attempt;
     if (state.status.isSuccess && attempt != null) {
+      isRefreshingAttempt = false;
       syncAttemptDeadline(attempt);
     }
     if (state.status.isSuccess && state.attempt?.isFinished == true) {
@@ -374,11 +386,7 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
 
   Widget subSectionTile(SectionModel section) => InkWell(
       key: ValueKey('mock_exam_section_${section.id}'),
-      onTap: section.isLocked ||
-              !section.isAvailable ||
-              section.progressState == SectionProgressState.completed
-          ? null
-          : () => onSectionTap(section),
+      onTap: canOpenSection(section) ? () => onSectionTap(section) : null,
       borderRadius: Style.border16,
       child: Container(
           padding: const EdgeInsets.all(14),
@@ -400,9 +408,27 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
                         : AppColors.primary),
             const SizedBox(width: 12),
             Expanded(child: Text(section.sectionTypeLabel, style: Style.bodyw5(context))),
-            Text(section.status.isEmpty ? '' : SectionModel.formatTypeLabel(section.status),
-                style: Style.small2w5(context, color: TextColorRole.greyColor))
+            if (shouldShowSectionTimer(section))
+              SectionTimerBadge(
+                  timeRemainingSeconds: section.timeRemainingSeconds,
+                  compact: true,
+                  onExpired: refreshAttempt)
+            else
+              Text(section.status.isEmpty ? '' : SectionModel.formatTypeLabel(section.status),
+                  style: Style.small2w5(context, color: TextColorRole.greyColor))
           ])));
+
+  bool shouldShowSectionTimer(SectionModel section) =>
+      section.timeRemainingSeconds != null &&
+      section.progressState != SectionProgressState.completed &&
+      section.status != 'completed' &&
+      section.status != 'expired';
+
+  bool canOpenSection(SectionModel section) =>
+      !section.isLocked &&
+      section.isAvailable &&
+      section.progressState != SectionProgressState.completed &&
+      section.status != 'expired';
 
   Widget content(MockExamSectionsState state) {
     if (state.status.isLoading || state.status.isInitial) {

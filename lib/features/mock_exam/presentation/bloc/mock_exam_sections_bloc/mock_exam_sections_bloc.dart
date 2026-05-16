@@ -17,11 +17,15 @@ class MockExamSectionsBloc extends Bloc<MockExamSectionsEvent, MockExamSectionsS
 
   Future<void> handleMockExamSectionsRequested(
       MockExamSectionsRequested event, Emitter<MockExamSectionsState> emit) async {
-    emit(state.copyWith(
-        status: Status.loading,
-        actionStatus: Status.initial,
-        sections: const [],
-        errorMessage: null));
+    if (event.showLoading || state.attempt == null) {
+      emit(state.copyWith(
+          status: Status.loading,
+          actionStatus: Status.initial,
+          sections: const [],
+          errorMessage: null));
+    } else {
+      emit(state.copyWith(actionStatus: Status.initial, errorMessage: null));
+    }
     try {
       final attempt = event.exam == null
           ? await mockExamRemoteDataSource.startMockExamAttempt(mockExamId: event.mockExamId)
@@ -33,9 +37,15 @@ class MockExamSectionsBloc extends Bloc<MockExamSectionsEvent, MockExamSectionsS
       emit(state.copyWith(
           status: Status.success, attempt: attempt, sections: sections, errorMessage: null));
     } on DioException catch (error) {
-      emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.from(error)));
+      emit(state.copyWith(
+          status: event.showLoading || state.attempt == null ? Status.error : state.status,
+          actionStatus: event.showLoading ? state.actionStatus : Status.error,
+          errorMessage: DioErrorMessage.from(error)));
     } catch (error) {
-      emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.fromUnknown(error)));
+      emit(state.copyWith(
+          status: event.showLoading || state.attempt == null ? Status.error : state.status,
+          actionStatus: event.showLoading ? state.actionStatus : Status.error,
+          errorMessage: DioErrorMessage.fromUnknown(error)));
     }
   }
 

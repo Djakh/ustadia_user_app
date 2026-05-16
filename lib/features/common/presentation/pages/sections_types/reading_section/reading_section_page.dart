@@ -10,6 +10,7 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/section_detai
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_state.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/reading_section/reading_section_intro.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_quiz_component.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_timer_badge.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
@@ -69,6 +70,11 @@ class ReadingSectionPageState extends State<ReadingSectionPage> {
       correctCount = correct;
       stage = ReadingSectionStage.result;
     });
+  }
+
+  void closeMockExamSectionOnTimerExpired() {
+    if (widget.sectionModel.source != SectionSource.mockExam || !mounted) return;
+    Navigator.of(context).pop(true);
   }
 
   Future<void> showReadingPassageSheet(String content) => showModalBottomSheet(
@@ -132,6 +138,35 @@ class ReadingSectionPageState extends State<ReadingSectionPage> {
                         .copyWith(color: isResultState ? panelColor : context.cs.primary))
               ]))));
 
+  Widget? quizHeaderWidget(SectionDetailState state) {
+    final detail = state.detail;
+    if (detail?.timeRemainingSeconds == null) return null;
+    return SectionTimerBadge(
+        timeRemainingSeconds: detail?.timeRemainingSeconds,
+        onExpired: closeMockExamSectionOnTimerExpired);
+  }
+
+  Widget timerBadge(SectionDetailState state) {
+    final detail = state.detail;
+    if (detail?.timeRemainingSeconds == null) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+        padding: const EdgeInsets.only(top: 20, bottom: 12),
+        child: SectionTimerBadge(
+            timeRemainingSeconds: detail?.timeRemainingSeconds,
+            onExpired: closeMockExamSectionOnTimerExpired));
+  }
+
+  Widget introView(SectionDetailState state, bool isLoading) => Column(children: [
+        timerBadge(state),
+        Expanded(
+            child: ReadingSectionIntro(
+                sectionModel: state.detail ?? widget.sectionModel,
+                changeStage: () => changeStage(state),
+                isLoading: isLoading))
+      ]);
+
   /// --- Widgets  ---
 
   /// --- Widgets ---
@@ -158,24 +193,18 @@ class ReadingSectionPageState extends State<ReadingSectionPage> {
     if (state.detail?.progressState == SectionProgressState.completed) {
       return QuizResultComponent(sectionModel: widget.sectionModel);
     }
-    if (stage == ReadingSectionStage.lesson)
-      return ReadingSectionIntro(
-          sectionModel: widget.sectionModel,
-          changeStage: () => changeStage(state),
-          isLoading: isLoading);
+    if (stage == ReadingSectionStage.lesson) return introView(state, isLoading);
     if (stage == ReadingSectionStage.quiz)
       return SectionQuizComponent(
           questions: state.detail?.questions ?? [],
+          headerWidget: quizHeaderWidget(state),
           onFinish: finishQuiz,
           panelActionBuilder: (context, isResultState, panelColor) => readingPassageButton(
               state.detail?.content ?? widget.sectionModel.content, isResultState, panelColor));
     if (stage == ReadingSectionStage.result) {
       return QuizResultComponent(sectionModel: widget.sectionModel);
     }
-    return ReadingSectionIntro(
-        sectionModel: widget.sectionModel,
-        changeStage: () => changeStage(state),
-        isLoading: isLoading);
+    return introView(state, isLoading);
   }
 
   @override

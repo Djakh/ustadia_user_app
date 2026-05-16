@@ -1,104 +1,364 @@
-[
-  {
-    "id": "51358353-b83a-443d-8079-d8616b8a807b",
-    "title": "IELTS Academic Mock Test 1",
-    "description": "Full-length IELTS Academic mock test covering all four sections",
-    "time_limit_minutes": 180,
-    "is_active": true,
-    "assignment": {
-      "id": "ce7d2475-21a4-4613-bd29-7924d2aecc44",
-      "start_time": "2026-05-06T11:13:55.575Z",
-      "end_time": "2026-05-16T11:13:55.575Z",
-      "status": "started",
-      "finished": true,
-      "attempt": {
-        "id": "8ff7ad4f-5dd1-47f4-a29e-3591c5735b0b",
-        "status": "finished",
-        "is_started": true,
-        "is_finished": true,
-        "started_at": "2026-05-11T12:11:59.651Z",
-        "finished_at": "2026-05-11T12:12:01.727Z",
-        "current_component_id": "8d8e1744-038e-4c8c-9f0e-87a73f05e491",
-        "current_sub_section_id": "bb407580-30be-48ec-b995-a295fad41504"
-      }
+{
+  "section_id": "97c2d78b-bf6c-472a-910a-c180ac520312",
+  "type": "listening",
+  "title": "Listening Section 2",
+  "content": null,
+  "order_index": 1,
+  "status": "in_progress",
+  "started_at": "2026-05-15T12:31:36.622Z",
+  "deadline_at": "2026-05-16T11:13:55.575Z",
+  "time_limit_seconds": 600,
+  "time_remaining_seconds": 0,
+  "questions": [
+    {
+      "id": "2f9c5938-2326-46b4-8de7-daf20f21bc63",
+      "type": "multiple-choice",
+      "title": "Question 1",
+      "description": null,
+      "order_index": 0,
+      "isAnswered": false,
+      "studentAnswer": null,
+      "answers": [
+        {
+          "id": "03c0d1f1-9d46-4f28-bb13-94d37f5957e4",
+          "answer_text": "Option A",
+          "order_index": 0,
+          "is_correct": null
+        },
+        {
+          "id": "5a1d6dcb-ed01-445b-a890-84abe8e1944f",
+          "answer_text": "Option B",
+          "order_index": 1,
+          "is_correct": null
+        },
+        {
+          "id": "4253b21e-a088-4291-93f4-c04bb25b19df",
+          "answer_text": "Option C",
+          "order_index": 2,
+          "is_correct": null
+        },
+        {
+          "id": "a706f524-4078-4eb5-a47e-d0651a5b2a8d",
+          "answer_text": "Option D",
+          "order_index": 3,
+          "is_correct": null
+        }
+      ]
+    },
+    {
+      "id": "0d27558e-e866-46cd-8b46-78c23030fa4a",
+      "type": "multiple-choice",
+      "title": "Question 2",
+      "description": null,
+      "order_index": 1,
+      "isAnswered": false,
+      "studentAnswer": null,
+      "answers": [
+        {
+          "id": "47058c79-793a-461e-941e-b7febc6e5e94",
+          "answer_text": "Option A",
+          "order_index": 0,
+          "is_correct": null
+        },
+        {
+          "id": "42870d2a-3369-4c6c-8110-ee3b669d8fd1",
+          "answer_text": "Option B",
+          "order_index": 1,
+          "is_correct": null
+        },
+        {
+          "id": "4f52d8f4-ba84-4907-8ab7-17fc6ce99b34",
+          "answer_text": "Option C",
+          "order_index": 2,
+          "is_correct": null
+        },
+        {
+          "id": "0ba36b1b-3692-4753-b76f-4b49ebe12bd8",
+          "answer_text": "Option D",
+          "order_index": 3,
+          "is_correct": null
+        }
+      ]
+    },
+    {
+      "id": "cc3004b4-7d9e-4216-b89e-0907b799e7ab",
+      "type": "multiple-choice",
+      "title": "Question 3",
+      "description": null,
+      "order_index": 2,
+      "isAnswered": false,
+      "studentAnswer": null,
+      "answers": [
+        {
+          "id": "e083939b-4b2f-4b2a-a046-d35b95b30d9b",
+          "answer_text": "Option A",
+          "order_index": 0,
+          "is_correct": null
+        },
+        {
+          "id": "06b9a70c-d313-4b60-a284-1a80fbebbdca",
+          "answer_text": "Option B",
+          "order_index": 1,
+          "is_correct": null
+        },
+        {
+          "id": "fc63f42e-36d5-49d2-b6d4-c8b01a8c3ec3",
+          "answer_text": "Option C",
+          "order_index": 2,
+          "is_correct": null
+        },
+        {
+          "id": "1a9cdba3-06c5-4820-9acd-424277a2fd21",
+          "answer_text": "Option D",
+          "order_index": 3,
+          "is_correct": null
+        }
+      ]
+    },
+    {
+      "id": "b1c72e69-fa1a-44e0-be8f-c16bfa324dab",
+      "type": "multiple-choice",
+      "title": "Question 4",
+      "description": null,
+      "order_index": 3,
+      "isAnswered": false,
+      "studentAnswer": null,
+      "answers": [
+        {
+          "id": "225ca245-656d-40fc-aed2-6e1eee5fc95e",
+          "answer_text": "Option A",
+          "order_index": 0,
+          "is_correct": null
+        },
+        {
+          "id": "b7e75844-2fab-4d0f-a21d-ef2d90a42651",
+          "answer_text": "Option B",
+          "order_index": 1,
+          "is_correct": null
+        },
+        {
+          "id": "d9d9b35f-f342-46ce-a20e-f079bd7bea72",
+          "answer_text": "Option C",
+          "order_index": 2,
+          "is_correct": null
+        },
+        {
+          "id": "5df927bf-beea-426c-a20b-5a2a833be08b",
+          "answer_text": "Option D",
+          "order_index": 3,
+          "is_correct": null
+        }
+      ]
+    },
+    {
+      "id": "d3eb68e8-1119-472d-a782-bdf10c47bde2",
+      "type": "multiple-choice",
+      "title": "Question 5",
+      "description": null,
+      "order_index": 4,
+      "isAnswered": false,
+      "studentAnswer": null,
+      "answers": [
+        {
+          "id": "7f1965a0-b83b-474e-9d6c-88688522fc39",
+          "answer_text": "Option A",
+          "order_index": 0,
+          "is_correct": null
+        },
+        {
+          "id": "0d588cf5-81fa-4314-ad1d-727f2e557130",
+          "answer_text": "Option B",
+          "order_index": 1,
+          "is_correct": null
+        },
+        {
+          "id": "8cf57e86-d170-4cdc-979e-541d74c5a4fd",
+          "answer_text": "Option C",
+          "order_index": 2,
+          "is_correct": null
+        },
+        {
+          "id": "26b6a589-0a44-468d-acee-dd3e2a841a62",
+          "answer_text": "Option D",
+          "order_index": 3,
+          "is_correct": null
+        }
+      ]
+    },
+    {
+      "id": "a71fe2ce-be7a-41b4-89e5-5565f4735ec7",
+      "type": "multiple-choice",
+      "title": "Question 6",
+      "description": null,
+      "order_index": 5,
+      "isAnswered": false,
+      "studentAnswer": null,
+      "answers": [
+        {
+          "id": "dcbc8e57-32c6-4498-9d19-c13a53b6d1e3",
+          "answer_text": "Option A",
+          "order_index": 0,
+          "is_correct": null
+        },
+        {
+          "id": "aeddf28b-b034-4118-8edf-31c0f885a863",
+          "answer_text": "Option B",
+          "order_index": 1,
+          "is_correct": null
+        },
+        {
+          "id": "c78f2646-2ca5-4710-9fba-bd8551407d8e",
+          "answer_text": "Option C",
+          "order_index": 2,
+          "is_correct": null
+        },
+        {
+          "id": "018aa5e9-f350-4fc8-affd-3abf92724bd8",
+          "answer_text": "Option D",
+          "order_index": 3,
+          "is_correct": null
+        }
+      ]
+    },
+    {
+      "id": "bf1f97df-c398-4348-ac40-c06af4072f4d",
+      "type": "multiple-choice",
+      "title": "Question 7",
+      "description": null,
+      "order_index": 6,
+      "isAnswered": false,
+      "studentAnswer": null,
+      "answers": [
+        {
+          "id": "9601b9d3-171d-4fca-8e90-551c4d355124",
+          "answer_text": "Option A",
+          "order_index": 0,
+          "is_correct": null
+        },
+        {
+          "id": "08fd8fda-3996-4822-82f1-074ac932ac2f",
+          "answer_text": "Option B",
+          "order_index": 1,
+          "is_correct": null
+        },
+        {
+          "id": "3ed652a0-6d1a-42dd-b821-c4ba938ee5b3",
+          "answer_text": "Option C",
+          "order_index": 2,
+          "is_correct": null
+        },
+        {
+          "id": "3f62627b-eebb-4e97-9a92-f6074d78d725",
+          "answer_text": "Option D",
+          "order_index": 3,
+          "is_correct": null
+        }
+      ]
+    },
+    {
+      "id": "177a4296-4670-4dc1-91aa-80f0aecbb551",
+      "type": "multiple-choice",
+      "title": "Question 8",
+      "description": null,
+      "order_index": 7,
+      "isAnswered": false,
+      "studentAnswer": null,
+      "answers": [
+        {
+          "id": "a2fea52d-89ab-42cc-9137-5561f8a8a357",
+          "answer_text": "Option A",
+          "order_index": 0,
+          "is_correct": null
+        },
+        {
+          "id": "4b364303-7a67-44a9-b7f8-59aa97aca2a2",
+          "answer_text": "Option B",
+          "order_index": 1,
+          "is_correct": null
+        },
+        {
+          "id": "e9627fbb-be40-45f8-80ab-947dfbe73414",
+          "answer_text": "Option C",
+          "order_index": 2,
+          "is_correct": null
+        },
+        {
+          "id": "23159924-1eb3-446c-92cb-32e70f09a4db",
+          "answer_text": "Option D",
+          "order_index": 3,
+          "is_correct": null
+        }
+      ]
+    },
+    {
+      "id": "9e4f68d7-cc79-4937-863e-7b7883dc4911",
+      "type": "multiple-choice",
+      "title": "Question 9",
+      "description": null,
+      "order_index": 8,
+      "isAnswered": false,
+      "studentAnswer": null,
+      "answers": [
+        {
+          "id": "0347bb53-83f5-4790-aa79-684bea9320f8",
+          "answer_text": "Option A",
+          "order_index": 0,
+          "is_correct": null
+        },
+        {
+          "id": "b28264d6-4ea5-4421-839c-16772bb93b4e",
+          "answer_text": "Option B",
+          "order_index": 1,
+          "is_correct": null
+        },
+        {
+          "id": "fe10dee2-e958-454b-9cf0-4587c99066d6",
+          "answer_text": "Option C",
+          "order_index": 2,
+          "is_correct": null
+        },
+        {
+          "id": "dc781115-2891-47d1-9003-7f74c4695b71",
+          "answer_text": "Option D",
+          "order_index": 3,
+          "is_correct": null
+        }
+      ]
+    },
+    {
+      "id": "75a5e50b-e691-4551-b4e7-6d09373d7ae6",
+      "type": "multiple-choice",
+      "title": "Question 10",
+      "description": null,
+      "order_index": 9,
+      "isAnswered": false,
+      "studentAnswer": null,
+      "answers": [
+        {
+          "id": "85782a3e-b85c-4620-8fbb-f71ebb5afece",
+          "answer_text": "Option A",
+          "order_index": 0,
+          "is_correct": null
+        },
+        {
+          "id": "69acb182-3f16-4f23-b60e-1509659bb9a8",
+          "answer_text": "Option B",
+          "order_index": 1,
+          "is_correct": null
+        },
+        {
+          "id": "6e8d66a6-dc69-4339-b83c-1979281a82b2",
+          "answer_text": "Option C",
+          "order_index": 2,
+          "is_correct": null
+        },
+        {
+          "id": "013898cc-ce15-48e4-8075-ec5e2e44c9a3",
+          "answer_text": "Option D",
+          "order_index": 3,
+          "is_correct": null
+        }
+      ]
     }
-  },
-  {
-    "id": "29571f22-4d3e-4ee5-bfea-22bd91d57b65",
-    "title": "IELTS General Training Mock Test 1",
-    "description": "Full-length IELTS General Training mock test covering all four sections",
-    "time_limit_minutes": 180,
-    "is_active": true,
-    "assignment": {
-      "id": "7f720b41-0c0b-4c19-b5a8-f706efd09c13",
-      "start_time": "2026-05-06T11:13:55.575Z",
-      "end_time": "2026-05-16T11:13:55.575Z",
-      "status": "started",
-      "finished": false,
-      "attempt": {
-        "id": "643d34bd-6463-47be-a041-c45edd5f6da1",
-        "status": "started",
-        "is_started": true,
-        "is_finished": false,
-        "started_at": "2026-05-13T12:16:01.190Z",
-        "finished_at": null,
-        "current_component_id": "bc376e1b-ef0d-4914-84fd-2e0153ebaf9f",
-        "current_sub_section_id": "be7600f7-3991-4517-bf71-34212dd8dd5b"
-      }
-    }
-  },
-  {
-    "id": "0ba87a5f-c6fd-4818-9eab-28f8094fdfc2",
-    "title": "IELTS Academic Mock Test 2",
-    "description": "Second IELTS Academic mock test with different questions",
-    "time_limit_minutes": 180,
-    "is_active": true,
-    "assignment": {
-      "id": "648a1f1e-819c-4c25-9f8f-0bf1b361cd1d",
-      "start_time": "2026-05-06T11:13:55.575Z",
-      "end_time": "2026-05-16T11:13:55.575Z",
-      "status": "assigned",
-      "finished": false,
-      "attempt": null
-    }
-  },
-  {
-    "id": "47c93d46-7395-48b6-8564-fc9866eb501f",
-    "title": "IELTS Speaking Practice Test",
-    "description": "Focused speaking practice test with 3 parts",
-    "time_limit_minutes": 15,
-    "is_active": true,
-    "assignment": {
-      "id": "b766c6d1-7fc9-4020-84c8-62bc5ac4f09f",
-      "start_time": "2026-05-06T11:13:55.575Z",
-      "end_time": "2026-05-16T11:13:55.575Z",
-      "status": "assigned",
-      "finished": false,
-      "attempt": null
-    }
-  },
-  {
-    "id": "3d6341dc-12a3-4b30-bb05-7b21618608cd",
-    "title": "IELTS Writing Practice Test",
-    "description": "Focused writing practice test with Task 1 and Task 2",
-    "time_limit_minutes": 60,
-    "is_active": true,
-    "assignment": {
-      "id": "a42b668c-75ef-4e67-890d-132b5d0347ce",
-      "start_time": "2026-05-06T11:13:55.575Z",
-      "end_time": "2026-05-16T11:13:55.575Z",
-      "status": "started",
-      "finished": false,
-      "attempt": {
-        "id": "d8d48637-89ce-41a9-a870-fd00cd5b3dd7",
-        "status": "started",
-        "is_started": true,
-        "is_finished": false,
-        "started_at": "2026-05-13T11:52:16.931Z",
-        "finished_at": null,
-        "current_component_id": "5d658771-f9ca-4a74-935d-fa43ff8c8ab5",
-        "current_sub_section_id": "fec1cbcb-89fd-4e88-bc9d-58157b064dfa"
-      }
-    }
-  }
-]
+  ]
+}

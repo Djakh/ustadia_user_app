@@ -17,12 +17,16 @@ class MockExamListBloc extends Bloc<MockExamListEvent, MockExamListState> {
 
   Future<void> handleMockExamsRequested(
       MockExamListRequested event, Emitter<MockExamListState> emit) async {
-    emit(state.copyWith(
-        status: Status.loading,
-        exams: const [],
-        pagination: const PaginationMeta(),
-        isLoadingMore: false,
-        errorMessage: null));
+    if (event.showLoading || state.exams.isEmpty) {
+      emit(state.copyWith(
+          status: Status.loading,
+          exams: const [],
+          pagination: const PaginationMeta(),
+          isLoadingMore: false,
+          errorMessage: null));
+    } else {
+      emit(state.copyWith(isLoadingMore: false, errorMessage: null));
+    }
     try {
       final result =
           await mockExamRemoteDataSource.fetchMockExams(page: event.page, limit: event.limit);
@@ -32,9 +36,13 @@ class MockExamListBloc extends Bloc<MockExamListEvent, MockExamListState> {
           pagination: result.meta,
           errorMessage: null));
     } on DioException catch (error) {
-      emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.from(error)));
+      emit(state.copyWith(
+          status: event.showLoading || state.exams.isEmpty ? Status.error : state.status,
+          errorMessage: DioErrorMessage.from(error)));
     } catch (error) {
-      emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.fromUnknown(error)));
+      emit(state.copyWith(
+          status: event.showLoading || state.exams.isEmpty ? Status.error : state.status,
+          errorMessage: DioErrorMessage.fromUnknown(error)));
     }
   }
 

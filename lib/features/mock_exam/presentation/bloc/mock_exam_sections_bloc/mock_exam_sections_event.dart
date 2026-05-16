@@ -11,11 +11,12 @@ abstract class MockExamSectionsEvent extends Equatable {
 class MockExamSectionsRequested extends MockExamSectionsEvent {
   final String mockExamId;
   final MockExamModel? exam;
+  final bool showLoading;
 
-  const MockExamSectionsRequested({required this.mockExamId, this.exam});
+  const MockExamSectionsRequested({required this.mockExamId, this.exam, this.showLoading = true});
 
   @override
-  List<Object?> get props => [mockExamId, exam];
+  List<Object?> get props => [mockExamId, exam, showLoading];
 }
 
 class MockExamFinishRequested extends MockExamSectionsEvent {
