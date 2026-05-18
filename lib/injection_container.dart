@@ -50,6 +50,9 @@ import 'package:ustadia_user_app/features/profile/data/datasources/leaderboard_r
 import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 import 'package:ustadia_user_app/features/profile/data/services/public_levels_store.dart';
 import 'package:ustadia_user_app/features/profile/presentation/bloc/leaderboard_bloc/leaderboard_bloc.dart';
+import 'package:ustadia_user_app/features/reels/data/datasources/reels_remote_data_source.dart';
+import 'package:ustadia_user_app/features/reels/presentation/bloc/reel_user_profile_bloc/reel_user_profile_bloc.dart';
+import 'package:ustadia_user_app/features/reels/presentation/bloc/reels_bloc/reels_bloc.dart';
 
 import 'core/network/dio_client.dart';
 
@@ -173,6 +176,12 @@ Future<void> initDependencies() async {
       () => MockExamRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
   sl.registerLazySingleton(() => MockExamListBloc(mockExamRemoteDataSource: sl()));
   sl.registerFactory(() => MockExamSectionsBloc(mockExamRemoteDataSource: sl()));
+
+  // Features - Reels
+  sl.registerLazySingleton<ReelsRemoteDataSource>(
+      () => ReelsRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
+  sl.registerFactory(() => ReelsBloc(reelsRemoteDataSource: sl()));
+  sl.registerFactory(() => ReelUserProfileBloc(reelsRemoteDataSource: sl()));
 }
 
 Future<void> resetTeacherScopedData() async {

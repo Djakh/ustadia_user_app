@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
-import 'package:ustadia_user_app/core/inherited_widgets/navigation_shell_scope.dart';
 import 'package:ustadia_user_app/features/common/data/models/user_profile_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
@@ -22,8 +21,7 @@ class DashboardQuickGridList extends StatelessWidget {
   /// --- Methods ---
   void goToMockExam(BuildContext context) => context.push(mockExamRoute);
   void goToAssignments(BuildContext context) => context.push(assignmentsRoute);
-
-  void goToChatWithAi(BuildContext context) => NavigationShellScope.of(context).goBranch(3);
+  void goToReels(BuildContext context) => context.push(reelsRoute);
 
   void goToLeadboard(BuildContext context) => context.push(leaderboardRoute);
 
@@ -53,12 +51,12 @@ class DashboardQuickGridList extends StatelessWidget {
             onTap: () => goToMockExam(context)),
         const SizedBox(height: 12),
         DashboardGridCard(
-            title: 'Chat with AI'.tr(),
-            subtitle: 'Voice practice'.tr(),
+            title: 'Reels'.tr(),
+            subtitle: 'Watch lesson clips'.tr(),
             cardColor: AppColors.greenE0,
             height: 140,
             backImage: AppImages.chatCardBack,
-            onTap: () => goToChatWithAi(context))
+            onTap: () => goToReels(context))
       ]);
 
   Widget chatAndLideBoard(BuildContext context, UserProfileModel? profile) => Column(children: [

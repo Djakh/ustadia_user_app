@@ -60,6 +60,9 @@ import 'package:ustadia_user_app/features/profile/presentation/pages/profile_pag
 import 'package:ustadia_user_app/features/profile/presentation/pages/settings_language_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/settings_notifications_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/settings_page.dart';
+import 'package:ustadia_user_app/features/reels/data/models/reel_post_model.dart';
+import 'package:ustadia_user_app/features/reels/presentation/pages/reel_user_profile_page.dart';
+import 'package:ustadia_user_app/features/reels/presentation/pages/reels_page.dart';
 import 'package:ustadia_user_app/features/splash/presentation/pages/splash_page.dart';
 
 /// --------------------
@@ -108,6 +111,9 @@ const mockExamPath = 'mock-exam';
 const mockExamHistoryPath = 'history';
 const mockExamSectionsPath = ':mockExamId';
 const mockExamResultPath = ':mockExamId/result/:attemptId';
+const reelsRoute = '/reels';
+const reelsUserProfilePath = '/reels/user/:userId';
+String reelsUserProfileRoute(String userId) => '/reels/user/$userId';
 
 const practiceRoute = '$homeRoute/practice';
 const askAiTopicsRoute = '$homeRoute/ask-ai';
@@ -244,6 +250,22 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(path: signUpRoute, builder: (_, __) => const SignUpPage()),
+    GoRoute(
+        path: reelsRoute,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) {
+          final extra = state.extra;
+          return ReelsPage(params: extra is ReelsPageParams ? extra : null);
+        }),
+    GoRoute(
+        path: reelsUserProfilePath,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) {
+          final extra = state.extra;
+          return ReelUserProfilePage(
+              userId: state.pathParameters['userId'] ?? '',
+              initialAuthor: extra is ReelAuthorModel ? extra : null);
+        }),
     GoRoute(
       path: mockExamRoute,
       parentNavigatorKey: _rootKey,
