@@ -39,6 +39,8 @@ import 'package:ustadia_user_app/features/mock_exam/presentation/bloc/mock_exam_
 import 'package:ustadia_user_app/features/notifications/data/datasources/notifications_remote_data_source.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/bloc/notifications_bloc/notifications_bloc.dart';
 import 'package:ustadia_user_app/features/practice/data/datasources/practice_remote_data_source.dart';
+import 'package:ustadia_user_app/features/practice/presentation/bloc/monkey_type_practices_bloc/monkey_type_practices_bloc.dart';
+import 'package:ustadia_user_app/features/practice/presentation/bloc/monkey_type_session_bloc/monkey_type_session_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_flashcard_sets_bloc/practice_flashcard_sets_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_sets_bloc/practice_listen_tap_sets_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_status_bloc/practice_listen_tap_status_bloc.dart';
@@ -150,6 +152,9 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => PracticeWordMatchSetsBloc(practiceRemoteDataSource: sl()));
   sl.registerFactory(() =>
       PracticeWordMatchStatusBloc(practiceRemoteDataSource: sl(), profileStatisticsStore: sl()));
+  sl.registerFactory(() => MonkeyTypePracticesBloc(practiceRemoteDataSource: sl()));
+  sl.registerFactory(
+      () => MonkeyTypeSessionBloc(practiceRemoteDataSource: sl(), profileStatisticsStore: sl()));
 
   // Features - Notifications
   sl.registerLazySingleton<NotificationsRemoteDataSource>(

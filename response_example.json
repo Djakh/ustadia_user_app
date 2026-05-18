@@ -1,1357 +1,162 @@
 {
-  "items": [
+  "id": "a4c6490a-e1dd-4c6b-be80-94bbddc190d4",
+  "title": "Basic English Sentences",
+  "description": "Practice typing simple English sentences",
+  "isPublic": false,
+  "teacher_id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
+  "created_at": "2026-05-18T12:13:04.365Z",
+  "updated_at": "2026-05-18T12:13:04.365Z",
+  "difficulty_levels": [
     {
-      "id": "056f45fe-4982-4086-8669-c1ace09d8607",
-      "author_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-      "type": "image",
-      "media_upload_id": null,
-      "title": "фвфы",
-      "description": "фывфыв",
-      "views_count": 2,
-      "likes_count": 0,
-      "created_at": "2026-05-08T15:07:33.605Z",
-      "author": {
-        "id": "907bf3b8-d31a-4537-938e-6386766da97b",
-        "firstName": "Sarkorbek",
-        "lastName": "Abilkosimov",
-        "email": "abilkosimovsarkor@gmail.com",
-        "phoneNumber": null,
-        "providers": [
-          {
-            "provider": "email",
-            "identifier": "abilkosimovsarkor@gmail.com",
-            "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
-          }
-        ],
-        "roles": [
-          "teacher",
-          "user"
-        ],
-        "language": "ru",
-        "level_id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-        "permissions": [
-          "feed"
-        ],
-        "created_at": "2025-12-24T10:32:44.479Z",
-        "xp": "40",
-        "isDeleted": false,
-        "reasoningSessions": [],
-        "level": {
-          "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-          "name": {
-            "en": "Pre-Intermediate",
-            "ru": "Допромежуточный",
-            "uz": "Oʻrta-oldi"
-          },
-          "description": {
-            "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
-            "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
-            "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
-          },
-          "isPublic": true,
-          "teacher_id": null,
-          "created_at": "2026-02-06T05:10:16.570Z",
-          "updated_at": "2026-02-06T05:10:16.570Z"
-        },
-        "balance": {
-          "id": "d57180d4-1a55-40e0-a1af-f682fa0b637d",
-          "amount": "0",
-          "user_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-          "created_at": "2026-04-24T04:43:06.555Z"
-        },
-        "profilePicture": {
-          "id": "c571a76d-e602-4428-8790-e82778a80da1",
-          "filename": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-10 Ð² 17.00.47.png",
-          "path": "37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "hash": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42",
-          "mimetype": "image/png",
-          "url": "/uploads/37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-04-16T13:48:20.295Z"
-        }
+      "id": "ec0f38bf-ac3b-44eb-b88b-394e5c842ecc",
+      "name": {
+        "en": "Beginner",
+        "ru": "Начинающий",
+        "uz": "Boshlang'ich"
       },
-      "media": null,
-      "images": [
-        {
-          "id": "512decb3-19c9-4c5a-9bcb-5510a62c56a1",
-          "filename": "42fd1a25b66346def155f802f4f7525b6633bd40bf256d32533d39a424079a8b.jpeg",
-          "received_filename": "1.jpeg",
-          "path": "42/fd/42fd1a25b66346def155f802f4f7525b6633bd40bf256d32533d39a424079a8b.jpeg",
-          "hash": "42fd1a25b66346def155f802f4f7525b6633bd40bf256d32533d39a424079a8b",
-          "mimetype": "image/jpeg",
-          "url": "/uploads/42/fd/42fd1a25b66346def155f802f4f7525b6633bd40bf256d32533d39a424079a8b.jpeg",
-          "uploaded_by_id": null,
-          "created_at": "2026-05-08T15:07:32.765Z"
-        },
-        {
-          "id": "200f97c8-cbe5-4727-bdc2-f00b75a48749",
-          "filename": "49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "received_filename": "IMG_20260507_020510_767.jpg",
-          "path": "49/dc/49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "hash": "49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a",
-          "mimetype": "image/jpeg",
-          "url": "/uploads/49/dc/49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "uploaded_by_id": null,
-          "created_at": "2026-05-08T14:30:35.743Z"
-        },
-        {
-          "id": "ed618793-e774-4bbd-a135-98c5bcdbec62",
-          "filename": "1e1b94c00fe30e3eb322bb313cbd5adcc11a7e91d64c5062390fe029b176efde.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-05-07 Ð² 17.14.05.png",
-          "path": "1e/1b/1e1b94c00fe30e3eb322bb313cbd5adcc11a7e91d64c5062390fe029b176efde.png",
-          "hash": "1e1b94c00fe30e3eb322bb313cbd5adcc11a7e91d64c5062390fe029b176efde",
-          "mimetype": "image/png",
-          "url": "/uploads/1e/1b/1e1b94c00fe30e3eb322bb313cbd5adcc11a7e91d64c5062390fe029b176efde.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-05-08T14:30:36.044Z"
-        }
-      ],
-      "comments": []
-    },
-    {
-      "id": "fa574f6b-11db-4a9a-848d-180aa1fdfffd",
-      "author_id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
-      "type": "image",
-      "media_upload_id": null,
-      "title": "New lesson video",
-      "description": "This video explains a new lesson topic.",
-      "views_count": 2,
-      "likes_count": 0,
-      "created_at": "2026-04-20T13:42:21.353Z",
-      "author": {
-        "id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
-        "firstName": "Nodir",
-        "lastName": "Fayzullayev",
-        "email": "fayzullayevnodir66@gmail.com",
-        "phoneNumber": null,
-        "providers": [
-          {
-            "provider": "email",
-            "identifier": "fayzullayevnodir66@gmail.com",
-            "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
-          }
-        ],
-        "roles": [
-          "teacher",
-          "user",
-          "admin"
-        ],
-        "language": "uz",
-        "level_id": "a7b8c9d0-e1f2-41d4-a716-446655440001",
-        "permissions": [
-          "feed"
-        ],
-        "created_at": "2025-12-24T08:18:38.134Z",
-        "xp": "0",
-        "isDeleted": false,
-        "reasoningSessions": [],
-        "level": {
-          "id": "a7b8c9d0-e1f2-41d4-a716-446655440001",
-          "name": {
-            "en": "Elementary",
-            "ru": "Элементарный",
-            "uz": "Boshlangʻich"
-          },
-          "description": {
-            "en": "Elementary level for beginners learning basic vocabulary and simple sentence structures",
-            "ru": "Элементарный уровень для начинающих изучение базовой лексики и простых структур предложений",
-            "uz": "Boshlangʻich daraja - asosiy leksika va oddiy gaplarni oʻrganayotgan boshlangʻich oʻquvchilar uchun"
-          },
-          "isPublic": true,
-          "teacher_id": null,
-          "created_at": "2026-02-06T05:10:16.563Z",
-          "updated_at": "2026-02-06T05:10:16.563Z"
-        },
-        "balance": {
-          "id": "a01624cf-5768-4437-8f8b-41bb36f82bbe",
-          "amount": "0",
-          "user_id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
-          "created_at": "2026-04-24T04:43:06.555Z"
-        },
-        "profilePicture": null
+      "description": {
+        "en": "Beginner level for typing practice",
+        "ru": "Начальный уровень для тренировки печати",
+        "uz": "Boshlang'ich darajasi uchun mashq"
       },
-      "media": null,
-      "images": [
-        {
-          "id": "41c6e894-e75b-413a-b828-3df41ae4c73e",
-          "filename": "1bd1fbaf93a04ec6446bc31eff4d6c229b90e9525c983a8893a8e6c84d62a952.jpg",
-          "received_filename": "17766923531266551724337300190694.jpg",
-          "path": "1b/d1/1bd1fbaf93a04ec6446bc31eff4d6c229b90e9525c983a8893a8e6c84d62a952.jpg",
-          "hash": "1bd1fbaf93a04ec6446bc31eff4d6c229b90e9525c983a8893a8e6c84d62a952",
-          "mimetype": "image/jpeg",
-          "url": "/uploads/1b/d1/1bd1fbaf93a04ec6446bc31eff4d6c229b90e9525c983a8893a8e6c84d62a952.jpg",
-          "uploaded_by_id": null,
-          "created_at": "2026-04-20T13:39:28.587Z"
-        }
-      ],
-      "comments": []
-    },
-    {
-      "id": "b1083ec5-7ac1-4e5c-8af6-d5efff028f68",
-      "author_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-      "type": "image",
-      "media_upload_id": null,
-      "title": "фывфы",
-      "description": "фывфы",
-      "views_count": 1,
-      "likes_count": 0,
-      "created_at": "2026-05-08T15:05:32.398Z",
-      "author": {
-        "id": "907bf3b8-d31a-4537-938e-6386766da97b",
-        "firstName": "Sarkorbek",
-        "lastName": "Abilkosimov",
-        "email": "abilkosimovsarkor@gmail.com",
-        "phoneNumber": null,
-        "providers": [
-          {
-            "provider": "email",
-            "identifier": "abilkosimovsarkor@gmail.com",
-            "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
-          }
-        ],
-        "roles": [
-          "teacher",
-          "user"
-        ],
-        "language": "ru",
-        "level_id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-        "permissions": [
-          "feed"
-        ],
-        "created_at": "2025-12-24T10:32:44.479Z",
-        "xp": "40",
-        "isDeleted": false,
-        "reasoningSessions": [],
-        "level": {
-          "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-          "name": {
-            "en": "Pre-Intermediate",
-            "ru": "Допромежуточный",
-            "uz": "Oʻrta-oldi"
-          },
-          "description": {
-            "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
-            "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
-            "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
-          },
-          "isPublic": true,
-          "teacher_id": null,
-          "created_at": "2026-02-06T05:10:16.570Z",
-          "updated_at": "2026-02-06T05:10:16.570Z"
-        },
-        "balance": {
-          "id": "d57180d4-1a55-40e0-a1af-f682fa0b637d",
-          "amount": "0",
-          "user_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-          "created_at": "2026-04-24T04:43:06.555Z"
-        },
-        "profilePicture": {
-          "id": "c571a76d-e602-4428-8790-e82778a80da1",
-          "filename": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-10 Ð² 17.00.47.png",
-          "path": "37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "hash": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42",
-          "mimetype": "image/png",
-          "url": "/uploads/37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-04-16T13:48:20.295Z"
-        }
-      },
-      "media": null,
-      "images": [
-        {
-          "id": "200f97c8-cbe5-4727-bdc2-f00b75a48749",
-          "filename": "49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "received_filename": "IMG_20260507_020510_767.jpg",
-          "path": "49/dc/49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "hash": "49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a",
-          "mimetype": "image/jpeg",
-          "url": "/uploads/49/dc/49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "uploaded_by_id": null,
-          "created_at": "2026-05-08T14:30:35.743Z"
-        }
-      ],
-      "comments": []
-    },
-    {
-      "id": "a706f25e-5f65-4908-b296-c4c698e52d88",
-      "author_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-      "type": "image",
-      "media_upload_id": null,
-      "title": "asdasdas",
-      "description": "adasd",
-      "views_count": 1,
-      "likes_count": 0,
-      "created_at": "2026-05-08T15:02:50.897Z",
-      "author": {
-        "id": "907bf3b8-d31a-4537-938e-6386766da97b",
-        "firstName": "Sarkorbek",
-        "lastName": "Abilkosimov",
-        "email": "abilkosimovsarkor@gmail.com",
-        "phoneNumber": null,
-        "providers": [
-          {
-            "provider": "email",
-            "identifier": "abilkosimovsarkor@gmail.com",
-            "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
-          }
-        ],
-        "roles": [
-          "teacher",
-          "user"
-        ],
-        "language": "ru",
-        "level_id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-        "permissions": [
-          "feed"
-        ],
-        "created_at": "2025-12-24T10:32:44.479Z",
-        "xp": "40",
-        "isDeleted": false,
-        "reasoningSessions": [],
-        "level": {
-          "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-          "name": {
-            "en": "Pre-Intermediate",
-            "ru": "Допромежуточный",
-            "uz": "Oʻrta-oldi"
-          },
-          "description": {
-            "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
-            "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
-            "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
-          },
-          "isPublic": true,
-          "teacher_id": null,
-          "created_at": "2026-02-06T05:10:16.570Z",
-          "updated_at": "2026-02-06T05:10:16.570Z"
-        },
-        "balance": {
-          "id": "d57180d4-1a55-40e0-a1af-f682fa0b637d",
-          "amount": "0",
-          "user_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-          "created_at": "2026-04-24T04:43:06.555Z"
-        },
-        "profilePicture": {
-          "id": "c571a76d-e602-4428-8790-e82778a80da1",
-          "filename": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-10 Ð² 17.00.47.png",
-          "path": "37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "hash": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42",
-          "mimetype": "image/png",
-          "url": "/uploads/37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-04-16T13:48:20.295Z"
-        }
-      },
-      "media": null,
-      "images": [
-        {
-          "id": "200f97c8-cbe5-4727-bdc2-f00b75a48749",
-          "filename": "49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "received_filename": "IMG_20260507_020510_767.jpg",
-          "path": "49/dc/49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "hash": "49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a",
-          "mimetype": "image/jpeg",
-          "url": "/uploads/49/dc/49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "uploaded_by_id": null,
-          "created_at": "2026-05-08T14:30:35.743Z"
-        },
-        {
-          "id": "ed618793-e774-4bbd-a135-98c5bcdbec62",
-          "filename": "1e1b94c00fe30e3eb322bb313cbd5adcc11a7e91d64c5062390fe029b176efde.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-05-07 Ð² 17.14.05.png",
-          "path": "1e/1b/1e1b94c00fe30e3eb322bb313cbd5adcc11a7e91d64c5062390fe029b176efde.png",
-          "hash": "1e1b94c00fe30e3eb322bb313cbd5adcc11a7e91d64c5062390fe029b176efde",
-          "mimetype": "image/png",
-          "url": "/uploads/1e/1b/1e1b94c00fe30e3eb322bb313cbd5adcc11a7e91d64c5062390fe029b176efde.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-05-08T14:30:36.044Z"
-        }
-      ],
-      "comments": []
-    },
-    {
-      "id": "c92a7cbf-cd4e-403a-8301-ee83d57b1304",
-      "author_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-      "type": "image",
-      "media_upload_id": null,
-      "title": "asdasd",
-      "description": "adasdas",
-      "views_count": 1,
-      "likes_count": 0,
-      "created_at": "2026-05-08T15:00:09.382Z",
-      "author": {
-        "id": "907bf3b8-d31a-4537-938e-6386766da97b",
-        "firstName": "Sarkorbek",
-        "lastName": "Abilkosimov",
-        "email": "abilkosimovsarkor@gmail.com",
-        "phoneNumber": null,
-        "providers": [
-          {
-            "provider": "email",
-            "identifier": "abilkosimovsarkor@gmail.com",
-            "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
-          }
-        ],
-        "roles": [
-          "teacher",
-          "user"
-        ],
-        "language": "ru",
-        "level_id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-        "permissions": [
-          "feed"
-        ],
-        "created_at": "2025-12-24T10:32:44.479Z",
-        "xp": "40",
-        "isDeleted": false,
-        "reasoningSessions": [],
-        "level": {
-          "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-          "name": {
-            "en": "Pre-Intermediate",
-            "ru": "Допромежуточный",
-            "uz": "Oʻrta-oldi"
-          },
-          "description": {
-            "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
-            "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
-            "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
-          },
-          "isPublic": true,
-          "teacher_id": null,
-          "created_at": "2026-02-06T05:10:16.570Z",
-          "updated_at": "2026-02-06T05:10:16.570Z"
-        },
-        "balance": {
-          "id": "d57180d4-1a55-40e0-a1af-f682fa0b637d",
-          "amount": "0",
-          "user_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-          "created_at": "2026-04-24T04:43:06.555Z"
-        },
-        "profilePicture": {
-          "id": "c571a76d-e602-4428-8790-e82778a80da1",
-          "filename": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-10 Ð² 17.00.47.png",
-          "path": "37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "hash": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42",
-          "mimetype": "image/png",
-          "url": "/uploads/37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-04-16T13:48:20.295Z"
-        }
-      },
-      "media": null,
-      "images": [
-        {
-          "id": "200f97c8-cbe5-4727-bdc2-f00b75a48749",
-          "filename": "49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "received_filename": "IMG_20260507_020510_767.jpg",
-          "path": "49/dc/49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "hash": "49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a",
-          "mimetype": "image/jpeg",
-          "url": "/uploads/49/dc/49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "uploaded_by_id": null,
-          "created_at": "2026-05-08T14:30:35.743Z"
-        }
-      ],
-      "comments": []
-    },
-    {
-      "id": "00f1c366-08cb-4515-bf00-0051f3fc5f74",
-      "author_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-      "type": "image",
-      "media_upload_id": null,
-      "title": "adasd",
-      "description": "asdasd asdasd 1232",
-      "views_count": 1,
-      "likes_count": 0,
-      "created_at": "2026-05-08T14:59:38.067Z",
-      "author": {
-        "id": "907bf3b8-d31a-4537-938e-6386766da97b",
-        "firstName": "Sarkorbek",
-        "lastName": "Abilkosimov",
-        "email": "abilkosimovsarkor@gmail.com",
-        "phoneNumber": null,
-        "providers": [
-          {
-            "provider": "email",
-            "identifier": "abilkosimovsarkor@gmail.com",
-            "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
-          }
-        ],
-        "roles": [
-          "teacher",
-          "user"
-        ],
-        "language": "ru",
-        "level_id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-        "permissions": [
-          "feed"
-        ],
-        "created_at": "2025-12-24T10:32:44.479Z",
-        "xp": "40",
-        "isDeleted": false,
-        "reasoningSessions": [],
-        "level": {
-          "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-          "name": {
-            "en": "Pre-Intermediate",
-            "ru": "Допромежуточный",
-            "uz": "Oʻrta-oldi"
-          },
-          "description": {
-            "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
-            "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
-            "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
-          },
-          "isPublic": true,
-          "teacher_id": null,
-          "created_at": "2026-02-06T05:10:16.570Z",
-          "updated_at": "2026-02-06T05:10:16.570Z"
-        },
-        "balance": {
-          "id": "d57180d4-1a55-40e0-a1af-f682fa0b637d",
-          "amount": "0",
-          "user_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-          "created_at": "2026-04-24T04:43:06.555Z"
-        },
-        "profilePicture": {
-          "id": "c571a76d-e602-4428-8790-e82778a80da1",
-          "filename": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-10 Ð² 17.00.47.png",
-          "path": "37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "hash": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42",
-          "mimetype": "image/png",
-          "url": "/uploads/37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-04-16T13:48:20.295Z"
-        }
-      },
-      "media": null,
-      "images": [
-        {
-          "id": "200f97c8-cbe5-4727-bdc2-f00b75a48749",
-          "filename": "49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "received_filename": "IMG_20260507_020510_767.jpg",
-          "path": "49/dc/49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "hash": "49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a",
-          "mimetype": "image/jpeg",
-          "url": "/uploads/49/dc/49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "uploaded_by_id": null,
-          "created_at": "2026-05-08T14:30:35.743Z"
-        },
-        {
-          "id": "ed618793-e774-4bbd-a135-98c5bcdbec62",
-          "filename": "1e1b94c00fe30e3eb322bb313cbd5adcc11a7e91d64c5062390fe029b176efde.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-05-07 Ð² 17.14.05.png",
-          "path": "1e/1b/1e1b94c00fe30e3eb322bb313cbd5adcc11a7e91d64c5062390fe029b176efde.png",
-          "hash": "1e1b94c00fe30e3eb322bb313cbd5adcc11a7e91d64c5062390fe029b176efde",
-          "mimetype": "image/png",
-          "url": "/uploads/1e/1b/1e1b94c00fe30e3eb322bb313cbd5adcc11a7e91d64c5062390fe029b176efde.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-05-08T14:30:36.044Z"
-        }
-      ],
-      "comments": []
-    },
-    {
-      "id": "299f478c-683b-42c3-9631-2c102889be36",
-      "author_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-      "type": "video",
-      "media_upload_id": "d9c61bd3-255d-49f0-b9b7-f1321eadf174",
-      "title": "asdasd",
-      "description": "asdas",
-      "views_count": 1,
-      "likes_count": 0,
-      "created_at": "2026-05-08T14:58:31.118Z",
-      "author": {
-        "id": "907bf3b8-d31a-4537-938e-6386766da97b",
-        "firstName": "Sarkorbek",
-        "lastName": "Abilkosimov",
-        "email": "abilkosimovsarkor@gmail.com",
-        "phoneNumber": null,
-        "providers": [
-          {
-            "provider": "email",
-            "identifier": "abilkosimovsarkor@gmail.com",
-            "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
-          }
-        ],
-        "roles": [
-          "teacher",
-          "user"
-        ],
-        "language": "ru",
-        "level_id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-        "permissions": [
-          "feed"
-        ],
-        "created_at": "2025-12-24T10:32:44.479Z",
-        "xp": "40",
-        "isDeleted": false,
-        "reasoningSessions": [],
-        "level": {
-          "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-          "name": {
-            "en": "Pre-Intermediate",
-            "ru": "Допромежуточный",
-            "uz": "Oʻrta-oldi"
-          },
-          "description": {
-            "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
-            "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
-            "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
-          },
-          "isPublic": true,
-          "teacher_id": null,
-          "created_at": "2026-02-06T05:10:16.570Z",
-          "updated_at": "2026-02-06T05:10:16.570Z"
-        },
-        "balance": {
-          "id": "d57180d4-1a55-40e0-a1af-f682fa0b637d",
-          "amount": "0",
-          "user_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-          "created_at": "2026-04-24T04:43:06.555Z"
-        },
-        "profilePicture": {
-          "id": "c571a76d-e602-4428-8790-e82778a80da1",
-          "filename": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-10 Ð² 17.00.47.png",
-          "path": "37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "hash": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42",
-          "mimetype": "image/png",
-          "url": "/uploads/37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-04-16T13:48:20.295Z"
-        }
-      },
-      "media": {
-        "id": "d9c61bd3-255d-49f0-b9b7-f1321eadf174",
-        "filename": "9206213c8d46184a56745f7c59888f06c90580e9b7053f1c3c46dc143f381342.mp4",
-        "received_filename": "tohir.mp4",
-        "path": "92/06/9206213c8d46184a56745f7c59888f06c90580e9b7053f1c3c46dc143f381342.mp4",
-        "hash": "9206213c8d46184a56745f7c59888f06c90580e9b7053f1c3c46dc143f381342",
-        "mimetype": "video/mp4",
-        "url": "/uploads/92/06/9206213c8d46184a56745f7c59888f06c90580e9b7053f1c3c46dc143f381342.mp4",
-        "uploaded_by_id": null,
-        "created_at": "2026-05-08T14:58:30.614Z"
-      },
-      "images": [],
-      "comments": []
-    },
-    {
-      "id": "4c836105-9676-4c25-a818-dd5af5894a0e",
-      "author_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-      "type": "image",
-      "media_upload_id": null,
-      "title": "asdasd",
-      "description": "asdasd new post 123",
-      "views_count": 1,
-      "likes_count": 0,
-      "created_at": "2026-05-08T14:54:57.109Z",
-      "author": {
-        "id": "907bf3b8-d31a-4537-938e-6386766da97b",
-        "firstName": "Sarkorbek",
-        "lastName": "Abilkosimov",
-        "email": "abilkosimovsarkor@gmail.com",
-        "phoneNumber": null,
-        "providers": [
-          {
-            "provider": "email",
-            "identifier": "abilkosimovsarkor@gmail.com",
-            "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
-          }
-        ],
-        "roles": [
-          "teacher",
-          "user"
-        ],
-        "language": "ru",
-        "level_id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-        "permissions": [
-          "feed"
-        ],
-        "created_at": "2025-12-24T10:32:44.479Z",
-        "xp": "40",
-        "isDeleted": false,
-        "reasoningSessions": [],
-        "level": {
-          "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-          "name": {
-            "en": "Pre-Intermediate",
-            "ru": "Допромежуточный",
-            "uz": "Oʻrta-oldi"
-          },
-          "description": {
-            "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
-            "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
-            "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
-          },
-          "isPublic": true,
-          "teacher_id": null,
-          "created_at": "2026-02-06T05:10:16.570Z",
-          "updated_at": "2026-02-06T05:10:16.570Z"
-        },
-        "balance": {
-          "id": "d57180d4-1a55-40e0-a1af-f682fa0b637d",
-          "amount": "0",
-          "user_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-          "created_at": "2026-04-24T04:43:06.555Z"
-        },
-        "profilePicture": {
-          "id": "c571a76d-e602-4428-8790-e82778a80da1",
-          "filename": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-10 Ð² 17.00.47.png",
-          "path": "37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "hash": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42",
-          "mimetype": "image/png",
-          "url": "/uploads/37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-04-16T13:48:20.295Z"
-        }
-      },
-      "media": null,
-      "images": [
-        {
-          "id": "ed618793-e774-4bbd-a135-98c5bcdbec62",
-          "filename": "1e1b94c00fe30e3eb322bb313cbd5adcc11a7e91d64c5062390fe029b176efde.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-05-07 Ð² 17.14.05.png",
-          "path": "1e/1b/1e1b94c00fe30e3eb322bb313cbd5adcc11a7e91d64c5062390fe029b176efde.png",
-          "hash": "1e1b94c00fe30e3eb322bb313cbd5adcc11a7e91d64c5062390fe029b176efde",
-          "mimetype": "image/png",
-          "url": "/uploads/1e/1b/1e1b94c00fe30e3eb322bb313cbd5adcc11a7e91d64c5062390fe029b176efde.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-05-08T14:30:36.044Z"
-        },
-        {
-          "id": "200f97c8-cbe5-4727-bdc2-f00b75a48749",
-          "filename": "49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "received_filename": "IMG_20260507_020510_767.jpg",
-          "path": "49/dc/49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "hash": "49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a",
-          "mimetype": "image/jpeg",
-          "url": "/uploads/49/dc/49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "uploaded_by_id": null,
-          "created_at": "2026-05-08T14:30:35.743Z"
-        }
-      ],
-      "comments": []
-    },
-    {
-      "id": "028e5a00-48eb-4c6e-885a-7e9391c9a990",
-      "author_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-      "type": "video",
-      "media_upload_id": "0e6b6d24-7e8b-4e1b-a580-2214b0ea8e53",
-      "title": "adasd",
-      "description": "asdas",
-      "views_count": 1,
-      "likes_count": 0,
-      "created_at": "2026-05-08T14:34:15.618Z",
-      "author": {
-        "id": "907bf3b8-d31a-4537-938e-6386766da97b",
-        "firstName": "Sarkorbek",
-        "lastName": "Abilkosimov",
-        "email": "abilkosimovsarkor@gmail.com",
-        "phoneNumber": null,
-        "providers": [
-          {
-            "provider": "email",
-            "identifier": "abilkosimovsarkor@gmail.com",
-            "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
-          }
-        ],
-        "roles": [
-          "teacher",
-          "user"
-        ],
-        "language": "ru",
-        "level_id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-        "permissions": [
-          "feed"
-        ],
-        "created_at": "2025-12-24T10:32:44.479Z",
-        "xp": "40",
-        "isDeleted": false,
-        "reasoningSessions": [],
-        "level": {
-          "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-          "name": {
-            "en": "Pre-Intermediate",
-            "ru": "Допромежуточный",
-            "uz": "Oʻrta-oldi"
-          },
-          "description": {
-            "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
-            "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
-            "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
-          },
-          "isPublic": true,
-          "teacher_id": null,
-          "created_at": "2026-02-06T05:10:16.570Z",
-          "updated_at": "2026-02-06T05:10:16.570Z"
-        },
-        "balance": {
-          "id": "d57180d4-1a55-40e0-a1af-f682fa0b637d",
-          "amount": "0",
-          "user_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-          "created_at": "2026-04-24T04:43:06.555Z"
-        },
-        "profilePicture": {
-          "id": "c571a76d-e602-4428-8790-e82778a80da1",
-          "filename": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-10 Ð² 17.00.47.png",
-          "path": "37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "hash": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42",
-          "mimetype": "image/png",
-          "url": "/uploads/37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-04-16T13:48:20.295Z"
-        }
-      },
-      "media": {
-        "id": "0e6b6d24-7e8b-4e1b-a580-2214b0ea8e53",
-        "filename": "e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b.mp4",
-        "received_filename": "The Simple Present Tense In 1 Minute!.mp4",
-        "path": "e7/7e/e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b.mp4",
-        "hash": "e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b",
-        "mimetype": "video/mp4",
-        "url": "/uploads/e7/7e/e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b.mp4",
-        "uploaded_by_id": null,
-        "created_at": "2026-04-01T23:51:41.008Z"
-      },
-      "images": [],
-      "comments": []
-    },
-    {
-      "id": "5d858ee6-d666-4448-a2db-285a74c34801",
-      "author_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-      "type": "image",
-      "media_upload_id": null,
-      "title": "фывфыв",
-      "description": "фвфы photo post",
-      "views_count": 1,
-      "likes_count": 0,
-      "created_at": "2026-05-08T14:30:37.027Z",
-      "author": {
-        "id": "907bf3b8-d31a-4537-938e-6386766da97b",
-        "firstName": "Sarkorbek",
-        "lastName": "Abilkosimov",
-        "email": "abilkosimovsarkor@gmail.com",
-        "phoneNumber": null,
-        "providers": [
-          {
-            "provider": "email",
-            "identifier": "abilkosimovsarkor@gmail.com",
-            "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
-          }
-        ],
-        "roles": [
-          "teacher",
-          "user"
-        ],
-        "language": "ru",
-        "level_id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-        "permissions": [
-          "feed"
-        ],
-        "created_at": "2025-12-24T10:32:44.479Z",
-        "xp": "40",
-        "isDeleted": false,
-        "reasoningSessions": [],
-        "level": {
-          "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-          "name": {
-            "en": "Pre-Intermediate",
-            "ru": "Допромежуточный",
-            "uz": "Oʻrta-oldi"
-          },
-          "description": {
-            "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
-            "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
-            "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
-          },
-          "isPublic": true,
-          "teacher_id": null,
-          "created_at": "2026-02-06T05:10:16.570Z",
-          "updated_at": "2026-02-06T05:10:16.570Z"
-        },
-        "balance": {
-          "id": "d57180d4-1a55-40e0-a1af-f682fa0b637d",
-          "amount": "0",
-          "user_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-          "created_at": "2026-04-24T04:43:06.555Z"
-        },
-        "profilePicture": {
-          "id": "c571a76d-e602-4428-8790-e82778a80da1",
-          "filename": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-10 Ð² 17.00.47.png",
-          "path": "37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "hash": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42",
-          "mimetype": "image/png",
-          "url": "/uploads/37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-04-16T13:48:20.295Z"
-        }
-      },
-      "media": null,
-      "images": [
-        {
-          "id": "a8fc8778-dea3-4128-852e-0235d62266f7",
-          "filename": "71c1b202d2430672c9f9a7d1f1de43e4923680cabef153e973e7243456d9dfa3.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-16 Ð² 20.41.27.png",
-          "path": "71/c1/71c1b202d2430672c9f9a7d1f1de43e4923680cabef153e973e7243456d9dfa3.png",
-          "hash": "71c1b202d2430672c9f9a7d1f1de43e4923680cabef153e973e7243456d9dfa3",
-          "mimetype": "image/png",
-          "url": "/uploads/71/c1/71c1b202d2430672c9f9a7d1f1de43e4923680cabef153e973e7243456d9dfa3.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-05-08T14:30:36.532Z"
-        },
-        {
-          "id": "70626b85-9eb6-4d04-a82f-187351459402",
-          "filename": "4c3090140df93b078c61988d979794deea3cc240f722bf86dd173f51cf8949c3.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-07 Ð² 19.13.31.png",
-          "path": "4c/30/4c3090140df93b078c61988d979794deea3cc240f722bf86dd173f51cf8949c3.png",
-          "hash": "4c3090140df93b078c61988d979794deea3cc240f722bf86dd173f51cf8949c3",
-          "mimetype": "image/png",
-          "url": "/uploads/4c/30/4c3090140df93b078c61988d979794deea3cc240f722bf86dd173f51cf8949c3.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-05-08T14:46:53.315Z"
-        },
-        {
-          "id": "200f97c8-cbe5-4727-bdc2-f00b75a48749",
-          "filename": "49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "received_filename": "IMG_20260507_020510_767.jpg",
-          "path": "49/dc/49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "hash": "49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a",
-          "mimetype": "image/jpeg",
-          "url": "/uploads/49/dc/49dcd99f353947669c683176205510d64b4cb107c4225bb3b41dbe23a4116f4a.jpg",
-          "uploaded_by_id": null,
-          "created_at": "2026-05-08T14:30:35.743Z"
-        }
-      ],
-      "comments": []
-    },
-    {
-      "id": "6b42ca6f-9261-4a93-8e47-1f279ac5b31f",
-      "author_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-      "type": "video",
-      "media_upload_id": "0e6b6d24-7e8b-4e1b-a580-2214b0ea8e53",
-      "title": "video 123",
-      "description": "video 123",
-      "views_count": 1,
-      "likes_count": 0,
-      "created_at": "2026-04-20T13:56:41.340Z",
-      "author": {
-        "id": "907bf3b8-d31a-4537-938e-6386766da97b",
-        "firstName": "Sarkorbek",
-        "lastName": "Abilkosimov",
-        "email": "abilkosimovsarkor@gmail.com",
-        "phoneNumber": null,
-        "providers": [
-          {
-            "provider": "email",
-            "identifier": "abilkosimovsarkor@gmail.com",
-            "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
-          }
-        ],
-        "roles": [
-          "teacher",
-          "user"
-        ],
-        "language": "ru",
-        "level_id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-        "permissions": [
-          "feed"
-        ],
-        "created_at": "2025-12-24T10:32:44.479Z",
-        "xp": "40",
-        "isDeleted": false,
-        "reasoningSessions": [],
-        "level": {
-          "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-          "name": {
-            "en": "Pre-Intermediate",
-            "ru": "Допромежуточный",
-            "uz": "Oʻrta-oldi"
-          },
-          "description": {
-            "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
-            "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
-            "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
-          },
-          "isPublic": true,
-          "teacher_id": null,
-          "created_at": "2026-02-06T05:10:16.570Z",
-          "updated_at": "2026-02-06T05:10:16.570Z"
-        },
-        "balance": {
-          "id": "d57180d4-1a55-40e0-a1af-f682fa0b637d",
-          "amount": "0",
-          "user_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-          "created_at": "2026-04-24T04:43:06.555Z"
-        },
-        "profilePicture": {
-          "id": "c571a76d-e602-4428-8790-e82778a80da1",
-          "filename": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-10 Ð² 17.00.47.png",
-          "path": "37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "hash": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42",
-          "mimetype": "image/png",
-          "url": "/uploads/37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-04-16T13:48:20.295Z"
-        }
-      },
-      "media": {
-        "id": "0e6b6d24-7e8b-4e1b-a580-2214b0ea8e53",
-        "filename": "e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b.mp4",
-        "received_filename": "The Simple Present Tense In 1 Minute!.mp4",
-        "path": "e7/7e/e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b.mp4",
-        "hash": "e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b",
-        "mimetype": "video/mp4",
-        "url": "/uploads/e7/7e/e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b.mp4",
-        "uploaded_by_id": null,
-        "created_at": "2026-04-01T23:51:41.008Z"
-      },
-      "images": [],
-      "comments": []
-    },
-    {
-      "id": "4cd012d5-2f9a-47c6-9e9f-5026023b0472",
-      "author_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-      "type": "video",
-      "media_upload_id": "0e6b6d24-7e8b-4e1b-a580-2214b0ea8e53",
-      "title": "video",
-      "description": "video",
-      "views_count": 1,
-      "likes_count": 0,
-      "created_at": "2026-04-20T13:55:47.790Z",
-      "author": {
-        "id": "907bf3b8-d31a-4537-938e-6386766da97b",
-        "firstName": "Sarkorbek",
-        "lastName": "Abilkosimov",
-        "email": "abilkosimovsarkor@gmail.com",
-        "phoneNumber": null,
-        "providers": [
-          {
-            "provider": "email",
-            "identifier": "abilkosimovsarkor@gmail.com",
-            "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
-          }
-        ],
-        "roles": [
-          "teacher",
-          "user"
-        ],
-        "language": "ru",
-        "level_id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-        "permissions": [
-          "feed"
-        ],
-        "created_at": "2025-12-24T10:32:44.479Z",
-        "xp": "40",
-        "isDeleted": false,
-        "reasoningSessions": [],
-        "level": {
-          "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-          "name": {
-            "en": "Pre-Intermediate",
-            "ru": "Допромежуточный",
-            "uz": "Oʻrta-oldi"
-          },
-          "description": {
-            "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
-            "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
-            "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
-          },
-          "isPublic": true,
-          "teacher_id": null,
-          "created_at": "2026-02-06T05:10:16.570Z",
-          "updated_at": "2026-02-06T05:10:16.570Z"
-        },
-        "balance": {
-          "id": "d57180d4-1a55-40e0-a1af-f682fa0b637d",
-          "amount": "0",
-          "user_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-          "created_at": "2026-04-24T04:43:06.555Z"
-        },
-        "profilePicture": {
-          "id": "c571a76d-e602-4428-8790-e82778a80da1",
-          "filename": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-10 Ð² 17.00.47.png",
-          "path": "37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "hash": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42",
-          "mimetype": "image/png",
-          "url": "/uploads/37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-04-16T13:48:20.295Z"
-        }
-      },
-      "media": {
-        "id": "0e6b6d24-7e8b-4e1b-a580-2214b0ea8e53",
-        "filename": "e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b.mp4",
-        "received_filename": "The Simple Present Tense In 1 Minute!.mp4",
-        "path": "e7/7e/e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b.mp4",
-        "hash": "e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b",
-        "mimetype": "video/mp4",
-        "url": "/uploads/e7/7e/e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b.mp4",
-        "uploaded_by_id": null,
-        "created_at": "2026-04-01T23:51:41.008Z"
-      },
-      "images": [],
-      "comments": []
-    },
-    {
-      "id": "f6653b78-2303-4172-8969-192504306b0f",
-      "author_id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
-      "type": "video",
-      "media_upload_id": "34120c5f-af23-45ee-a0f6-2bd2e039028d",
-      "title": "New lesson video",
-      "description": "This video explains a new lesson topic.",
-      "views_count": 1,
-      "likes_count": 0,
-      "created_at": "2026-04-20T13:44:55.603Z",
-      "author": {
-        "id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
-        "firstName": "Nodir",
-        "lastName": "Fayzullayev",
-        "email": "fayzullayevnodir66@gmail.com",
-        "phoneNumber": null,
-        "providers": [
-          {
-            "provider": "email",
-            "identifier": "fayzullayevnodir66@gmail.com",
-            "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
-          }
-        ],
-        "roles": [
-          "teacher",
-          "user",
-          "admin"
-        ],
-        "language": "uz",
-        "level_id": "a7b8c9d0-e1f2-41d4-a716-446655440001",
-        "permissions": [
-          "feed"
-        ],
-        "created_at": "2025-12-24T08:18:38.134Z",
-        "xp": "0",
-        "isDeleted": false,
-        "reasoningSessions": [],
-        "level": {
-          "id": "a7b8c9d0-e1f2-41d4-a716-446655440001",
-          "name": {
-            "en": "Elementary",
-            "ru": "Элементарный",
-            "uz": "Boshlangʻich"
-          },
-          "description": {
-            "en": "Elementary level for beginners learning basic vocabulary and simple sentence structures",
-            "ru": "Элементарный уровень для начинающих изучение базовой лексики и простых структур предложений",
-            "uz": "Boshlangʻich daraja - asosiy leksika va oddiy gaplarni oʻrganayotgan boshlangʻich oʻquvchilar uchun"
-          },
-          "isPublic": true,
-          "teacher_id": null,
-          "created_at": "2026-02-06T05:10:16.563Z",
-          "updated_at": "2026-02-06T05:10:16.563Z"
-        },
-        "balance": {
-          "id": "a01624cf-5768-4437-8f8b-41bb36f82bbe",
-          "amount": "0",
-          "user_id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
-          "created_at": "2026-04-24T04:43:06.555Z"
-        },
-        "profilePicture": null
-      },
-      "media": {
-        "id": "34120c5f-af23-45ee-a0f6-2bd2e039028d",
-        "filename": "6a43b9c3fe71b7da93c1a9d1e1576497738e68dc1127aef5963dfe4ea1074caa.mp4",
-        "received_filename": "VID_20260420_184352.mp4",
-        "path": "6a/43/6a43b9c3fe71b7da93c1a9d1e1576497738e68dc1127aef5963dfe4ea1074caa.mp4",
-        "hash": "6a43b9c3fe71b7da93c1a9d1e1576497738e68dc1127aef5963dfe4ea1074caa",
-        "mimetype": "video/mp4",
-        "url": "/uploads/6a/43/6a43b9c3fe71b7da93c1a9d1e1576497738e68dc1127aef5963dfe4ea1074caa.mp4",
-        "uploaded_by_id": null,
-        "created_at": "2026-04-20T13:44:02.536Z"
-      },
-      "images": [],
-      "comments": []
-    },
-    {
-      "id": "3e351f32-c760-4a3f-bad9-b45684d5aebb",
-      "author_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-      "type": "video",
-      "media_upload_id": "0e6b6d24-7e8b-4e1b-a580-2214b0ea8e53",
-      "title": "new post",
-      "description": "new post 123",
-      "views_count": 0,
-      "likes_count": 0,
-      "created_at": "2026-04-20T13:22:00.756Z",
-      "author": {
-        "id": "907bf3b8-d31a-4537-938e-6386766da97b",
-        "firstName": "Sarkorbek",
-        "lastName": "Abilkosimov",
-        "email": "abilkosimovsarkor@gmail.com",
-        "phoneNumber": null,
-        "providers": [
-          {
-            "provider": "email",
-            "identifier": "abilkosimovsarkor@gmail.com",
-            "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
-          }
-        ],
-        "roles": [
-          "teacher",
-          "user"
-        ],
-        "language": "ru",
-        "level_id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-        "permissions": [
-          "feed"
-        ],
-        "created_at": "2025-12-24T10:32:44.479Z",
-        "xp": "40",
-        "isDeleted": false,
-        "reasoningSessions": [],
-        "level": {
-          "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-          "name": {
-            "en": "Pre-Intermediate",
-            "ru": "Допромежуточный",
-            "uz": "Oʻrta-oldi"
-          },
-          "description": {
-            "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
-            "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
-            "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
-          },
-          "isPublic": true,
-          "teacher_id": null,
-          "created_at": "2026-02-06T05:10:16.570Z",
-          "updated_at": "2026-02-06T05:10:16.570Z"
-        },
-        "balance": {
-          "id": "d57180d4-1a55-40e0-a1af-f682fa0b637d",
-          "amount": "0",
-          "user_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-          "created_at": "2026-04-24T04:43:06.555Z"
-        },
-        "profilePicture": {
-          "id": "c571a76d-e602-4428-8790-e82778a80da1",
-          "filename": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-10 Ð² 17.00.47.png",
-          "path": "37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "hash": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42",
-          "mimetype": "image/png",
-          "url": "/uploads/37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-04-16T13:48:20.295Z"
-        }
-      },
-      "media": {
-        "id": "0e6b6d24-7e8b-4e1b-a580-2214b0ea8e53",
-        "filename": "e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b.mp4",
-        "received_filename": "The Simple Present Tense In 1 Minute!.mp4",
-        "path": "e7/7e/e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b.mp4",
-        "hash": "e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b",
-        "mimetype": "video/mp4",
-        "url": "/uploads/e7/7e/e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b.mp4",
-        "uploaded_by_id": null,
-        "created_at": "2026-04-01T23:51:41.008Z"
-      },
-      "images": [],
-      "comments": []
-    },
-    {
-      "id": "8e296dd0-827c-44a9-a62e-16e370841b6b",
-      "author_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-      "type": "video",
-      "media_upload_id": "0e6b6d24-7e8b-4e1b-a580-2214b0ea8e53",
-      "title": "New post",
-      "description": "New post asdasdsa",
-      "views_count": 0,
-      "likes_count": 0,
-      "created_at": "2026-04-20T13:20:53.814Z",
-      "author": {
-        "id": "907bf3b8-d31a-4537-938e-6386766da97b",
-        "firstName": "Sarkorbek",
-        "lastName": "Abilkosimov",
-        "email": "abilkosimovsarkor@gmail.com",
-        "phoneNumber": null,
-        "providers": [
-          {
-            "provider": "email",
-            "identifier": "abilkosimovsarkor@gmail.com",
-            "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
-          }
-        ],
-        "roles": [
-          "teacher",
-          "user"
-        ],
-        "language": "ru",
-        "level_id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-        "permissions": [
-          "feed"
-        ],
-        "created_at": "2025-12-24T10:32:44.479Z",
-        "xp": "40",
-        "isDeleted": false,
-        "reasoningSessions": [],
-        "level": {
-          "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-          "name": {
-            "en": "Pre-Intermediate",
-            "ru": "Допромежуточный",
-            "uz": "Oʻrta-oldi"
-          },
-          "description": {
-            "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
-            "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
-            "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
-          },
-          "isPublic": true,
-          "teacher_id": null,
-          "created_at": "2026-02-06T05:10:16.570Z",
-          "updated_at": "2026-02-06T05:10:16.570Z"
-        },
-        "balance": {
-          "id": "d57180d4-1a55-40e0-a1af-f682fa0b637d",
-          "amount": "0",
-          "user_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-          "created_at": "2026-04-24T04:43:06.555Z"
-        },
-        "profilePicture": {
-          "id": "c571a76d-e602-4428-8790-e82778a80da1",
-          "filename": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-10 Ð² 17.00.47.png",
-          "path": "37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "hash": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42",
-          "mimetype": "image/png",
-          "url": "/uploads/37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-          "uploaded_by_id": null,
-          "created_at": "2026-04-16T13:48:20.295Z"
-        }
-      },
-      "media": {
-        "id": "0e6b6d24-7e8b-4e1b-a580-2214b0ea8e53",
-        "filename": "e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b.mp4",
-        "received_filename": "The Simple Present Tense In 1 Minute!.mp4",
-        "path": "e7/7e/e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b.mp4",
-        "hash": "e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b",
-        "mimetype": "video/mp4",
-        "url": "/uploads/e7/7e/e77e9bc7975c8766424b07818452745d43a1f77cc126428f75de87eaa4170a4b.mp4",
-        "uploaded_by_id": null,
-        "created_at": "2026-04-01T23:51:41.008Z"
-      },
-      "images": [],
-      "comments": []
+      "isPublic": true,
+      "teacher_id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
+      "created_at": "2026-05-18T12:13:04.278Z",
+      "updated_at": "2026-05-18T12:13:04.278Z"
     }
   ],
-  "total": 15,
-  "page": 1,
-  "limit": 20
+  "teacher": {
+    "id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
+    "firstName": "Nodir",
+    "lastName": "Fayzullayev",
+    "email": "fayzullayevnodir66@gmail.com",
+    "phoneNumber": null,
+    "providers": [
+      {
+        "provider": "email",
+        "identifier": "fayzullayevnodir66@gmail.com",
+        "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+      }
+    ],
+    "roles": [
+      "teacher",
+      "user",
+      "admin"
+    ],
+    "language": "uz",
+    "level_id": "a7b8c9d0-e1f2-41d4-a716-446655440001",
+    "permissions": [
+      "feed"
+    ],
+    "created_at": "2025-12-24T08:18:38.134Z",
+    "xp": "0",
+    "isDeleted": false,
+    "reasoningSessions": [],
+    "level": {
+      "id": "a7b8c9d0-e1f2-41d4-a716-446655440001",
+      "name": {
+        "en": "Elementary",
+        "ru": "Элементарный",
+        "uz": "Boshlangʻich"
+      },
+      "description": {
+        "en": "Elementary level for beginners learning basic vocabulary and simple sentence structures",
+        "ru": "Элементарный уровень для начинающих изучение базовой лексики и простых структур предложений",
+        "uz": "Boshlangʻich daraja - asosiy leksika va oddiy gaplarni oʻrganayotgan boshlangʻich oʻquvchilar uchun"
+      },
+      "isPublic": true,
+      "teacher_id": null,
+      "created_at": "2026-02-06T05:10:16.563Z",
+      "updated_at": "2026-02-06T05:10:16.563Z"
+    },
+    "balance": {
+      "id": "a01624cf-5768-4437-8f8b-41bb36f82bbe",
+      "amount": "0",
+      "user_id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
+      "created_at": "2026-04-24T04:43:06.555Z"
+    },
+    "profilePicture": null
+  },
+  "texts": [
+    {
+      "id": "a168d446-0cc1-4cf9-b793-5079bc71cc51",
+      "text": "The quick brown fox jumps over the lazy dog.",
+      "order_index": 1,
+      "practice_id": "a4c6490a-e1dd-4c6b-be80-94bbddc190d4",
+      "created_at": "2026-05-18T12:13:04.380Z",
+      "updated_at": "2026-05-18T12:13:04.380Z"
+    },
+    {
+      "id": "02db8305-1f93-4528-97ac-52f9c8ddf9cc",
+      "text": "Practice makes perfect when learning to type fast.",
+      "order_index": 2,
+      "practice_id": "a4c6490a-e1dd-4c6b-be80-94bbddc190d4",
+      "created_at": "2026-05-18T12:13:04.390Z",
+      "updated_at": "2026-05-18T12:13:04.390Z"
+    },
+    {
+      "id": "c9176d87-d382-4f64-9dfb-9857253ec2a7",
+      "text": "JavaScript is a popular programming language.",
+      "order_index": 3,
+      "practice_id": "a4c6490a-e1dd-4c6b-be80-94bbddc190d4",
+      "created_at": "2026-05-18T12:13:04.400Z",
+      "updated_at": "2026-05-18T12:13:04.400Z"
+    },
+    {
+      "id": "296d48a3-fd69-4c04-8ea1-bbe78d471883",
+      "text": "NestJS makes building backend applications easy.",
+      "order_index": 4,
+      "practice_id": "a4c6490a-e1dd-4c6b-be80-94bbddc190d4",
+      "created_at": "2026-05-18T12:13:04.407Z",
+      "updated_at": "2026-05-18T12:13:04.407Z"
+    },
+    {
+      "id": "6417a7f2-0a47-4e68-b167-1246ca1b3382",
+      "text": "TypeScript adds type safety to JavaScript.",
+      "order_index": 5,
+      "practice_id": "a4c6490a-e1dd-4c6b-be80-94bbddc190d4",
+      "created_at": "2026-05-18T12:13:04.415Z",
+      "updated_at": "2026-05-18T12:13:04.415Z"
+    },
+    {
+      "id": "e7e04574-32b6-4d8d-bc41-d70f9f12ae9c",
+      "text": "The sun rises in the east and sets in the west.",
+      "order_index": 6,
+      "practice_id": "a4c6490a-e1dd-4c6b-be80-94bbddc190d4",
+      "created_at": "2026-05-18T12:13:04.428Z",
+      "updated_at": "2026-05-18T12:13:04.428Z"
+    },
+    {
+      "id": "00e204e1-d742-4b08-ba3d-6ac92251e64b",
+      "text": "A journey of a thousand miles begins with a single step.",
+      "order_index": 7,
+      "practice_id": "a4c6490a-e1dd-4c6b-be80-94bbddc190d4",
+      "created_at": "2026-05-18T12:13:04.438Z",
+      "updated_at": "2026-05-18T12:13:04.438Z"
+    },
+    {
+      "id": "78623594-5746-4d46-ae25-e055fe6ffd9b",
+      "text": "Knowledge is power in the modern world.",
+      "order_index": 8,
+      "practice_id": "a4c6490a-e1dd-4c6b-be80-94bbddc190d4",
+      "created_at": "2026-05-18T12:13:04.447Z",
+      "updated_at": "2026-05-18T12:13:04.447Z"
+    },
+    {
+      "id": "6098b338-149a-489b-8305-afd1aced4f8a",
+      "text": "Reading books expands your mind and vocabulary.",
+      "order_index": 9,
+      "practice_id": "a4c6490a-e1dd-4c6b-be80-94bbddc190d4",
+      "created_at": "2026-05-18T12:13:04.455Z",
+      "updated_at": "2026-05-18T12:13:04.455Z"
+    },
+    {
+      "id": "c02d8358-5c78-4658-a009-ba6c9d864b22",
+      "text": "Consistent practice leads to mastery over time.",
+      "order_index": 10,
+      "practice_id": "a4c6490a-e1dd-4c6b-be80-94bbddc190d4",
+      "created_at": "2026-05-18T12:13:04.463Z",
+      "updated_at": "2026-05-18T12:13:04.463Z"
+    }
+  ]
 }

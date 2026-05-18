@@ -38,6 +38,7 @@ import 'package:ustadia_user_app/features/mock_exam/data/models/mock_exam_attemp
 import 'package:ustadia_user_app/features/mock_exam/data/models/mock_exam_model.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:ustadia_user_app/features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:ustadia_user_app/features/practice/data/models/monkey_type_model.dart';
 import 'package:ustadia_user_app/features/practice/data/models/practice_listen_tap_set_model.dart';
 import 'package:ustadia_user_app/features/practice/data/models/practice_sentence_builder_set_model.dart';
 import 'package:ustadia_user_app/features/practice/data/models/practice_word_match_set_model.dart';
@@ -46,6 +47,8 @@ import 'package:ustadia_user_app/features/practice/presentation/pages/build_sent
 import 'package:ustadia_user_app/features/practice/presentation/pages/flashcards/practice_flashcard_sets_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/practice_listen_tap_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/listen_tap_pages/practice_listen_tap_sets_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/monkey_type/monkey_type_practices_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/pages/monkey_type/monkey_type_session_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/practice_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/practice_speed_mix_result_page.dart';
@@ -130,6 +133,8 @@ const wordMatchPath = 'word-match';
 const buildSentencePath = 'build-sentence';
 const writingAssessmentPath = 'writing-assessment';
 const listenTapSetsPath = 'listen-tap-sets';
+const monkeyTypePath = 'monkey-type';
+const monkeyTypeSessionPath = 'session';
 
 const listenTapPath = 'listen-tap';
 const vocabularyPath = 'vocabulary';
@@ -160,6 +165,8 @@ const wordMatchRoute = '$practiceRoute/$wordMatchPath';
 const buildSentenceRoute = '$practiceRoute/$buildSentencePath';
 const writingAssessmentRoute = '$practiceRoute/$writingAssessmentPath';
 const listenTapSetsRoute = '$practiceRoute/$listenTapSetsPath';
+const monkeyTypeRoute = '$practiceRoute/$monkeyTypePath';
+const monkeyTypeSessionRoute = '$monkeyTypeRoute/$monkeyTypeSessionPath';
 
 const listenTapRoute = '$practiceRoute/$listenTapPath';
 
@@ -504,6 +511,17 @@ final appRouter = GoRouter(
                     return PracticeListenTapPage(set: state.extra as PracticeListenTapSetModel);
                   },
                 ),
+                GoRoute(
+                    path: monkeyTypePath,
+                    parentNavigatorKey: _rootKey,
+                    builder: (_, __) => const MonkeyTypePracticesPage(),
+                    routes: [
+                      GoRoute(
+                          path: monkeyTypeSessionPath,
+                          parentNavigatorKey: _rootKey,
+                          builder: (context, state) => MonkeyTypeSessionPage(
+                              practice: state.extra as MonkeyTypePracticeModel))
+                    ]),
 
                 /// SpeedMix: start -> play/result
                 GoRoute(

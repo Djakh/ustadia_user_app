@@ -15,6 +15,7 @@ class AppImages {
   static const buildTheSentence = 'assets/images/build_the_sentence.png';
   static const flashcardSprint = 'assets/images/flashcard_sprint.png';
   static const listenTap = 'assets/images/listen_tap.png';
+  static const monkeyType = 'assets/images/monkey_type.png';
   static const speedMix = 'assets/images/speed_mix.png';
   static const worldMatch = 'assets/images/world_match.png';
   static const writingAssesment = 'assets/images/writing_assesment.png';
