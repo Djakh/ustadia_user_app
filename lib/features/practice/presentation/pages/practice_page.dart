@@ -39,6 +39,11 @@ class PracticePage extends StatelessWidget {
             description: 'Train your ear with audio'.tr(),
             image: AppImages.listenTap,
             route: listenTapSetsRoute),
+        ActivityModel(
+            title: 'Monkey Type'.tr(),
+            description: 'Train typing speed'.tr(),
+            image: AppImages.monkeyType,
+            route: monkeyTypeRoute),
         // ActivityModel(
         //     title: 'Vocabulary'.tr(),
         //     description: 'Choose right answer',
