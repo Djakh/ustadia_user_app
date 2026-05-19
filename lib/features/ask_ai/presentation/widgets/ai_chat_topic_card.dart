@@ -9,6 +9,8 @@ class AiChatTopicCard extends StatelessWidget {
 
   const AiChatTopicCard({super.key, required this.topic, required this.onTap});
 
+  String get durationText => '${topic.duration}m';
+
   @override
   Widget build(BuildContext context) => PrimaryBox(
       onTap: onTap,
@@ -17,7 +19,9 @@ class AiChatTopicCard extends StatelessWidget {
         Text(topic.title, style: Style.body2w6(context)),
         const SizedBox(height: 6),
         Text(topic.description, style: Style.small3w4(context, color: TextColorRole.greyColor)),
-        const SizedBox(height: 6),
-        Text('${topic.duration}s', style: Style.small3w4(context, color: TextColorRole.greyColor))
+        if (topic.duration > 0) ...[
+          const SizedBox(height: 6),
+          Text(durationText, style: Style.small3w4(context, color: TextColorRole.greyColor))
+        ]
       ]));
 }

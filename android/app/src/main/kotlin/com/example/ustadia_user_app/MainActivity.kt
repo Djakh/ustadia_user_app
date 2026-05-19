@@ -38,12 +38,14 @@ class MainActivity : FlutterFragmentActivity() {
 
   fun handleAudioRouteMethodCall(call: MethodCall, result: MethodChannel.Result) {
     val reason = call.argument<String>("reason") ?: "unknown"
+    val outputMode = VoiceAgentOutputMode.from(call.argument<String>("outputMode"))
     audioRouteExecutor.execute {
       val response: Any? =
           when (call.method) {
-            "startVoiceAgentSession" -> voiceAgentAudioRouteController.startVoiceAgentSession(reason)
-            "enterVoiceAgentPlaybackMode" -> voiceAgentAudioRouteController.enterPlaybackMode(reason)
-            "enterVoiceAgentCaptureMode" -> voiceAgentAudioRouteController.enterCaptureMode(reason)
+            "startVoiceAgentSession" -> voiceAgentAudioRouteController.startVoiceAgentSession(outputMode, reason)
+            "enterVoiceAgentPlaybackMode" -> voiceAgentAudioRouteController.applyOutputMode(VoiceAgentOutputMode.speaker, "legacy_playback:$reason")
+            "enterVoiceAgentCaptureMode" -> voiceAgentAudioRouteController.applyOutputMode(VoiceAgentOutputMode.speaker, "legacy_capture:$reason")
+            "applyVoiceAgentOutputMode" -> voiceAgentAudioRouteController.applyOutputMode(outputMode, reason)
             "stopVoiceAgentSession" -> voiceAgentAudioRouteController.stopVoiceAgentSession(reason)
             else -> null
           }
@@ -64,9 +66,15 @@ class MainActivity : FlutterFragmentActivity() {
   }
 }
 
-enum class VoiceAgentRouteMode {
-  playback,
-  capture,
+enum class VoiceAgentOutputMode {
+  speaker,
+  phone;
+
+  companion object {
+    fun from(value: String?): VoiceAgentOutputMode {
+      return values().firstOrNull { it.name == value } ?: speaker
+    }
+  }
 }
 
 class VoiceAgentAudioRouteController(context: Context) {
@@ -82,7 +90,7 @@ class VoiceAgentAudioRouteController(context: Context) {
 
   var sessionStarted = false
   var callbackRegistered = false
-  var currentRouteMode = VoiceAgentRouteMode.playback
+  var currentOutputMode = VoiceAgentOutputMode.speaker
   var previousAudioMode = AudioManager.MODE_NORMAL
   var previousSpeakerphoneState = false
 
@@ -103,34 +111,28 @@ class VoiceAgentAudioRouteController(context: Context) {
         }
       }
 
-  fun startVoiceAgentSession(reason: String): Map<String, Any> {
+  fun startVoiceAgentSession(
+      outputMode: VoiceAgentOutputMode = VoiceAgentOutputMode.speaker,
+      reason: String
+  ): Map<String, Any> {
     if (!sessionStarted) {
       previousAudioMode = audioManager.mode
       previousSpeakerphoneState = audioManager.isSpeakerphoneOn
       sessionStarted = true
       registerAudioDeviceCallback()
     }
-    currentRouteMode = VoiceAgentRouteMode.playback
+    currentOutputMode = outputMode
     applyCurrentRoute("start:$reason")
     return collectRouteSnapshot("start:$reason")
   }
 
-  fun enterPlaybackMode(reason: String): Map<String, Any> {
+  fun applyOutputMode(outputMode: VoiceAgentOutputMode, reason: String): Map<String, Any> {
     if (!sessionStarted) {
-      return startVoiceAgentSession(reason)
+      return startVoiceAgentSession(outputMode, reason)
     }
-    currentRouteMode = VoiceAgentRouteMode.playback
-    applyCurrentRoute("playback:$reason")
-    return collectRouteSnapshot("playback:$reason")
-  }
-
-  fun enterCaptureMode(reason: String): Map<String, Any> {
-    if (!sessionStarted) {
-      startVoiceAgentSession(reason)
-    }
-    currentRouteMode = VoiceAgentRouteMode.capture
-    applyCurrentRoute("capture:$reason")
-    return collectRouteSnapshot("capture:$reason")
+    currentOutputMode = outputMode
+    applyCurrentRoute("output:${outputMode.name}:$reason")
+    return collectRouteSnapshot("output:${outputMode.name}:$reason")
   }
 
   fun stopVoiceAgentSession(reason: String): Map<String, Any> {
@@ -159,35 +161,40 @@ class VoiceAgentAudioRouteController(context: Context) {
   }
 
   fun applyCurrentRoute(reason: String) {
-    applyPlaybackRoute(reason)
+    applyOutputRoute(currentOutputMode, reason)
   }
 
-  fun applyPlaybackRoute(reason: String) {
-    applyCaptureRoute(reason)
-  }
-
-  fun applyCaptureRoute(reason: String) {
+  fun applyOutputRoute(outputMode: VoiceAgentOutputMode, reason: String) {
     val externalOutputConnected = hasExternalOutputRoute()
-    audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+    if (audioManager.mode != AudioManager.MODE_IN_COMMUNICATION) {
+      audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+    }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
       if (externalOutputConnected) {
         audioManager.clearCommunicationDevice()
       } else {
-        val speakerDevice =
-            audioManager.availableCommunicationDevices.firstOrNull {
-              it.type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
+        val deviceType =
+            if (outputMode == VoiceAgentOutputMode.speaker) {
+              AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
+            } else {
+              AudioDeviceInfo.TYPE_BUILTIN_EARPIECE
             }
-        if (speakerDevice != null) {
-          audioManager.setCommunicationDevice(speakerDevice)
+        val outputDevice = audioManager.availableCommunicationDevices.firstOrNull { it.type == deviceType }
+        if (outputDevice != null) {
+          audioManager.setCommunicationDevice(outputDevice)
         } else {
           audioManager.clearCommunicationDevice()
         }
       }
     }
 
-    if (!externalOutputConnected) {
-      audioManager.isSpeakerphoneOn = true
+    val shouldUseSpeakerphone =
+        !externalOutputConnected && outputMode == VoiceAgentOutputMode.speaker
+    if (audioManager.isSpeakerphoneOn != shouldUseSpeakerphone) {
+      audioManager.isSpeakerphoneOn = shouldUseSpeakerphone
+    }
+    if (shouldUseSpeakerphone) {
       @Suppress("DEPRECATION")
       audioManager.isBluetoothScoOn = false
       @Suppress("DEPRECATION")
@@ -228,7 +235,7 @@ class VoiceAgentAudioRouteController(context: Context) {
   fun collectRouteSnapshot(reason: String): Map<String, Any> {
     val snapshot = mutableMapOf<String, Any>()
     snapshot["reason"] = reason
-    snapshot["routeMode"] = currentRouteMode.name
+    snapshot["outputMode"] = currentOutputMode.name
     snapshot["audioMode"] = audioModeName(audioManager.mode)
     snapshot["speakerphoneOn"] = audioManager.isSpeakerphoneOn
     snapshot["externalOutputConnected"] = hasExternalOutputRoute()

@@ -34,10 +34,11 @@ class VoiceOrbState extends State<VoiceOrb> with TickerProviderStateMixin {
     orbController =
         AnimationController(vsync: this, duration: durationForState(widget.voiceUiState));
     shimmerController =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 1600))..repeat();
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 1600));
     pulseAnimation = Tween(begin: 0.96, end: 1.04)
         .animate(CurvedAnimation(parent: orbController, curve: Curves.easeInOut));
     orbController.repeat(reverse: true);
+    updateShimmerController();
   }
 
   @override
@@ -48,6 +49,11 @@ class VoiceOrbState extends State<VoiceOrb> with TickerProviderStateMixin {
       if (!orbController.isAnimating) {
         orbController.repeat(reverse: true);
       }
+    }
+    if (oldWidget.voiceUiState != widget.voiceUiState ||
+        oldWidget.assistantSpeaking != widget.assistantSpeaking ||
+        oldWidget.userSpeaking != widget.userSpeaking) {
+      updateShimmerController();
     }
   }
 
@@ -64,6 +70,22 @@ class VoiceOrbState extends State<VoiceOrb> with TickerProviderStateMixin {
       case VoiceUiState.error:
         return const Duration(milliseconds: 2000);
     }
+  }
+
+  bool get shouldRunShimmer =>
+      widget.assistantSpeaking ||
+      widget.userSpeaking ||
+      widget.voiceUiState == VoiceUiState.connecting ||
+      widget.voiceUiState == VoiceUiState.thinking ||
+      widget.voiceUiState == VoiceUiState.speaking;
+
+  void updateShimmerController() {
+    if (shouldRunShimmer) {
+      if (!shimmerController.isAnimating) shimmerController.repeat();
+      return;
+    }
+    if (shimmerController.isAnimating) shimmerController.stop();
+    shimmerController.value = 0.5;
   }
 
   double levelBoost() {

@@ -35,9 +35,14 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
   static const double voiceControlsBottomPadding = 132;
   static const double textComposerBottomPadding = 148;
   static const Duration assistantResponseTimeout = Duration(seconds: 10);
-  static const int maxInitialAssistantSyncAttempts = 12;
+  static const int maxInitialAssistantSyncAttempts = 5;
   static const Duration voiceStartupDelay = Duration(milliseconds: 450);
   static const Duration shutdownDelay = Duration(milliseconds: 420);
+  static const Duration initialAssistantFirstSyncDelay = Duration(milliseconds: 1400);
+  static const Duration initialAssistantRetryDelay = Duration(milliseconds: 2400);
+  static const Duration assistantTurnSyncDelay = Duration(milliseconds: 1100);
+  static const Duration latestMessagesSyncThrottle = Duration(milliseconds: 1200);
+  static const Duration blockedMessagesSyncRetryDelay = Duration(milliseconds: 800);
 
   final ScrollController scrollController = ScrollController();
   final TextEditingController messageController = TextEditingController();
@@ -63,6 +68,7 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
   bool textComposerVisible = false;
   bool isClosing = false;
   bool shutdownScheduled = false;
+  DateTime? lastLatestMessagesRequestAt;
   static const int pageLimit = 50;
 
   @override
@@ -158,7 +164,12 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
   }
 
   void connectSocket() {
-    if (isClosing || socket != null) return;
+    if (isClosing) return;
+    final currentSocket = socket;
+    if (currentSocket != null) {
+      if (!currentSocket.connected) currentSocket.connect();
+      return;
+    }
     final token = sl<AuthLocalDataSource>().getAccessToken();
     final baseUrl = sl<AiChatRemoteDataSource>().dio.options.baseUrl;
     if (token.isEmpty || baseUrl.isEmpty) return;
@@ -283,33 +294,54 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
       return;
     }
     initialMessagesSyncTimer?.cancel();
-    initialMessagesSyncTimer = Timer(const Duration(milliseconds: 1200), syncLatestMessages);
+    initialMessagesSyncTimer = Timer(initialAssistantFirstSyncDelay, syncLatestMessages);
   }
 
   void syncLatestMessages() {
-    if (!mounted || initialAssistantSyncCompleted) return;
-    initialAssistantSyncAttempts += 1;
-    context
-        .read<AskAiBloc>()
-        .add(AskAiMessagesRequested(topicId: widget.topic.id, page: 1, limit: pageLimit));
+    if (!mounted || isClosing || initialAssistantSyncCompleted) return;
+    final blocState = context.read<AskAiBloc>().state;
+    final hasAssistantMessage = blocState.messages.any((message) => message.role == 'assistant');
+    if (hasAssistantMessage) {
+      initialAssistantSyncCompleted = true;
+      initialMessagesSyncTimer?.cancel();
+      return;
+    }
+    final didRequest = requestLatestMessages(force: initialAssistantSyncAttempts == 0);
+    if (didRequest) {
+      initialAssistantSyncAttempts += 1;
+    }
     if (!initialAssistantSyncCompleted &&
         initialAssistantSyncAttempts < maxInitialAssistantSyncAttempts) {
       initialMessagesSyncTimer?.cancel();
-      initialMessagesSyncTimer = Timer(const Duration(milliseconds: 1800), syncLatestMessages);
+      initialMessagesSyncTimer = Timer(
+          didRequest ? initialAssistantRetryDelay : blockedMessagesSyncRetryDelay,
+          syncLatestMessages);
     }
   }
 
   void scheduleAssistantTurnMessagesSync() {
     assistantTurnMessagesSyncTimer?.cancel();
-    assistantTurnMessagesSyncTimer =
-        Timer(const Duration(milliseconds: 900), syncMessagesAfterAssistantTurn);
+    assistantTurnMessagesSyncTimer = Timer(assistantTurnSyncDelay, syncMessagesAfterAssistantTurn);
   }
 
   void syncMessagesAfterAssistantTurn() {
-    if (!mounted) return;
-    context
-        .read<AskAiBloc>()
-        .add(AskAiMessagesRequested(topicId: widget.topic.id, page: 1, limit: pageLimit));
+    requestLatestMessages(force: true);
+  }
+
+  bool requestLatestMessages({bool force = false}) {
+    if (!mounted || isClosing) return false;
+    final bloc = context.read<AskAiBloc>();
+    if (bloc.state.messagesStatus.isLoading) return false;
+    final now = DateTime.now();
+    final lastRequestAt = lastLatestMessagesRequestAt;
+    if (!force &&
+        lastRequestAt != null &&
+        now.difference(lastRequestAt) < latestMessagesSyncThrottle) {
+      return false;
+    }
+    lastLatestMessagesRequestAt = now;
+    bloc.add(AskAiMessagesRequested(topicId: widget.topic.id, page: 1, limit: pageLimit));
+    return true;
   }
 
   void onScroll() {
@@ -397,9 +429,7 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
   void handleAssistantResponseTimeout() {
     if (!mounted || !waitingForAssistantResponse) return;
     setState(() => waitingForAssistantResponse = false);
-    context
-        .read<AskAiBloc>()
-        .add(AskAiMessagesRequested(topicId: widget.topic.id, page: 1, limit: pageLimit));
+    requestLatestMessages(force: true);
   }
 
   bool get canTapMicrophone =>
@@ -562,8 +592,10 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
           isConnecting:
               voiceCallNotifier.isConnecting || voiceCallNotifier.isMicrophoneTransitioning,
           isRecording: voiceCallNotifier.micEnabled && !waitingForAssistantResponse,
+          outputMode: voiceCallNotifier.outputMode,
           labelText: microphoneButtonText(),
           onMicrophoneTap: canTapMicrophone ? onMicTap : null,
+          onAudioOutputTap: voiceCallNotifier.toggleAudioOutputMode,
           onKeyboardTap: showTextComposer));
 
   Widget get textMessageComposer => AnimatedBuilder(

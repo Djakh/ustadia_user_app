@@ -3,26 +3,48 @@ import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/features/ask_ai/presentation/widgets/ask_ai_control_icon_button.dart';
 import 'package:ustadia_user_app/features/ask_ai/presentation/widgets/ask_ai_microphone_button.dart';
+import 'package:ustadia_user_app/features/ask_ai/state/voice_call_notifier.dart';
 
 class AskAiVoiceControls extends StatelessWidget {
   final bool isConnecting;
   final bool isRecording;
+  final VoiceAudioOutputMode outputMode;
   final String labelText;
   final VoidCallback? onMicrophoneTap;
+  final VoidCallback? onAudioOutputTap;
   final VoidCallback onKeyboardTap;
 
   const AskAiVoiceControls(
       {super.key,
       required this.isConnecting,
       required this.isRecording,
+      required this.outputMode,
       required this.labelText,
       required this.onMicrophoneTap,
+      required this.onAudioOutputTap,
       required this.onKeyboardTap});
+
+  IconData get outputIcon => outputMode == VoiceAudioOutputMode.speaker
+      ? Icons.volume_up_rounded
+      : Icons.phone_in_talk_rounded;
+
+  String get outputTooltip =>
+      outputMode == VoiceAudioOutputMode.speaker ? 'Speaker'.tr() : 'Phone'.tr();
 
   @override
   Widget build(BuildContext context) => SizedBox(
       height: 126,
       child: Stack(children: [
+        Positioned(
+            left: 18,
+            bottom: 42,
+            child: AskAiControlIconButton(
+                iconData: outputIcon,
+                onTap: onAudioOutputTap,
+                tooltipText: outputTooltip,
+                backgroundColor: outputMode == VoiceAudioOutputMode.speaker
+                    ? AppColors.primary
+                    : AppColors.gray700)),
         Align(
             alignment: Alignment.bottomCenter,
             child: AskAiMicrophoneButton(

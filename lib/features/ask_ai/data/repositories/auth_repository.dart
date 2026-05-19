@@ -15,3 +15,16 @@ class InMemoryAuthRepository implements AuthRepository {
   @override
   Future<String> getUserId() async => userId;
 }
+
+class DynamicAuthRepository implements AuthRepository {
+  final String Function() jwtTokenGetter;
+  final String Function() userIdGetter;
+
+  const DynamicAuthRepository({required this.jwtTokenGetter, required this.userIdGetter});
+
+  @override
+  Future<String> getJwtToken() async => jwtTokenGetter();
+
+  @override
+  Future<String> getUserId() async => userIdGetter();
+}

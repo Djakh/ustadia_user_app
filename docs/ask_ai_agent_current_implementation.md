@@ -4,6 +4,15 @@ This document describes the current Ask AI implementation in this repository.
 
 It is a code handoff document, not a product spec.
 
+Last verified against code in:
+- `lib/features/ask_ai`
+- `lib/router.dart`
+- `lib/injection_container.dart`
+- `lib/app.dart`
+- `lib/main.dart`
+- `lib/core/services/voice_agent_audio_route_service.dart`
+- native audio bridges in `ios/Runner/AppDelegate.swift` and `android/app/src/main/kotlin/com/example/ustadia_user_app/MainActivity.kt`
+
 It covers:
 - architecture
 - relevant files
@@ -31,7 +40,7 @@ The Ask AI feature is split into three main parts:
    - owns mic enable and disable
    - owns assistant speech detection
    - owns voice state machine
-   - owns native speaker routing calls
+   - owns audio output mode and native routing calls
 
 3. `VoiceAgentPage`
    - coordinates the page lifecycle
@@ -45,7 +54,31 @@ Current ownership boundary:
 - `VoiceCallNotifier` handles voice only
 - `VoiceAgentPage` stitches socket, UI, bloc, and notifier together
 
+The feature does not currently have a separate domain/usecase layer. It follows the local feature pattern used in parts of this codebase where a feature can depend directly on a remote data source and presentation bloc when the behavior is mostly UI/session orchestration.
+
 ## 2. Main Files
+
+Current file inventory:
+
+```text
+lib/features/ask_ai/
+├── data/
+│   ├── datasources/ai_chat_remote_data_source.dart
+│   ├── models/ai_chat_message_model.dart
+│   ├── models/ai_chat_topic_model.dart
+│   ├── models/livekit_token_model.dart
+│   └── repositories/auth_repository.dart
+├── presentation/
+│   ├── bloc/ask_ai_bloc/
+│   │   ├── ask_ai_bloc.dart
+│   │   ├── ask_ai_event.dart
+│   │   └── ask_ai_state.dart
+│   ├── pages/ask_ai_topics_page.dart
+│   ├── pages/voice_agent_page.dart
+│   └── widgets/*.dart
+├── state/voice_call_notifier.dart
+└── widgets/voice_orb.dart
+```
 
 ### 2.1 Page and state
 
@@ -90,9 +123,34 @@ Current ownership boundary:
 - `ios/Runner/AppDelegate.swift`
 - `android/app/src/main/kotlin/com/example/ustadia_user_app/MainActivity.kt`
 
+### 2.6 App wiring
+
+- `lib/app.dart`
+  - provides `AskAiBloc` through the app-level `MultiBlocProvider`
+- `lib/injection_container.dart`
+  - registers `AiChatRemoteDataSource`
+  - registers `AuthRepository`
+  - registers `AskAiBloc`
+- `lib/main.dart`
+  - disables LiveKit hardware automatic configuration with `Hardware.instance.setAutomaticConfigurationEnabled(enable: false)`
+- `pubspec.yaml`
+  - uses `livekit_client: ^2.6.3`
+
 ## 3. Data and API Layer
 
 `AiChatRemoteDataSource` uses Dio and currently exposes three REST calls.
+
+The remote data source is intentionally thin. It maps backend responses to models and leaves UI/session orchestration to the bloc and page.
+
+Current constructor:
+
+```dart
+class AiChatRemoteDataSource {
+  final Dio dio;
+
+  AiChatRemoteDataSource({required this.dio});
+}
+```
 
 ### 3.1 Fetch topics
 
@@ -106,6 +164,21 @@ Query params:
 - `page`
 - `limit`
 
+Expected response shape:
+
+```json
+{
+  "data": [
+    {
+      "id": "topic-id",
+      "title": "Topic title",
+      "description": "Topic description",
+      "duration": 10
+    }
+  ]
+}
+```
+
 ### 3.2 Fetch messages
 
 Method:
@@ -117,6 +190,24 @@ Endpoint:
 Query params:
 - `page`
 - `limit`
+
+Expected response shape:
+
+```json
+{
+  "messages": [
+    {
+      "id": "message-id",
+      "topicId": "topic-id",
+      "userId": "user-id",
+      "role": "user|assistant",
+      "content": "message text",
+      "created_at": "date",
+      "isFinished": false
+    }
+  ]
+}
+```
 
 ### 3.3 Fetch LiveKit token
 
@@ -133,6 +224,45 @@ Payload:
 }
 ```
 
+Expected response shape:
+
+```json
+{
+  "url": "wss://...",
+  "token": "livekit-token",
+  "roomName": "room",
+  "participantIdentity": "student-id",
+  "sttEnabled": true,
+  "ttsEnabled": true,
+  "metadata": {}
+}
+```
+
+## 3.4 Dependency Injection Contract
+
+Ask AI dependencies are registered in `initDependencies()`:
+
+```dart
+sl.registerLazySingleton<AiChatRemoteDataSource>(
+    () => AiChatRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
+
+sl.registerLazySingleton<AuthRepository>(() => InMemoryAuthRepository(
+    jwtToken: sl<AuthLocalDataSource>().getAccessToken(),
+    userId: sl<UserBloc>().state.profile?.id ?? ''));
+
+sl.registerFactory(() =>
+    AskAiBloc(aiChatRemoteDataSource: sl<AiChatRemoteDataSource>(), authRepository: sl()));
+```
+
+Important behavior:
+- `AiChatRemoteDataSource` reuses the authenticated Dio from `AuthRemoteDataSource`.
+- `AuthRepository` is an in-memory wrapper around the access token and current profile id at registration time.
+- `AskAiBloc` is a factory, so every provider creation receives a new bloc instance.
+
+## 3.5 Auth Contract
+
+`AskAiBloc.ensureAuthValues()` blocks topic/message requests if the token is empty and emits an unauthorized error. `VoiceAgentPage.connectSocket()` reads the access token directly from `AuthLocalDataSource` because socket authorization is page-owned, not bloc-owned.
+
 ## 4. Data Models
 
 ### 4.1 `AiChatTopicModel`
@@ -142,6 +272,10 @@ Fields:
 - `title`
 - `description`
 - `duration`
+
+Parsing notes:
+- all string fields default to `''`
+- `duration` is accepted only as an `int`; otherwise it defaults to `0`
 
 ### 4.2 `AiChatMessageModel`
 
@@ -161,6 +295,10 @@ Special behavior:
   - `role`
   - `created_at`
   - `content`
+
+Model copy behavior:
+- `copyWith()` supports updating all fields.
+- message merge code uses this to preserve a longer backend id and merge `isFinished`.
 
 ### 4.3 `LivekitTokenModel`
 
@@ -190,6 +328,7 @@ It does not handle:
 - LiveKit
 - microphone
 - speaker routing
+- speaker/phone output mode switching
 - room events
 - socket creation
 
@@ -228,7 +367,28 @@ This exists because:
 - the same message can arrive via socket and later via REST
 - those two versions may not have the same id
 
+Current merge contract:
+
+```dart
+final merged = <String, AiChatMessageModel>{};
+for (final message in [...state.messages, ...messages]) {
+  merged[message.id] = message;
+}
+```
+
+After direct-id merging, the bloc builds a semantic map and sorts the final list by `createdAt`.
+
+Do not remove this dedupe unless backend guarantees stable ids across REST and socket paths.
+
 ## 6. Ask AI Navigation
+
+Route constants in `lib/router.dart`:
+
+```dart
+const askAiTopicsRoute = '$homeRoute/ask-ai';
+const askAiVoiceAgentPath = 'ask-ai-voice-agent';
+const askAiVoiceAgentRoute = '$askAiTopicsRoute/$askAiVoiceAgentPath';
+```
 
 ### 6.1 Topic page
 
@@ -319,6 +479,19 @@ Important socket events:
 - `ai_chat_connected`
 - `ai_chat_error`
 - `newMessage`
+
+Socket creation code shape:
+
+```dart
+final nextSocket = io.io(
+    '$baseUrl/ai-chat',
+    io.OptionBuilder()
+        .setTransports(['websocket'])
+        .setPath('/socket.io')
+        .disableAutoConnect()
+        .setExtraHeaders({'Authorization': 'Bearer $token'})
+        .build());
+```
 
 ### 7.4 Text message send flow
 
@@ -424,6 +597,8 @@ Current close goal:
 - pop page immediately
 - avoid heavy teardown work during the pop itself
 
+`PopScope` disables default pop and routes all back actions through `beginClosing()` so the socket, timers, and LiveKit notifier are stopped consistently.
+
 ## 8. VoiceCallNotifier
 
 ### 8.1 Responsibilities
@@ -477,11 +652,23 @@ It is not a fully authoritative server turn state.
 11. set `room = nextRoom`
 12. disable local microphone
 13. wait `300ms`
-14. apply capture mode:
-   - `VoiceAgentAudioRouteService.enterCaptureMode(...)`
-   - `room.setSpeakerOn(true, forceSpeakerOutput: true)`
+14. apply current audio output mode:
+   - `VoiceAgentAudioRouteService.applyOutputMode(...)`
+   - `room.setSpeakerOn(...)` with the current `VoiceAudioOutputMode`
 15. update local flags
 16. switch to `VoiceUiState.listening`
+
+Core LiveKit room options:
+
+```dart
+Room(
+  roomOptions: const RoomOptions(
+    adaptiveStream: true,
+    dynacast: true,
+    defaultAudioOutputOptions: AudioOutputOptions(speakerOn: isSpeakerMode),
+  ),
+)
+```
 
 ### 8.4 Disconnect flow
 
@@ -506,8 +693,27 @@ On pause:
 
 On resume:
 - if already connected:
-  - reapplies audio mode
-  - re-forces speaker through LiveKit room
+  - reapplies current `VoiceAudioOutputMode`
+  - mirrors that mode into LiveKit speaker state
+
+### 8.5.1 Audio Output Mode
+
+`VoiceCallNotifier` is the single authoritative owner of audio output routing.
+
+Enum:
+- `VoiceAudioOutputMode.speaker`
+- `VoiceAudioOutputMode.phone`
+
+Default:
+- `speaker`
+
+The notifier owns:
+- `outputMode`
+- `toggleAudioOutputMode()`
+- `setAudioOutputMode(...)`
+- `applyCurrentAudioOutputMode(...)`
+
+All native routing and LiveKit speaker state changes must go through `applyCurrentAudioOutputMode(...)`. Widgets and pages should not directly call native audio routing or `room.setSpeakerOn(...)`.
 
 ### 8.6 Microphone flow
 
@@ -668,6 +874,19 @@ Animation speed changes per state:
 - center mic/stop button
 - right keyboard button
 
+## 9.6 Topics UI
+
+`AskAiTopicsPage`:
+- dispatches `AskAiTopicsRequested` in a post-frame callback
+- uses `BlocStatusView` with `ShimmerList` for loading
+- renders each topic through `AiChatTopicCard`
+- pushes `askAiVoiceAgentRoute` with `AiChatTopicModel` as `state.extra`
+
+`AiChatTopicCard`:
+- uses `PrimaryBox`
+- follows app typography through `Style`
+- shows title, description, and duration in seconds
+
 ## 10. Native Audio Route Service
 
 Flutter bridge:
@@ -680,6 +899,7 @@ Methods:
 - `startVoiceAgentSession`
 - `enterVoiceAgentPlaybackMode`
 - `enterVoiceAgentCaptureMode`
+- `applyVoiceAgentOutputMode`
 - `stopVoiceAgentSession`
 
 Current Dart behavior:
@@ -706,25 +926,27 @@ Purpose:
 
 `VoiceAgentAudioRouteController` owns:
 - one `AVAudioSession`
-- route mode
+- output mode
 - previous session snapshot for restore
 - observer registration for route change / interruption / media reset
 
 Current routing behavior:
-- playback and capture both resolve to `configureCaptureRoute()`
-- this keeps one stable speaker-capable session
+- explicit `speaker` and `phone` output modes
+- both modes keep one `.playAndRecord` / `.videoChat` session
+- route changes reapply the currently selected output mode
 
 Current session config:
 - category: `.playAndRecord`
 - mode: `.videoChat`
 - options:
-  - `.defaultToSpeaker`
-  - `.allowBluetooth`
+  - `.defaultToSpeaker` only in speaker mode
+  - `.allowBluetoothHFP`
   - `.allowBluetoothA2DP`
   - `.allowAirPlay`
 
 If no external route exists:
-- output is overridden to `.speaker`
+- speaker mode overrides output to `.speaker`
+- phone mode removes speaker override so the built-in receiver/earpiece is used
 
 ## 12. Android Native Audio Routing
 
@@ -749,13 +971,15 @@ Purpose:
 - audio device callback
 
 Current route behavior:
-- playback and capture both resolve to `applyCaptureRoute()`
-- this keeps a stable communication route instead of flipping modes repeatedly
+- explicit `speaker` and `phone` output modes
+- both modes keep `MODE_IN_COMMUNICATION`
+- device callbacks reapply the currently selected output mode
 
 Current route config:
 - `AudioManager.MODE_IN_COMMUNICATION`
-- built-in speaker communication device when available
-- `isSpeakerphoneOn = true` if no external output route is connected
+- speaker mode selects built-in speaker when no external output route is connected
+- phone mode selects built-in earpiece when no external output route is connected
+- Bluetooth/headphones clear the app-selected communication device so the external route wins naturally
 
 ## 13. Current Page Status Logic
 
@@ -790,6 +1014,12 @@ The current implementation already tries to reduce freezes by:
 - moving native audio route work onto native worker queues
 - thresholding assistant audio notifications
 - avoiding some redundant rebuilds
+
+Additional code-level performance notes:
+- `VoiceCallNotifier.notifySafely()` prevents notifications after disposal.
+- audio visualizer updates are thresholded by `levelNotifyThreshold`.
+- `VoiceAgentPage` keeps waiting state local to avoid bloc churn for short-lived UI transitions.
+- `AskAiMessagesList` is reversed instead of manually scrolling to the bottom on every build.
 
 ## 15. Current Known Problems / Risk Areas
 
@@ -827,6 +1057,14 @@ This is why the page still contains:
 - initial assistant sync retry
 - post-assistant-turn sync
 
+### 15.5 `AuthRepository` is not dynamic
+
+`InMemoryAuthRepository` receives token and user id during DI registration. If the app supports token/profile replacement without dependency reinitialization, Ask AI auth values can become stale. Socket auth is less exposed to this because `VoiceAgentPage` reads `AuthLocalDataSource` directly when connecting.
+
+### 15.6 `AskAiState.copyWith()` cannot clear `currentTopic`
+
+The current `copyWith` implementation keeps the previous topic when `currentTopic` is omitted. That is fine for the current flow because opening a topic always provides a new value, but future reset/logout flows should handle this deliberately.
+
 ## 16. Suggested Reading Order For Another Engineer
 
 If another engineer or model needs to debug or rewrite this feature, read in this order:
@@ -848,10 +1086,25 @@ These design boundaries should be kept unless there is a deliberate rewrite:
 - `VoiceCallNotifier` handles LiveKit and voice state
 - socket sends typed messages with `sendMessage`
 - bloc deduplicates messages with semantic keys
-- native route service forces speaker-capable audio routing
+- native route service applies notifier-owned `speaker` or `phone` output mode
 - voice page has a duplicate-open guard from topics page
 
-## 18. Short Summary
+## 18. Extension Checklist
+
+When changing Ask AI:
+
+1. Keep topic/message REST loading in `AskAiBloc`.
+2. Keep LiveKit room and microphone state in `VoiceCallNotifier`.
+3. Keep socket creation and send-message orchestration in `VoiceAgentPage` unless a deliberate socket service is introduced.
+4. Preserve `mergeMessages()` duplicate handling.
+5. Cancel every timer added to `VoiceAgentPage`.
+6. Dispose LiveKit listeners, rooms, visualizers, and socket references on close.
+7. Use existing widgets (`AskAiControlIconButton`, `AskAiMessagesPanel`, `AskAiVoiceControls`) before creating new controls.
+8. Reuse `Style`, `AppColors`, `PrimaryBox`, `BlocStatusView`, and `ShimmerList` where appropriate.
+9. Verify app pause/resume behavior after voice changes.
+10. Verify native audio route behavior on both iOS and Android when changing speaker/phone output mode.
+
+## 19. Short Summary
 
 The current Ask AI implementation is a hybrid of:
 - REST history
