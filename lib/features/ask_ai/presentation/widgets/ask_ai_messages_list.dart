@@ -18,31 +18,29 @@ class AskAiMessagesList extends StatelessWidget {
       required this.topPadding,
       required this.bottomPadding});
 
-  List<Widget> children() {
-    final items = <Widget>[
-      for (final message in messages.reversed)
-        Padding(
-            key: ValueKey(message.id),
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: AskAiAnimatedMessageItem(message: message, isMe: message.role == 'user'))
-    ];
-    if (isPaginating) {
-      items.add(const Padding(
+  Widget itemBuilder(BuildContext context, int index) {
+    if (index >= messages.length) {
+      return const Padding(
           key: ValueKey('pagination_loader'),
           padding: EdgeInsets.symmetric(vertical: 10),
           child: Center(
               child: SizedBox(
                   width: 18,
                   height: 18,
-                  child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.white)))));
+                  child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.white))));
     }
-    return items;
+    final message = messages[messages.length - 1 - index];
+    return Padding(
+        key: ValueKey(message.id),
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: AskAiAnimatedMessageItem(message: message, isMe: message.role == 'user'));
   }
 
   @override
-  Widget build(BuildContext context) => ListView(
+  Widget build(BuildContext context) => ListView.builder(
       controller: scrollController,
       reverse: true,
       padding: EdgeInsets.fromLTRB(16, topPadding, 16, bottomPadding),
-      children: children());
+      itemCount: messages.length + (isPaginating ? 1 : 0),
+      itemBuilder: itemBuilder);
 }

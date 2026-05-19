@@ -11,6 +11,8 @@ import 'package:ustadia_user_app/features/ask_ai/data/datasources/ai_chat_remote
 
 enum VoiceUiState { connecting, listening, thinking, speaking, error }
 
+enum VoiceAudioOutputMode { speaker, phone }
+
 class VoiceCallNotifier extends ChangeNotifier {
   static const String agentParticipantIdentity = 'ustadia-bot';
   static const double assistantSpeakingThreshold = 0.01;
@@ -27,11 +29,11 @@ class VoiceCallNotifier extends ChangeNotifier {
   String? assistantTrackSid;
 
   VoiceUiState voiceUiState = VoiceUiState.connecting;
+  VoiceAudioOutputMode outputMode = VoiceAudioOutputMode.speaker;
   bool isConnecting = false;
   bool isDisposed = false;
   bool isMicrophoneTransitioning = false;
   bool micEnabled = false;
-  bool speakerEnabled = false;
   bool agentConnected = false;
   bool agentAudioActive = false;
   bool agentAudioPlaying = false;
@@ -44,6 +46,7 @@ class VoiceCallNotifier extends ChangeNotifier {
   double agentAudioLevel = 0;
   double localAudioLevel = 0;
   bool localSpeaking = false;
+  bool audioSessionActive = false;
   String lastLivekitEvent = '';
   String? errorMessage;
   Timer? thinkingTimer;
@@ -51,6 +54,7 @@ class VoiceCallNotifier extends ChangeNotifier {
   Timer? assistantAudioLockTimer;
   int connectAttemptId = 0;
   Future<void>? disconnectOperation;
+  Future<void>? audioOutputModeOperation;
 
   VoiceCallNotifier({required this.aiChatRemoteDataSource, required this.topicId});
 
@@ -58,6 +62,7 @@ class VoiceCallNotifier extends ChangeNotifier {
   bool get isAgentTurn => assistantAudioLocked;
   bool get canStartUserTurn =>
       isConnected && !isConnecting && voiceUiState != VoiceUiState.connecting;
+  bool get isSpeakerMode => outputMode == VoiceAudioOutputMode.speaker;
 
   bool isActiveConnectAttempt(int attemptId) => !isDisposed && attemptId == connectAttemptId;
 
@@ -81,14 +86,14 @@ class VoiceCallNotifier extends ChangeNotifier {
     debugPrint('[Voice] connecting...');
 
     try {
-      await VoiceAgentAudioRouteService.instance.startSession(reason: 'before_livekit_connect');
+      await applyCurrentAudioOutputMode(reason: 'before_livekit_connect');
       final tokenModel = await aiChatRemoteDataSource.fetchLivekitToken(topicId: topicId);
       if (!isActiveConnectAttempt(attemptId)) return;
       final nextRoom = Room(
-          roomOptions: const RoomOptions(
+          roomOptions: RoomOptions(
               adaptiveStream: true,
               dynacast: true,
-              defaultAudioOutputOptions: AudioOutputOptions(speakerOn: true)));
+              defaultAudioOutputOptions: AudioOutputOptions(speakerOn: isSpeakerMode)));
       listenToRoomEvents(nextRoom);
       await nextRoom.connect(tokenModel.url, tokenModel.token);
       if (!isActiveConnectAttempt(attemptId)) {
@@ -104,9 +109,8 @@ class VoiceCallNotifier extends ChangeNotifier {
       await nextRoom.localParticipant?.setMicrophoneEnabled(false);
       await Future.delayed(const Duration(milliseconds: 300));
       if (!isActiveConnectAttempt(attemptId)) return;
-      await applyCaptureMode(reason: 'after_livekit_connect');
+      await applyCurrentAudioOutputMode(reason: 'after_livekit_connect');
       micEnabled = false;
-      speakerEnabled = true;
       assistantAudioLocked = false;
       participantsCount = roomParticipantsCount(room);
       agentConnected = agentConnectedValue(room);
@@ -114,12 +118,14 @@ class VoiceCallNotifier extends ChangeNotifier {
       setVoiceState(VoiceUiState.listening);
       debugPrint('[Voice] connected');
     } on DioException catch (error) {
+      await stopAudioSession(reason: 'voice_connect_failed');
       errorMessage = DioErrorMessage.from(error);
       setVoiceState(VoiceUiState.error);
       clearAssistantAudioLock();
       userSpeaking = false;
       agentAudioActive = false;
     } catch (error) {
+      await stopAudioSession(reason: 'voice_connect_failed');
       errorMessage = 'Request failed.'.tr();
       setVoiceState(VoiceUiState.error);
       clearAssistantAudioLock();
@@ -160,6 +166,7 @@ class VoiceCallNotifier extends ChangeNotifier {
     final roomValue = room;
     room = null;
     if (roomValue == null) {
+      await stopAudioSession(reason: 'voice_session_disconnected_without_room');
       resetState();
       return;
     }
@@ -167,7 +174,7 @@ class VoiceCallNotifier extends ChangeNotifier {
       await roomValue.localParticipant?.setMicrophoneEnabled(false);
       await roomValue.disconnect();
     } finally {
-      await VoiceAgentAudioRouteService.instance.stopSession(reason: 'voice_session_disconnected');
+      await stopAudioSession(reason: 'voice_session_disconnected');
       roomValue.dispose();
       resetState();
       debugPrint('[Voice] disconnected');
@@ -180,9 +187,22 @@ class VoiceCallNotifier extends ChangeNotifier {
 
   Future<void> onAppResumed() async {
     if (!isConnected) return;
-    await applyCurrentAudioMode(reason: 'app_resumed');
-    await room?.setSpeakerOn(true, forceSpeakerOutput: true);
+    await applyCurrentAudioOutputMode(reason: 'app_resumed');
     notifySafely();
+  }
+
+  Future<void> toggleAudioOutputMode() async {
+    final nextMode = outputMode == VoiceAudioOutputMode.speaker
+        ? VoiceAudioOutputMode.phone
+        : VoiceAudioOutputMode.speaker;
+    await setAudioOutputMode(nextMode);
+  }
+
+  Future<void> setAudioOutputMode(VoiceAudioOutputMode nextMode) async {
+    if (outputMode == nextMode) return;
+    outputMode = nextMode;
+    notifySafely();
+    await applyCurrentAudioOutputMode(reason: 'user_selected_${nextMode.name}');
   }
 
   Future<void> toggleMicrophone() async {
@@ -225,6 +245,8 @@ class VoiceCallNotifier extends ChangeNotifier {
       } else {
         await room!.localParticipant?.setMicrophoneEnabled(false);
       }
+      await applyCurrentAudioOutputMode(
+          reason: enabled ? 'microphone_enabled' : 'microphone_disabled');
     } catch (error) {
       micEnabled = previousMicEnabled;
       userSpeaking = previousUserSpeaking;
@@ -250,32 +272,66 @@ class VoiceCallNotifier extends ChangeNotifier {
     notifySafely();
     try {
       await room!.localParticipant?.setMicrophoneEnabled(false);
+      await applyCurrentAudioOutputMode(reason: 'stop_microphone_for_assistant');
     } finally {
       isMicrophoneTransitioning = false;
       notifySafely();
     }
   }
 
-  Future<void> applyCurrentAudioMode({required String reason}) async {
-    await applyCaptureMode(reason: reason);
+  Future<void> applyCurrentAudioOutputMode({required String reason}) {
+    late final Future<void> operation;
+    operation = (audioOutputModeOperation ?? Future<void>.value())
+        .catchError((_) {})
+        .then((_) => applyCurrentAudioOutputModeInternal(reason: reason));
+    audioOutputModeOperation = operation;
+    unawaited(operation.whenComplete(() {
+      if (identical(audioOutputModeOperation, operation)) {
+        audioOutputModeOperation = null;
+      }
+    }));
+    return operation;
   }
 
-  Future<void> applyPlaybackMode({required String reason}) async {
+  Future<void> applyCurrentAudioOutputModeInternal({required String reason}) async {
+    if (isDisposed) return;
     final roomValue = room;
-    await VoiceAgentAudioRouteService.instance.enterPlaybackMode(reason: reason);
-    if (roomValue != null) {
-      await roomValue.setSpeakerOn(true, forceSpeakerOutput: true);
+    final targetMode = outputMode;
+    final isSpeakerOutput = targetMode == VoiceAudioOutputMode.speaker;
+    final modeName = targetMode.name;
+    try {
+      await VoiceAgentAudioRouteService.instance
+          .applyOutputMode(outputMode: modeName, reason: reason);
+      audioSessionActive = true;
+      if (isDisposed || !identical(room, roomValue)) return;
+      if (roomValue != null) {
+        await roomValue.setSpeakerOn(isSpeakerOutput, forceSpeakerOutput: isSpeakerOutput);
+      }
+    } catch (error, stackTrace) {
+      debugPrint('[VoiceAudioOutput] apply failed: $error');
+      debugPrintStack(stackTrace: stackTrace);
     }
-    speakerEnabled = true;
   }
 
-  Future<void> applyCaptureMode({required String reason}) async {
-    final roomValue = room;
-    await VoiceAgentAudioRouteService.instance.enterCaptureMode(reason: reason);
-    if (roomValue != null) {
-      await roomValue.setSpeakerOn(true, forceSpeakerOutput: true);
-    }
-    speakerEnabled = true;
+  Future<void> stopAudioSession({required String reason}) {
+    if (!audioSessionActive && audioOutputModeOperation == null) return Future<void>.value();
+    late final Future<void> operation;
+    operation = (audioOutputModeOperation ?? Future<void>.value())
+        .catchError((_) {})
+        .then((_) => stopAudioSessionInternal(reason: reason));
+    audioOutputModeOperation = operation;
+    unawaited(operation.whenComplete(() {
+      if (identical(audioOutputModeOperation, operation)) {
+        audioOutputModeOperation = null;
+      }
+    }));
+    return operation;
+  }
+
+  Future<void> stopAudioSessionInternal({required String reason}) async {
+    if (!audioSessionActive) return;
+    audioSessionActive = false;
+    await VoiceAgentAudioRouteService.instance.stopSession(reason: reason);
   }
 
   Future<void> attachAssistantAudioVisualizer(RemoteAudioTrack track) async {
@@ -333,15 +389,28 @@ class VoiceCallNotifier extends ChangeNotifier {
     livekitListener = nextRoom.createListener();
     livekitListener!.on<RoomConnectedEvent>((event) async {
       debugPrint('[LiveKit] room connected');
-      await VoiceAgentAudioRouteService.instance.enterCaptureMode(reason: 'room_connected_event');
-      await nextRoom.setSpeakerOn(true, forceSpeakerOutput: true);
-      speakerEnabled = true;
+      await applyCurrentAudioOutputMode(reason: 'room_connected_event');
       participantsCount = roomParticipantsCount(nextRoom);
       setLastEvent('Room connected');
+    });
+    livekitListener!.on<RoomReconnectingEvent>((event) {
+      debugPrint('[LiveKit] room reconnecting');
+      setLastEvent('Room reconnecting');
+      setVoiceState(VoiceUiState.connecting);
+    });
+    livekitListener!.on<RoomReconnectedEvent>((event) async {
+      debugPrint('[LiveKit] room reconnected');
+      await applyCurrentAudioOutputMode(reason: 'room_reconnected_event');
+      participantsCount = roomParticipantsCount(nextRoom);
+      agentConnected = agentConnectedValue(nextRoom);
+      agentAudioActive = agentAudioActiveValue(nextRoom);
+      if (!assistantAudioLocked) setVoiceState(VoiceUiState.listening);
+      setLastEvent('Room reconnected');
     });
     livekitListener!.on<RoomDisconnectedEvent>((event) {
       debugPrint('[LiveKit] room disconnected');
       setLastEvent('Room disconnected');
+      unawaited(stopAudioSession(reason: 'room_disconnected_event'));
       setVoiceState(VoiceUiState.error);
       clearAssistantAudioLock();
       userSpeaking = false;
@@ -548,11 +617,11 @@ class VoiceCallNotifier extends ChangeNotifier {
     userTurnHasSpeech = false;
     currentAgentIdentity = null;
     micEnabled = false;
-    speakerEnabled = false;
     participantsCount = 0;
     agentAudioLevel = 0;
     localAudioLevel = 0;
     localSpeaking = false;
+    audioSessionActive = false;
     voiceUiState = VoiceUiState.connecting;
     lastLivekitEvent = '';
     errorMessage = null;
@@ -619,11 +688,11 @@ class VoiceCallNotifier extends ChangeNotifier {
     userTurnHasSpeech = false;
     currentAgentIdentity = null;
     micEnabled = false;
-    speakerEnabled = false;
     participantsCount = 0;
     agentAudioLevel = 0;
     localAudioLevel = 0;
     localSpeaking = false;
+    audioSessionActive = false;
     lastLivekitEvent = '';
     Future<void>(() async {
       currentListener?.dispose();

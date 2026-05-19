@@ -38,17 +38,20 @@ import UserNotifications
   func handleAudioRouteMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
     let arguments = call.arguments as? [String: Any]
     let reason = arguments?["reason"] as? String ?? "unknown"
+    let outputMode = VoiceAgentOutputMode(rawValue: arguments?["outputMode"] as? String ?? "") ?? .speaker
 
     voiceAgentAudioRouteQueue.async { [weak self] in
       guard let self else { return }
       let response: Any
       switch call.method {
       case "startVoiceAgentSession":
-        response = self.voiceAgentAudioRouteController.startVoiceAgentSession(reason: reason)
+        response = self.voiceAgentAudioRouteController.startVoiceAgentSession(outputMode: outputMode, reason: reason)
       case "enterVoiceAgentPlaybackMode":
-        response = self.voiceAgentAudioRouteController.enterPlaybackMode(reason: reason)
+        response = self.voiceAgentAudioRouteController.applyOutputMode(.speaker, reason: "legacy_playback:\(reason)")
       case "enterVoiceAgentCaptureMode":
-        response = self.voiceAgentAudioRouteController.enterCaptureMode(reason: reason)
+        response = self.voiceAgentAudioRouteController.applyOutputMode(.speaker, reason: "legacy_capture:\(reason)")
+      case "applyVoiceAgentOutputMode":
+        response = self.voiceAgentAudioRouteController.applyOutputMode(outputMode, reason: reason)
       case "stopVoiceAgentSession":
         response = self.voiceAgentAudioRouteController.stopVoiceAgentSession(reason: reason)
       default:
@@ -80,9 +83,9 @@ import UserNotifications
   }
 }
 
-enum VoiceAgentRouteMode {
-  case playback
-  case capture
+enum VoiceAgentOutputMode: String {
+  case speaker
+  case phone
 }
 
 final class VoiceAgentAudioRouteController {
@@ -90,13 +93,13 @@ final class VoiceAgentAudioRouteController {
 
   let audioSession = AVAudioSession.sharedInstance()
   var sessionStarted = false
-  var currentRouteMode = VoiceAgentRouteMode.playback
+  var currentOutputMode = VoiceAgentOutputMode.speaker
   var previousCategory: AVAudioSession.Category?
   var previousMode: AVAudioSession.Mode?
   var previousOptions: AVAudioSession.CategoryOptions = []
   var observersRegistered = false
 
-  func startVoiceAgentSession(reason: String) -> [String: Any] {
+  func startVoiceAgentSession(outputMode: VoiceAgentOutputMode = .speaker, reason: String) -> [String: Any] {
     if !sessionStarted {
       previousCategory = audioSession.category
       previousMode = audioSession.mode
@@ -104,27 +107,18 @@ final class VoiceAgentAudioRouteController {
       sessionStarted = true
       registerObservers()
     }
-    currentRouteMode = .playback
+    currentOutputMode = outputMode
     applyCurrentRoute(reason: "start:\(reason)")
     return collectRouteSnapshot(reason: "start:\(reason)")
   }
 
-  func enterPlaybackMode(reason: String) -> [String: Any] {
+  func applyOutputMode(_ outputMode: VoiceAgentOutputMode, reason: String) -> [String: Any] {
     if !sessionStarted {
-      return startVoiceAgentSession(reason: reason)
+      return startVoiceAgentSession(outputMode: outputMode, reason: reason)
     }
-    currentRouteMode = .playback
-    applyCurrentRoute(reason: "playback:\(reason)")
-    return collectRouteSnapshot(reason: "playback:\(reason)")
-  }
-
-  func enterCaptureMode(reason: String) -> [String: Any] {
-    if !sessionStarted {
-      _ = startVoiceAgentSession(reason: reason)
-    }
-    currentRouteMode = .capture
-    applyCurrentRoute(reason: "capture:\(reason)")
-    return collectRouteSnapshot(reason: "capture:\(reason)")
+    currentOutputMode = outputMode
+    applyCurrentRoute(reason: "output:\(outputMode.rawValue):\(reason)")
+    return collectRouteSnapshot(reason: "output:\(outputMode.rawValue):\(reason)")
   }
 
   func stopVoiceAgentSession(reason: String) -> [String: Any] {
@@ -145,30 +139,41 @@ final class VoiceAgentAudioRouteController {
   }
 
   func applyCurrentRoute(reason: String) {
-    configureCaptureRoute(reason: reason)
+    configureRoute(outputMode: currentOutputMode, reason: reason)
   }
 
-  func configurePlaybackRoute(reason: String) {
-    configureCaptureRoute(reason: reason)
-  }
-
-  func configureCaptureRoute(reason: String) {
+  func configureRoute(outputMode: VoiceAgentOutputMode, reason: String) {
     do {
-      try audioSession.setCategory(
-        .playAndRecord,
-        mode: .videoChat,
-        options: [.defaultToSpeaker, .allowBluetooth, .allowBluetoothA2DP, .allowAirPlay]
-      )
+      let options = categoryOptions(outputMode: outputMode)
+      if audioSession.category != .playAndRecord ||
+          audioSession.mode != .videoChat ||
+          audioSession.categoryOptions != options {
+        try audioSession.setCategory(
+          .playAndRecord,
+          mode: .videoChat,
+          options: options
+        )
+      }
       try audioSession.setActive(true)
       if hasExternalOutputRoute() {
         try audioSession.overrideOutputAudioPort(.none)
-      } else {
+      } else if outputMode == .speaker {
         try audioSession.overrideOutputAudioPort(.speaker)
+      } else {
+        try audioSession.overrideOutputAudioPort(.none)
       }
     } catch {
-      NSLog("[VoiceAgentAudioRoute] configure capture failed for \(reason): \(error.localizedDescription)")
+      NSLog("[VoiceAgentAudioRoute] configure route failed for \(reason): \(error.localizedDescription)")
     }
     logAudioRoute(reason: reason)
+  }
+
+  func categoryOptions(outputMode: VoiceAgentOutputMode) -> AVAudioSession.CategoryOptions {
+    var options: AVAudioSession.CategoryOptions = [.allowBluetoothHFP, .allowBluetoothA2DP, .allowAirPlay]
+    if outputMode == .speaker {
+      options.insert(.defaultToSpeaker)
+    }
+    return options
   }
 
   func registerObservers() {
@@ -240,7 +245,7 @@ final class VoiceAgentAudioRouteController {
   func collectRouteSnapshot(reason: String) -> [String: Any] {
     [
       "reason": reason,
-      "routeMode": currentRouteMode == .capture ? "capture" : "playback",
+      "outputMode": currentOutputMode.rawValue,
       "category": audioSession.category.rawValue,
       "mode": audioSession.mode.rawValue,
       "currentOutputs": audioSession.currentRoute.outputs.map(describePort),

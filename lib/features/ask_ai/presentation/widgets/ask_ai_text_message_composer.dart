@@ -42,7 +42,7 @@ class AskAiTextMessageComposer extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             child: ConstrainedBox(
                 constraints: const BoxConstraints(
-                    minHeight: minComposerHeight, maxHeight: 80),
+                    minHeight: minComposerHeight, maxHeight: maxComposerHeight),
                 child: Container(
                     padding: const EdgeInsets.fromLTRB(18, 0, 12, 0),
                     decoration: BoxDecoration(

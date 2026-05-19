@@ -42,13 +42,21 @@ class AskAiBloc extends Bloc<AskAiEvent, AskAiState> {
 
   Future<void> handleMessagesRequested(
       AskAiMessagesRequested event, Emitter<AskAiState> emit) async {
+    if (state.currentTopic?.id.isNotEmpty == true && state.currentTopic!.id != event.topicId) {
+      return;
+    }
     emit(state.copyWith(messagesStatus: Status.loading, errorMessage: null));
     final authCheck = await ensureAuthValues(emit);
     if (!authCheck) return;
     try {
       final list = await aiChatRemoteDataSource.fetchMessages(
           topicId: event.topicId, page: event.page, limit: event.limit);
-      final merged = mergeMessages([...state.messages, ...list]);
+      if (state.currentTopic?.id.isNotEmpty == true && state.currentTopic!.id != event.topicId) {
+        return;
+      }
+      final currentTopicMessages =
+          state.messages.where((message) => message.topicId == event.topicId).toList();
+      final merged = mergeMessages([...currentTopicMessages, ...list]);
       emit(state.copyWith(messagesStatus: Status.success, messages: merged, errorMessage: null));
     } on DioException catch (error) {
       emit(state.copyWith(messagesStatus: Status.error, errorMessage: DioErrorMessage.from(error)));

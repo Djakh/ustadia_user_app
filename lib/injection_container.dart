@@ -170,9 +170,9 @@ Future<void> initDependencies() async {
   // Features - Ask AI
   sl.registerLazySingleton<AiChatRemoteDataSource>(
       () => AiChatRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
-  sl.registerLazySingleton<AuthRepository>(() => InMemoryAuthRepository(
-      jwtToken: sl<AuthLocalDataSource>().getAccessToken(),
-      userId: sl<UserBloc>().state.profile?.id ?? ''));
+  sl.registerLazySingleton<AuthRepository>(() => DynamicAuthRepository(
+      jwtTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken(),
+      userIdGetter: () => sl<UserBloc>().state.profile?.id ?? ''));
   sl.registerFactory(
       () => AskAiBloc(aiChatRemoteDataSource: sl<AiChatRemoteDataSource>(), authRepository: sl()));
 

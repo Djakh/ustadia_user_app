@@ -18,12 +18,13 @@ class AiChatMessageModel {
 
   factory AiChatMessageModel.fromJson(Map<String, dynamic> json) => AiChatMessageModel(
       id: _resolveId(json),
-      topicId: json['topicId']?.toString() ?? '',
-      userId: json['userId']?.toString() ?? '',
+      topicId: (json['topicId'] ?? json['topic_id'])?.toString() ?? '',
+      userId: (json['userId'] ?? json['user_id'])?.toString() ?? '',
       role: json['role']?.toString() ?? '',
       content: json['content']?.toString() ?? '',
-      createdAt: DateTime.tryParse(json['created_at']?.toString() ?? '') ?? DateTime.now(),
-      isFinished: json['isFinished'] == true);
+      createdAt: DateTime.tryParse((json['created_at'] ?? json['createdAt'])?.toString() ?? '') ??
+          DateTime.now(),
+      isFinished: _parseBool(json['isFinished']));
 
   AiChatMessageModel copyWith(
           {String? id,
@@ -45,11 +46,18 @@ class AiChatMessageModel {
   static String _resolveId(Map<String, dynamic> json) {
     final directId = json['id']?.toString() ?? '';
     if (directId.isNotEmpty) return directId;
-    final topicId = json['topicId']?.toString() ?? '';
-    final userId = json['userId']?.toString() ?? '';
+    final topicId = (json['topicId'] ?? json['topic_id'])?.toString() ?? '';
+    final userId = (json['userId'] ?? json['user_id'])?.toString() ?? '';
     final role = json['role']?.toString() ?? '';
-    final createdAt = json['created_at']?.toString() ?? '';
+    final createdAt = (json['created_at'] ?? json['createdAt'])?.toString() ?? '';
     final content = json['content']?.toString() ?? '';
     return '$topicId|$userId|$role|$createdAt|$content';
+  }
+
+  static bool _parseBool(dynamic value) {
+    if (value is bool) return value;
+    if (value is num) return value != 0;
+    final normalizedValue = value?.toString().toLowerCase().trim();
+    return normalizedValue == 'true' || normalizedValue == '1';
   }
 }
