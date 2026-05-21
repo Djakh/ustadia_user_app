@@ -21,22 +21,24 @@ class Button extends StatelessWidget {
   final double? borderWidth;
   final bool isLoading;
   final bool isAvialable;
+  final ButtonStyle? buttonStyle;
 
-  const Button.primary({
-    super.key,
-    required this.onTap,
-    this.child,
-    this.text,
-    this.textStyle,
-    this.textColor,
-    this.height,
-    this.color,
-    this.borderColor,
-    this.margin,
-    this.isLoading = false,
-    this.isAvialable = true,
-    this.borderWidth,
-  }) : type = ButtonType.primary;
+  const Button.primary(
+      {super.key,
+      required this.onTap,
+      this.child,
+      this.text,
+      this.textStyle,
+      this.textColor,
+      this.height,
+      this.color,
+      this.borderColor,
+      this.margin,
+      this.isLoading = false,
+      this.isAvialable = true,
+      this.borderWidth,
+      this.buttonStyle})
+      : type = ButtonType.primary;
 
   const Button.border({
     super.key,
@@ -52,6 +54,7 @@ class Button extends StatelessWidget {
     this.isLoading = false,
     this.isAvialable = true,
     this.borderWidth,
+    this.buttonStyle,
   }) : type = ButtonType.border;
 
   const Button.text({
@@ -68,6 +71,7 @@ class Button extends StatelessWidget {
     this.isLoading = false,
     this.isAvialable = true,
     this.borderWidth,
+    this.buttonStyle,
   }) : type = ButtonType.text;
 
   /// --- Widgets ---
@@ -98,16 +102,17 @@ class Button extends StatelessWidget {
 
   Widget borderButton(BuildContext context) => OutlinedButton(
         onPressed: isAvialable && !isLoading ? onTap : null,
-        style: OutlinedButton.styleFrom(
-          minimumSize: Size(double.infinity, (height ?? 52).toDouble()),
-          shape: RoundedRectangleBorder(borderRadius: Style.border32),
-          side: BorderSide(
-            color: borderColor ?? context.cs.surface,
-            width: borderWidth ?? 1,
-          ),
-          backgroundColor: isAvialable ? (color ?? AppColors.white) : AppColors.gray8D,
-          foregroundColor: textColor ?? context.cs.primary,
-        ),
+        style: buttonStyle ??
+            OutlinedButton.styleFrom(
+              minimumSize: Size(double.infinity, (height ?? 52).toDouble()),
+              shape: RoundedRectangleBorder(borderRadius: Style.border32),
+              side: BorderSide(
+                color: borderColor ?? context.cs.surface,
+                width: borderWidth ?? 1,
+              ),
+              backgroundColor: isAvialable ? (color ?? AppColors.white) : AppColors.gray8D,
+              foregroundColor: textColor ?? context.cs.primary,
+            ),
         child: isLoading ? const ActivityIndicator() : content(context),
       );
 

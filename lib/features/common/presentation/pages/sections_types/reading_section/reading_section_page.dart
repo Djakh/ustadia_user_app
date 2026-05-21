@@ -10,6 +10,7 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/section_detai
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_state.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/reading_section/reading_section_intro.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_quiz_component.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_quiz_panel_action_button.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_timer_badge.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
 import 'package:ustadia_user_app/injection_container.dart';
@@ -115,29 +116,6 @@ class ReadingSectionPageState extends State<ReadingSectionPage> {
                                 textAlign: TextAlign.justify)))
                   ])))));
 
-  Widget readingPassageButton(String content, bool isResultState, Color panelColor) => Material(
-      color: Colors.transparent,
-      child: InkWell(
-          onTap: () => showReadingPassageSheet(content),
-          borderRadius: BorderRadius.circular(18),
-          child: Ink(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                  color: isResultState ? Colors.white : Colors.transparent,
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(
-                      color: isResultState
-                          ? Colors.white.withValues(alpha: 0.9)
-                          : context.cs.outline.withValues(alpha: 0.2))),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Icon(Icons.menu_book_rounded,
-                    size: 18, color: isResultState ? panelColor : context.cs.primary),
-                const SizedBox(width: 6),
-                Text('Read'.tr(),
-                    style: Style.bodyw5(context)
-                        .copyWith(color: isResultState ? panelColor : context.cs.primary))
-              ]))));
-
   Widget? quizHeaderWidget(SectionDetailState state) {
     final detail = state.detail;
     if (detail?.timeRemainingSeconds == null) return null;
@@ -199,8 +177,12 @@ class ReadingSectionPageState extends State<ReadingSectionPage> {
           questions: state.detail?.questions ?? [],
           headerWidget: quizHeaderWidget(state),
           onFinish: finishQuiz,
-          panelActionBuilder: (context, isResultState, panelColor) => readingPassageButton(
-              state.detail?.content ?? widget.sectionModel.content, isResultState, panelColor));
+          panelActionBuilder: (context, isResultState, panelColor) => SectionQuizPanelActionButton(
+              onTap: () =>
+                  showReadingPassageSheet(state.detail?.content ?? widget.sectionModel.content),
+              isResultState: isResultState,
+              panelColor: panelColor,
+              label: 'Read'));
     if (stage == ReadingSectionStage.result) {
       return QuizResultComponent(sectionModel: widget.sectionModel);
     }

@@ -12,8 +12,25 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/section_quest
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_state.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/cards/quiz_card.dart';
+import 'package:ustadia_user_app/features/learn/data/models/learn_question_answer_result_model.dart';
 import 'package:ustadia_user_app/features/mock_exam/data/datasources/mock_exam_remote_data_source.dart';
 import 'package:ustadia_user_app/injection_container.dart';
+
+class _QuizQuestionDraft {
+  final int? selectedIndex;
+  final Set<int> selectedIndices;
+  final List<String> blankAnswers;
+  final String shortAnswer;
+  final bool showCorrectAnswer;
+
+  const _QuizQuestionDraft({
+    required this.selectedIndex,
+    required this.selectedIndices,
+    required this.blankAnswers,
+    required this.shortAnswer,
+    required this.showCorrectAnswer,
+  });
+}
 
 class SectionQuizComponent extends StatefulWidget {
   final List<SectionQuestionModel> questions;
@@ -39,6 +56,11 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   int correctCount = 0;
   bool hasSubmitted = false;
   bool showCorrectAnswer = false;
+  bool isQuestionsOverviewVisible = false;
+  OverlayEntry? questionsOverviewEntry;
+  final Set<String> submittedQuestionIds = {};
+  final Map<String, _QuizQuestionDraft> questionDrafts = {};
+  final Map<String, LearnQuestionAnswerResultModel> questionResults = {};
 
   int? selectedIndex;
   final Set<int> selectedIndices = {};
@@ -51,6 +73,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   void initState() {
     questions = widget.questions;
     answerBloc.add(const QuestionAnswerReset());
+    _syncSubmittedQuestions();
     if (questions.isNotEmpty) _syncQuestionState();
     shortAnswerController.addListener(_handleInputChanged);
     super.initState();
@@ -58,6 +81,8 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
 
   @override
   void dispose() {
+    questionsOverviewEntry?.remove();
+    questionsOverviewEntry = null;
     for (final controller in blankControllers) {
       controller.dispose();
     }
@@ -74,6 +99,10 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       questions = widget.questions;
       questionIndex = 0;
       correctCount = 0;
+      closeQuestionsOverview();
+      questionDrafts.clear();
+      questionResults.clear();
+      _syncSubmittedQuestions();
       if (questions.isNotEmpty) _syncQuestionState();
     }
   }
@@ -95,10 +124,43 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   int get blanksCount => currentQuestion.numberOfBlanks > 0
       ? currentQuestion.numberOfBlanks
       : currentQuestion.blankAnswers.length;
+  bool get isFirstQuestion => questionIndex == 0;
+  bool get isLastQuestion => questionIndex == questions.length - 1;
+  int get submittedCount => questions.where((question) => isQuestionSubmitted(question)).length;
+  bool get allQuestionsSubmitted => questions.isNotEmpty && submittedCount == questions.length;
+  int get unsubmittedCount => questions.length - submittedCount;
 
   /// --- Methods ---
 
-  void _resetBlankControllers() {
+  void _syncSubmittedQuestions() {
+    submittedQuestionIds
+      ..clear()
+      ..addAll(questions
+          .where((question) => question.isAnswered == true)
+          .map((question) => question.id)
+          .where((id) => id.isNotEmpty));
+  }
+
+  bool isQuestionSubmitted(SectionQuestionModel question) =>
+      question.isAnswered == true || submittedQuestionIds.contains(question.id);
+
+  LearnQuestionAnswerResultModel? currentQuestionResult(QuestionAnswerState answerState) {
+    final result = answerState.result;
+    if (result != null && result.questionId == currentQuestion.id) return result;
+    return questionResults[currentQuestion.id];
+  }
+
+  void _saveCurrentQuestionState() {
+    if (questions.isEmpty || currentQuestion.id.isEmpty) return;
+    questionDrafts[currentQuestion.id] = _QuizQuestionDraft(
+        selectedIndex: selectedIndex,
+        selectedIndices: Set<int>.from(selectedIndices),
+        blankAnswers: blankControllers.map((controller) => controller.text).toList(),
+        shortAnswer: shortAnswerController.text,
+        showCorrectAnswer: showCorrectAnswer);
+  }
+
+  void _resetBlankControllers([List<String>? draftAnswers]) {
     for (final controller in blankControllers) {
       controller.dispose();
     }
@@ -107,7 +169,9 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     final count = blanksCount;
     for (var i = 0; i < count; i++) {
       final controller = TextEditingController();
-      if (currentQuestion.userBlankAnswers.length > i) {
+      if (draftAnswers != null && draftAnswers.length > i) {
+        controller.text = draftAnswers[i];
+      } else if (currentQuestion.userBlankAnswers.length > i) {
         controller.text = currentQuestion.userBlankAnswers[i].answer ?? '';
       }
       controller.addListener(_handleInputChanged);
@@ -127,20 +191,26 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     }
     selectedIndex = null;
     selectedIndices.clear();
-    hasSubmitted = isReviewMode;
-    showCorrectAnswer = false;
+    final draft = questionDrafts[currentQuestion.id];
+    hasSubmitted = isQuestionSubmitted(currentQuestion);
+    showCorrectAnswer = draft?.showCorrectAnswer ?? false;
 
-    for (var i = 0; i < currentAnswers.length; i++) {
-      if (!currentAnswers[i].userSelected) continue;
-      if (isMultipleChoice) {
-        selectedIndices.add(i);
-      } else {
-        selectedIndex = i;
+    if (draft != null) {
+      selectedIndex = draft.selectedIndex;
+      selectedIndices.addAll(draft.selectedIndices);
+    } else {
+      for (var i = 0; i < currentAnswers.length; i++) {
+        if (!currentAnswers[i].userSelected) continue;
+        if (isMultipleChoice) {
+          selectedIndices.add(i);
+        } else {
+          selectedIndex = i;
+        }
       }
     }
 
-    _resetBlankControllers();
-    shortAnswerController.clear();
+    _resetBlankControllers(draft?.blankAnswers);
+    shortAnswerController.text = draft?.shortAnswer ?? '';
   }
 
   void _handleInputChanged() {
@@ -183,6 +253,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   void submitCurrentAnswer() {
     if (!isReadyToSubmit) return;
     if (answerBloc.state.status.isLoading) return;
+    _saveCurrentQuestionState();
     if (isMultipleChoice) {
       final selectedAnswerIds = selectedIndices
           .map((index) => currentAnswers[index].id)
@@ -257,16 +328,66 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   }
 
   Future<void> goNextQuestion() async {
-    if (questionIndex == questions.length - 1) {
-      await finishMockExamSectionIfNeeded();
-      return widget.onFinish(correctCount);
+    if (answerBloc.state.status.isLoading) return;
+    if (isLastQuestion) {
+      return finishQuizIfComplete();
     }
 
-    answerBloc.add(const QuestionAnswerReset());
-    questionIndex++;
-    _syncQuestionState();
+    goToQuestion(questionIndex + 1);
+  }
 
+  Future<void> finishQuizIfComplete() async {
+    if (!allQuestionsSubmitted) {
+      openQuestionsOverview();
+      return;
+    }
+    await finishMockExamSectionIfNeeded();
+    return widget.onFinish(correctCount);
+  }
+
+  void goPreviousQuestion() {
+    if (answerBloc.state.status.isLoading || isFirstQuestion) return;
+    goToQuestion(questionIndex - 1);
+  }
+
+  void goToQuestion(int index, {bool closeQuestionsOverview = false}) {
+    if (answerBloc.state.status.isLoading) return;
+    if (index < 0 || index >= questions.length) return;
+    _saveCurrentQuestionState();
+    answerBloc.add(const QuestionAnswerReset());
+    questionIndex = index;
+    _syncQuestionState();
+    if (closeQuestionsOverview) {
+      this.closeQuestionsOverview();
+      return;
+    }
     setState(() {});
+  }
+
+  void openQuestionsOverview() {
+    if (answerBloc.state.status.isLoading) return;
+    _saveCurrentQuestionState();
+    questionsOverviewEntry ??= OverlayEntry(builder: questionsOverviewOverlay);
+    if (!questionsOverviewEntry!.mounted) {
+      Overlay.of(context, rootOverlay: true).insert(questionsOverviewEntry!);
+    }
+    questionsOverviewEntry?.markNeedsBuild();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || questionsOverviewEntry == null) return;
+      setState(() => isQuestionsOverviewVisible = true);
+      questionsOverviewEntry?.markNeedsBuild();
+    });
+  }
+
+  void closeQuestionsOverview() {
+    if (!isQuestionsOverviewVisible) return;
+    setState(() => isQuestionsOverviewVisible = false);
+    questionsOverviewEntry?.markNeedsBuild();
+    Future.delayed(const Duration(milliseconds: 260), () {
+      if (!mounted || isQuestionsOverviewVisible) return;
+      questionsOverviewEntry?.remove();
+      questionsOverviewEntry = null;
+    });
   }
 
   /// --- Widgets ---
@@ -284,6 +405,34 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   Widget get progressHeader =>
       Column(children: [indicator, const SizedBox(height: 4), progressHeaderInfo]);
 
+  Widget get quizTopBar => Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+          padding: const EdgeInsets.only(right: 128),
+          child: Text(
+              'Answered {count} of {total}'
+                  .tr(namedArgs: {'count': '$submittedCount', 'total': '${questions.length}'}),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Style.small2w5(context).copyWith(color: AppColors.gray500))));
+
+  Widget get questionsOverviewButton => Material(
+      color: Colors.transparent,
+      child: InkWell(
+          onTap: openQuestionsOverview,
+          borderRadius: Style.border16,
+          child: Ink(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: Style.border16,
+                  border: Border.all(color: AppColors.gray300)),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                const Icon(Icons.fact_check_rounded, size: 18),
+                const SizedBox(width: 6),
+                Text('Questions'.tr(), style: Style.small2w5(context))
+              ]))));
+
   List<Widget> get isShownHeaderWidget => widget.headerWidget != null
       ? [
           widget.headerWidget!,
@@ -295,7 +444,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       isMultipleChoice ? selectedIndices.contains(index) : selectedIndex == index;
 
   bool get hasResultForCurrentQuestion {
-    final result = answerBloc.state.result;
+    final result = currentQuestionResult(answerBloc.state);
     return result != null &&
         result.questionId.isNotEmpty &&
         result.questionId == currentQuestion.id;
@@ -309,9 +458,10 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
           .where((id) => id.isNotEmpty)
           .toSet();
     }
-    if (!hasResultForCurrentQuestion) return const {};
-    final idsFromResult = <String>{...answerState.result?.correctAnswerIds ?? const []};
-    final singleId = answerState.result?.correctAnswerId;
+    final result = currentQuestionResult(answerState);
+    if (result == null || result.questionId != currentQuestion.id) return const {};
+    final idsFromResult = <String>{...result.correctAnswerIds};
+    final singleId = result.correctAnswerId;
     if (singleId != null && singleId.isNotEmpty) idsFromResult.add(singleId);
     return idsFromResult;
   }
@@ -427,8 +577,8 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
           selectedIds.length == correctIds.length &&
           selectedIds.containsAll(correctIds);
     }
-    return answerState.result?.questionId == currentQuestion.id &&
-        answerState.result?.isCorrect == true;
+    final result = currentQuestionResult(answerState);
+    return result?.questionId == currentQuestion.id && result?.isCorrect == true;
   }
 
   Color resultPanelColor(QuestionAnswerState answerState) => isMockExam
@@ -456,14 +606,18 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   String? resultPanelSubtitle(QuestionAnswerState answerState) {
     if (!isResultState) {
       return isReadyToSubmit
-          ? 'Tap submit to check your answer.'.tr()
-          : 'Choose an answer to continue.'.tr();
+          ? 'Submit now or skip and return later.'.tr()
+          : 'Choose an answer or skip and return later.'.tr();
     }
     if (isMockExam) {
-      return 'Tap continue to move to the next question.'.tr();
+      return allQuestionsSubmitted && isLastQuestion
+          ? 'Tap finish to see your result.'.tr()
+          : 'Tap continue to move to the next question.'.tr();
     }
     if (questionWasCorrect(answerState)) {
-      return 'Tap continue to move to the next question.'.tr();
+      return allQuestionsSubmitted && isLastQuestion
+          ? 'Tap finish to see your result.'.tr()
+          : 'Tap continue to move to the next question.'.tr();
     }
     if (showCorrectAnswer && effectiveCorrectAnswerIds(answerState).isNotEmpty) {
       return 'The correct answer is now marked for review.'.tr();
@@ -474,21 +628,50 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     return null;
   }
 
-  Widget showAnswerButton(QuestionAnswerState answerState) => Button.border(
+  Widget showAnswerButton(QuestionAnswerState answerState) => InkWell(
       onTap: () => setState(() => showCorrectAnswer = true),
-      height: 52,
-      color: AppColors.white,
-      borderColor: isResultState
-          ? AppColors.white.withValues(alpha: 0.75)
-          : AppColors.orange033.withValues(alpha: 0.35),
-      child: Icon(Icons.visibility_rounded,
-          size: 20, color: isResultState ? resultPanelColor(answerState) : AppColors.orange033));
+      borderRadius: BorderRadius.circular(21),
+      child: Container(
+          height: 30,
+          width: 52,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(21),
+              border: Border.all(
+                  color: isResultState
+                      ? AppColors.white.withValues(alpha: 0.75)
+                      : AppColors.orange033.withValues(alpha: 0.35))),
+          child: Icon(Icons.visibility_rounded,
+              size: 20,
+              color: isResultState ? resultPanelColor(answerState) : AppColors.orange033)));
+
+  Widget navigationCircleButton(
+          {required IconData icon, required VoidCallback onTap, required bool isAvailable}) =>
+      InkWell(
+          onTap: isAvailable ? onTap : null,
+          child: Ink(
+              child: Container(
+                  width: 68,
+                  height: 36,
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(18)),
+                      color: isAvailable ? AppColors.white : AppColors.gray100,
+                      border:
+                          Border.all(color: isAvailable ? AppColors.gray200 : AppColors.gray100)),
+                  child: Icon(icon,
+                      size: 26, color: isAvailable ? AppColors.gray700 : AppColors.gray400))));
 
   Widget submitButton(QuestionAnswerState answerState) {
     final canSubmit = hasSubmitted ? true : isReadyToSubmit;
-    final label = hasSubmitted || isReviewMode ? 'Continue' : 'Submit';
+    final label = hasSubmitted || isReviewMode
+        ? allQuestionsSubmitted && isLastQuestion
+            ? 'Finish'
+            : 'Continue'
+        : 'Submit';
     return Button.primary(
         onTap: hasSubmitted || isReviewMode ? goNextQuestion : submitCurrentAnswer,
+        height: 36,
         text: label.tr(),
         color: isResultState && !isMockExam ? AppColors.white : null,
         textColor: isResultState && !isMockExam ? resultPanelColor(answerState) : null,
@@ -497,11 +680,22 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   }
 
   Widget actionButtons(QuestionAnswerState answerState) {
-    if (!canRevealCorrectAnswer) return submitButton(answerState);
     return Row(children: [
-      SizedBox(width: 84, child: showAnswerButton(answerState)),
+      navigationCircleButton(
+          icon: Icons.chevron_left,
+          onTap: goPreviousQuestion,
+          isAvailable: !isFirstQuestion && !answerState.status.isLoading),
       const SizedBox(width: 12),
-      Expanded(child: submitButton(answerState))
+      Expanded(child: submitButton(answerState)),
+      const SizedBox(width: 12),
+      navigationCircleButton(
+          icon: isLastQuestion
+              ? allQuestionsSubmitted
+                  ? Icons.check_rounded
+                  : Icons.fact_check_rounded
+              : Icons.chevron_right,
+          onTap: goNextQuestion,
+          isAvailable: !answerState.status.isLoading)
     ]);
   }
 
@@ -524,7 +718,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               SizedBox(
-                  height: 72,
+                  height: 80,
                   child: isResultState
                       ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -540,15 +734,23 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
                               panelAction,
                             ]
                           ]),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 8),
                           Expanded(
-                              child: Text(subtitle ?? '',
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Style.bodyw4(context).copyWith(
-                                      color: isMockExam
-                                          ? context.cs.onSurface.withValues(alpha: 0.72)
-                                          : AppColors.white.withValues(alpha: 0.92))))
+                              child: Row(
+                            children: [
+                              if (canRevealCorrectAnswer) showAnswerButton(answerState),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(subtitle ?? '',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Style.small3w4(context).copyWith(
+                                        color: isMockExam
+                                            ? context.cs.onSurface.withValues(alpha: 0.72)
+                                            : AppColors.white.withValues(alpha: 0.92))),
+                              ),
+                            ],
+                          ))
                         ])
                       : Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Expanded(
@@ -561,7 +763,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
                             panelAction,
                           ]
                         ])),
-              const SizedBox(height: 18),
+              const SizedBox(height: 12),
               actionButtons(answerState)
             ])));
   }
@@ -576,6 +778,153 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       child: Text('Question data is incomplete. No correct answer was provided by the server.'.tr(),
           style: Style.small3w4(context).copyWith(color: AppColors.error)));
 
+  Color questionStatusColor(SectionQuestionModel question) =>
+      isQuestionSubmitted(question) ? AppColors.primary : AppColors.orange09;
+
+  Widget questionStatusBadge(BuildContext context, SectionQuestionModel question) {
+    final submitted = isQuestionSubmitted(question);
+    return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+            color: submitted ? AppColors.greenE7 : AppColors.orangeEB, borderRadius: Style.border8),
+        child: Text(submitted ? 'Submitted'.tr() : 'Not submitted'.tr(),
+            style: Style.smallw6(context)
+                .copyWith(color: submitted ? AppColors.green36 : AppColors.orange12)));
+  }
+
+  Widget questionListTile(BuildContext panelContext, int index) {
+    final question = questions[index];
+    final submitted = isQuestionSubmitted(question);
+    final isCurrent = index == questionIndex;
+    final statusColor = questionStatusColor(question);
+    return Material(
+        color: Colors.transparent,
+        child: InkWell(
+            onTap: () => goToQuestion(index, closeQuestionsOverview: true),
+            borderRadius: Style.border16,
+            child: Ink(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                    color: isCurrent ? AppColors.greenE7 : panelContext.cs.surface,
+                    borderRadius: Style.border16,
+                    border: Border.all(
+                        color: isCurrent
+                            ? AppColors.primary
+                            : submitted
+                                ? AppColors.greenC6
+                                : AppColors.gray200)),
+                child: Row(children: [
+                  Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(color: statusColor, shape: BoxShape.circle),
+                      child: Center(
+                          child: Text('${index + 1}',
+                              style:
+                                  Style.small3w7(panelContext, color: TextColorRole.whiteColor)))),
+                  const SizedBox(width: 12),
+                  Expanded(
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text('Question {current}'.tr(namedArgs: {'current': '${index + 1}'}),
+                        style: Style.bodyw6(panelContext)),
+                    const SizedBox(height: 4),
+                    questionStatusBadge(panelContext, question)
+                  ])),
+                  if (isCurrent)
+                    const Icon(Icons.radio_button_checked_rounded,
+                        color: AppColors.green36, size: 20)
+                  else
+                    Icon(submitted ? Icons.check_circle_rounded : Icons.circle_outlined,
+                        color: submitted ? AppColors.green36 : AppColors.gray400, size: 20)
+                ]))));
+  }
+
+  Widget questionListPanel(BuildContext panelContext) => Container(
+      width: double.infinity,
+      height: MediaQuery.of(panelContext).size.height * 0.78,
+      decoration: BoxDecoration(
+          color: panelContext.cs.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(28))),
+      child: SafeArea(
+          top: false,
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 14, 20, 20),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                Center(
+                    child: Container(
+                        width: 46,
+                        height: 5,
+                        decoration: BoxDecoration(
+                            color: panelContext.cs.outline.withValues(alpha: 0.25),
+                            borderRadius: BorderRadius.circular(999)))),
+                const SizedBox(height: 18),
+                Row(children: [
+                  Expanded(child: Text('Questions'.tr(), style: Style.body2w6(panelContext))),
+                  IconButton(
+                      onPressed: closeQuestionsOverview, icon: const Icon(Icons.close_rounded))
+                ]),
+                const SizedBox(height: 4),
+                Text(
+                    allQuestionsSubmitted
+                        ? 'All questions are submitted.'.tr()
+                        : 'Choose not submitted questions and solve them.'.tr(),
+                    style: Style.small3w4(panelContext, color: TextColorRole.greyColor)),
+                const SizedBox(height: 14),
+                Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration:
+                        BoxDecoration(color: AppColors.gray100, borderRadius: Style.border16),
+                    child: Row(children: [
+                      Expanded(
+                          child: Text(
+                              'Answered {count} of {total}'.tr(namedArgs: {
+                                'count': '$submittedCount',
+                                'total': '${questions.length}'
+                              }),
+                              style: Style.small3w5(panelContext))),
+                      Text('$unsubmittedCount ${'left'.tr()}',
+                          style: Style.small3w5(panelContext).copyWith(
+                              color:
+                                  unsubmittedCount == 0 ? AppColors.green36 : AppColors.orange12))
+                    ])),
+                const SizedBox(height: 14),
+                Expanded(
+                    child: ListView.separated(
+                        itemCount: questions.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 8),
+                        itemBuilder: (_, index) => questionListTile(panelContext, index))),
+                if (allQuestionsSubmitted) ...[
+                  const SizedBox(height: 14),
+                  Button.primary(
+                      onTap: () async {
+                        closeQuestionsOverview();
+                        await finishQuizIfComplete();
+                      },
+                      text: 'Finish'.tr())
+                ]
+              ]))));
+
+  Widget questionsOverviewOverlay(BuildContext context) => Positioned.fill(
+      child: IgnorePointer(
+          ignoring: !isQuestionsOverviewVisible,
+          child: Material(
+              type: MaterialType.transparency,
+              child: Stack(children: [
+                AnimatedOpacity(
+                    opacity: isQuestionsOverviewVisible ? 1 : 0,
+                    duration: const Duration(milliseconds: 180),
+                    curve: Curves.easeOut,
+                    child: GestureDetector(
+                        onTap: closeQuestionsOverview,
+                        child: Container(color: AppColors.black.withValues(alpha: 0.38)))),
+                AnimatedSlide(
+                    offset: isQuestionsOverviewVisible ? Offset.zero : const Offset(0, 1),
+                    duration: const Duration(milliseconds: 260),
+                    curve: Curves.easeOutCubic,
+                    child:
+                        Align(alignment: Alignment.bottomCenter, child: questionListPanel(context)))
+              ]))));
+
   Widget scrollContent(QuestionAnswerState answerState, double bottomSpacerHeight) => ListView(
           padding: EdgeInsets.only(bottom: bottomSpacerHeight),
           physics: const ClampingScrollPhysics(),
@@ -584,6 +933,8 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Column(children: [
                   const SizedBox(height: 24),
+                  quizTopBar,
+                  const SizedBox(height: 16),
                   progressHeader,
                   const SizedBox(height: 24),
                   ...isShownHeaderWidget,
@@ -612,6 +963,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
             final panelHeight = 210.0 + MediaQuery.of(context).padding.bottom;
             return Stack(children: [
               Positioned.fill(child: scrollContent(answerState, panelHeight + 16)),
+              Positioned(top: 12, right: 12, child: questionsOverviewButton),
               Positioned(
                   left: 0, right: 0, bottom: 0, child: bottomResultPanel(context, answerState))
             ]);
@@ -629,9 +981,15 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
         listener: (context, state) {
           if (state.status.isSuccess) {
             if (!hasSubmitted) {
+              _saveCurrentQuestionState();
+              submittedQuestionIds.add(currentQuestion.id);
+              final result = state.result;
+              if (result != null && result.questionId == currentQuestion.id) {
+                questionResults[currentQuestion.id] = result;
+              }
               if (!isMockExam &&
-                  state.result?.questionId == currentQuestion.id &&
-                  state.result?.isCorrect == true) {
+                  result?.questionId == currentQuestion.id &&
+                  result?.isCorrect == true) {
                 correctCount++;
               }
               hasSubmitted = true;
@@ -644,6 +1002,11 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
                 .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
           }
         },
-        child: view);
+        child: PopScope(
+            canPop: !isQuestionsOverviewVisible,
+            onPopInvokedWithResult: (didPop, _) {
+              if (!didPop && isQuestionsOverviewVisible) closeQuestionsOverview();
+            },
+            child: view));
   }
 }

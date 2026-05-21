@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:ustadia_user_app/core/widgets/text/html_text.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/grammar_section/grammar_section_intro.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_quiz_component.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_quiz_panel_action_button.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_timer_badge.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_bloc.dart';
@@ -76,6 +78,44 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
     Navigator.of(context).pop(true);
   }
 
+  Future<void> showGrammarSheet(String content) => showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) => Container(
+          height: MediaQuery.of(sheetContext).size.height * 0.78,
+          decoration: BoxDecoration(
+              color: sheetContext.cs.surface,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(28))),
+          child: SafeArea(
+              top: false,
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 14, 20, 20),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                    Center(
+                        child: Container(
+                            width: 46,
+                            height: 5,
+                            decoration: BoxDecoration(
+                                color: sheetContext.cs.outline.withValues(alpha: 0.25),
+                                borderRadius: BorderRadius.circular(999)))),
+                    const SizedBox(height: 18),
+                    Row(children: [
+                      Expanded(
+                          child: Text('Grammar rules'.tr(), style: Style.body2w6(sheetContext))),
+                      IconButton(
+                          onPressed: () => Navigator.of(sheetContext).pop(),
+                          icon: const Icon(Icons.close_rounded))
+                    ]),
+                    const SizedBox(height: 8),
+                    Expanded(
+                        child: SingleChildScrollView(
+                            child: HtmlText(
+                                data: content,
+                                textStyle: Style.bodyw4(sheetContext),
+                                textAlign: TextAlign.justify)))
+                  ])))));
+
   Widget? quizHeaderWidget(SectionDetailState state) {
     final detail = state.detail;
     if (detail?.timeRemainingSeconds == null) return null;
@@ -133,6 +173,11 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
       return SectionQuizComponent(
           questions: state.detail?.questions ?? [],
           headerWidget: quizHeaderWidget(state),
+          panelActionBuilder: (context, isResultState, panelColor) => SectionQuizPanelActionButton(
+              onTap: () => showGrammarSheet(state.detail?.content ?? widget.sectionModel.content),
+              isResultState: isResultState,
+              panelColor: panelColor,
+              label: 'Read'),
           onFinish: finishQuiz);
     if (stage == GrammarSectionStage.result) {
       return QuizResultComponent(sectionModel: widget.sectionModel);
