@@ -37,7 +37,6 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
-  /// --- Widgets ---
   String fullImageUrl(String? url) {
     return resolveApiAssetUrl(
       url,
@@ -45,6 +44,9 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
+  void goToMeets() => context.push(meetsRoute);
+
+  /// --- Widgets ---
   Widget userAvatar(String? imageUrl) => GestureDetector(
       onTap: imageUrl == null || imageUrl.isEmpty
           ? null
@@ -69,6 +71,24 @@ class _DashboardPageState extends State<DashboardPage> {
         Text(name, style: Style.body3w7(context))
       ]);
 
+  Widget meetsButton() => InkWell(
+      onTap: goToMeets,
+      borderRadius: Style.border16,
+      child: Ink(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+          decoration: BoxDecoration(
+              color: AppColors.greenE7,
+              borderRadius: Style.border16,
+              border: Border.all(color: AppColors.greenC6)),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            const Icon(Icons.video_call_rounded, color: AppColors.green36, size: 20),
+            const SizedBox(width: 6),
+            FittedBox(
+                fit: BoxFit.fill,
+                child: Text('Meets'.tr(),
+                    style: Style.small3w5(context).copyWith(color: AppColors.green36)))
+          ])));
+
   Widget profileHeader(UserState state) {
     final profile = state.profile;
     final name = profile == null ? 'User' : '${profile.firstName} ${profile.lastName}'.trim();
@@ -76,23 +96,25 @@ class _DashboardPageState extends State<DashboardPage> {
     return Row(children: [
       userAvatar(imageUrl),
       const SizedBox(width: 12),
-      profileInfoTexts(name),
-      const Spacer(),
-     // firePoint()
+      Expanded(child: profileInfoTexts(name)),
+      // firePoint()
     ]);
   }
 
   Widget view(UserState state) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           profileHeader(state),
+
+          meetsButton(),
           // const SizedBox(height: 24),
           // const DashboardCalendar(),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           const TodayPlanCard(),
           const SizedBox(height: 16),
           const DashboardQuickGridList(),
           const SizedBox(height: 18),
-       //   const DashboardStrakCard(),
+          //   const DashboardStrakCard(),
           const SizedBox(height: 80)
         ],
       );
