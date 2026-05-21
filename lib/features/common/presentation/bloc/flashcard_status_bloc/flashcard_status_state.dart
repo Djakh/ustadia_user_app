@@ -8,6 +8,7 @@ class FlashcardStatusState extends Equatable {
   final String? flashcardId;
   final String? back;
   final String? cardStatus;
+  final bool? isAnswered;
   final String? errorMessage;
 
   const FlashcardStatusState({
@@ -15,6 +16,7 @@ class FlashcardStatusState extends Equatable {
     this.flashcardId,
     this.back,
     this.cardStatus,
+    this.isAnswered,
     this.errorMessage,
   });
 
@@ -23,6 +25,7 @@ class FlashcardStatusState extends Equatable {
     Object? flashcardId = _unset,
     Object? back = _unset,
     Object? cardStatus = _unset,
+    Object? isAnswered = _unset,
     String? errorMessage,
   }) {
     return FlashcardStatusState(
@@ -30,10 +33,11 @@ class FlashcardStatusState extends Equatable {
       flashcardId: identical(flashcardId, _unset) ? this.flashcardId : flashcardId as String?,
       back: identical(back, _unset) ? this.back : back as String?,
       cardStatus: identical(cardStatus, _unset) ? this.cardStatus : cardStatus as String?,
+      isAnswered: identical(isAnswered, _unset) ? this.isAnswered : isAnswered as bool?,
       errorMessage: errorMessage,
     );
   }
 
   @override
-  List<Object?> get props => [status, flashcardId, back, cardStatus, errorMessage];
+  List<Object?> get props => [status, flashcardId, back, cardStatus, isAnswered, errorMessage];
 }

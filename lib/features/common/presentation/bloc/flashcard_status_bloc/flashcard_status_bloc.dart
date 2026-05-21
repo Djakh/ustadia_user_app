@@ -30,6 +30,7 @@ class FlashcardStatusBloc extends Bloc<FlashcardStatusEvent, FlashcardStatusStat
       flashcardId: event.flashcardId,
       back: null,
       cardStatus: null,
+      isAnswered: null,
     ));
     try {
       final response = await flashcardRepository.updateFlashcardStatus(
@@ -44,6 +45,7 @@ class FlashcardStatusBloc extends Bloc<FlashcardStatusEvent, FlashcardStatusStat
         flashcardId: event.flashcardId,
         back: response.back,
         cardStatus: response.status,
+        isAnswered: response.isAnswered,
         errorMessage: null,
       ));
     } on DioException catch (error) {

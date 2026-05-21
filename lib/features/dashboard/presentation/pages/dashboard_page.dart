@@ -65,17 +65,11 @@ class _DashboardPageState extends State<DashboardPage> {
         Text('+5', style: Style.small2w4(context).copyWith(color: AppColors.orange9200))
       ]));
 
-  Column profileInfoTexts(String name) =>
-      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Welcome back,'.tr(), style: Style.small2w5(context, color: TextColorRole.greyColor)),
-        Text(name, style: Style.body3w7(context))
-      ]);
-
   Widget meetsButton() => InkWell(
       onTap: goToMeets,
       borderRadius: Style.border16,
       child: Ink(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+          padding: const EdgeInsets.symmetric(vertical: 4),
           decoration: BoxDecoration(
               color: AppColors.greenE7,
               borderRadius: Style.border16,
@@ -86,8 +80,17 @@ class _DashboardPageState extends State<DashboardPage> {
             FittedBox(
                 fit: BoxFit.fill,
                 child: Text('Meets'.tr(),
-                    style: Style.small3w5(context).copyWith(color: AppColors.green36)))
+                    style: Style.small2w5(context).copyWith(color: AppColors.green36)))
           ])));
+
+  Row welcomeBackAndMeetings() => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Text('Welcome back,'.tr(), style: Style.small2w5(context, color: TextColorRole.greyColor)),
+        meetsButton()
+      ]);
+
+  Column profileInfoTexts(String name) => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [welcomeBackAndMeetings(), Text(name, style: Style.body3w7(context))]);
 
   Widget profileHeader(UserState state) {
     final profile = state.profile;
@@ -106,7 +109,6 @@ class _DashboardPageState extends State<DashboardPage> {
         children: [
           profileHeader(state),
 
-          meetsButton(),
           // const SizedBox(height: 24),
           // const DashboardCalendar(),
           const SizedBox(height: 16),
