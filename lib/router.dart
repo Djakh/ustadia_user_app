@@ -30,6 +30,7 @@ import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dar
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_lessons_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_sections_page.dart';
 import 'package:ustadia_user_app/features/learn/presentation/pages/learn_units_page.dart';
+import 'package:ustadia_user_app/features/meets/presentation/pages/student_meets_page.dart';
 import 'package:ustadia_user_app/features/mock_exam/presentation/pages/mock_exam_history_page.dart';
 import 'package:ustadia_user_app/features/mock_exam/presentation/pages/mock_exam_list_page.dart';
 import 'package:ustadia_user_app/features/mock_exam/presentation/pages/mock_exam_result_page.dart';
@@ -83,6 +84,8 @@ const signUpRoute = '/sign-up';
 /// --------------------
 const homeRoute = '/home';
 const dashboardRoute = '$homeRoute/dashboard';
+const meetsPath = 'meets';
+const meetsRoute = '$dashboardRoute/$meetsPath';
 const assignmentsPath = 'assignments';
 const assignmentsRoute = '$dashboardRoute/$assignmentsPath';
 const assignmentsSectionsPath = 'sections';
@@ -347,6 +350,10 @@ final appRouter = GoRouter(
               path: dashboardRoute,
               pageBuilder: (_, __) => const NoTransitionPage(child: DashboardPage()),
               routes: [
+                GoRoute(
+                    path: meetsPath,
+                    parentNavigatorKey: _rootKey,
+                    builder: (_, __) => const StudentMeetsPage()),
                 GoRoute(
                     path: assignmentsPath,
                     parentNavigatorKey: _rootKey,

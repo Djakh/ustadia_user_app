@@ -36,6 +36,8 @@ import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_units_bl
 import 'package:ustadia_user_app/features/mock_exam/data/datasources/mock_exam_remote_data_source.dart';
 import 'package:ustadia_user_app/features/mock_exam/presentation/bloc/mock_exam_list_bloc/mock_exam_list_bloc.dart';
 import 'package:ustadia_user_app/features/mock_exam/presentation/bloc/mock_exam_sections_bloc/mock_exam_sections_bloc.dart';
+import 'package:ustadia_user_app/features/meets/data/datasources/student_meets_remote_data_source.dart';
+import 'package:ustadia_user_app/features/meets/presentation/bloc/student_meets_bloc/student_meets_bloc.dart';
 import 'package:ustadia_user_app/features/notifications/data/datasources/notifications_remote_data_source.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/bloc/notifications_bloc/notifications_bloc.dart';
 import 'package:ustadia_user_app/features/practice/data/datasources/practice_remote_data_source.dart';
@@ -138,6 +140,9 @@ Future<void> initDependencies() async {
   // Features - Dashboard
   sl.registerLazySingleton<CurrentUnitStore>(() => CurrentUnitStore(learnRemoteDataSource: sl()));
   sl.registerFactory(() => CurrentUnitBloc(learnRemoteDataSource: sl()));
+  sl.registerLazySingleton<StudentMeetsRemoteDataSource>(
+      () => StudentMeetsRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
+  sl.registerFactory(() => StudentMeetsBloc(studentMeetsRemoteDataSource: sl()));
 
   // Features - Practice
   sl.registerLazySingleton<PracticeRemoteDataSource>(
