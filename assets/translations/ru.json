@@ -441,5 +441,7 @@
   "Agent is speaking": "Ассистент говорит",
   "Your turn to speak": "Ваша очередь говорить",
   "Assistant speaking": "Ассистент говорит",
+  "Translating...": "Перевод...",
+  "Unable to translate": "Не удалось перевести",
   "Reconnect": "Переподключить"
 }

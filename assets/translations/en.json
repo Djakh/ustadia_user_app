@@ -440,5 +440,7 @@
   "Agent is speaking": "Agent is speaking",
   "Your turn to speak": "Your turn to speak",
   "Assistant speaking": "Assistant speaking",
+  "Translating...": "Translating...",
+  "Unable to translate": "Unable to translate",
   "Reconnect": "Reconnect"
 }

@@ -441,5 +441,7 @@
   "Agent is speaking": "Agent gapiryapti",
   "Your turn to speak": "Sizning navbatingiz gapirish",
   "Assistant speaking": "Assistent gapiryapti",
+  "Translating...": "Tarjima qilinmoqda...",
+  "Unable to translate": "Tarjima qilib bo‘lmadi",
   "Reconnect": "Qayta ulanish"
 }

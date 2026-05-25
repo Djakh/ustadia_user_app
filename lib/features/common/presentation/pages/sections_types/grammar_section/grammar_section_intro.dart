@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
-import 'package:ustadia_user_app/core/widgets/text/html_text.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/components/translatable_section_content.dart';
 
 class GrammarSectionIntro extends StatelessWidget {
   final SectionModel sectionModel;
@@ -17,7 +17,7 @@ class GrammarSectionIntro extends StatelessWidget {
 
   /// --- Widgets ---
 
-  Widget htmlContent(BuildContext context) => HtmlText(
+  Widget htmlContent(BuildContext context) => TranslatableSectionContent(
       data: sectionModel.content, textAlign: TextAlign.justify, textStyle: Style.bodyw4(context));
 
   Widget view(BuildContext context) => Column(children: [
