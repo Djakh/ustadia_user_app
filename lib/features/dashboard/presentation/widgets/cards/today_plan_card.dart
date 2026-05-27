@@ -19,6 +19,9 @@ class TodayPlanCard extends StatefulWidget {
 }
 
 class TodayPlanCardState extends State<TodayPlanCard> {
+  static const double _cardHeight = 252;
+  static const double _buttonHeight = 44;
+
   late final CurrentUnitStore currentUnitStore;
 
   @override
@@ -28,17 +31,23 @@ class TodayPlanCardState extends State<TodayPlanCard> {
     currentUnitStore.refreshIfNeeded();
   }
 
-  Widget _planItem(String value, String label, BuildContext context) => Column(children: [
-        Text(value, style: Style.headline3w7(context).copyWith(color: AppColors.white)),
+  Widget _planItem(String value, String label, BuildContext context) => Expanded(
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+        FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(value, style: Style.headline3w7(context).copyWith(color: AppColors.white))),
         const SizedBox(height: 4),
-        Text(label, style: Style.bodyw7(context, color: TextColorRole.whiteColor))
-      ]);
+        Text(label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: Style.small3w7(context, color: TextColorRole.whiteColor))
+      ]));
 
   Widget _divider() =>
-      Container(width: 1, height: 32, color: AppColors.white.withValues(alpha: 0.4));
+      Container(width: 1, height: 36, color: AppColors.white.withValues(alpha: 0.4));
 
-  Row todaysPlanInfo(BuildContext context, CurrentUnitModel unit) =>
-      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+  Row todaysPlanInfo(BuildContext context, CurrentUnitModel unit) => Row(children: [
         _planItem('${unit.totalSections}', 'Total sections'.tr(), context),
         _divider(),
         _planItem('${unit.completedSections}', 'Completed'.tr(), context),
@@ -46,10 +55,9 @@ class TodayPlanCardState extends State<TodayPlanCard> {
         _planItem('${unit.completionPercentage.round()}%', 'Progress'.tr(), context)
       ]);
 
-  LearnUnitProgressState _progressState(CurrentUnitModel unit) =>
-      unit.completionPercentage >= 100
-          ? LearnUnitProgressState.completed
-          : LearnUnitProgressState.inProgress;
+  LearnUnitProgressState _progressState(CurrentUnitModel unit) => unit.completionPercentage >= 100
+      ? LearnUnitProgressState.completed
+      : LearnUnitProgressState.inProgress;
 
   LearnUnitModel _toLearnUnitModel(CurrentUnitModel unit) => LearnUnitModel(
         id: unit.id,
@@ -74,39 +82,54 @@ class TodayPlanCardState extends State<TodayPlanCard> {
   Widget startPlanButton(BuildContext context, CurrentUnitModel unit) => Button.primary(
         onTap: () => openTodayPlan(context, unit),
         color: AppColors.white,
+        height: _buttonHeight.toInt(),
         textColor: AppColors.black,
         text: 'Start today`s plan'.tr(),
       );
 
-  Widget unitHeader(BuildContext context, CurrentUnitModel unit) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Today`s plan'.tr(), style: Style.small3w4(context, color: TextColorRole.whiteColor)),
-          const SizedBox(height: 8),
-          Text(
-            unit.name.isNotEmpty
-                ? unit.name
-                : 'Unit {number}'.tr(namedArgs: {'number': '${unit.orderIndex}'}),
-            style: Style.body2w7(context, color: TextColorRole.whiteColor),
-          ),
-          if (unit.lesson.name.isNotEmpty) ...[
-            const SizedBox(height: 2),
-            Text(unit.lesson.name, style: Style.bodyw4(context, color: TextColorRole.whiteColor)),
+  Widget unitHeader(BuildContext context, CurrentUnitModel unit) =>
+      LayoutBuilder(builder: (context, constraints) {
+        final isCompact = constraints.maxHeight < 78;
+        final hasLesson = unit.lesson.name.isNotEmpty;
+        final title = unit.name.isNotEmpty
+            ? unit.name
+            : 'Unit {number}'.tr(namedArgs: {'number': '${unit.orderIndex}'});
+
+        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('Today`s plan'.tr(),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Style.small3w4(context, color: TextColorRole.whiteColor)),
+          SizedBox(height: isCompact ? 4 : 8),
+          Flexible(
+              flex: hasLesson ? 2 : 1,
+              child: Text(title,
+                  maxLines: isCompact ? 1 : 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Style.body2w7(context, color: TextColorRole.whiteColor))),
+          if (hasLesson) ...[
+            SizedBox(height: isCompact ? 0 : 2),
+            Flexible(
+                child: Text(unit.lesson.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Style.bodyw4(context, color: TextColorRole.whiteColor))),
           ],
-        ],
-      );
+        ]);
+      });
 
   Widget view(BuildContext context, CurrentUnitModel unit) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        unitHeader(context, unit),
-        const SizedBox(height: 22),
+        Expanded(child: unitHeader(context, unit)),
+        const SizedBox(height: 14),
         todaysPlanInfo(context, unit),
-        const SizedBox(height: 22),
+        const SizedBox(height: 14),
         startPlanButton(context, unit)
       ]);
 
   Widget cardShell(BuildContext context, Widget child) => Container(
         width: double.infinity,
+        height: _cardHeight,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -118,18 +141,23 @@ class TodayPlanCardState extends State<TodayPlanCard> {
         child: child,
       );
 
-  Widget loading(BuildContext context) => const PrimaryLoadingIndicator(
-        height: 28,
-        width: 28,
-        valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
-      );
+  Widget loading(BuildContext context) => const Center(
+      child: PrimaryLoadingIndicator(
+          height: 28, width: 28, valueColor: AlwaysStoppedAnimation<Color>(AppColors.white)));
 
   Widget messageView(BuildContext context, String message) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Today`s plan'.tr(), style: Style.small3w4(context, color: TextColorRole.whiteColor)),
+          Text('Today`s plan'.tr(),
+              style: Style.small3w4(context, color: TextColorRole.whiteColor)),
           const SizedBox(height: 12),
-          Text(message, style: Style.bodyw5(context, color: TextColorRole.whiteColor)),
+          Expanded(
+              child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(message,
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                      style: Style.bodyw5(context, color: TextColorRole.whiteColor)))),
         ],
       );
 
@@ -138,14 +166,13 @@ class TodayPlanCardState extends State<TodayPlanCard> {
       context,
       ValueListenableBuilder<bool>(
           valueListenable: currentUnitStore.loading,
-          builder: (context, isLoading, _) =>
-              ValueListenableBuilder<CurrentUnitModel?>(
-                  valueListenable: currentUnitStore.unit,
-                  builder: (context, unit, __) {
-                    if (isLoading && unit == null) return loading(context);
-                    if (unit == null || unit.id.isEmpty) {
-                      return messageView(context, 'No current unit found'.tr());
-                    }
-                    return view(context, unit);
-                  })));
+          builder: (context, isLoading, _) => ValueListenableBuilder<CurrentUnitModel?>(
+              valueListenable: currentUnitStore.unit,
+              builder: (context, unit, __) {
+                if (isLoading && unit == null) return loading(context);
+                if (unit == null || unit.id.isEmpty) {
+                  return messageView(context, 'No current unit found'.tr());
+                }
+                return view(context, unit);
+              })));
 }

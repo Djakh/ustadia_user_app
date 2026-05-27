@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_model.dart';
@@ -57,6 +60,11 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   final Set<int> _learningCards = {};
   final FlashcardStatusBloc statusBloc = sl<FlashcardStatusBloc>();
   FlashcardSprintResultStats? resultStats;
+  final GlobalKey flashcardKey = GlobalKey(debugLabel: 'flashcard_card');
+  final GlobalKey cardsButtonKey = GlobalKey(debugLabel: 'flashcard_cards_button');
+  final GlobalKey previousButtonKey = GlobalKey(debugLabel: 'flashcard_previous');
+  final GlobalKey mainButtonKey = GlobalKey(debugLabel: 'flashcard_main_action');
+  final GlobalKey nextButtonKey = GlobalKey(debugLabel: 'flashcard_next');
 
   List<LearnFlashcardModel> get cards => widget.flashcardSetModel.flashcards;
   LearnFlashcardModel get current => cards[index];
@@ -241,11 +249,13 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
         Text(progress, style: Style.small3w4(context, color: TextColorRole.greyColor))
       ]);
 
-  Widget get flashCard => FlashcardView(
-      flashcard: current,
-      showMeaning: shouldShowMeaning,
-      onToggle: toggleFace,
-      isLoading: isCurrentMeaningLoading);
+  Widget get flashCard => KeyedSubtree(
+      key: flashcardKey,
+      child: FlashcardView(
+          flashcard: current,
+          showMeaning: shouldShowMeaning,
+          onToggle: toggleFace,
+          isLoading: isCurrentMeaningLoading));
 
   String normalizedCardStatus(int cardIndex) => cards[cardIndex].status.toLowerCase();
 
@@ -311,6 +321,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   VoidCallback get mainActionTap => isCurrentCardAnswered || hasSeenMeaning ? goNextCard : onKnowIt;
 
   Widget get flashcardsOverviewButton => Material(
+      key: cardsButtonKey,
       color: Colors.transparent,
       child: InkWell(
           onTap: openFlashcardsOverview,
@@ -329,6 +340,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
 
   Widget controls(BuildContext context) => Row(children: [
         SectionNavigationCircleButton(
+            key: previousButtonKey,
             height: 44,
             width: 84,
             icon: Icons.chevron_left,
@@ -336,13 +348,16 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
             isAvailable: !isFirstCard && !isSubmitting),
         const SizedBox(width: 8),
         Expanded(
-            child: Button.border(
-                onTap: mainActionTap,
-                height: 44,
-                text: mainActionText.tr(),
-                isAvialable: !isSubmitting)),
+            child: KeyedSubtree(
+                key: mainButtonKey,
+                child: Button.border(
+                    onTap: mainActionTap,
+                    height: 44,
+                    text: mainActionText.tr(),
+                    isAvialable: !isSubmitting))),
         const SizedBox(width: 8),
         SectionNavigationCircleButton(
+            key: nextButtonKey,
             height: 44,
             width: 84,
             icon: isLastCard && !allRequiredCardsAnswered
@@ -487,10 +502,18 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
         Positioned(top: 12, right: 12, child: flashcardsOverviewButton)
       ]);
 
-  Widget get view => PrimaryBackground(
-      header: header,
-      headerTooltipText: widget.flashcardSetModel.title,
-      child: flashcardsContent(context));
+  Widget get view => GuidedTutorialPage(
+      pageId: '${TutorialPageIds.practiceSession}.flashcard_sprint',
+      steps: TutorialPresets.flashcardPractice(
+          cardKey: flashcardKey,
+          cardsButtonKey: cardsButtonKey,
+          previousKey: previousButtonKey,
+          mainActionKey: mainButtonKey,
+          nextKey: nextButtonKey),
+      child: PrimaryBackground(
+          header: header,
+          headerTooltipText: widget.flashcardSetModel.title,
+          child: flashcardsContent(context)));
 
   Widget get resultView {
     final sectionModel = widget.sectionModel;

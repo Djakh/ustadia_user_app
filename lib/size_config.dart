@@ -15,9 +15,6 @@ class SizeConfig {
     screenWidth = constraints.maxWidth;
     screenHeight = constraints.maxHeight - padding.top - padding.bottom; // Exclude SafeArea
 
-    print("Adjusted height (without SafeArea) is $screenHeight");
-    print("width is $screenWidth");
-
     heightPercent1 = screenHeight * 0.01;
     widthPercent1 = screenWidth * 0.01;
 

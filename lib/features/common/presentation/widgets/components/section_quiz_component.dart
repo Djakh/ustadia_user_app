@@ -3,6 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_storage_service.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_answer_model.dart';
@@ -61,6 +65,15 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   final Set<String> submittedQuestionIds = {};
   final Map<String, _QuizQuestionDraft> questionDrafts = {};
   final Map<String, LearnQuestionAnswerResultModel> questionResults = {};
+  final GlobalKey quizProgressKey = GlobalKey(debugLabel: 'quiz_progress');
+  final GlobalKey questionListButtonKey = GlobalKey(debugLabel: 'quiz_question_list_button');
+  final GlobalKey questionCardKey = GlobalKey(debugLabel: 'quiz_question_card');
+  final GlobalKey answerAreaKey = GlobalKey(debugLabel: 'quiz_answer_area');
+  final GlobalKey bottomPanelKey = GlobalKey(debugLabel: 'quiz_bottom_panel');
+  final GlobalKey panelActionKey = GlobalKey(debugLabel: 'quiz_panel_action');
+  final GlobalKey submitButtonKey = GlobalKey(debugLabel: 'quiz_submit_button');
+  final GlobalKey previousButtonKey = GlobalKey(debugLabel: 'quiz_previous_button');
+  final GlobalKey nextButtonKey = GlobalKey(debugLabel: 'quiz_next_button');
 
   int? selectedIndex;
   final Set<int> selectedIndices = {};
@@ -417,6 +430,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
               style: Style.small2w5(context).copyWith(color: AppColors.gray500))));
 
   Widget get questionsOverviewButton => Material(
+      key: questionListButtonKey,
       color: Colors.transparent,
       child: InkWell(
           onTap: openQuestionsOverview,
@@ -534,6 +548,20 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
             child: optionItem(index, answerState),
           ));
 
+  Widget answerInputArea(QuestionAnswerState answerState) => KeyedSubtree(
+      key: answerAreaKey,
+      child: Column(children: [
+        if (isFillBlank)
+          fillBlankView()
+        else if (isShortAnswer)
+          shortAnswerView()
+        else if (currentAnswers.isNotEmpty)
+          ...optionsList(answerState)
+        else
+          Text('No answers available.'.tr(),
+              style: Style.small3w4(context, color: TextColorRole.greyColor)),
+      ]));
+
   Widget fillBlankView() => Column(
       children: List.generate(
           blankControllers.length,
@@ -647,8 +675,12 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
               color: isResultState ? resultPanelColor(answerState) : AppColors.orange033)));
 
   Widget navigationCircleButton(
-          {required IconData icon, required VoidCallback onTap, required bool isAvailable}) =>
+          {Key? key,
+          required IconData icon,
+          required VoidCallback onTap,
+          required bool isAvailable}) =>
       InkWell(
+          key: key,
           onTap: isAvailable ? onTap : null,
           child: Ink(
               child: Container(
@@ -669,19 +701,22 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
             ? 'Finish'
             : 'Continue'
         : 'Submit';
-    return Button.primary(
-        onTap: hasSubmitted || isReviewMode ? goNextQuestion : submitCurrentAnswer,
-        height: 36,
-        text: label.tr(),
-        color: isResultState && !isMockExam ? AppColors.white : null,
-        textColor: isResultState && !isMockExam ? resultPanelColor(answerState) : null,
-        isLoading: !isReviewMode && answerState.status.isLoading,
-        isAvialable: canSubmit);
+    return KeyedSubtree(
+        key: submitButtonKey,
+        child: Button.primary(
+            onTap: hasSubmitted || isReviewMode ? goNextQuestion : submitCurrentAnswer,
+            height: 36,
+            text: label.tr(),
+            color: isResultState && !isMockExam ? AppColors.white : null,
+            textColor: isResultState && !isMockExam ? resultPanelColor(answerState) : null,
+            isLoading: !isReviewMode && answerState.status.isLoading,
+            isAvialable: canSubmit));
   }
 
   Widget actionButtons(QuestionAnswerState answerState) {
     return Row(children: [
       navigationCircleButton(
+          key: previousButtonKey,
           icon: Icons.chevron_left,
           onTap: goPreviousQuestion,
           isAvailable: !isFirstQuestion && !answerState.status.isLoading),
@@ -689,6 +724,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       Expanded(child: submitButton(answerState)),
       const SizedBox(width: 12),
       navigationCircleButton(
+          key: nextButtonKey,
           icon: isLastQuestion
               ? allQuestionsSubmitted
                   ? Icons.check_rounded
@@ -706,6 +742,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     final textColor = resultPanelTextColor(context);
     final panelAction = widget.panelActionBuilder?.call(context, isResultState, panelColor);
     return SizedBox(
+        key: bottomPanelKey,
         width: double.infinity,
         child: Container(
             padding: EdgeInsets.fromLTRB(18, 18, 18, 20 + bottomInset),
@@ -731,7 +768,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
                                     style: Style.body2w6(context).copyWith(color: textColor))),
                             if (panelAction != null) ...[
                               const SizedBox(width: 12),
-                              panelAction,
+                              KeyedSubtree(key: panelActionKey, child: panelAction),
                             ]
                           ]),
                           const SizedBox(height: 8),
@@ -760,7 +797,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
                                       style: Style.bodyw4(context).copyWith(color: textColor)))),
                           if (panelAction != null) ...[
                             const SizedBox(width: 12),
-                            panelAction,
+                            KeyedSubtree(key: panelActionKey, child: panelAction),
                           ]
                         ])),
               const SizedBox(height: 12),
@@ -935,24 +972,17 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
                   const SizedBox(height: 24),
                   quizTopBar,
                   const SizedBox(height: 16),
-                  progressHeader,
+                  KeyedSubtree(key: quizProgressKey, child: progressHeader),
                   const SizedBox(height: 24),
                   ...isShownHeaderWidget,
-                  QuestionsCard(currentQuestion: currentQuestion),
+                  KeyedSubtree(
+                      key: questionCardKey, child: QuestionsCard(currentQuestion: currentQuestion)),
                   const SizedBox(height: 20),
                   // if (hasMalformedChoiceQuestion) ...[
                   //   malformedQuestionWarning(context),
                   //   const SizedBox(height: 12),
                   // ],
-                  if (isFillBlank)
-                    fillBlankView()
-                  else if (isShortAnswer)
-                    shortAnswerView()
-                  else if (currentAnswers.isNotEmpty)
-                    ...optionsList(answerState)
-                  else
-                    Text('No answers available.'.tr(),
-                        style: Style.small3w4(context, color: TextColorRole.greyColor)),
+                  answerInputArea(answerState),
                 ]))
           ]);
 
@@ -976,37 +1006,56 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
           child: Text('No questions available.'.tr(),
               style: Style.bodyw5(context, color: TextColorRole.greyColor)));
 
-    return BlocListener<QuestionAnswerBloc, QuestionAnswerState>(
-        bloc: answerBloc,
-        listener: (context, state) {
-          if (state.status.isSuccess) {
-            if (!hasSubmitted) {
-              _saveCurrentQuestionState();
-              submittedQuestionIds.add(currentQuestion.id);
-              final result = state.result;
-              if (result != null && result.questionId == currentQuestion.id) {
-                questionResults[currentQuestion.id] = result;
+    final storage = sl<TutorialStorageService>();
+    final questionTypePageId = '${TutorialPageIds.sectionQuiz}.type.$questionType';
+    final includeCommonSteps = !storage.isPageCompleted(TutorialPageIds.sectionQuiz);
+
+    return GuidedTutorialPage(
+        pageId: includeCommonSteps ? TutorialPageIds.sectionQuiz : questionTypePageId,
+        additionalCompletedPageIds: includeCommonSteps ? [questionTypePageId] : const [],
+        steps: TutorialPresets.sectionQuiz(
+            questionType: questionType,
+            includeCommonSteps: includeCommonSteps,
+            progressKey: quizProgressKey,
+            questionListKey: questionListButtonKey,
+            questionKey: questionCardKey,
+            answerKey: answerAreaKey,
+            bottomPanelKey: bottomPanelKey,
+            submitKey: submitButtonKey,
+            previousKey: previousButtonKey,
+            nextKey: nextButtonKey,
+            panelActionKey: widget.panelActionBuilder == null ? null : panelActionKey),
+        child: BlocListener<QuestionAnswerBloc, QuestionAnswerState>(
+            bloc: answerBloc,
+            listener: (context, state) {
+              if (state.status.isSuccess) {
+                if (!hasSubmitted) {
+                  _saveCurrentQuestionState();
+                  submittedQuestionIds.add(currentQuestion.id);
+                  final result = state.result;
+                  if (result != null && result.questionId == currentQuestion.id) {
+                    questionResults[currentQuestion.id] = result;
+                  }
+                  if (!isMockExam &&
+                      result?.questionId == currentQuestion.id &&
+                      result?.isCorrect == true) {
+                    correctCount++;
+                  }
+                  hasSubmitted = true;
+                  setState(() {});
+                }
+                return;
               }
-              if (!isMockExam &&
-                  result?.questionId == currentQuestion.id &&
-                  result?.isCorrect == true) {
-                correctCount++;
+              if (state.status.isError && state.errorMessage != null) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
               }
-              hasSubmitted = true;
-              setState(() {});
-            }
-            return;
-          }
-          if (state.status.isError && state.errorMessage != null) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-          }
-        },
-        child: PopScope(
-            canPop: !isQuestionsOverviewVisible,
-            onPopInvokedWithResult: (didPop, _) {
-              if (!didPop && isQuestionsOverviewVisible) closeQuestionsOverview();
             },
-            child: view));
+            child: PopScope(
+                canPop: !isQuestionsOverviewVisible,
+                onPopInvokedWithResult: (didPop, _) {
+                  if (!didPop && isQuestionsOverviewVisible) closeQuestionsOverview();
+                },
+                child: view)));
   }
 }

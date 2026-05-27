@@ -4,6 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/connection/reload_conntection_button.dart';
@@ -339,7 +342,10 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       ]);
 
   @override
-  Widget build(BuildContext context) => MultiBlocListener(
+  Widget build(BuildContext context) => GuidedTutorialPage(
+      pageId: '${TutorialPageIds.section}.writing',
+      steps: TutorialPresets.section(sectionType: 'writing'),
+      child: MultiBlocListener(
           listeners: [
             BlocListener<QuestionAnswerBloc, QuestionAnswerState>(
                 bloc: answerBloc, listener: questionAnswerListener),
@@ -354,5 +360,5 @@ class WritingSectionPageState extends State<WritingSectionPage> {
                   isHeader: stage != WritingSectionStage.result,
                   isScrollable: false,
                   child: BlocBuilder<SectionDetailBloc, SectionDetailState>(
-                      bloc: detailBloc, builder: (context, state) => view(state)))));
+                      bloc: detailBloc, builder: (context, state) => view(state))))));
 }

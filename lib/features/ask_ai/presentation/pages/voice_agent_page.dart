@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/features/ask_ai/data/datasources/ai_chat_remote_data_source.dart';
 import 'package:ustadia_user_app/features/ask_ai/data/models/ai_chat_message_model.dart';
 import 'package:ustadia_user_app/features/ask_ai/data/models/ai_chat_topic_model.dart';
@@ -615,20 +618,23 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
       child: textComposerVisible ? textMessageComposer : voiceControls);
 
   @override
-  Widget build(BuildContext context) => PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) async {
-        if (didPop) return;
-        if (isClosing) return;
-        beginClosing();
-        Navigator.of(this.context).pop();
-      },
-      child: Scaffold(
-          backgroundColor: AppColors.secondary,
-          appBar: AskAiPageAppBar(
-              title: widget.topic.title,
-              hasTimeLimit: hasTimeLimit,
-              timerText: timerValue(),
-              onBack: onAppBarBack),
-          body: body(context)));
+  Widget build(BuildContext context) => GuidedTutorialPage(
+      pageId: TutorialPageIds.voiceAgent,
+      steps: TutorialPresets.voiceAgent(),
+      child: PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) async {
+            if (didPop) return;
+            if (isClosing) return;
+            beginClosing();
+            Navigator.of(this.context).pop();
+          },
+          child: Scaffold(
+              backgroundColor: AppColors.secondary,
+              appBar: AskAiPageAppBar(
+                  title: widget.topic.title,
+                  hasTimeLimit: hasTimeLimit,
+                  timerText: timerValue(),
+                  onBack: onAppBarBack),
+              body: body(context))));
 }

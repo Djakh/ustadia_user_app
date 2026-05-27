@@ -7,6 +7,9 @@ import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/network/api_url_resolver.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cached_images/avatars/user_avatar.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_remote_data_source.dart';
@@ -28,6 +31,14 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   final UserBloc userBloc = sl<UserBloc>();
+  final GlobalKey profileHeaderKey = GlobalKey(debugLabel: 'dashboard_profile_header');
+  final GlobalKey meetsKey = GlobalKey(debugLabel: 'dashboard_meets');
+  final GlobalKey planKey = GlobalKey(debugLabel: 'dashboard_plan');
+  final GlobalKey gridKey = GlobalKey(debugLabel: 'dashboard_grid');
+  final GlobalKey mockExamKey = GlobalKey(debugLabel: 'dashboard_mock_exam');
+  final GlobalKey reelsKey = GlobalKey(debugLabel: 'dashboard_reels');
+  final GlobalKey assignmentsKey = GlobalKey(debugLabel: 'dashboard_assignments');
+  final GlobalKey leaderboardKey = GlobalKey(debugLabel: 'dashboard_leaderboard');
 
   @override
   void initState() {
@@ -66,6 +77,7 @@ class _DashboardPageState extends State<DashboardPage> {
       ]));
 
   Widget meetsButton() => InkWell(
+      key: meetsKey,
       onTap: goToMeets,
       borderRadius: Style.border16,
       child: Ink(
@@ -96,7 +108,7 @@ class _DashboardPageState extends State<DashboardPage> {
     final profile = state.profile;
     final name = profile == null ? 'User' : '${profile.firstName} ${profile.lastName}'.trim();
     final imageUrl = fullImageUrl(profile?.profilePictureUrl);
-    return Row(children: [
+    return Row(key: profileHeaderKey, children: [
       userAvatar(imageUrl),
       const SizedBox(width: 12),
       Expanded(child: profileInfoTexts(name)),
@@ -112,9 +124,15 @@ class _DashboardPageState extends State<DashboardPage> {
           // const SizedBox(height: 24),
           // const DashboardCalendar(),
           const SizedBox(height: 16),
-          const TodayPlanCard(),
+          KeyedSubtree(key: planKey, child: const TodayPlanCard()),
           const SizedBox(height: 16),
-          const DashboardQuickGridList(),
+          KeyedSubtree(
+              key: gridKey,
+              child: DashboardQuickGridList(
+                  mockExamKey: mockExamKey,
+                  reelsKey: reelsKey,
+                  assignmentsKey: assignmentsKey,
+                  leaderboardKey: leaderboardKey)),
           const SizedBox(height: 18),
           //   const DashboardStrakCard(),
           const SizedBox(height: 80)
@@ -124,6 +142,17 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) => BlocBuilder<UserBloc, UserState>(
       bloc: userBloc,
-      builder: (context, state) => PrimaryBackground(
-          isScrollable: true, backgroundColor: context.cs.surface, child: view(state)));
+      builder: (context, state) => GuidedTutorialPage(
+          pageId: TutorialPageIds.dashboard,
+          steps: TutorialPresets.dashboard(
+              profileKey: profileHeaderKey,
+              meetsKey: meetsKey,
+              planKey: planKey,
+              gridKey: gridKey,
+              mockExamKey: mockExamKey,
+              reelsKey: reelsKey,
+              assignmentsKey: assignmentsKey,
+              leaderboardKey: leaderboardKey),
+          child: PrimaryBackground(
+              isScrollable: true, backgroundColor: context.cs.surface, child: view(state))));
 }
