@@ -3,13 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/practice/data/models/activity_model.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_item_tile_card.dart';
 import 'package:ustadia_user_app/router.dart';
 
-class PracticePage extends StatelessWidget {
+class PracticePage extends StatefulWidget {
   const PracticePage({super.key});
+
+  @override
+  State<PracticePage> createState() => PracticePageState();
+}
+
+class PracticePageState extends State<PracticePage> {
+  final GlobalKey activityListKey = GlobalKey(debugLabel: 'practice_activity_list');
+  final GlobalKey flashcardKey = GlobalKey(debugLabel: 'practice_flashcard');
+  final GlobalKey wordMatchKey = GlobalKey(debugLabel: 'practice_word_match');
+  final GlobalKey buildSentenceKey = GlobalKey(debugLabel: 'practice_build_sentence');
+  final GlobalKey listenTapKey = GlobalKey(debugLabel: 'practice_listen_tap');
+  final GlobalKey monkeyTypeKey = GlobalKey(debugLabel: 'practice_monkey_type');
 
   /// --- Data ---
 
@@ -62,13 +77,25 @@ class PracticePage extends StatelessWidget {
 
   /// --- Widgets ---
 
+  GlobalKey? activityKey(ActivityModel activity) {
+    if (activity.route == flashcardSprintRoute) return flashcardKey;
+    if (activity.route == wordMatchRoute) return wordMatchKey;
+    if (activity.route == buildSentenceRoute) return buildSentenceKey;
+    if (activity.route == listenTapSetsRoute) return listenTapKey;
+    if (activity.route == monkeyTypeRoute) return monkeyTypeKey;
+    return null;
+  }
+
   Widget activityList(BuildContext context) => ListView.separated(
+      key: activityListKey,
       padding: const EdgeInsets.symmetric(vertical: 12),
       itemCount: activities.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       separatorBuilder: (_, __) => const SizedBox(height: 10),
-      itemBuilder: (context, index) => PracticeItemTileCard(activityModel: activities[index]));
+      itemBuilder: (context, index) => KeyedSubtree(
+          key: activityKey(activities[index]),
+          child: PracticeItemTileCard(activityModel: activities[index])));
 
   Widget body(BuildContext context) => PrimaryBackground(
       title: 'Practice'.tr(),
@@ -83,8 +110,17 @@ class PracticePage extends StatelessWidget {
       ));
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => GuidedTutorialPage(
+      pageId: TutorialPageIds.practice,
+      steps: TutorialPresets.practice(
+          listKey: activityListKey,
+          flashcardKey: flashcardKey,
+          wordMatchKey: wordMatchKey,
+          buildSentenceKey: buildSentenceKey,
+          listenTapKey: listenTapKey,
+          monkeyTypeKey: monkeyTypeKey),
+      child: Scaffold(
         backgroundColor: context.cs.surface,
         body: SafeArea(child: body(context)),
-      );
+      ));
 }

@@ -6,6 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:record/record.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
 import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
@@ -340,7 +343,10 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
       });
 
   @override
-  Widget build(BuildContext context) => MultiBlocListener(
+  Widget build(BuildContext context) => GuidedTutorialPage(
+      pageId: '${TutorialPageIds.section}.speaking',
+      steps: TutorialPresets.section(sectionType: 'speaking'),
+      child: MultiBlocListener(
           listeners: [
             BlocListener<FileUploadBloc, FileUploadState>(
                 bloc: uploadBloc, listener: fileUploadListener),
@@ -353,5 +359,5 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
                   title: widget.sectionModel.title,
                   headerTooltipText: widget.sectionModel.title,
                   isScrollable: false,
-                  child: bodyChecker)));
+                  child: bodyChecker))));
 }

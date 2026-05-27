@@ -1,6 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/features/ask_ai/data/models/ai_chat_topic_model.dart';
 import 'package:ustadia_user_app/features/ask_ai/presentation/pages/ask_ai_topics_page.dart';
 import 'package:ustadia_user_app/features/ask_ai/presentation/pages/voice_agent_page.dart';
@@ -240,6 +243,13 @@ SectionModel _resolveSectionModel(GoRouterState state, SectionType type) {
       _placeholderSectionModel(type);
 }
 
+Widget _tutorialPage({
+  required String pageId,
+  required List<TutorialStepModel> steps,
+  required Widget child,
+}) =>
+    GuidedTutorialPage(pageId: pageId, steps: steps, child: child);
+
 final appRouter = GoRouter(
   navigatorKey: _rootKey,
   initialLocation: splashRoute,
@@ -334,7 +344,10 @@ final appRouter = GoRouter(
           if (extra is LearnFlashcardSetModel) {
             return FlashcardSprintPage(flashcardSetModel: extra);
           }
-          return const PracticeFlashcardSetsPage();
+          return _tutorialPage(
+              pageId: TutorialPageIds.practiceSets,
+              steps: TutorialPresets.genericPracticeSets(),
+              child: const PracticeFlashcardSetsPage());
         }),
 
     /// ----------- SHELL (BOTTOM NAV) -----------
@@ -384,7 +397,10 @@ final appRouter = GoRouter(
                                         pendingTaskCount: 0,
                                         completedTaskPercentage: 0,
                                         isCompleted: false));
-                            return AssignmentSectionsPage(params: params);
+                            return _tutorialPage(
+                                pageId: TutorialPageIds.assignmentSections,
+                                steps: TutorialPresets.assignmentSections(),
+                                child: AssignmentSectionsPage(params: params));
                           },
                           routes: [
                             GoRoute(
@@ -399,7 +415,10 @@ final appRouter = GoRouter(
                                           subtitle: 'Practice'.tr(),
                                           type: AssignmentDetailType.listening,
                                           theme: AssignmentThemeCatalog.listening);
-                                  return AssignmentDetailsPage(params: params);
+                                  return _tutorialPage(
+                                      pageId: TutorialPageIds.assignmentDetails,
+                                      steps: TutorialPresets.assignmentDetails(),
+                                      child: AssignmentDetailsPage(params: params));
                                 })
                           ])
                     ])
@@ -485,7 +504,10 @@ final appRouter = GoRouter(
                     if (extra is PracticeWordMatchSetModel) {
                       return PracticeWordMatchPage(set: extra);
                     }
-                    return const PracticeWordMatchSetsPage();
+                    return _tutorialPage(
+                        pageId: TutorialPageIds.practiceSets,
+                        steps: TutorialPresets.genericPracticeSets(),
+                        child: const PracticeWordMatchSetsPage());
                   },
                 ),
                 GoRoute(
@@ -496,19 +518,28 @@ final appRouter = GoRouter(
                     if (extra is PracticeSentenceBuilderSetModel) {
                       return PracticeBuildSentencePage(set: extra);
                     }
-                    return const PracticeBuildSentenceSetsPage();
+                    return _tutorialPage(
+                        pageId: TutorialPageIds.practiceSets,
+                        steps: TutorialPresets.genericPracticeSets(),
+                        child: const PracticeBuildSentenceSetsPage());
                   },
                 ),
                 GoRoute(
                   path: writingAssessmentPath,
                   parentNavigatorKey: _rootKey,
-                  builder: (_, __) => const PracticeWritingAssessmentPage(),
+                  builder: (_, __) => _tutorialPage(
+                      pageId: '${TutorialPageIds.practiceSession}.writing_assessment',
+                      steps: TutorialPresets.genericPracticeSession(),
+                      child: const PracticeWritingAssessmentPage()),
                 ),
                 GoRoute(
                   path: listenTapSetsPath,
                   parentNavigatorKey: _rootKey,
                   builder: (context, state) {
-                    return const PracticeListenTapSetsPage();
+                    return _tutorialPage(
+                        pageId: TutorialPageIds.practiceSets,
+                        steps: TutorialPresets.genericPracticeSets(),
+                        child: const PracticeListenTapSetsPage());
                   },
                 ),
                 GoRoute(
@@ -521,7 +552,10 @@ final appRouter = GoRouter(
                 GoRoute(
                     path: monkeyTypePath,
                     parentNavigatorKey: _rootKey,
-                    builder: (_, __) => const MonkeyTypePracticesPage(),
+                    builder: (_, __) => _tutorialPage(
+                        pageId: TutorialPageIds.practiceSets,
+                        steps: TutorialPresets.genericPracticeSets(),
+                        child: const MonkeyTypePracticesPage()),
                     routes: [
                       GoRoute(
                           path: monkeyTypeSessionPath,
@@ -534,12 +568,18 @@ final appRouter = GoRouter(
                 GoRoute(
                   path: speedMixPath,
                   parentNavigatorKey: _rootKey,
-                  builder: (_, __) => const PracticeSpeedMixStartPage(),
+                  builder: (_, __) => _tutorialPage(
+                      pageId: TutorialPageIds.practiceSets,
+                      steps: TutorialPresets.genericPracticeSets(),
+                      child: const PracticeSpeedMixStartPage()),
                   routes: [
                     GoRoute(
                       path: speedMixPlayPath,
                       parentNavigatorKey: _rootKey,
-                      builder: (_, __) => const PracticeSpeedMixPlayPage(),
+                      builder: (_, __) => _tutorialPage(
+                          pageId: '${TutorialPageIds.practiceSession}.speed_mix',
+                          steps: TutorialPresets.genericPracticeSession(),
+                          child: const PracticeSpeedMixPlayPage()),
                     ),
                     GoRoute(
                       path: speedMixResultPath,
@@ -583,12 +623,18 @@ final appRouter = GoRouter(
                 GoRoute(
                   path: leaderboardPath,
                   parentNavigatorKey: _rootKey,
-                  builder: (_, __) => const LeaderboardPage(),
+                  builder: (_, __) => _tutorialPage(
+                      pageId: TutorialPageIds.leaderboard,
+                      steps: TutorialPresets.leaderboard(),
+                      child: const LeaderboardPage()),
                 ),
                 GoRoute(
                   path: notificationsPath,
                   parentNavigatorKey: _rootKey,
-                  builder: (_, __) => const NotificationsPage(),
+                  builder: (_, __) => _tutorialPage(
+                      pageId: TutorialPageIds.notifications,
+                      steps: TutorialPresets.notifications(),
+                      child: const NotificationsPage()),
                 ),
                 GoRoute(
                   path: settingsPath,
@@ -598,12 +644,18 @@ final appRouter = GoRouter(
                     GoRoute(
                       path: editAccountPath,
                       parentNavigatorKey: _rootKey,
-                      builder: (_, __) => const EditAccountPage(),
+                      builder: (_, __) => _tutorialPage(
+                          pageId: TutorialPageIds.editAccount,
+                          steps: TutorialPresets.editAccount(),
+                          child: const EditAccountPage()),
                     ),
                     GoRoute(
                       path: settingsNotificationsPath,
                       parentNavigatorKey: _rootKey,
-                      builder: (_, __) => const SettingsNotificationsPage(),
+                      builder: (_, __) => _tutorialPage(
+                          pageId: '${TutorialPageIds.settings}.notifications',
+                          steps: TutorialPresets.notifications(),
+                          child: const SettingsNotificationsPage()),
                     ),
                     GoRoute(
                       path: settingsLanguagePath,

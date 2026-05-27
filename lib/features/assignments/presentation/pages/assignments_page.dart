@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/loading/shimmer_box.dart';
@@ -25,6 +28,8 @@ class AssignmentsPage extends StatefulWidget {
 class AssignmentsPageState extends State<AssignmentsPage> {
   int selectedTabIndex = 0;
   final AssignmentsBloc assignmentsBloc = sl<AssignmentsBloc>();
+  final GlobalKey tabsKey = GlobalKey(debugLabel: 'assignments_tabs');
+  final GlobalKey listKey = GlobalKey(debugLabel: 'assignments_list');
 
   @override
   void initState() {
@@ -62,10 +67,12 @@ class AssignmentsPageState extends State<AssignmentsPage> {
     if (result == true) assignmentsBloc.add(const AssignmentsRequested());
   }
 
-  Widget tabSelector() => SegmentedControl(
-      labels: ['active'.tr(), 'Completed'.tr()],
-      selectedIndex: selectedTabIndex,
-      onChanged: onSelectedTabIndex);
+  Widget tabSelector() => KeyedSubtree(
+      key: tabsKey,
+      child: SegmentedControl(
+          labels: ['active'.tr(), 'Completed'.tr()],
+          selectedIndex: selectedTabIndex,
+          onChanged: onSelectedTabIndex));
 
   Widget sectionHeader(BuildContext context, String title) =>
       Text(title.tr(), style: Style.body2w6(context));
@@ -129,14 +136,17 @@ class AssignmentsPageState extends State<AssignmentsPage> {
                 const SizedBox(height: 24),
                 tabSelector(),
                 const SizedBox(height: 20),
-                if (selectedTabIndex == 0)
-                  activeTabView(context, data)
-                else
-                  completedTabView(context, data),
+                KeyedSubtree(
+                    key: listKey,
+                    child: selectedTabIndex == 0
+                        ? activeTabView(context, data)
+                        : completedTabView(context, data)),
                 const SizedBox(height: 80)
               ]))));
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(backgroundColor: context.cs.surface, body: SafeArea(child: body(context)));
+  Widget build(BuildContext context) => GuidedTutorialPage(
+      pageId: TutorialPageIds.assignments,
+      steps: TutorialPresets.assignments(tabsKey: tabsKey, listKey: listKey),
+      child: Scaffold(backgroundColor: context.cs.surface, body: SafeArea(child: body(context))));
 }

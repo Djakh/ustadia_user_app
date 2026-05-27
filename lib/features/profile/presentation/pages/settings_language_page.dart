@@ -2,6 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/common/data/models/user_profile_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
@@ -22,6 +25,7 @@ class SettingsLanguagePage extends StatefulWidget {
 
 class SettingsLanguagePageState extends State<SettingsLanguagePage> {
   late String selectedKey;
+  final GlobalKey languageListKey = GlobalKey(debugLabel: 'settings_language_list');
 
   List<SettingsLanguageModel> items = [
     SettingsLanguageModel(
@@ -71,12 +75,15 @@ class SettingsLanguagePageState extends State<SettingsLanguagePage> {
 
   Column view(BuildContext context) => Column(children: [
         const SizedBox(height: 12),
-        ItemListBox(child: languageItemList(context)),
+        KeyedSubtree(key: languageListKey, child: ItemListBox(child: languageItemList(context))),
         const SizedBox(height: 24)
       ]);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-      body:
-          PrimaryBackground(title: 'Language'.tr().tr(), isScrollable: true, child: view(context)));
+  Widget build(BuildContext context) => GuidedTutorialPage(
+      pageId: TutorialPageIds.language,
+      steps: TutorialPresets.language(listKey: languageListKey),
+      child: Scaffold(
+          body: PrimaryBackground(
+              title: 'Language'.tr().tr(), isScrollable: true, child: view(context))));
 }

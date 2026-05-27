@@ -46,6 +46,9 @@ class LoginPageState extends State<LoginPage> {
   final resetEmailController = TextEditingController();
   final resetOtpController = TextEditingController();
   final resetPasswordController = TextEditingController();
+  final phoneFocusNode = FocusNode();
+  final emailFocusNode = FocusNode();
+  final passwordFocusNode = FocusNode();
   bool rememberMe = false;
   bool showError = false;
   bool showEmailError = false;
@@ -83,6 +86,9 @@ class LoginPageState extends State<LoginPage> {
     resetEmailController.dispose();
     resetOtpController.dispose();
     resetPasswordController.dispose();
+    phoneFocusNode.dispose();
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
     authLoginBloc.close();
     authPasswordBloc.close();
     super.dispose();
@@ -168,6 +174,7 @@ class LoginPageState extends State<LoginPage> {
   void authLoginListener(BuildContext context, AuthLoginState state) {
     if (mounted) setState(() {});
     if (state.status == Status.success) {
+      hideKeyboard();
       saveRememberedCredentials();
       isAwaitingUser = true;
       userBloc.add(const UserProfileRequested());
@@ -186,13 +193,26 @@ class LoginPageState extends State<LoginPage> {
   bool get isPasswordValid => passwordController.text.trim().isNotEmpty;
   String get fullPhoneNumber => '+998${phoneController.text.replaceAll(RegExp(r'\D'), '')}';
 
-  void goToOtp() => context.push(otpRoute,
-      extra: isEmailLogin ? emailController.text.trim() : '+998 ${phoneController.text}');
+  void goToOtp() {
+    hideKeyboard();
+    context.push(otpRoute,
+        extra: isEmailLogin ? emailController.text.trim() : '+998 ${phoneController.text}');
+  }
 
-  void goToHome() => context.go(dashboardRoute);
-  void goToIntroSurvey() => context.go(introSurveyRoute);
+  void goToHome() {
+    hideKeyboard();
+    context.go(dashboardRoute);
+  }
 
-  void goToSignup() => context.go(signUpRoute);
+  void goToIntroSurvey() {
+    hideKeyboard();
+    context.go(introSurveyRoute);
+  }
+
+  void goToSignup() {
+    hideKeyboard();
+    context.go(signUpRoute);
+  }
 
   void toggleRemember(bool value) {
     setState(() => rememberMe = value);
@@ -200,6 +220,7 @@ class LoginPageState extends State<LoginPage> {
   }
 
   void onLogin() {
+    hideKeyboard();
     if (isEmailLogin) {
       final emailValid = isEmailValid;
       final passwordValid = isPasswordValid;
@@ -231,8 +252,10 @@ class LoginPageState extends State<LoginPage> {
         phoneNumber: fullPhoneNumber, password: passwordController.text.trim()));
   }
 
+  void hideKeyboard() => FocusManager.instance.primaryFocus?.unfocus();
+
   void toggleLoginMethod() {
-    FocusScope.of(context).unfocus();
+    hideKeyboard();
     setState(() {
       isEmailLogin = !isEmailLogin;
       showError = false;
@@ -275,6 +298,7 @@ class LoginPageState extends State<LoginPage> {
   /// --- Showed Widgets ---
 
   Future<void> showForgotPasswordDialog(AuthContactType type) async {
+    hideKeyboard();
     final controller =
         type == AuthContactType.email ? forgotEmailController : forgotPhoneController;
     controller.text =
@@ -304,6 +328,7 @@ class LoginPageState extends State<LoginPage> {
   }
 
   Future<void> showResetPasswordDialog(AuthContactType type, String contact) async {
+    hideKeyboard();
     final contactController =
         type == AuthContactType.email ? resetEmailController : resetPhoneController;
     contactController.text = contact;
@@ -361,26 +386,35 @@ class LoginPageState extends State<LoginPage> {
 
   Widget get phoneTextField => InputField.phone(
       controller: phoneController,
+      focusNode: phoneFocusNode,
       label: 'Phone number'.tr(),
+      textInputAction: TextInputAction.next,
       errorText: showError ? 'Phone number is invalid.'.tr() : null,
-      onChanged: (value) => setState(() => showError = false));
+      onChanged: (value) => setState(() => showError = false),
+      onSubmitted: (_) => passwordFocusNode.requestFocus());
 
   Widget get emailTextField => InputField.email(
       controller: emailController,
+      focusNode: emailFocusNode,
       label: 'Email'.tr(),
       hint: 'e.g. name@email.com'.tr(),
+      textInputAction: TextInputAction.next,
       errorText: showEmailError ? 'Email is invalid.'.tr() : null,
-      onChanged: (value) => setState(() => showEmailError = false));
+      onChanged: (value) => setState(() => showEmailError = false),
+      onSubmitted: (_) => passwordFocusNode.requestFocus());
 
   Widget get passwordField => InputField.password(
       controller: passwordController,
+      focusNode: passwordFocusNode,
       label: 'Password'.tr(),
       hint: 'Enter your password'.tr(),
+      textInputAction: TextInputAction.done,
       obscure: !passwordVisible,
       showVisibilityToggle: true,
       onToggleVisibility: () => setState(() => passwordVisible = !passwordVisible),
       errorText: showPasswordError ? 'Password is required.'.tr() : null,
-      onChanged: (value) => setState(() => showPasswordError = false));
+      onChanged: (value) => setState(() => showPasswordError = false),
+      onSubmitted: (_) => onLogin());
 
   Widget get divider => Row(children: [
         Expanded(child: Divider(color: context.cs.onTertiary.withValues(alpha: 0.4))),

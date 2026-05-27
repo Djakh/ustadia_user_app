@@ -146,11 +146,11 @@ class AssignmentSectionsPageState extends State<AssignmentSectionsPage> {
           ])));
 
   @override
-  Widget build(BuildContext context) => WillPopScope(
-      onWillPop: () async {
-        if (!context.mounted) return false;
+  Widget build(BuildContext context) => PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop || !context.mounted) return;
         closePage();
-        return false;
       },
       child: Scaffold(backgroundColor: context.cs.surface, body: SafeArea(child: body(context))));
 }

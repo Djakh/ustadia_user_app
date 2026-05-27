@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/listviews/primary_list_view.dart';
@@ -23,6 +26,7 @@ class LearnLessonsPage extends StatefulWidget {
 
 class LearnLessonsPageState extends State<LearnLessonsPage> {
   final LearnLessonsBloc lessonsBloc = sl<LearnLessonsBloc>();
+  final GlobalKey lessonsListKey = GlobalKey(debugLabel: 'learn_lessons_list');
   bool shouldRefreshParent = false;
 
   @override
@@ -70,21 +74,25 @@ class LearnLessonsPageState extends State<LearnLessonsPage> {
             itemHeight: 112,
             padding: Style.paddingPrimary,
             borderRadius: Style.border20),
-        builder: (context, lessons) => lessonsList(context, lessons),
+        builder: (context, lessons) =>
+            KeyedSubtree(key: lessonsListKey, child: lessonsList(context, lessons)),
       );
 
   @override
-  Widget build(BuildContext context) => WillPopScope(
-      onWillPop: () async {
-        if (!context.mounted) return false;
+  Widget build(BuildContext context) => PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop || !context.mounted) return;
         context.pop(shouldRefreshParent ? true : null);
-        return false;
       },
-      child: Scaffold(
-          backgroundColor: context.cs.surface,
-          body: PrimaryBackground(
-              title: 'Lessons'.tr(),
-              isScrollable: false,
-              onBack: () => context.pop(shouldRefreshParent ? true : null),
-              child: contentChecker)));
+      child: GuidedTutorialPage(
+          pageId: TutorialPageIds.lessons,
+          steps: TutorialPresets.lessons(listKey: lessonsListKey),
+          child: Scaffold(
+              backgroundColor: context.cs.surface,
+              body: PrimaryBackground(
+                  title: 'Lessons'.tr(),
+                  isScrollable: false,
+                  onBack: () => context.pop(shouldRefreshParent ? true : null),
+                  child: contentChecker))));
 }

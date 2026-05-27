@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
 import 'package:ustadia_user_app/features/practice/data/models/practice_word_match_set_model.dart';
@@ -23,6 +26,7 @@ class PracticeWordMatchPage extends StatefulWidget {
 class _PracticeWordMatchPageState extends State<PracticeWordMatchPage> {
   final PracticeWordMatchStatusBloc statusBloc = sl<PracticeWordMatchStatusBloc>();
   final ProfileStatisticsStore statisticsStore = sl<ProfileStatisticsStore>();
+  final GlobalKey cardsKey = GlobalKey(debugLabel: 'word_match_cards');
   bool showResult = false;
   int wrongAttempts = 0;
 
@@ -62,31 +66,36 @@ class _PracticeWordMatchPageState extends State<PracticeWordMatchPage> {
       title: widget.set.title.isEmpty ? 'Word match' : widget.set.title,
       child: Column(children: [
         const SizedBox(height: 24),
-        PracticeWordMatchContent(
-            sources: sources,
-            targets: targets,
-            onCompleted: submitCompleted,
-            onWrongAttempt: onWrongAttempt),
+        KeyedSubtree(
+            key: cardsKey,
+            child: PracticeWordMatchContent(
+                sources: sources,
+                targets: targets,
+                onCompleted: submitCompleted,
+                onWrongAttempt: onWrongAttempt)),
       ]));
 
   @override
-  Widget build(BuildContext context) => BlocListener<PracticeWordMatchStatusBloc,
-          PracticeWordMatchStatusState>(
-      bloc: statusBloc,
-      listener: (context, state) {
-        if (state.status.isError && state.errorMessage != null) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-        }
-        if (state.status.isSuccess) {
-          statisticsStore.refresh();
-          setState(() => showResult = true);
-        }
-      },
-      child: Scaffold(
-          backgroundColor: context.cs.surface,
-          body: SafeArea(
-              child: showResult
-                  ? QuizResultComponent(all: totalPairs, correctOnes: totalPairs)
-                  : view)));
+  Widget build(BuildContext context) =>
+      BlocListener<PracticeWordMatchStatusBloc, PracticeWordMatchStatusState>(
+          bloc: statusBloc,
+          listener: (context, state) {
+            if (state.status.isError && state.errorMessage != null) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+            }
+            if (state.status.isSuccess) {
+              statisticsStore.refresh();
+              setState(() => showResult = true);
+            }
+          },
+          child: Scaffold(
+              backgroundColor: context.cs.surface,
+              body: SafeArea(
+                  child: showResult
+                      ? QuizResultComponent(all: totalPairs, correctOnes: totalPairs)
+                      : GuidedTutorialPage(
+                          pageId: '${TutorialPageIds.practiceSession}.word_match',
+                          steps: TutorialPresets.wordMatchPractice(cardsKey: cardsKey),
+                          child: view))));
 }

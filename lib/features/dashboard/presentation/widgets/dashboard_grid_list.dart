@@ -11,7 +11,13 @@ import 'package:ustadia_user_app/router.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class DashboardQuickGridList extends StatelessWidget {
-  const DashboardQuickGridList({super.key});
+  final GlobalKey? mockExamKey;
+  final GlobalKey? reelsKey;
+  final GlobalKey? assignmentsKey;
+  final GlobalKey? leaderboardKey;
+
+  const DashboardQuickGridList(
+      {super.key, this.mockExamKey, this.reelsKey, this.assignmentsKey, this.leaderboardKey});
 
   // exact design sizes
   static const double cardWidth = 174;
@@ -43,6 +49,7 @@ class DashboardQuickGridList extends StatelessWidget {
 
   Widget lessonAndChat(BuildContext context) => Column(children: [
         DashboardGridCard(
+            key: mockExamKey,
             title: 'Mock exam'.tr(),
             subtitle: 'IELTS mock tests'.tr(),
             cardColor: AppColors.orangeBE,
@@ -51,6 +58,7 @@ class DashboardQuickGridList extends StatelessWidget {
             onTap: () => goToMockExam(context)),
         const SizedBox(height: 12),
         DashboardGridCard(
+            key: reelsKey,
             title: 'Reels'.tr(),
             subtitle: 'Watch lesson clips'.tr(),
             cardColor: AppColors.greenE0,
@@ -61,6 +69,7 @@ class DashboardQuickGridList extends StatelessWidget {
 
   Widget chatAndLideBoard(BuildContext context, UserProfileModel? profile) => Column(children: [
         DashboardGridCard(
+            key: assignmentsKey,
             title: 'Assignments'.tr(),
             subtitle: 'Consolidate the acquired knowledge'.tr(),
             cardColor: AppColors.purpleFF,
@@ -70,6 +79,7 @@ class DashboardQuickGridList extends StatelessWidget {
             isEnabled: assignmentsEnabled(profile)),
         const SizedBox(height: 12),
         DashboardGridCard(
+            key: leaderboardKey,
             title: 'Leaderboard'.tr(),
             subtitle: 'Top 10 this week'.tr(),
             cardColor: AppColors.blueFB,

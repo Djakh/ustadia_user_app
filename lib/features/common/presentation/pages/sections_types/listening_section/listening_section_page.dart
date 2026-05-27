@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_bloc.dart';
@@ -149,18 +152,22 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-      backgroundColor: context.cs.surface,
-      body: PrimaryBackground(
-          header: header,
-          headerTooltipText: widget.sectionModel.title,
-          padding: stage == ListeningSectionStage.quiz ? EdgeInsets.zero : null,
-          margin:
-              stage == ListeningSectionStage.quiz ? const EdgeInsets.fromLTRB(8, 8, 8, 0) : null,
-          applyBottomSafeArea: stage != ListeningSectionStage.quiz,
-          isHeader: stage != ListeningSectionStage.result,
-          isScrollable: false,
-          alwaysScrollable: false,
-          child: BlocBuilder<SectionDetailBloc, SectionDetailState>(
-              bloc: detailBloc, builder: (context, state) => body(context, state))));
+  Widget build(BuildContext context) => GuidedTutorialPage(
+      pageId: '${TutorialPageIds.section}.listening',
+      steps: TutorialPresets.section(sectionType: 'listening'),
+      child: Scaffold(
+          backgroundColor: context.cs.surface,
+          body: PrimaryBackground(
+              header: header,
+              headerTooltipText: widget.sectionModel.title,
+              padding: stage == ListeningSectionStage.quiz ? EdgeInsets.zero : null,
+              margin: stage == ListeningSectionStage.quiz
+                  ? const EdgeInsets.fromLTRB(8, 8, 8, 0)
+                  : null,
+              applyBottomSafeArea: stage != ListeningSectionStage.quiz,
+              isHeader: stage != ListeningSectionStage.result,
+              isScrollable: false,
+              alwaysScrollable: false,
+              child: BlocBuilder<SectionDetailBloc, SectionDetailState>(
+                  bloc: detailBloc, builder: (context, state) => body(context, state)))));
 }

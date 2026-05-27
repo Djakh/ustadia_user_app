@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
@@ -28,6 +31,12 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
   final MonkeyTypeSessionBloc sessionBloc = sl<MonkeyTypeSessionBloc>();
   final TextEditingController controller = TextEditingController();
   final Stopwatch stopwatch = Stopwatch();
+  final GlobalKey progressKey = GlobalKey(debugLabel: 'monkey_type_progress');
+  final GlobalKey statsKey = GlobalKey(debugLabel: 'monkey_type_stats');
+  final GlobalKey targetTextKey = GlobalKey(debugLabel: 'monkey_type_target_text');
+  final GlobalKey inputKey = GlobalKey(debugLabel: 'monkey_type_input');
+  final GlobalKey submitKey = GlobalKey(debugLabel: 'monkey_type_submit');
+  final GlobalKey navigationKey = GlobalKey(debugLabel: 'monkey_type_navigation');
   Timer? timer;
   int activeTextIndex = 0;
   int elapsedSeconds = 0;
@@ -183,7 +192,9 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
             style: Style.bodyw7(context))
       ]);
 
-  Widget navigationButtons(List<MonkeyTypeTextModel> texts) => Row(children: [
+  Widget navigationButtons(List<MonkeyTypeTextModel> texts) => KeyedSubtree(
+      key: navigationKey,
+      child: Row(children: [
         Expanded(
             child: Button.border(
                 onTap: previousText,
@@ -203,7 +214,7 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
                   const SizedBox(width: 4),
                   const Icon(Icons.chevron_right_rounded, size: 20),
                 ])))
-      ]);
+      ]));
 
   Widget sessionView(
       BuildContext context, List<MonkeyTypeTextModel> texts, MonkeyTypeSessionState state) {
@@ -215,48 +226,54 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
       Text(widget.practice.description,
           style: Style.small3w4(context, color: TextColorRole.greyColor)),
       const SizedBox(height: 16),
-      textProgress(texts),
+      KeyedSubtree(key: progressKey, child: textProgress(texts)),
       const SizedBox(height: 10),
-      Row(children: [
-        statBox(context, 'WPM'.tr(), wpm(typed).toStringAsFixed(0)),
-        const SizedBox(width: 8),
-        statBox(context, 'Accuracy'.tr(), '${accuracy(typed, target).toStringAsFixed(0)}%'),
-        const SizedBox(width: 8),
-        statBox(context, 'Time'.tr(), '${elapsedSeconds}s')
-      ]),
+      KeyedSubtree(
+          key: statsKey,
+          child: Row(children: [
+            statBox(context, 'WPM'.tr(), wpm(typed).toStringAsFixed(0)),
+            const SizedBox(width: 8),
+            statBox(context, 'Accuracy'.tr(), '${accuracy(typed, target).toStringAsFixed(0)}%'),
+            const SizedBox(width: 8),
+            statBox(context, 'Time'.tr(), '${elapsedSeconds}s')
+          ])),
       const SizedBox(height: 16),
-      targetTextView(target, typed),
+      KeyedSubtree(key: targetTextKey, child: targetTextView(target, typed)),
       const SizedBox(height: 14),
-      TextField(
-          controller: controller,
-          minLines: 5,
-          maxLines: 8,
-          enabled: !state.submitStatus.isLoading && !hasSubmitted,
-          decoration: InputDecoration(
-              hintText: 'Start typing'.tr(),
-              filled: true,
-              fillColor: context.cs.surface,
-              suffixIcon: controller.text.isEmpty && !hasSubmitted
-                  ? null
-                  : IconButton(
-                      tooltip: 'Clear'.tr(),
-                      onPressed: resetCurrentText,
-                      icon: const Icon(Icons.cancel_rounded)),
-              border: OutlineInputBorder(borderRadius: Style.border20),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: Style.border20,
-                  borderSide: const BorderSide(color: AppColors.grayF4)))),
+      KeyedSubtree(
+          key: inputKey,
+          child: TextField(
+              controller: controller,
+              minLines: 5,
+              maxLines: 8,
+              enabled: !state.submitStatus.isLoading && !hasSubmitted,
+              decoration: InputDecoration(
+                  hintText: 'Start typing'.tr(),
+                  filled: true,
+                  fillColor: context.cs.surface,
+                  suffixIcon: controller.text.isEmpty && !hasSubmitted
+                      ? null
+                      : IconButton(
+                          tooltip: 'Clear'.tr(),
+                          onPressed: resetCurrentText,
+                          icon: const Icon(Icons.cancel_rounded)),
+                  border: OutlineInputBorder(borderRadius: Style.border20),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: Style.border20,
+                      borderSide: const BorderSide(color: AppColors.grayF4))))),
       const SizedBox(height: 14),
       if (state.submitStatus.isSuccess && hasSubmitted) resultPanel(context, typed, target),
       if (state.submitStatus.isError && state.submitErrorMessage != null)
         Text(state.submitErrorMessage!,
             style: Style.small3w4(context).copyWith(color: AppColors.error)),
       const SizedBox(height: 14),
-      Button.primary(
-          onTap: () => hasSubmitted && !isLast ? nextText(texts) : submitAnswer(texts),
-          isLoading: state.submitStatus.isLoading,
-          isAvialable: typed.trim().isNotEmpty,
-          text: hasSubmitted && !isLast ? 'Next text'.tr() : 'Submit'.tr()),
+      KeyedSubtree(
+          key: submitKey,
+          child: Button.primary(
+              onTap: () => hasSubmitted && !isLast ? nextText(texts) : submitAnswer(texts),
+              isLoading: state.submitStatus.isLoading,
+              isAvialable: typed.trim().isNotEmpty,
+              text: hasSubmitted && !isLast ? 'Next text'.tr() : 'Submit'.tr())),
       const SizedBox(height: 10),
       navigationButtons(texts),
       const SizedBox(height: 80),
@@ -278,5 +295,14 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.cs.surface,
-      body: PrimaryBackground(title: widget.practice.title, child: contentChecker));
+      body: GuidedTutorialPage(
+          pageId: '${TutorialPageIds.practiceSession}.monkey_type',
+          steps: TutorialPresets.monkeyTypePractice(
+              progressKey: progressKey,
+              statsKey: statsKey,
+              targetTextKey: targetTextKey,
+              inputKey: inputKey,
+              submitKey: submitKey,
+              navigationKey: navigationKey),
+          child: PrimaryBackground(title: widget.practice.title, child: contentChecker)));
 }

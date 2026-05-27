@@ -13,6 +13,7 @@ class InputField extends StatelessWidget {
   final String? errorText;
   final bool enabled;
   final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSubmitted;
   final TextInputAction? textInputAction;
   final FocusNode? focusNode;
   final bool? obscure;
@@ -33,6 +34,7 @@ class InputField extends StatelessWidget {
       this.errorText,
       this.enabled = true,
       this.onChanged,
+      this.onSubmitted,
       this.textInputAction,
       this.focusNode,
       this.obscure,
@@ -54,6 +56,7 @@ class InputField extends StatelessWidget {
       this.errorText,
       this.enabled = true,
       this.onChanged,
+      this.onSubmitted,
       this.textInputAction,
       this.focusNode,
       this.obscure,
@@ -75,6 +78,7 @@ class InputField extends StatelessWidget {
       this.errorText,
       this.enabled = true,
       this.onChanged,
+      this.onSubmitted,
       this.textInputAction,
       this.focusNode,
       this.obscure,
@@ -96,6 +100,7 @@ class InputField extends StatelessWidget {
       this.errorText,
       this.enabled = true,
       this.onChanged,
+      this.onSubmitted,
       this.textInputAction,
       this.focusNode,
       this.obscure,
@@ -117,6 +122,7 @@ class InputField extends StatelessWidget {
       this.errorText,
       this.enabled = true,
       this.onChanged,
+      this.onSubmitted,
       this.textInputAction = TextInputAction.newline,
       this.focusNode,
       this.showVisibilityToggle = false,
@@ -226,7 +232,9 @@ class InputField extends StatelessWidget {
             style: Style.small3w4(context),
             maxLines: maxLines ?? (isPassword ? 1 : null),
             decoration: decoration(context),
-            onChanged: onChanged),
+            onChanged: onChanged,
+            onSubmitted: onSubmitted,
+            onTapOutside: (_) => FocusScope.of(context).unfocus()),
         if (hasError) error(context)
       ]);
 }

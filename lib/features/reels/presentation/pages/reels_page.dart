@@ -5,6 +5,9 @@ import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/network/api_url_resolver.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_remote_data_source.dart';
@@ -216,10 +219,13 @@ class _ReelsPageState extends State<ReelsPage> with WidgetsBindingObserver {
       builder: (context, posts) => reelsView(context, posts, reelsBloc.state));
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-      backgroundColor: AppColors.black,
-      body: BlocConsumer<ReelsBloc, ReelsState>(
-          bloc: reelsBloc,
-          listener: listenState,
-          builder: (context, state) => Stack(children: [contentChecker, topBar(context)])));
+  Widget build(BuildContext context) => GuidedTutorialPage(
+      pageId: TutorialPageIds.reels,
+      steps: TutorialPresets.reels(),
+      child: Scaffold(
+          backgroundColor: AppColors.black,
+          body: BlocConsumer<ReelsBloc, ReelsState>(
+              bloc: reelsBloc,
+              listener: listenState,
+              builder: (context, state) => Stack(children: [contentChecker, topBar(context)]))));
 }

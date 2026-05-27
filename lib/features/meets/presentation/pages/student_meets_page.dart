@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/listviews/paginated_list_view.dart';
@@ -208,7 +211,10 @@ class StudentMeetsPageState extends State<StudentMeetsPage> {
       ]);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-      backgroundColor: context.cs.surface,
-      body: PrimaryBackground(title: 'Meets'.tr(), isScrollable: false, child: body(context)));
+  Widget build(BuildContext context) => GuidedTutorialPage(
+      pageId: TutorialPageIds.meets,
+      steps: TutorialPresets.meets(),
+      child: Scaffold(
+          backgroundColor: context.cs.surface,
+          body: PrimaryBackground(title: 'Meets'.tr(), isScrollable: false, child: body(context))));
 }

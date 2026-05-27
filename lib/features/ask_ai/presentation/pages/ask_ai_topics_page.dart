@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/loading/shimmer_list.dart';
@@ -22,6 +25,7 @@ class AskAiTopicsPage extends StatefulWidget {
 
 class _AskAiTopicsPageState extends State<AskAiTopicsPage> {
   bool isOpeningVoiceAgent = false;
+  final GlobalKey topicsKey = GlobalKey(debugLabel: 'ask_ai_topics');
 
   /// --- Life cycle ---
 
@@ -52,6 +56,7 @@ class _AskAiTopicsPageState extends State<AskAiTopicsPage> {
   /// --- Widgets ---
 
   Widget topicsList(BuildContext context, List<AiChatTopicModel> topics) => Column(
+      key: topicsKey,
       children: topics
           .map((topic) => Padding(
               padding: const EdgeInsets.only(bottom: 12),
@@ -60,24 +65,27 @@ class _AskAiTopicsPageState extends State<AskAiTopicsPage> {
           .toList());
 
   @override
-  Widget build(BuildContext context) => PrimaryBackground(
-      isScrollable: true,
-      backgroundColor: context.cs.surface,
-      child: BlocStatusView<AskAiBloc, AskAiState, List<AiChatTopicModel>>(
-          bloc: context.read<AskAiBloc>(),
-          statusOf: (s) => s.topicsStatus,
-          errorOf: (s) => s.errorMessage,
-          data: (s) => s.topics,
-          isEmpty: (data) => data.isEmpty,
-          empty: Center(child: Text('No topics found'.tr())),
-          loading: ShimmerList(
-              itemCount: 4,
-              itemHeight: 92,
-              padding: Style.paddingPrimary,
-              borderRadius: Style.border20),
-          builder: (context, topics) => Column(children: [
-                const SizedBox(height: 24),
-                topicsList(context, topics),
-                const SizedBox(height: 80)
-              ])));
+  Widget build(BuildContext context) => GuidedTutorialPage(
+      pageId: TutorialPageIds.askAi,
+      steps: TutorialPresets.askAi(topicsKey: topicsKey),
+      child: PrimaryBackground(
+          isScrollable: true,
+          backgroundColor: context.cs.surface,
+          child: BlocStatusView<AskAiBloc, AskAiState, List<AiChatTopicModel>>(
+              bloc: context.read<AskAiBloc>(),
+              statusOf: (s) => s.topicsStatus,
+              errorOf: (s) => s.errorMessage,
+              data: (s) => s.topics,
+              isEmpty: (data) => data.isEmpty,
+              empty: Center(child: Text('No topics found'.tr())),
+              loading: ShimmerList(
+                  itemCount: 4,
+                  itemHeight: 92,
+                  padding: Style.paddingPrimary,
+                  borderRadius: Style.border20),
+              builder: (context, topics) => Column(children: [
+                    const SizedBox(height: 24),
+                    topicsList(context, topics),
+                    const SizedBox(height: 80)
+                  ]))));
 }

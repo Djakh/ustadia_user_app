@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
@@ -28,6 +31,7 @@ class LearnUnitsPage extends StatefulWidget {
 
 class LearnUnitsPageState extends State<LearnUnitsPage> {
   final LearnUnitsBloc unitsBloc = sl<LearnUnitsBloc>();
+  final GlobalKey unitsListKey = GlobalKey(debugLabel: 'learn_units_list');
   bool shouldRefreshParent = false;
 
   /// --- Life cycle ---
@@ -82,7 +86,7 @@ class LearnUnitsPageState extends State<LearnUnitsPage> {
         const SizedBox(height: 24),
         subtitleCard,
         const SizedBox(height: 12),
-        grid(context, units)
+        KeyedSubtree(key: unitsListKey, child: grid(context, units))
       ]));
 
   Widget get contentChecker =>
@@ -116,16 +120,20 @@ class LearnUnitsPageState extends State<LearnUnitsPage> {
       );
 
   @override
-  Widget build(BuildContext context) => WillPopScope(
-      onWillPop: () async {
-        if (!context.mounted) return false;
+  Widget build(BuildContext context) => PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop || !context.mounted) return;
         context.pop(shouldRefreshParent ? true : null);
-        return false;
       },
-      child: Scaffold(
-          backgroundColor: context.cs.surface,
-          body: PrimaryBackground(
-              title: widget.learnLessonModel.name.isEmpty ? 'Learn' : widget.learnLessonModel.name,
-              onBack: () => context.pop(shouldRefreshParent ? true : null),
-              child: contentChecker)));
+      child: GuidedTutorialPage(
+          pageId: TutorialPageIds.lessonUnits,
+          steps: TutorialPresets.lessonUnits(listKey: unitsListKey),
+          child: Scaffold(
+              backgroundColor: context.cs.surface,
+              body: PrimaryBackground(
+                  title:
+                      widget.learnLessonModel.name.isEmpty ? 'Learn' : widget.learnLessonModel.name,
+                  onBack: () => context.pop(shouldRefreshParent ? true : null),
+                  child: contentChecker))));
 }

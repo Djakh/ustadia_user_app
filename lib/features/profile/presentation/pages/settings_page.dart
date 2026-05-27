@@ -5,6 +5,9 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/services/session_logout_service.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:ustadia_user_app/features/common/data/datasources/user_remote_data_source.dart';
@@ -20,8 +23,15 @@ import 'package:ustadia_user_app/features/profile/presentation/widgets/settings/
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+
+  @override
+  State<SettingsPage> createState() => SettingsPageState();
+}
+
+class SettingsPageState extends State<SettingsPage> {
+  final GlobalKey settingsListKey = GlobalKey(debugLabel: 'settings_list');
 
   List<SettingsItemModel> get mainItems => [
         SettingsItemModel(title: 'Account'.tr(), iconData: Icons.person),
@@ -86,7 +96,7 @@ class SettingsPage extends StatelessWidget {
   }
 
   /// --- Widgets ---
-  
+
   Widget itemsList(BuildContext context) => BlocBuilder<UserBloc, UserState>(
       builder: (context, state) => state.profile == null
           ? const SizedBox()
@@ -113,15 +123,18 @@ class SettingsPage extends StatelessWidget {
       child: SettingsListItem(item: logoutItem, onTap: () => showLogoutDialog(context)));
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-      body: PrimaryBackground(
-          title: 'Settings'.tr(),
-          isScrollable: true,
-          child: Column(children: [
-            const SizedBox(height: 12),
-            ItemListBox(child: itemsList(context)),
-            const SizedBox(height: 16),
-            removeSettingsItem(context),
-            const SizedBox(height: 24)
-          ])));
+  Widget build(BuildContext context) => GuidedTutorialPage(
+      pageId: TutorialPageIds.settings,
+      steps: TutorialPresets.settings(listKey: settingsListKey),
+      child: Scaffold(
+          body: PrimaryBackground(
+              title: 'Settings'.tr(),
+              isScrollable: true,
+              child: Column(children: [
+                const SizedBox(height: 12),
+                KeyedSubtree(key: settingsListKey, child: ItemListBox(child: itemsList(context))),
+                const SizedBox(height: 16),
+                removeSettingsItem(context),
+                const SizedBox(height: 24)
+              ]))));
 }

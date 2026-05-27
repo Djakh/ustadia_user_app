@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/connection/reload_conntection_button.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/headers/primary_bottom_sheet_header.dart';
@@ -29,6 +32,7 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
   TeacherModel? selectedTeacherModel;
   bool isLoading = false;
   List<TeacherModel> teachersList = [];
+  final GlobalKey teacherListKey = GlobalKey(debugLabel: 'teacher_picker_list');
 
   /// --- Life cycle ---
 
@@ -147,7 +151,7 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
         empty: Center(child: Text('No teachers found'.tr())),
         builder: (context, teachers) {
           teachersList = teachers;
-          return teacherList;
+          return KeyedSubtree(key: teacherListKey, child: teacherList);
         },
       );
 
@@ -158,10 +162,13 @@ class _TeacherPickerSheetState extends State<TeacherPickerSheet> {
       ]);
 
   @override
-  Widget build(BuildContext context) => Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-          color: context.cs.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
-      child: view);
+  Widget build(BuildContext context) => GuidedTutorialPage(
+      pageId: TutorialPageIds.teacherPicker,
+      steps: TutorialPresets.teacherPicker(listKey: teacherListKey),
+      child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+              color: context.cs.surface,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
+          child: view));
 }

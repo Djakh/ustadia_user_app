@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/listviews/paginated_list_view.dart';
@@ -28,6 +31,7 @@ class LearnSectionsPage extends StatefulWidget {
 
 class LearnSectionsPageState extends State<LearnSectionsPage> {
   final LearnSectionsBloc sectionsBloc = sl<LearnSectionsBloc>();
+  final GlobalKey sectionsListKey = GlobalKey(debugLabel: 'learn_sections_list');
   bool shouldRefreshParent = false;
 
   /// --- Life cycle ---
@@ -122,37 +126,40 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
           itemBuilder: (item) =>
               LearnSectionCard(sectionModel: item, onTap: () => onSectionTap(context, item)));
 
-  Widget
-      get contentChecker =>
-          BlocStatusView<LearnSectionsBloc, LearnSectionsState, List<SectionModel>>(
-              bloc: sectionsBloc,
-              invalid:
-                  widget.params.unit.id.isEmpty ? Center(child: Text('Unit not found'.tr())) : null,
-              statusOf: (s) => s.status,
-              errorOf: (s) => s.errorMessage,
-              data: (s) => s.sections,
-              isEmpty: (sections) => sections.isEmpty,
-              keepDataOnLoading: false,
-              empty: Center(child: Text('No sections found'.tr())),
-              loading: ShimmerList(
-                  itemCount: 6,
-                  itemHeight: 96,
-                  padding: Style.paddingPrimary,
-                  borderRadius: Style.border20),
-              builder: (context, sections) => sectionsList(context, sections, sectionsBloc.state));
+  Widget get contentChecker =>
+      BlocStatusView<LearnSectionsBloc, LearnSectionsState, List<SectionModel>>(
+          bloc: sectionsBloc,
+          invalid:
+              widget.params.unit.id.isEmpty ? Center(child: Text('Unit not found'.tr())) : null,
+          statusOf: (s) => s.status,
+          errorOf: (s) => s.errorMessage,
+          data: (s) => s.sections,
+          isEmpty: (sections) => sections.isEmpty,
+          keepDataOnLoading: false,
+          empty: Center(child: Text('No sections found'.tr())),
+          loading: ShimmerList(
+              itemCount: 6,
+              itemHeight: 96,
+              padding: Style.paddingPrimary,
+              borderRadius: Style.border20),
+          builder: (context, sections) => KeyedSubtree(
+              key: sectionsListKey, child: sectionsList(context, sections, sectionsBloc.state)));
 
   @override
-  Widget build(BuildContext context) => WillPopScope(
-      onWillPop: () async {
-        if (!context.mounted) return false;
+  Widget build(BuildContext context) => PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop || !context.mounted) return;
         context.pop(shouldRefreshParent ? true : null);
-        return false;
       },
-      child: Scaffold(
-          backgroundColor: context.cs.surface,
-          body: PrimaryBackground(
-              title: widget.params.unit.title.isEmpty ? 'Sections' : widget.params.unit.title,
-              isScrollable: false,
-              onBack: () => context.pop(shouldRefreshParent ? true : null),
-              child: contentChecker)));
+      child: GuidedTutorialPage(
+          pageId: TutorialPageIds.lessonSections,
+          steps: TutorialPresets.lessonSections(listKey: sectionsListKey),
+          child: Scaffold(
+              backgroundColor: context.cs.surface,
+              body: PrimaryBackground(
+                  title: widget.params.unit.title.isEmpty ? 'Sections' : widget.params.unit.title,
+                  isScrollable: false,
+                  onBack: () => context.pop(shouldRefreshParent ? true : null),
+                  child: contentChecker))));
 }

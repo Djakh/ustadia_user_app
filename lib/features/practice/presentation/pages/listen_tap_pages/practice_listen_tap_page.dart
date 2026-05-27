@@ -4,6 +4,9 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
@@ -31,6 +34,11 @@ class PracticeListenTapPageState extends State<PracticeListenTapPage> {
 
   final PracticeListenTapStatusBloc statusBloc = sl<PracticeListenTapStatusBloc>();
   final ProfileStatisticsStore statisticsStore = sl<ProfileStatisticsStore>();
+  final GlobalKey progressKey = GlobalKey(debugLabel: 'listen_tap_progress');
+  final GlobalKey audioKey = GlobalKey(debugLabel: 'listen_tap_audio');
+  final GlobalKey optionsKey = GlobalKey(debugLabel: 'listen_tap_options');
+  final GlobalKey bottomPanelKey = GlobalKey(debugLabel: 'listen_tap_bottom_panel');
+  final GlobalKey submitKey = GlobalKey(debugLabel: 'listen_tap_submit');
 
   int listeningIndex = 0;
   int correctCount = 0;
@@ -217,8 +225,7 @@ class PracticeListenTapPageState extends State<PracticeListenTapPage> {
           overflow: TextOverflow.ellipsis),
       if (showCheck)
         Align(
-            alignment: Alignment.centerRight,
-            child: Icon(Icons.check, size: 18, color: checkColor))
+            alignment: Alignment.centerRight, child: Icon(Icons.check, size: 18, color: checkColor))
     ]);
     if (isFilled) {
       return Button.primary(onTap: () => selectOption(index), color: fill, child: label);
@@ -272,13 +279,15 @@ class PracticeListenTapPageState extends State<PracticeListenTapPage> {
 
   Widget submitButton(PracticeListenTapStatusState statusState) {
     final label = hasSubmitted ? 'Continue' : 'Submit';
-    return Button.primary(
-        onTap: hasSubmitted ? onNext : submitCurrentAnswer,
-        text: label.tr(),
-        color: isResultState ? AppColors.white : null,
-        textColor: isResultState ? resultPanelColor : null,
-        isLoading: statusState.status.isLoading,
-        isAvialable: hasSubmitted || selectedIndex != null);
+    return KeyedSubtree(
+        key: submitKey,
+        child: Button.primary(
+            onTap: hasSubmitted ? onNext : submitCurrentAnswer,
+            text: label.tr(),
+            color: isResultState ? AppColors.white : null,
+            textColor: isResultState ? resultPanelColor : null,
+            isLoading: statusState.status.isLoading,
+            isAvialable: hasSubmitted || selectedIndex != null));
   }
 
   Widget actionButtons(PracticeListenTapStatusState statusState) {
@@ -296,6 +305,7 @@ class PracticeListenTapPageState extends State<PracticeListenTapPage> {
     final bottomInset = MediaQuery.of(context).padding.bottom;
     final textColor = resultPanelTextColor(context);
     return SizedBox(
+        key: bottomPanelKey,
         width: double.infinity,
         child: Container(
             padding: EdgeInsets.fromLTRB(18, 18, 18, 20 + bottomInset),
@@ -343,23 +353,29 @@ class PracticeListenTapPageState extends State<PracticeListenTapPage> {
                   padding: EdgeInsets.only(bottom: panelHeight + 16),
                   physics: const ClampingScrollPhysics(),
                   children: [
-                    Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Column(children: [
-                          const SizedBox(height: 24),
-                          indicator,
-                          const SizedBox(height: 4),
-                          listeningInfo,
-                          const SizedBox(height: 24),
-                          AudioCard(sectionModel: currentQuestionAudioSection),
-                          const SizedBox(height: 24),
-                          ...List.generate(
-                              current.options.length,
-                              (index) => Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 6),
-                                  child: optionItem(index))),
-                        ]))
-                  ])),
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Column(children: [
+                      const SizedBox(height: 24),
+                      KeyedSubtree(
+                          key: progressKey,
+                          child: Column(
+                              children: [indicator, const SizedBox(height: 4), listeningInfo])),
+                      const SizedBox(height: 24),
+                      KeyedSubtree(
+                          key: audioKey,
+                          child: AudioCard(sectionModel: currentQuestionAudioSection)),
+                      const SizedBox(height: 24),
+                      KeyedSubtree(
+                          key: optionsKey,
+                          child: Column(
+                              children: List.generate(
+                                  current.options.length,
+                                  (index) => Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 6),
+                                      child: optionItem(index))))),
+                    ]))
+              ])),
           Positioned(left: 0, right: 0, bottom: 0, child: bottomResultPanel(statusState))
         ]);
       });
@@ -379,12 +395,20 @@ class PracticeListenTapPageState extends State<PracticeListenTapPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.cs.surface,
-      body: PrimaryBackground(
-          title: widget.set.title,
-          padding: EdgeInsets.zero,
-          margin: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-          applyBottomSafeArea: false,
-          isScrollable: false,
-          alwaysScrollable: false,
-          child: view));
+      body: GuidedTutorialPage(
+          pageId: '${TutorialPageIds.practiceSession}.listen_tap',
+          steps: TutorialPresets.listenTapPractice(
+              progressKey: progressKey,
+              audioKey: audioKey,
+              optionsKey: optionsKey,
+              bottomPanelKey: bottomPanelKey,
+              submitKey: submitKey),
+          child: PrimaryBackground(
+              title: widget.set.title,
+              padding: EdgeInsets.zero,
+              margin: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+              applyBottomSafeArea: false,
+              isScrollable: false,
+              alwaysScrollable: false,
+              child: view)));
 }

@@ -1,29 +1,29 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ustadia_user_app/app.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ustadia_user_app/core/tutorial/tutorial_storage_service.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(UstadiaUserApp());
+  TestWidgetsFlutterBinding.ensureInitialized();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  test('TutorialStorageService stores opt-in and completed pages', () async {
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
+    final storage = TutorialStorageService(prefs: prefs);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    expect(storage.isPromptAnswered, isFalse);
+    expect(storage.shouldConsiderPage('dashboard'), isTrue);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await storage.setTutorialEnabled(false);
+
+    expect(storage.isPromptAnswered, isTrue);
+    expect(storage.isEnabled, isFalse);
+    expect(storage.shouldConsiderPage('dashboard'), isFalse);
+
+    await storage.setTutorialEnabled(true);
+    await storage.markPageCompleted('dashboard');
+
+    expect(storage.isEnabled, isTrue);
+    expect(storage.isPageCompleted('dashboard'), isTrue);
+    expect(storage.shouldConsiderPage('dashboard'), isFalse);
   });
 }
