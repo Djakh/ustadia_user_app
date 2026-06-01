@@ -387,9 +387,16 @@ class TutorialPresets {
         'Read or listen to the intro first, then continue to the quiz. Use question navigation when you want to come back later.'
             .tr(),
     };
-    return [
+    final steps = <TutorialStepModel>[
       TutorialStepModel(
           title: 'Section intro'.tr(), message: introMessage, icon: Icons.menu_book_rounded),
+      if (sectionType == 'reading' || sectionType == 'grammar')
+        TutorialStepModel(
+            title: 'Translate words'.tr(),
+            message:
+                'Long-press any English word in the text to see its translation. Use the language button above the text to switch between Uzbek and Russian.'
+                    .tr(),
+            icon: Icons.translate_rounded),
       TutorialStepModel(
           title: 'Start the task'.tr(),
           message:
@@ -403,6 +410,7 @@ class TutorialPresets {
                   .tr(),
           icon: Icons.touch_app_rounded),
     ];
+    return steps;
   }
 
   static List<TutorialStepModel> sectionQuiz({

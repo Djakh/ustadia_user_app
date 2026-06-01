@@ -11,13 +11,15 @@ class FlashcardView extends StatelessWidget {
   final bool showMeaning;
   final VoidCallback onToggle;
   final bool isLoading;
+  final bool canFlip;
 
   const FlashcardView(
       {super.key,
       required this.flashcard,
       required this.showMeaning,
       required this.onToggle,
-      required this.isLoading});
+      required this.isLoading,
+      this.canFlip = true});
 
   /// --- Widgets ---
 
@@ -36,8 +38,10 @@ class FlashcardView extends StatelessWidget {
           Text('Word'.tr(), style: Style.small3w4(context, color: TextColorRole.greyColor)),
           const SizedBox(height: 8),
           Text(flashcard.front, style: Style.headlinew7(context), textAlign: TextAlign.center),
-          const SizedBox(height: 24),
-          tapToFlipWidgets(context)
+          if (canFlip) ...[
+            const SizedBox(height: 24),
+            tapToFlipWidgets(context),
+          ]
         ]),
       );
 
@@ -106,7 +110,7 @@ class FlashcardView extends StatelessWidget {
       child: showMeaning ? backCard : faceCard);
 
   Widget view(BuildContext context) => InkWell(
-      onTap: isLoading ? null : onToggle,
+      onTap: isLoading || !canFlip ? null : onToggle,
       borderRadius: Style.border20,
       child: Ink(
           height: 477,

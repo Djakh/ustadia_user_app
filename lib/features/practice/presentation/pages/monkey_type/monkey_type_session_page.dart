@@ -30,6 +30,7 @@ class MonkeyTypeSessionPage extends StatefulWidget {
 class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
   final MonkeyTypeSessionBloc sessionBloc = sl<MonkeyTypeSessionBloc>();
   final TextEditingController controller = TextEditingController();
+  final ScrollController inputScrollController = ScrollController();
   final Stopwatch stopwatch = Stopwatch();
   final GlobalKey progressKey = GlobalKey(debugLabel: 'monkey_type_progress');
   final GlobalKey statsKey = GlobalKey(debugLabel: 'monkey_type_stats');
@@ -56,6 +57,7 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
     controller
       ..removeListener(onTypingChanged)
       ..dispose();
+    inputScrollController.dispose();
     sessionBloc.close();
     super.dispose();
   }
@@ -221,6 +223,7 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
     final target = targetText(texts);
     final typed = controller.text;
     final isLast = activeTextIndex >= texts.length - 1;
+    final inputHeight = (MediaQuery.sizeOf(context).height * 0.24).clamp(150.0, 230.0);
     return ListView(physics: const AlwaysScrollableScrollPhysics(), children: [
       const SizedBox(height: 20),
       Text(widget.practice.description,
@@ -242,25 +245,31 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
       const SizedBox(height: 14),
       KeyedSubtree(
           key: inputKey,
-          child: TextField(
-              controller: controller,
-              minLines: 5,
-              maxLines: 8,
-              enabled: !state.submitStatus.isLoading && !hasSubmitted,
-              decoration: InputDecoration(
-                  hintText: 'Start typing'.tr(),
-                  filled: true,
-                  fillColor: context.cs.surface,
-                  suffixIcon: controller.text.isEmpty && !hasSubmitted
-                      ? null
-                      : IconButton(
-                          tooltip: 'Clear'.tr(),
-                          onPressed: resetCurrentText,
-                          icon: const Icon(Icons.cancel_rounded)),
-                  border: OutlineInputBorder(borderRadius: Style.border20),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: Style.border20,
-                      borderSide: const BorderSide(color: AppColors.grayF4))))),
+          child: SizedBox(
+              height: inputHeight,
+              child: TextField(
+                  controller: controller,
+                  scrollController: inputScrollController,
+                  scrollPhysics: const AlwaysScrollableScrollPhysics(),
+                  keyboardType: TextInputType.multiline,
+                  expands: true,
+                  minLines: null,
+                  maxLines: null,
+                  enabled: !state.submitStatus.isLoading && !hasSubmitted,
+                  decoration: InputDecoration(
+                      hintText: 'Start typing'.tr(),
+                      filled: true,
+                      fillColor: context.cs.surface,
+                      suffixIcon: controller.text.isEmpty && !hasSubmitted
+                          ? null
+                          : IconButton(
+                              tooltip: 'Clear'.tr(),
+                              onPressed: resetCurrentText,
+                              icon: const Icon(Icons.cancel_rounded)),
+                      border: OutlineInputBorder(borderRadius: Style.border20),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: Style.border20,
+                          borderSide: const BorderSide(color: AppColors.grayF4)))))),
       const SizedBox(height: 14),
       if (state.submitStatus.isSuccess && hasSubmitted) resultPanel(context, typed, target),
       if (state.submitStatus.isError && state.submitErrorMessage != null)

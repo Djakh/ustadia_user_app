@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
@@ -54,6 +55,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   int index = 0;
   bool showMeaning = false;
   bool isFlashcardsOverviewVisible = false;
+  bool shouldRefreshParent = false;
   OverlayEntry? flashcardsOverviewEntry;
   final Set<int> _seenMeaning = {};
   final Set<int> _knownCards = {};
@@ -78,6 +80,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   bool get isFirstCard => index == 0;
   bool get isLastCard => index == cards.length - 1;
   bool get isCurrentCardAnswered => isCardAnswered(index);
+  bool get canCurrentCardFlip => !isCurrentCardAnswered || current.back != null;
   int get reviewedCount => List.generate(cards.length, (cardIndex) => cardIndex)
       .where((cardIndex) => widget.isPractice
           ? isKnownCard(cardIndex) || isLearningCard(cardIndex)
@@ -127,18 +130,14 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   void onKnowIt() {
     if (isSubmitting) return;
     if (isCurrentCardAnswered) return;
-    if (!showMeaning) {
-      setState(() => showMeaning = true);
-      if (!hasSeenMeaning) {
-        _learningCards.add(index);
-        _seenMeaning.add(index);
-      }
-    }
-    if (!_knownCards.contains(index)) {
-      _knownCards.add(index);
-      _learningCards.remove(index);
-    }
     _submitStatus('not_revealed');
+    if (!_knownCards.contains(index)) {
+      setState(() {
+        showMeaning = false;
+        _knownCards.add(index);
+        _learningCards.remove(index);
+      });
+    }
   }
 
   void goNextCard() {
@@ -228,6 +227,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
     if (state.status.isSuccess) {
       final cardIndex = cards.indexWhere((card) => card.id == state.flashcardId);
       if (cardIndex == -1) return;
+      if (isSectionVocabulary) shouldRefreshParent = true;
       final updatedBack = state.back;
       final updatedStatus = state.cardStatus;
       if (updatedBack != null || updatedStatus != null) {
@@ -255,7 +255,8 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
           flashcard: current,
           showMeaning: shouldShowMeaning,
           onToggle: toggleFace,
-          isLoading: isCurrentMeaningLoading));
+          isLoading: isCurrentMeaningLoading,
+          canFlip: canCurrentCardFlip));
 
   String normalizedCardStatus(int cardIndex) => cards[cardIndex].status.toLowerCase();
 
@@ -540,9 +541,14 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
       builder: (context, state) => Scaffold(
           backgroundColor: context.cs.surface,
           body: PopScope(
-              canPop: !isFlashcardsOverviewVisible,
+              canPop: false,
               onPopInvokedWithResult: (didPop, _) {
-                if (!didPop && isFlashcardsOverviewVisible) closeFlashcardsOverview();
+                if (didPop) return;
+                if (isFlashcardsOverviewVisible) {
+                  closeFlashcardsOverview();
+                  return;
+                }
+                context.pop(shouldRefreshParent ? true : null);
               },
               child: stage == FlashcardSprintStage.result
                   ? resultView

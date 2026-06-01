@@ -39,9 +39,7 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.params.unit.id.isNotEmpty &&
-        (sectionsBloc.state.sections.isEmpty ||
-            sectionsBloc.state.unitId != widget.params.unit.id)) {
+    if (widget.params.unit.id.isNotEmpty) {
       sectionsBloc.add(LearnSectionsRequested(unitId: widget.params.unit.id));
     }
   }

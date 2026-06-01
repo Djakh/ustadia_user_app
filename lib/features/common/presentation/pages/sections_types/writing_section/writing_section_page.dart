@@ -204,7 +204,7 @@ class WritingSectionPageState extends State<WritingSectionPage> {
         lessonId: question.lessonId,
         userInputText:
             selectedMethod == LearnWritingMethodType.inApp ? inputController.text.trim() : null,
-        userAudioId: selectedMethod == LearnWritingMethodType.upload ? uploadedFile?.id : null,
+        userFileId: selectedMethod == LearnWritingMethodType.upload ? uploadedFile?.id : null,
         source: question.source));
   }
 

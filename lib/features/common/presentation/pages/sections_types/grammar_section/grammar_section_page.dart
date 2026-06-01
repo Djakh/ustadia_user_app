@@ -175,6 +175,7 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
     if (stage == GrammarSectionStage.quiz)
       return SectionQuizComponent(
           questions: state.detail?.questions ?? [],
+          sectionContent: state.detail?.content ?? widget.sectionModel.content,
           headerWidget: quizHeaderWidget(state),
           panelActionBuilder: (context, isResultState, panelColor) => SectionQuizPanelActionButton(
               onTap: () => showGrammarSheet(state.detail?.content ?? widget.sectionModel.content),

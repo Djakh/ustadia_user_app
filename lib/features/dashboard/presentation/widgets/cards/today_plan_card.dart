@@ -73,8 +73,12 @@ class TodayPlanCardState extends State<TodayPlanCard> {
       );
 
   Future<void> openTodayPlan(BuildContext context, CurrentUnitModel unit) async {
+    await currentUnitStore.refreshIfNeeded();
+    final nextUnit = currentUnitStore.unit.value ?? unit;
+    if (!context.mounted) return;
     await context.push(learnSectionsRoute,
-        extra: LearnSectionsParams(unit: _toLearnUnitModel(unit), lessonId: unit.lesson.id));
+        extra:
+            LearnSectionsParams(unit: _toLearnUnitModel(nextUnit), lessonId: nextUnit.lesson.id));
     if (!mounted) return;
     currentUnitStore.refreshIfNeeded();
   }

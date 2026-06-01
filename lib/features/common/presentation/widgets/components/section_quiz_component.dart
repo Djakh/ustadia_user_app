@@ -16,6 +16,7 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/section_quest
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_state.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/cards/quiz_card.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_answer_evidence_view.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_question_answer_result_model.dart';
 import 'package:ustadia_user_app/features/mock_exam/data/datasources/mock_exam_remote_data_source.dart';
 import 'package:ustadia_user_app/injection_container.dart';
@@ -39,6 +40,7 @@ class _QuizQuestionDraft {
 class SectionQuizComponent extends StatefulWidget {
   final List<SectionQuestionModel> questions;
   final ValueChanged<int> onFinish;
+  final String sectionContent;
   final Widget? headerWidget;
   final Widget Function(BuildContext context, bool isResultState, Color panelColor)?
       panelActionBuilder;
@@ -46,6 +48,7 @@ class SectionQuizComponent extends StatefulWidget {
       {super.key,
       required this.questions,
       required this.onFinish,
+      this.sectionContent = '',
       this.headerWidget,
       this.panelActionBuilder});
 
@@ -491,6 +494,13 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       currentAnswers.isNotEmpty &&
       currentAnswers.every((answer) => !answer.isCorrect);
 
+  bool get hasCurrentAnswerEvidence => SectionAnswerEvidenceView.hasEvidence(
+      content: widget.sectionContent, questionId: currentQuestion.id);
+
+  bool get hasCorrectBlankAnswers =>
+      isFillBlank &&
+      currentQuestion.blankAnswers.any((item) => item.answer?.trim().isNotEmpty == true);
+
   Color optionFillColor(BuildContext context, int index, QuestionAnswerState answerState) {
     if (!hasSubmitted) return context.cs.surface;
     if (!isSelectedIndex(index)) return context.cs.surface;
@@ -562,17 +572,42 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
               style: Style.small3w4(context, color: TextColorRole.greyColor)),
       ]));
 
+  String? correctBlankAnswer(int index) {
+    final position = index + 1;
+    for (final item in currentQuestion.blankAnswers) {
+      if (item.position == position && item.answer?.trim().isNotEmpty == true) {
+        return item.answer!.trim();
+      }
+    }
+    return null;
+  }
+
+  Widget correctBlankAnswerView(String answer) => Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const Icon(Icons.check_circle_rounded, size: 18, color: AppColors.primary),
+        const SizedBox(width: 6),
+        Expanded(
+            child: Text(answer,
+                style: Style.small3w5(context)
+                    .copyWith(color: AppColors.primary, fontWeight: FontWeight.w700)))
+      ]));
+
   Widget fillBlankView() => Column(
-      children: List.generate(
-          blankControllers.length,
-          (index) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: TextField(
+          children: List.generate(blankControllers.length, (index) {
+        final answer = correctBlankAnswer(index);
+        return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              if (showCorrectAnswer && answer != null) correctBlankAnswerView(answer),
+              TextField(
                   readOnly: isReviewMode,
                   controller: blankControllers[index],
                   decoration: InputDecoration(
                       hintText: 'Blank {number}'.tr(namedArgs: {'number': '${index + 1}'}),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)))))));
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))))
+            ]));
+      }));
 
   Widget shortAnswerView() => TextField(
       controller: shortAnswerController,
@@ -586,9 +621,13 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       !isMockExam &&
       hasSubmitted &&
       !questionWasCorrect(answerBloc.state) &&
-      currentAnswers.isNotEmpty &&
-      effectiveCorrectAnswerIds(answerBloc.state).isNotEmpty &&
+      (effectiveCorrectAnswerIds(answerBloc.state).isNotEmpty ||
+          hasCurrentAnswerEvidence ||
+          hasCorrectBlankAnswers) &&
       !showCorrectAnswer;
+
+  bool get canShowAnswerButton =>
+      canRevealCorrectAnswer || (isResultState && !isMockExam && hasCurrentAnswerEvidence);
 
   bool get isResultState => hasSubmitted || isReviewMode;
 
@@ -650,14 +689,65 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     if (showCorrectAnswer && effectiveCorrectAnswerIds(answerState).isNotEmpty) {
       return 'The correct answer is now marked for review.'.tr();
     }
+    if (showCorrectAnswer && hasCorrectBlankAnswers) {
+      return 'The correct blank answers are now shown above the fields.'.tr();
+    }
     if (canRevealCorrectAnswer) {
       return 'Tap the eye button to view the correct answer.'.tr();
     }
     return null;
   }
 
+  Future<void> showAnswerEvidenceSheet() {
+    return showModalBottomSheet<void>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: context.cs.surface,
+        shape: RoundedRectangleBorder(borderRadius: Style.borderVer24),
+        builder: (sheetContext) => SafeArea(
+            top: false,
+            child: SizedBox(
+                height: MediaQuery.of(sheetContext).size.height * 0.78,
+                child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 14, 20, 20),
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                      Center(
+                          child: Container(
+                              width: 46,
+                              height: 5,
+                              decoration: BoxDecoration(
+                                  color: sheetContext.cs.outline.withValues(alpha: 0.25),
+                                  borderRadius: BorderRadius.circular(999)))),
+                      const SizedBox(height: 18),
+                      Row(children: [
+                        Expanded(
+                            child: Text('Answer evidence'.tr(), style: Style.body2w6(context))),
+                        IconButton(
+                            onPressed: () => Navigator.of(sheetContext).pop(),
+                            icon: const Icon(Icons.close_rounded))
+                      ]),
+                      const SizedBox(height: 8),
+                      Text(
+                          'The highlighted part shows where this answer appears in the content.'
+                              .tr(),
+                          style: Style.small3w4(context, color: TextColorRole.greyColor)),
+                      const SizedBox(height: 16),
+                      Expanded(
+                          child: SingleChildScrollView(
+                              child: SectionAnswerEvidenceView(
+                                  content: widget.sectionContent,
+                                  questionId: currentQuestion.id,
+                                  textStyle: Style.bodyw4(context))))
+                    ])))));
+  }
+
+  void revealAnswer(QuestionAnswerState answerState) {
+    setState(() => showCorrectAnswer = true);
+    if (hasCurrentAnswerEvidence) showAnswerEvidenceSheet();
+  }
+
   Widget showAnswerButton(QuestionAnswerState answerState) => InkWell(
-      onTap: () => setState(() => showCorrectAnswer = true),
+      onTap: () => revealAnswer(answerState),
       borderRadius: BorderRadius.circular(21),
       child: Container(
           height: 30,
@@ -775,7 +865,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
                           Expanded(
                               child: Row(
                             children: [
-                              if (canRevealCorrectAnswer) showAnswerButton(answerState),
+                              if (canShowAnswerButton) showAnswerButton(answerState),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Text(subtitle ?? '',

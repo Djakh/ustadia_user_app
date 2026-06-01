@@ -7,7 +7,7 @@ import 'package:ustadia_user_app/features/assignments/data/models/assignment_typ
 
 class AssignmentCard extends StatelessWidget {
   final AssignmentModel assignment;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const AssignmentCard({super.key, required this.assignment, required this.onTap});
 
@@ -37,17 +37,20 @@ class AssignmentCard extends StatelessWidget {
   double get progressValue => assignment.progress.clamp(0, 100) / 100;
 
   String get statusLabel {
+    if (assignment.isDeadlinePassed && !assignment.isCompleted) return 'Deadline Passed';
     if (assignment.status.isEmpty) return 'Status';
     return assignment.status[0].toUpperCase() + assignment.status.substring(1);
   }
 
   Color get statusBackgroundColor {
+    if (assignment.isDeadlinePassed && !assignment.isCompleted) return AppColors.orangeEB;
     if (assignment.status == 'completed') return AppColors.greenE7;
     if (assignment.status == 'active') return AppColors.gray100;
     return AppColors.orangeEB;
   }
 
   Color get statusTextColor {
+    if (assignment.isDeadlinePassed && !assignment.isCompleted) return AppColors.orange12;
     if (assignment.status == 'completed') return AppColors.success;
     if (assignment.status == 'active') return AppColors.gray500;
     return AppColors.orange12;
@@ -93,46 +96,50 @@ class AssignmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => InkWell(
-      onTap: onTap,
+      onTap: assignment.canOpen ? onTap : null,
       borderRadius: Style.border24,
-      child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: Style.border24,
-              border: Border.all(color: AppColors.gray100),
-              boxShadow: const [
-                BoxShadow(color: AppColors.shadow, blurRadius: 10, offset: Offset(0, 4))
-              ]),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Container(
-                  width: 54,
-                  height: 54,
-                  decoration:
-                      BoxDecoration(color: theme.backgroundColor, borderRadius: Style.border16),
-                  child: Center(child: Text(theme.emoji, style: const TextStyle(fontSize: 22)))),
-              const SizedBox(width: 12),
-              Expanded(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(assignment.title, style: Style.body2w6(context)),
-                const SizedBox(height: 4),
-                Text(assignment.description,
-                    style: Style.small2w4(context, color: TextColorRole.greyColor))
-              ])),
-              statusBadge(context)
-            ]),
-            const SizedBox(height: 12),
-            typeTags(context),
-            const SizedBox(height: 12),
-            Row(children: [
-              const Icon(Icons.timer, size: 12, color: AppColors.gray400),
-              const SizedBox(width: 4),
-              Text(timeLimitLabel, style: Style.small2w4(context, color: TextColorRole.greyColor)),
-              const SizedBox(width: 8),
-              Text(sectionCountLabel,
-                  style: Style.small2w4(context, color: TextColorRole.greyColor))
-            ]),
-            if (hasProgress) progressRow(context)
-          ])));
+      child: Opacity(
+          opacity: assignment.canOpen || assignment.isCompleted ? 1 : 0.72,
+          child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: Style.border24,
+                  border: Border.all(color: AppColors.gray100),
+                  boxShadow: const [
+                    BoxShadow(color: AppColors.shadow, blurRadius: 10, offset: Offset(0, 4))
+                  ]),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Container(
+                      width: 54,
+                      height: 54,
+                      decoration:
+                          BoxDecoration(color: theme.backgroundColor, borderRadius: Style.border16),
+                      child:
+                          Center(child: Text(theme.emoji, style: const TextStyle(fontSize: 22)))),
+                  const SizedBox(width: 12),
+                  Expanded(
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(assignment.title, style: Style.body2w6(context)),
+                    const SizedBox(height: 4),
+                    Text(assignment.description,
+                        style: Style.small2w4(context, color: TextColorRole.greyColor))
+                  ])),
+                  statusBadge(context)
+                ]),
+                const SizedBox(height: 12),
+                typeTags(context),
+                const SizedBox(height: 12),
+                Row(children: [
+                  const Icon(Icons.timer, size: 12, color: AppColors.gray400),
+                  const SizedBox(width: 4),
+                  Text(timeLimitLabel,
+                      style: Style.small2w4(context, color: TextColorRole.greyColor)),
+                  const SizedBox(width: 8),
+                  Text(sectionCountLabel,
+                      style: Style.small2w4(context, color: TextColorRole.greyColor))
+                ]),
+                if (hasProgress) progressRow(context)
+              ]))));
 }

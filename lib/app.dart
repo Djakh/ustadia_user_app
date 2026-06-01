@@ -8,7 +8,6 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/next_task_blo
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
-import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 import 'package:ustadia_user_app/size_config.dart';
@@ -17,21 +16,6 @@ class UstadiaUserApp extends StatelessWidget {
   const UstadiaUserApp({super.key});
 
   /// --- Widgets ---
-
-  Locale? localeFromProfile(BuildContext context, String? languageCode) {
-    if (languageCode == null || languageCode.isEmpty) return null;
-    for (final locale in context.supportedLocales) {
-      if (locale.languageCode == languageCode) return locale;
-    }
-    return null;
-  }
-
-  Future<void> syncProfileLocale(BuildContext context, String? languageCode) async {
-    final targetLocale = localeFromProfile(context, languageCode);
-    if (targetLocale == null) return;
-    if (context.locale.languageCode == targetLocale.languageCode) return;
-    await context.setLocale(targetLocale);
-  }
 
   Widget get materialApp => LayoutBuilder(builder: (context, constraints) {
         SizeConfig().init(context, constraints);
@@ -43,20 +27,15 @@ class UstadiaUserApp extends StatelessWidget {
               BlocProvider(create: (_) => sl<AskAiBloc>()),
               BlocProvider(create: (_) => sl<TeacherBloc>()..add(const TeachersRequested())),
             ],
-            child: BlocListener<UserBloc, UserState>(
-                listenWhen: (previous, current) =>
-                    previous.profile?.language != current.profile?.language &&
-                    current.profile != null,
-                listener: (context, state) => syncProfileLocale(context, state.profile?.language),
-                child: MaterialApp.router(
-                    title: 'Ustadia User'.tr(),
-                    theme: AppTheme.light(),
-                    darkTheme: AppTheme.dark(),
-                    themeMode: ThemeMode.light,
-                    locale: context.locale,
-                    supportedLocales: context.supportedLocales,
-                    localizationsDelegates: context.localizationDelegates,
-                    routerConfig: appRouter)));
+            child: MaterialApp.router(
+                title: 'Ustadia User'.tr(),
+                theme: AppTheme.light(),
+                darkTheme: AppTheme.dark(),
+                themeMode: ThemeMode.light,
+                locale: context.locale,
+                supportedLocales: context.supportedLocales,
+                localizationsDelegates: context.localizationDelegates,
+                routerConfig: appRouter));
       });
   @override
   Widget build(BuildContext context) => materialApp;
