@@ -96,9 +96,10 @@ class _ReelsPageState extends State<ReelsPage> with WidgetsBindingObserver {
     }
   }
 
-  void showComments(ReelPostModel post) {
+  Future<void> showComments(ReelPostModel post) async {
     reelsBloc.add(ReelCommentsRequested(postId: post.id));
-    showModalBottomSheet<void>(
+    setState(() => playbackAllowed = false);
+    await showModalBottomSheet<void>(
         context: context,
         isScrollControlled: true,
         backgroundColor: context.cs.surface,
@@ -118,12 +119,17 @@ class _ReelsPageState extends State<ReelsPage> with WidgetsBindingObserver {
                   onSubmit: (text) =>
                       reelsBloc.add(ReelCommentSubmitted(postId: currentPost.id, text: text)));
             }));
+    if (!mounted) return;
+    setState(() => playbackAllowed = true);
   }
 
-  void openAuthorProfile(ReelPostModel post) {
+  Future<void> openAuthorProfile(ReelPostModel post) async {
     final author = post.author;
     if (author == null || author.id.isEmpty) return;
-    context.push('/reels/user/${Uri.encodeComponent(author.id)}', extra: author);
+    setState(() => playbackAllowed = false);
+    await context.push('/reels/user/${Uri.encodeComponent(author.id)}', extra: author);
+    if (!mounted) return;
+    setState(() => playbackAllowed = true);
   }
 
   void listenState(BuildContext context, ReelsState state) {

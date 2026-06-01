@@ -38,6 +38,13 @@ class AssignmentModel {
 
   bool get isActive => status == 'active';
 
+  bool get isDeadlinePassed {
+    final value = deadline;
+    return value != null && !DateTime.now().isBefore(value);
+  }
+
+  bool get canOpen => isCompleted || (isActive && !isDeadlinePassed);
+
   SectionModel? get firstSection => sections.isNotEmpty ? sections.first : null;
 
   factory AssignmentModel.fromJson(Map<String, dynamic> json) {

@@ -184,6 +184,9 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
     if (event.userAudioId != null && event.userAudioId!.trim().isNotEmpty) {
       payload['audio_file_id'] = event.userAudioId!.trim();
     }
+    if (event.userFileId != null && event.userFileId!.trim().isNotEmpty) {
+      payload['user_file_id'] = event.userFileId!.trim();
+    }
     return payload;
   }
 
@@ -212,6 +215,9 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
     }
     if (event.userAudioId != null && event.userAudioId!.trim().isNotEmpty) {
       payload['user_audio_id'] = event.userAudioId!.trim();
+    }
+    if (event.userFileId != null && event.userFileId!.trim().isNotEmpty) {
+      payload['user_file_id'] = event.userFileId!.trim();
     }
     answers.add(payload);
     return answers;
@@ -242,6 +248,9 @@ class QuestionAnswerBloc extends Bloc<SectionQuestionAnswerEvent, QuestionAnswer
     }
     if (event.userAudioId != null && event.userAudioId!.trim().isNotEmpty) {
       payload['user_audio_id'] = event.userAudioId!.trim();
+    }
+    if (event.userFileId != null && event.userFileId!.trim().isNotEmpty) {
+      payload['user_file_id'] = event.userFileId!.trim();
     }
     answers.add(payload);
     return answers;

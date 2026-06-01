@@ -18,9 +18,30 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   /// --- Getters ---
   int get navigationIndex => widget.navigationShell.currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) return;
+    sl<ProfileStatisticsStore>().markStale();
+    sl<CurrentUnitStore>().markStale();
+    sl<ProfileStatisticsStore>().refreshIfNeeded();
+    sl<CurrentUnitStore>().refreshIfNeeded();
+  }
 
   /// --- Methods ---
 

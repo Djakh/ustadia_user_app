@@ -128,45 +128,53 @@ class _TranslatableSectionContentState extends State<TranslatableSectionContent>
     final left = math.max(
         12.0, math.min(tooltipPosition.dx - maxWidth / 2, media.size.width - maxWidth - 12));
     final top = math.max(media.padding.top + 8, tooltipPosition.dy - 76);
-    return Positioned(
-        left: left,
-        top: top,
-        width: maxWidth,
+    return Positioned.fill(
         child: Material(
             color: Colors.transparent,
             child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: hideTranslation,
-                child: DecoratedBox(
-                    decoration: BoxDecoration(
-                        color: AppColors.gray900,
-                        borderRadius: Style.border16,
-                        boxShadow: [
-                          BoxShadow(
-                              color: AppColors.black.withValues(alpha: 0.12),
-                              blurRadius: 14,
-                              offset: const Offset(0, 6))
-                        ]),
-                    child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                        child: Column(mainAxisSize: MainAxisSize.min, children: [
-                          Text(tooltipWord,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Style.small3w4(context).copyWith(color: AppColors.gray300)),
-                          const SizedBox(height: 3),
-                          Text(tooltipText,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                              style: Style.bodyw6(context).copyWith(color: AppColors.white)),
-                          if (isTooltipLoading) ...[
-                            const SizedBox(height: 8),
-                            const SizedBox(
-                                width: 14,
-                                height: 14,
-                                child: CircularProgressIndicator(strokeWidth: 2))
-                          ]
-                        ]))))));
+                child: Stack(children: [
+                  Positioned(
+                      left: left,
+                      top: top,
+                      width: maxWidth,
+                      child: GestureDetector(
+                          onTap: hideTranslation,
+                          child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                  color: AppColors.gray900,
+                                  borderRadius: Style.border16,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: AppColors.black.withValues(alpha: 0.12),
+                                        blurRadius: 14,
+                                        offset: const Offset(0, 6))
+                                  ]),
+                              child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                                    Text(tooltipWord,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Style.small3w4(context)
+                                            .copyWith(color: AppColors.gray300)),
+                                    const SizedBox(height: 3),
+                                    Text(tooltipText,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                        style:
+                                            Style.bodyw6(context).copyWith(color: AppColors.white)),
+                                    if (isTooltipLoading) ...[
+                                      const SizedBox(height: 8),
+                                      const SizedBox(
+                                          width: 14,
+                                          height: 14,
+                                          child: CircularProgressIndicator(strokeWidth: 2))
+                                    ]
+                                  ])))))
+                ]))));
   }
 
   Widget get languageButton => PopupMenuButton<WordTranslationLanguage>(

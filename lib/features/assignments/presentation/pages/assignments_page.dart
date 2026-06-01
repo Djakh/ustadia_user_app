@@ -61,6 +61,7 @@ class AssignmentsPageState extends State<AssignmentsPage> {
   }
 
   Future<void> openAssignmentSections(AssignmentModel assignment) async {
+    if (!assignment.canOpen) return;
     final result = await context.push(assignmentsSectionsRoute,
         extra: AssignmentSectionsParams(assignment: assignment));
     if (!mounted) return;

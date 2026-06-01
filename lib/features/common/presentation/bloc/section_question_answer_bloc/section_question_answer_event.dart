@@ -19,6 +19,7 @@ class QuestionAnswerSubmitted extends SectionQuestionAnswerEvent {
   final List<String> answerIds;
   final String? userInputText;
   final String? userAudioId;
+  final String? userFileId;
   final List<SectionBlankAnswer> blankAnswers;
   final String? unitId;
   final String? lessonId;
@@ -34,6 +35,7 @@ class QuestionAnswerSubmitted extends SectionQuestionAnswerEvent {
       this.answerIds = const [],
       this.userInputText,
       this.userAudioId,
+      this.userFileId,
       this.blankAnswers = const [],
       this.unitId,
       this.lessonId,
@@ -50,6 +52,7 @@ class QuestionAnswerSubmitted extends SectionQuestionAnswerEvent {
         answerIds,
         userInputText,
         userAudioId,
+        userFileId,
         blankAnswers,
         unitId,
         lessonId,

@@ -98,6 +98,7 @@ class ReelsBloc extends Bloc<ReelsEvent, ReelsState> {
         ..[event.postId] = result.items;
       emit(state.copyWith(
           posts: replacePostComments(
+              posts: state.posts,
               postId: event.postId,
               comments: result.items,
               commentsCount: result.meta.total == 0 ? result.items.length : result.meta.total),
@@ -133,6 +134,7 @@ class ReelsBloc extends Bloc<ReelsEvent, ReelsState> {
           ..[postId] = comments;
     return currentState.copyWith(
         posts: replacePostComments(
+            posts: currentState.posts,
             postId: postId,
             comments: comments,
             commentsCount: pagination.total == 0 ? comments.length : pagination.total),
@@ -166,6 +168,7 @@ class ReelsBloc extends Bloc<ReelsEvent, ReelsState> {
         ..[event.postId] = nextComments;
       emit(state.copyWith(
           posts: replacePostComments(
+              posts: state.posts,
               postId: event.postId,
               comments: nextComments,
               commentsCount: result.meta.total == 0 ? nextComments.length : result.meta.total),
@@ -232,13 +235,22 @@ class ReelsBloc extends Bloc<ReelsEvent, ReelsState> {
     emit(state.copyWith(
         actionStatus: Status.loading, actionPostId: event.postId, actionErrorMessage: null));
     try {
-      await reelsRemoteDataSource.createComment(
+      final createdComment = await reelsRemoteDataSource.createComment(
           postId: event.postId, text: event.text.trim(), parentCommentId: event.parentCommentId);
-      final result = await reelsRemoteDataSource.fetchComments(postId: event.postId);
+      final currentPostIndex = state.posts.indexWhere((post) => post.id == event.postId);
+      final currentPost = currentPostIndex == -1 ? null : state.posts[currentPostIndex];
+      final currentComments =
+          state.commentsByPostId[event.postId] ?? currentPost?.comments ?? const [];
+      final nextComments = <ReelCommentModel>[createdComment, ...currentComments];
+      final currentMeta = state.commentsMeta(event.postId);
+      final postCommentsCount = currentPost?.commentsCount ?? currentComments.length;
+      final currentTotal =
+          currentMeta.total > postCommentsCount ? currentMeta.total : postCommentsCount;
+      final nextMeta = currentMeta.copyWith(total: currentTotal + 1);
       emit(stateWithComments(
               postId: event.postId,
-              comments: result.items,
-              pagination: result.meta,
+              comments: nextComments,
+              pagination: nextMeta,
               currentState: state)
           .copyWith(actionStatus: Status.success, actionPostId: event.postId));
     } on DioException catch (error) {
@@ -258,11 +270,12 @@ class ReelsBloc extends Bloc<ReelsEvent, ReelsState> {
       posts.map((post) => post.id == nextPost.id ? nextPost : post).toList();
 
   List<ReelPostModel> replacePostComments({
+    required List<ReelPostModel> posts,
     required String postId,
     required List<ReelCommentModel> comments,
     required int commentsCount,
   }) =>
-      state.posts
+      posts
           .map((post) => post.id == postId
               ? post.copyWith(comments: comments, commentsCount: commentsCount)
               : post)
