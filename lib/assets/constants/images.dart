@@ -33,6 +33,7 @@ class AppImages {
   static const chatCardBack = 'assets/images/chat_card_back.png';
   static const practiceCardBack = 'assets/images/practice_card_back.png';
   static const leaderboardCardBack = 'assets/images/leaderboard_card_back.png';
+  static const unitBackground = 'assets/images/unit_background.png';
 
   static const xpLightningOrange = 'assets/images/xp_ lightning_orange.png';
 

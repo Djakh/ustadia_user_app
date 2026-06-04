@@ -74,9 +74,21 @@ class AskAiTextMessageComposer extends StatelessWidget {
                 height: height,
                 padding: const EdgeInsets.fromLTRB(18, 0, 12, 0),
                 decoration: BoxDecoration(
-                    color: AppColors.white.withValues(alpha: 0.06),
+                    gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          AppColors.white.withValues(alpha: 0.075),
+                          AppColors.white.withValues(alpha: 0.045)
+                        ]),
                     borderRadius: BorderRadius.circular(minComposerHeight / 2),
-                    border: Border.all(color: AppColors.white.withValues(alpha: 0.08))),
+                    border: Border.all(color: AppColors.white.withValues(alpha: 0.1)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: AppColors.black.withValues(alpha: 0.18),
+                          blurRadius: 18,
+                          offset: const Offset(0, 10))
+                    ]),
                 child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                   Expanded(
                       child: TextField(

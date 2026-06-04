@@ -33,9 +33,10 @@ class VoiceAgentPage extends StatefulWidget {
   State<VoiceAgentPage> createState() => VoiceAgentPageState();
 }
 
-class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObserver {
+class VoiceAgentPageState extends State<VoiceAgentPage>
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   static const double messagesTopPadding = 204;
-  static const double voiceControlsBottomPadding = 132;
+  static const double voiceControlsBottomPadding = 142;
   static const double textComposerBottomPadding = 148;
   static const Duration assistantResponseTimeout = Duration(seconds: 10);
   static const int maxInitialAssistantSyncAttempts = 5;
@@ -51,6 +52,7 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
   final TextEditingController messageController = TextEditingController();
   final FocusNode messageFocusNode = FocusNode();
   late final VoiceCallNotifier voiceCallNotifier;
+  late final AnimationController modeSwitchController;
 
   io.Socket? socket;
   Timer? callLimitTimer;
@@ -78,6 +80,8 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    modeSwitchController =
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 340));
     remainingSeconds = widget.topic.duration > 0 ? widget.topic.duration * 60 : 0;
     scrollController.addListener(onScroll);
     voiceCallNotifier = VoiceCallNotifier(
@@ -101,6 +105,7 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
     voiceStartupTimer?.cancel();
     scrollController.removeListener(onScroll);
     scrollController.dispose();
+    modeSwitchController.dispose();
     messageController.dispose();
     messageFocusNode.dispose();
     voiceCallNotifier.removeListener(handleVoiceNotifierChanged);
@@ -491,6 +496,7 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
     }
     if (!textComposerVisible && mounted) {
       setState(() => textComposerVisible = true);
+      modeSwitchController.forward();
     }
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted || !textComposerVisible) return;
@@ -502,6 +508,7 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
     messageFocusNode.unfocus();
     if (!textComposerVisible || !mounted) return;
     setState(() => textComposerVisible = false);
+    modeSwitchController.reverse();
   }
 
   void handleMessagesStateChanged(AskAiState state) {
@@ -589,9 +596,9 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
           statusText: displayStatusText(voiceCallNotifier.voiceUiState)));
 
   Widget get voiceControls => AnimatedBuilder(
+      key: const ValueKey('voice_controls'),
       animation: voiceCallNotifier,
       builder: (context, child) => AskAiVoiceControls(
-          key: const ValueKey('voice_controls'),
           isConnecting:
               voiceCallNotifier.isConnecting || voiceCallNotifier.isMicrophoneTransitioning,
           isRecording: voiceCallNotifier.micEnabled && !waitingForAssistantResponse,
@@ -602,20 +609,51 @@ class VoiceAgentPageState extends State<VoiceAgentPage> with WidgetsBindingObser
           onKeyboardTap: showTextComposer));
 
   Widget get textMessageComposer => AnimatedBuilder(
+      key: const ValueKey('text_composer'),
       animation: voiceCallNotifier,
       builder: (context, child) => AskAiTextMessageComposer(
-          key: const ValueKey('text_composer'),
           controller: messageController,
           focusNode: messageFocusNode,
           canSend: canSendTextMessage,
           onSend: sendTextMessage,
           onVoiceModeTap: showVoiceControls));
 
-  Widget get bottomControl => AnimatedSwitcher(
-      duration: const Duration(milliseconds: 220),
-      switchInCurve: Curves.easeOutCubic,
-      switchOutCurve: Curves.easeOutCubic,
-      child: textComposerVisible ? textMessageComposer : voiceControls);
+  Widget modeSwitchLayer(
+          {required Widget child,
+          required double opacity,
+          required double translateY,
+          required double scale,
+          required bool ignorePointer}) =>
+      IgnorePointer(
+          ignoring: ignorePointer,
+          child: Opacity(
+              opacity: opacity,
+              child: Transform.translate(
+                  offset: Offset(0, translateY),
+                  child: Transform.scale(
+                      scale: scale, alignment: Alignment.bottomCenter, child: child))));
+
+  Widget get bottomControl => SizedBox(
+      height: textComposerBottomPadding,
+      child: AnimatedBuilder(
+          animation: modeSwitchController,
+          builder: (context, child) {
+            final t = Curves.easeOutCubic.transform(modeSwitchController.value);
+            return Stack(alignment: Alignment.bottomCenter, children: [
+              modeSwitchLayer(
+                  child: voiceControls,
+                  opacity: 1 - t,
+                  translateY: 34 * t,
+                  scale: 1 - (0.04 * t),
+                  ignorePointer: textComposerVisible || modeSwitchController.value > 0.5),
+              modeSwitchLayer(
+                  child: textMessageComposer,
+                  opacity: t,
+                  translateY: 42 * (1 - t),
+                  scale: 0.96 + (0.04 * t),
+                  ignorePointer: !textComposerVisible || modeSwitchController.value < 0.5)
+            ]);
+          }));
 
   @override
   Widget build(BuildContext context) => GuidedTutorialPage(
