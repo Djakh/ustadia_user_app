@@ -179,6 +179,7 @@ class ReadingSectionPageState extends State<ReadingSectionPage> {
       return SectionQuizComponent(
           questions: state.detail?.questions ?? [],
           sectionContent: state.detail?.content ?? widget.sectionModel.content,
+          sectionType: 'reading',
           headerWidget: quizHeaderWidget(state),
           onFinish: finishQuiz,
           panelActionBuilder: (context, isResultState, panelColor) => SectionQuizPanelActionButton(

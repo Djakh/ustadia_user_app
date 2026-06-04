@@ -11,6 +11,10 @@ class UserProfileRequested extends UserEvent {
   const UserProfileRequested();
 }
 
+class UserProfileReset extends UserEvent {
+  const UserProfileReset();
+}
+
 class UserProfileUpdated extends UserEvent {
   final String? firstName;
   final String? lastName;

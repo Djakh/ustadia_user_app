@@ -11,8 +11,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   UserBloc({required this.userRemoteDataSource}) : super(const UserState()) {
     on<UserProfileRequested>(handleProfileRequested);
+    on<UserProfileReset>(handleProfileReset);
     on<UserProfileUpdated>(handleProfileUpdated);
     on<UserProfileDelete>(handleProfileDelete);
+  }
+
+  void handleProfileReset(UserProfileReset event, Emitter<UserState> emit) {
+    emit(const UserState());
   }
 
   Future<void> handleProfileRequested(UserProfileRequested event, Emitter<UserState> emit) async {

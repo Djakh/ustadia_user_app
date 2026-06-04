@@ -83,9 +83,6 @@ class HtmlText extends StatelessWidget {
         if (element.localName == 'body' || element.localName == 'p') {
           return {'margin': '0', 'padding': '0'};
         }
-        if (element.localName == 'mark') {
-          return {'background-color': 'transparent', 'color': 'inherit'};
-        }
         final videoUrl = videoUrlFromElement(element);
         if (videoUrl != null || element.classes.contains('video-link')) {
           return {'font-weight': '700', 'color': videoLinkColor, 'text-decoration': 'underline'};

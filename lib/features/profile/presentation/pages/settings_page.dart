@@ -67,7 +67,8 @@ class SettingsPageState extends State<SettingsPage> {
   Future<void> logout() async {
     await SessionLogoutService.logout(
         authLocalDataSource: sl<AuthLocalDataSource>(),
-        userRemoteDataSource: sl<UserRemoteDataSource>());
+        userRemoteDataSource: sl<UserRemoteDataSource>(),
+        resetSessionData: resetTeacherScopedData);
   }
 
   void goToNotifications(BuildContext context) => context.push(settingsNotificationsRoute);

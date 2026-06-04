@@ -24,6 +24,7 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/section_detai
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_event.dart';
 import 'package:ustadia_user_app/features/dashboard/data/services/current_unit_store.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/bloc/current_unit_bloc/current_unit_bloc.dart';
 import 'package:ustadia_user_app/features/intro_survey/data/datasources/intro_survey_remote_data_source.dart';
@@ -75,19 +76,21 @@ Future<void> initDependencies() async {
           authLocalDataSource: sl<AuthLocalDataSource>(),
           userRemoteDataSource:
               sl.isRegistered<UserRemoteDataSource>() ? sl<UserRemoteDataSource>() : null,
-          unregisterDevice: false)));
+          unregisterDevice: false,
+          resetSessionData: resetTeacherScopedData)));
 
   // Features - Auth
   sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSource(
       dio: DioClient.create(
-          //   baseUrl: 'https://backend.ustadia.findecor.io',
-          baseUrl: 'https://dev.backend.ustadia.findecor.io',
+             baseUrl: 'https://backend.ustadia.findecor.io',
+         // baseUrl: 'https://dev.backend.ustadia.findecor.io',
           accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken(),
           onUnauthorized: () => SessionLogoutService.logout(
               authLocalDataSource: sl<AuthLocalDataSource>(),
               userRemoteDataSource:
                   sl.isRegistered<UserRemoteDataSource>() ? sl<UserRemoteDataSource>() : null,
-              unregisterDevice: false))));
+              unregisterDevice: false,
+              resetSessionData: resetTeacherScopedData))));
   sl.registerFactory(() => AuthLoginBloc(
       authRemoteDataSource: sl(), authLocalDataSource: sl(), userRemoteDataSource: sl()));
   sl.registerFactory(() => AuthPasswordBloc(authRemoteDataSource: sl()));
@@ -197,7 +200,13 @@ Future<void> initDependencies() async {
 }
 
 Future<void> resetTeacherScopedData() async {
-  await sl.resetLazySingleton<UserBloc>();
+  await DioClient.clearCache();
+  if (sl.isRegistered<UserBloc>()) {
+    final userBloc = sl<UserBloc>();
+    if (!userBloc.isClosed) {
+      userBloc.add(const UserProfileReset());
+    }
+  }
   await sl.resetLazySingleton<ProfileStatisticsStore>();
   await sl.resetLazySingleton<AssignmentsBloc>();
   await sl.resetLazySingleton<AssignmentSectionsStore>();

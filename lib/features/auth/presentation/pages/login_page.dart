@@ -58,7 +58,7 @@ class LoginPageState extends State<LoginPage> {
   final AuthLoginBloc authLoginBloc = sl<AuthLoginBloc>();
   final AuthPasswordBloc authPasswordBloc = sl<AuthPasswordBloc>();
   final AuthLocalDataSource authLocalDataSource = sl<AuthLocalDataSource>();
-  final UserBloc userBloc = sl<UserBloc>();
+  late final UserBloc userBloc;
   bool isForgotDialogOpen = false;
   bool isResetDialogOpen = false;
   String resetEmail = '';
@@ -72,6 +72,7 @@ class LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    userBloc = context.read<UserBloc>();
     loadRememberedCredentials();
   }
 

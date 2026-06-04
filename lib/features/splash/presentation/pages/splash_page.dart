@@ -24,7 +24,7 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  final UserBloc userBloc = sl<UserBloc>();
+  late final UserBloc userBloc;
   bool isCheckingUser = false;
   bool isStarting = false;
   String? startupErrorMessage;
@@ -34,6 +34,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
+    userBloc = context.read<UserBloc>();
     start();
   }
 

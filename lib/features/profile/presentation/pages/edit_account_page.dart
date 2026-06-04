@@ -118,7 +118,8 @@ class EditAccountPageState extends State<EditAccountPage> {
 
   void logout() async => SessionLogoutService.logout(
       authLocalDataSource: sl<AuthLocalDataSource>(),
-      userRemoteDataSource: sl<UserRemoteDataSource>());
+      userRemoteDataSource: sl<UserRemoteDataSource>(),
+      resetSessionData: resetTeacherScopedData);
 
   void confirmDelete() {
     userBloc.add(const UserProfileDelete());

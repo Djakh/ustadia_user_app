@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ustadia_user_app/core/network/dio_client.dart';
 import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/core/services/firebase_messaging_service.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
@@ -27,20 +28,16 @@ class AuthLoginBloc extends Bloc<AuthLoginEvent, AuthLoginState> {
       AuthLoginWithEmailRequested event, Emitter<AuthLoginState> emit) async {
     emit(state.copyWith(status: Status.loading, errorMessage: null));
     try {
-      final response = await authRemoteDataSource.loginWithEmail(
-          email: event.email, password: event.password);
+      final response =
+          await authRemoteDataSource.loginWithEmail(email: event.email, password: event.password);
       await authLocalDataSource.setAccessToken(response.accessToken);
+      final accessToken = await _resetTeacherToSystemLessons();
       await _registerDeviceToken();
-      emit(state.copyWith(
-          status: Status.success,
-          accessToken: response.accessToken,
-          errorMessage: null));
+      emit(state.copyWith(status: Status.success, accessToken: accessToken, errorMessage: null));
     } on DioException catch (error) {
-      emit(state.copyWith(
-          status: Status.error, errorMessage: DioErrorMessage.from(error)));
+      emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.from(error)));
     } catch (error) {
-      emit(state.copyWith(
-          status: Status.error, errorMessage: 'Login failed. Please try again.'));
+      emit(state.copyWith(status: Status.error, errorMessage: 'Login failed. Please try again.'));
     }
   }
 
@@ -51,17 +48,13 @@ class AuthLoginBloc extends Bloc<AuthLoginEvent, AuthLoginState> {
       final response = await authRemoteDataSource.loginWithPhone(
           phoneNumber: event.phoneNumber, password: event.password);
       await authLocalDataSource.setAccessToken(response.accessToken);
+      final accessToken = await _resetTeacherToSystemLessons();
       await _registerDeviceToken();
-      emit(state.copyWith(
-          status: Status.success,
-          accessToken: response.accessToken,
-          errorMessage: null));
+      emit(state.copyWith(status: Status.success, accessToken: accessToken, errorMessage: null));
     } on DioException catch (error) {
-      emit(state.copyWith(
-          status: Status.error, errorMessage: DioErrorMessage.from(error)));
+      emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.from(error)));
     } catch (error) {
-      emit(state.copyWith(
-          status: Status.error, errorMessage: 'Login failed. Please try again.'));
+      emit(state.copyWith(status: Status.error, errorMessage: 'Login failed. Please try again.'));
     }
   }
 
@@ -72,5 +65,14 @@ class AuthLoginBloc extends Bloc<AuthLoginEvent, AuthLoginState> {
     try {
       await userRemoteDataSource.registerDevice(token: token, deviceType: deviceType);
     } catch (_) {}
+  }
+
+  Future<String> _resetTeacherToSystemLessons() async {
+    final response = await userRemoteDataSource.swapTeacher(teacherId: null);
+    if (response.accessToken.isNotEmpty) {
+      await authLocalDataSource.setAccessToken(response.accessToken);
+    }
+    await DioClient.clearCache();
+    return authLocalDataSource.getAccessToken();
   }
 }
