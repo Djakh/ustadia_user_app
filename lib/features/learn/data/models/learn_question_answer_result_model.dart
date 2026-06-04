@@ -67,7 +67,8 @@ class LearnQuestionAnswerResultModel {
       userInputText: _nullableText(json['user_input_text']),
       userAudioId: _nullableText(json['user_audio_id']),
       userBlankAnswers: _extractBlankAnswers(json['user_blank_answers']),
-      correctBlankAnswers: _extractBlankAnswers(json['correct_blank_answers']),
+      correctBlankAnswers:
+          _extractBlankAnswers(json['correct_blank_answers'] ?? json['correctBlankAnswers']),
       isCorrect: _toBoolOrNull(isCorrectValue),
       aiFeedback: _nullableText(json['ai_feedback']),
       createdAt: json['created_at']?.toString() ?? '',

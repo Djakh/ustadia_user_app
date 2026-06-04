@@ -5,6 +5,11 @@ class SectionAnswerModel {
   final bool isCorrect;
   final bool userSelected;
   final int orderIndex;
+  final String? transcript;
+  final int? startPosition;
+  final int? endPosition;
+  final double? audioStartTime;
+  final double? audioEndTime;
 
   const SectionAnswerModel(
       {required this.id,
@@ -12,7 +17,32 @@ class SectionAnswerModel {
       required this.answerText,
       required this.isCorrect,
       required this.userSelected,
-      required this.orderIndex});
+      required this.orderIndex,
+      required this.transcript,
+      required this.startPosition,
+      required this.endPosition,
+      required this.audioStartTime,
+      required this.audioEndTime});
+
+  bool get hasEvidenceRangeData =>
+      startPosition != null &&
+      endPosition != null &&
+      startPosition! >= 0 &&
+      endPosition! > startPosition!;
+
+  bool get hasAudioEvidenceData =>
+      audioStartTime != null &&
+      audioEndTime != null &&
+      audioStartTime! >= 0 &&
+      audioEndTime! > audioStartTime!;
+
+  bool get hasEvidenceRange => isCorrect && hasEvidenceRangeData;
+
+  bool get hasAudioEvidence => isCorrect && hasAudioEvidenceData;
+
+  bool get hasAnswerEvidence => hasEvidenceRange || hasAudioEvidence;
+
+  bool get hasAnswerEvidenceData => hasEvidenceRangeData || hasAudioEvidenceData;
 
   factory SectionAnswerModel.fromJson(Map<String, dynamic> json, {String? selectedAnswerId}) =>
       SectionAnswerModel(
@@ -23,12 +53,29 @@ class SectionAnswerModel {
           isCorrect: _extractIsCorrect(json),
           userSelected: _toBool(json['user_selected']) ||
               (selectedAnswerId != null && selectedAnswerId == json['id']?.toString()),
-          orderIndex: _toInt(json['order_index']));
+          orderIndex: _toInt(json['order_index']),
+          transcript: json['transcript']?.toString(),
+          startPosition: _toIntOrNull(json['start_position'] ?? json['startPosition']),
+          endPosition: _toIntOrNull(json['end_position'] ?? json['endPosition']),
+          audioStartTime: _toDoubleOrNull(json['audio_start_time'] ?? json['audioStartTime']),
+          audioEndTime: _toDoubleOrNull(json['audio_end_time'] ?? json['audioEndTime']));
 
   static int _toInt(dynamic value, {int fallback = 0}) {
     if (value == null) return fallback;
     if (value is int) return value;
     return int.tryParse(value.toString()) ?? fallback;
+  }
+
+  static int? _toIntOrNull(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    return int.tryParse(value.toString());
+  }
+
+  static double? _toDoubleOrNull(dynamic value) {
+    if (value == null) return null;
+    if (value is num) return value.toDouble();
+    return double.tryParse(value.toString());
   }
 
   static bool _toBool(dynamic value, {bool fallback = false}) {

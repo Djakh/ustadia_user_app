@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ustadia_user_app/core/network/dio_client.dart';
 import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/core/services/firebase_messaging_service.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
@@ -33,11 +34,12 @@ class AuthVerifyBloc extends Bloc<AuthVerifyEvent, AuthVerifyState> {
       final accessToken =
           await authRemoteDataSource.verifyOtp(tempId: event.tempId, otp: event.otp);
       await authLocalDataSource.setAccessToken(accessToken);
+      final systemLessonsAccessToken = await _resetTeacherToSystemLessons();
       await _registerDeviceToken();
       emit(state.copyWith(
           status: Status.success,
           action: AuthVerifyAction.verifyOtp,
-          accessToken: accessToken,
+          accessToken: systemLessonsAccessToken,
           errorMessage: null,
           clearMessage: true));
     } on DioException catch (error) {
@@ -94,5 +96,14 @@ class AuthVerifyBloc extends Bloc<AuthVerifyEvent, AuthVerifyState> {
     try {
       await userRemoteDataSource.registerDevice(token: token, deviceType: deviceType);
     } catch (_) {}
+  }
+
+  Future<String> _resetTeacherToSystemLessons() async {
+    final response = await userRemoteDataSource.swapTeacher(teacherId: null);
+    if (response.accessToken.isNotEmpty) {
+      await authLocalDataSource.setAccessToken(response.accessToken);
+    }
+    await DioClient.clearCache();
+    return authLocalDataSource.getAccessToken();
   }
 }

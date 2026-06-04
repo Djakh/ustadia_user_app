@@ -415,7 +415,9 @@ class TutorialPresets {
 
   static List<TutorialStepModel> sectionQuiz({
     required String questionType,
+    String? sectionType,
     bool includeCommonSteps = true,
+    bool includeEvidenceStep = false,
     GlobalKey? progressKey,
     GlobalKey? questionListKey,
     GlobalKey? questionKey,
@@ -454,7 +456,19 @@ class TutorialPresets {
         message: answerMessage,
         icon: Icons.touch_app_rounded,
         targetKey: answerKey);
-    if (!includeCommonSteps) return [answerStep];
+    final evidenceStep = TutorialStepModel(
+        title: 'Answer evidence'.tr(),
+        message: sectionType == 'listening'
+            ? 'For listening review, Show answer can open the answer evidence sheet. It may show the exact audio time range and the transcript text, with the answer part marked when available.'
+                .tr()
+            : 'For reading review, Show answer can open the passage with the answer evidence marked. Use the highlighted text to understand exactly where the correct answer came from.'
+                .tr(),
+        icon: Icons.find_in_page_rounded,
+        mascotMood: TutorialMascotMood.smart,
+        accentColor: AppColors.primary,
+        accentBackgroundColor: AppColors.greenE7,
+        targetKey: bottomPanelKey);
+    if (!includeCommonSteps) return includeEvidenceStep ? [evidenceStep] : [answerStep];
     return [
       TutorialStepModel(
           title: 'Quiz progress'.tr(),
@@ -518,6 +532,7 @@ class TutorialPresets {
           accentColor: AppColors.orange09,
           accentBackgroundColor: AppColors.orangeEB,
           targetKey: bottomPanelKey),
+      if (includeEvidenceStep) evidenceStep,
       TutorialStepModel(
           title: 'Exam save state'.tr(),
           message:

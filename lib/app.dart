@@ -22,7 +22,7 @@ class UstadiaUserApp extends StatelessWidget {
         return MultiBlocProvider(
             providers: [
               BlocProvider(create: (_) => NextTaskBloc()),
-              BlocProvider(create: (_) => sl<UserBloc>()),
+              BlocProvider.value(value: sl<UserBloc>()),
               BlocProvider(create: (_) => sl<FileUploadBloc>()),
               BlocProvider(create: (_) => sl<AskAiBloc>()),
               BlocProvider(create: (_) => sl<TeacherBloc>()..add(const TeachersRequested())),

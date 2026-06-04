@@ -5,6 +5,10 @@ import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 class DioClient {
   DioClient._();
 
+  static final MemCacheStore _cacheStore = MemCacheStore();
+
+  static Future<void> clearCache() => _cacheStore.clean();
+
   static Dio create(
       {String? baseUrl,
       String Function()? accessTokenGetter,
@@ -18,7 +22,7 @@ class DioClient {
 
     final dio = Dio(options);
     final cacheOptions = CacheOptions(
-        store: MemCacheStore(),
+        store: _cacheStore,
         policy: CachePolicy.request,
         hitCacheOnErrorExcept: [401, 403],
         maxStale: const Duration(days: 7));

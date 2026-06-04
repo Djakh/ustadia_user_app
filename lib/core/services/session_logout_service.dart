@@ -4,6 +4,8 @@ import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_
 import 'package:ustadia_user_app/features/common/data/datasources/user_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_event.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_event.dart';
 import 'package:ustadia_user_app/router.dart';
 
 class SessionLogoutService {
@@ -12,7 +14,8 @@ class SessionLogoutService {
   static Future<void> logout(
       {required AuthLocalDataSource authLocalDataSource,
       UserRemoteDataSource? userRemoteDataSource,
-      bool unregisterDevice = true}) async {
+      bool unregisterDevice = true,
+      Future<void> Function()? resetSessionData}) async {
     if (isLoggingOut) return;
     isLoggingOut = true;
     try {
@@ -27,10 +30,15 @@ class SessionLogoutService {
         }
       }
       await authLocalDataSource.clearAccessToken();
+      await resetSessionData?.call();
       final rootContext = rootNavigatorKey.currentContext;
       if (rootContext != null && rootContext.mounted) {
         try {
           rootContext.read<TeacherBloc>().add(const TeachersReset());
+        } catch (_) {}
+        try {
+          final userBloc = rootContext.read<UserBloc>();
+          if (!userBloc.isClosed) userBloc.add(const UserProfileReset());
         } catch (_) {}
       }
       appRouter.go(loginRoute);

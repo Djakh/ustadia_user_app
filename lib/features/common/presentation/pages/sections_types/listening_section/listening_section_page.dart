@@ -144,6 +144,7 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
       return SectionQuizComponent(
           questions: state.detail?.questions ?? [],
           sectionContent: state.detail?.content ?? widget.sectionModel.content,
+          sectionType: 'listening',
           headerWidget: quizHeaderWidget(state),
           onFinish: finishQuiz);
     if (stage == ListeningSectionStage.result) {

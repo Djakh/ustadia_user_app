@@ -38,7 +38,7 @@ class OtpPageState extends State<OtpPage> {
   Timer? countdown;
   int secondsLeft = 30;
   final AuthVerifyBloc authVerifyBloc = sl<AuthVerifyBloc>();
-  final UserBloc userBloc = sl<UserBloc>();
+  late final UserBloc userBloc;
   bool isAwaitingUser = false;
 
   /// --- Life cycle ---
@@ -46,6 +46,7 @@ class OtpPageState extends State<OtpPage> {
   @override
   void initState() {
     super.initState();
+    userBloc = context.read<UserBloc>();
     startTimer();
   }
 

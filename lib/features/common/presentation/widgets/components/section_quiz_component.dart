@@ -41,6 +41,7 @@ class SectionQuizComponent extends StatefulWidget {
   final List<SectionQuestionModel> questions;
   final ValueChanged<int> onFinish;
   final String sectionContent;
+  final String? sectionType;
   final Widget? headerWidget;
   final Widget Function(BuildContext context, bool isResultState, Color panelColor)?
       panelActionBuilder;
@@ -49,6 +50,7 @@ class SectionQuizComponent extends StatefulWidget {
       required this.questions,
       required this.onFinish,
       this.sectionContent = '',
+      this.sectionType,
       this.headerWidget,
       this.panelActionBuilder});
 
@@ -132,7 +134,10 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
 
   bool get isMultipleChoice => questionType == 'multiple-choice';
   bool get isShortAnswer => questionType == 'short-answer';
-  bool get isFillBlank => questionType == 'fill-blank';
+  bool get isFillBlank =>
+      questionType == 'fill-blank' ||
+      questionType == 'fill_blank' ||
+      questionType == 'fill-in-blank';
   int get maxSelectionLimit => (currentQuestion.maxSelections ?? 0) > 0
       ? currentQuestion.maxSelections!
       : currentAnswers.length;
@@ -468,19 +473,20 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   }
 
   Set<String> effectiveCorrectAnswerIds(QuestionAnswerState answerState) {
-    if (isReviewMode) {
-      return currentAnswers
-          .where((answer) => answer.isCorrect)
-          .map((answer) => answer.id)
-          .where((id) => id.isNotEmpty)
-          .toSet();
-    }
+    final localCorrectIds = currentAnswers
+        .where((answer) => answer.isCorrect)
+        .map((answer) => answer.id)
+        .where((id) => id.isNotEmpty)
+        .toSet();
+    if (isReviewMode) return localCorrectIds;
     final result = currentQuestionResult(answerState);
-    if (result == null || result.questionId != currentQuestion.id) return const {};
+    if (result == null || result.questionId != currentQuestion.id) {
+      return hasSubmitted ? localCorrectIds : const {};
+    }
     final idsFromResult = <String>{...result.correctAnswerIds};
     final singleId = result.correctAnswerId;
     if (singleId != null && singleId.isNotEmpty) idsFromResult.add(singleId);
-    return idsFromResult;
+    return idsFromResult.isEmpty && hasSubmitted ? localCorrectIds : idsFromResult;
   }
 
   bool isCorrectAnswerIndex(int index, QuestionAnswerState answerState) {
@@ -494,12 +500,41 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       currentAnswers.isNotEmpty &&
       currentAnswers.every((answer) => !answer.isCorrect);
 
-  bool get hasCurrentAnswerEvidence => SectionAnswerEvidenceView.hasEvidence(
-      content: widget.sectionContent, questionId: currentQuestion.id);
+  SectionAnswerModel? currentEvidenceAnswer(QuestionAnswerState answerState) {
+    final correctIds = effectiveCorrectAnswerIds(answerState);
+    for (final answer in currentAnswers) {
+      if (answer.hasAnswerEvidence) return answer;
+      if (correctIds.contains(answer.id) && answer.hasAnswerEvidenceData) return answer;
+    }
+    if (!hasSubmitted) return null;
+    for (final answer in currentAnswers) {
+      if (answer.hasAnswerEvidenceData) return answer;
+    }
+    return null;
+  }
+
+  bool hasCurrentAnswerEvidence(QuestionAnswerState answerState) {
+    final answer = currentEvidenceAnswer(answerState);
+    if (answer == null) return false;
+    if (answer.hasAudioEvidenceData) return true;
+    return answer.hasEvidenceRangeData && widget.sectionContent.isNotEmpty;
+  }
+
+  List<SectionBlankAnswer> effectiveCorrectBlankAnswers(QuestionAnswerState answerState) {
+    final result = currentQuestionResult(answerState);
+    final resultAnswers = result?.correctBlankAnswers
+            .map((item) => SectionBlankAnswer(position: item.position, answer: item.answer))
+            .where((item) => item.answer?.trim().isNotEmpty == true)
+            .toList() ??
+        const <SectionBlankAnswer>[];
+    if (resultAnswers.isNotEmpty) return resultAnswers;
+    return currentQuestion.blankAnswers
+        .where((item) => item.answer?.trim().isNotEmpty == true)
+        .toList();
+  }
 
   bool get hasCorrectBlankAnswers =>
-      isFillBlank &&
-      currentQuestion.blankAnswers.any((item) => item.answer?.trim().isNotEmpty == true);
+      isFillBlank && effectiveCorrectBlankAnswers(answerBloc.state).isNotEmpty;
 
   Color optionFillColor(BuildContext context, int index, QuestionAnswerState answerState) {
     if (!hasSubmitted) return context.cs.surface;
@@ -574,10 +609,15 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
 
   String? correctBlankAnswer(int index) {
     final position = index + 1;
-    for (final item in currentQuestion.blankAnswers) {
+    final correctAnswers = effectiveCorrectBlankAnswers(answerBloc.state);
+    for (final item in correctAnswers) {
       if (item.position == position && item.answer?.trim().isNotEmpty == true) {
         return item.answer!.trim();
       }
+    }
+    if (correctAnswers.length > index) {
+      final answer = correctAnswers[index].answer?.trim();
+      if (answer != null && answer.isNotEmpty) return answer;
     }
     return null;
   }
@@ -601,7 +641,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               if (showCorrectAnswer && answer != null) correctBlankAnswerView(answer),
               TextField(
-                  readOnly: isReviewMode,
+                  readOnly: isResultState,
                   controller: blankControllers[index],
                   decoration: InputDecoration(
                       hintText: 'Blank {number}'.tr(namedArgs: {'number': '${index + 1}'}),
@@ -611,7 +651,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
 
   Widget shortAnswerView() => TextField(
       controller: shortAnswerController,
-      readOnly: isReviewMode,
+      readOnly: isResultState,
       maxLines: 4,
       decoration: InputDecoration(
           hintText: 'Type your answer'.tr(),
@@ -620,14 +660,17 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   bool get canRevealCorrectAnswer =>
       !isMockExam &&
       hasSubmitted &&
-      !questionWasCorrect(answerBloc.state) &&
-      (effectiveCorrectAnswerIds(answerBloc.state).isNotEmpty ||
-          hasCurrentAnswerEvidence ||
-          hasCorrectBlankAnswers) &&
-      !showCorrectAnswer;
+      isReviewableQuestion &&
+      (!showCorrectAnswer || hasCurrentAnswerEvidence(answerBloc.state));
 
-  bool get canShowAnswerButton =>
-      canRevealCorrectAnswer || (isResultState && !isMockExam && hasCurrentAnswerEvidence);
+  bool get isReviewableQuestion => isFillBlank || currentAnswers.isNotEmpty || hasAnswerReviewData;
+
+  bool get hasAnswerReviewData =>
+      effectiveCorrectAnswerIds(answerBloc.state).isNotEmpty ||
+      hasCurrentAnswerEvidence(answerBloc.state) ||
+      hasCorrectBlankAnswers;
+
+  bool get canShowAnswerButton => canRevealCorrectAnswer;
 
   bool get isResultState => hasSubmitted || isReviewMode;
 
@@ -692,13 +735,55 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     if (showCorrectAnswer && hasCorrectBlankAnswers) {
       return 'The correct blank answers are now shown above the fields.'.tr();
     }
+    if (showCorrectAnswer && hasCurrentAnswerEvidence(answerState)) {
+      return 'Tap the eye button again to review the answer evidence.'.tr();
+    }
     if (canRevealCorrectAnswer) {
       return 'Tap the eye button to view the correct answer.'.tr();
     }
     return null;
   }
 
-  Future<void> showAnswerEvidenceSheet() {
+  Widget answerEvidenceLoadingView(BuildContext context) => Center(
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+        const CircularProgressIndicator(strokeWidth: 3),
+        const SizedBox(height: 14),
+        Text('Loading answer...'.tr(),
+            style: Style.small3w4(context, color: TextColorRole.greyColor))
+      ]));
+
+  Widget answerEvidenceMissingView(BuildContext context) => Center(
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+        Icon(Icons.check_circle_outline_rounded,
+            size: 42, color: context.cs.primary.withValues(alpha: 0.8)),
+        const SizedBox(height: 12),
+        Text('The correct answer is now marked on the question.'.tr(),
+            textAlign: TextAlign.center,
+            style: Style.small3w4(context, color: TextColorRole.greyColor))
+      ]));
+
+  Widget answerEvidenceFutureView(
+          {required BuildContext sheetContext,
+          required Future<SectionAnswerModel?> answerFuture,
+          SectionAnswerModel? initialAnswer}) =>
+      FutureBuilder<SectionAnswerModel?>(
+          future: answerFuture,
+          initialData: initialAnswer,
+          builder: (context, snapshot) {
+            final answer = snapshot.data;
+            if (answer == null && snapshot.connectionState != ConnectionState.done) {
+              return answerEvidenceLoadingView(sheetContext);
+            }
+            if (answer == null) return answerEvidenceMissingView(sheetContext);
+            return SingleChildScrollView(
+                child: SectionAnswerEvidenceView(
+                    content: widget.sectionContent,
+                    answer: answer,
+                    textStyle: Style.bodyw4(sheetContext)));
+          });
+
+  Future<void> showAnswerEvidenceSheet(
+      {required Future<SectionAnswerModel?> answerFuture, SectionAnswerModel? initialAnswer}) {
     return showModalBottomSheet<void>(
         context: context,
         isScrollControlled: true,
@@ -728,22 +813,77 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
                       ]),
                       const SizedBox(height: 8),
                       Text(
-                          'The highlighted part shows where this answer appears in the content.'
+                          'The highlighted text or audio time shows where this answer appears.'
                               .tr(),
                           style: Style.small3w4(context, color: TextColorRole.greyColor)),
                       const SizedBox(height: 16),
                       Expanded(
-                          child: SingleChildScrollView(
-                              child: SectionAnswerEvidenceView(
-                                  content: widget.sectionContent,
-                                  questionId: currentQuestion.id,
-                                  textStyle: Style.bodyw4(context))))
+                          child: answerEvidenceFutureView(
+                              sheetContext: sheetContext,
+                              answerFuture: answerFuture,
+                              initialAnswer: initialAnswer))
                     ])))));
   }
 
-  void revealAnswer(QuestionAnswerState answerState) {
-    setState(() => showCorrectAnswer = true);
-    if (hasCurrentAnswerEvidence) showAnswerEvidenceSheet();
+  Future<SectionAnswerModel?> refreshCurrentEvidenceAnswer(QuestionAnswerState answerState) async {
+    if (currentQuestion.sectionId.isEmpty) return null;
+    try {
+      final detail = await fetchFreshSectionDetail();
+      SectionQuestionModel? freshQuestion;
+      for (final item in detail.questions) {
+        if (item.id == currentQuestion.id) {
+          freshQuestion = item;
+          break;
+        }
+      }
+      if (freshQuestion == null) return null;
+      questions[questionIndex] = freshQuestion;
+      submittedQuestionIds.add(freshQuestion.id);
+      hasSubmitted = true;
+      if (mounted) setState(() {});
+      return currentEvidenceAnswer(answerState);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<SectionModel> fetchFreshSectionDetail() {
+    if (currentQuestion.source == SectionSource.assignment) {
+      final assignmentId = currentQuestion.assignmentId;
+      if (assignmentId == null || assignmentId.isEmpty) {
+        throw Exception('Assignment id is missing.');
+      }
+      return answerBloc.assignmentsRemoteDataSource.fetchAssignmentSectionDetail(
+          assignmentId: assignmentId, sectionId: currentQuestion.sectionId);
+    }
+    if (currentQuestion.source == SectionSource.mockExam) {
+      final mockExamId = currentQuestion.mockExamId;
+      final attemptId = currentQuestion.mockAttemptId;
+      if (mockExamId == null || mockExamId.isEmpty || attemptId == null || attemptId.isEmpty) {
+        throw Exception('Mock exam data is missing.');
+      }
+      return answerBloc.mockExamRemoteDataSource.fetchMockExamSectionDetail(
+          mockExamId: mockExamId, attemptId: attemptId, sectionId: currentQuestion.sectionId);
+    }
+    return answerBloc.learnRemoteDataSource
+        .fetchSectionDetail(sectionId: currentQuestion.sectionId);
+  }
+
+  Future<void> revealAnswer(QuestionAnswerState answerState) async {
+    if (!showCorrectAnswer && mounted) setState(() => showCorrectAnswer = true);
+    final evidenceAnswer = currentEvidenceAnswer(answerState);
+    if (evidenceAnswer != null) {
+      showAnswerEvidenceSheet(
+          answerFuture: Future<SectionAnswerModel?>.value(evidenceAnswer),
+          initialAnswer: evidenceAnswer);
+      return;
+    }
+
+    final freshEvidenceAnswer = await refreshCurrentEvidenceAnswer(answerState);
+    if (!mounted || freshEvidenceAnswer == null) return;
+    showAnswerEvidenceSheet(
+        answerFuture: Future<SectionAnswerModel?>.value(freshEvidenceAnswer),
+        initialAnswer: freshEvidenceAnswer);
   }
 
   Widget showAnswerButton(QuestionAnswerState answerState) => InkWell(
@@ -1098,14 +1238,30 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
 
     final storage = sl<TutorialStorageService>();
     final questionTypePageId = '${TutorialPageIds.sectionQuiz}.type.$questionType';
+    final normalizedSectionType = widget.sectionType?.toLowerCase();
+    final isEvidenceSection =
+        normalizedSectionType == 'reading' || normalizedSectionType == 'listening';
+    final evidencePageId = '${TutorialPageIds.sectionQuiz}.answer_evidence.$normalizedSectionType';
     final includeCommonSteps = !storage.isPageCompleted(TutorialPageIds.sectionQuiz);
+    final includeEvidenceStep = isEvidenceSection && !storage.isPageCompleted(evidencePageId);
+    final pageId = includeCommonSteps
+        ? TutorialPageIds.sectionQuiz
+        : includeEvidenceStep
+            ? evidencePageId
+            : questionTypePageId;
+    final completedPageIds = [
+      if (includeCommonSteps) questionTypePageId,
+      if (includeCommonSteps && includeEvidenceStep) evidencePageId,
+    ];
 
     return GuidedTutorialPage(
-        pageId: includeCommonSteps ? TutorialPageIds.sectionQuiz : questionTypePageId,
-        additionalCompletedPageIds: includeCommonSteps ? [questionTypePageId] : const [],
+        pageId: pageId,
+        additionalCompletedPageIds: completedPageIds,
         steps: TutorialPresets.sectionQuiz(
             questionType: questionType,
+            sectionType: normalizedSectionType,
             includeCommonSteps: includeCommonSteps,
+            includeEvidenceStep: includeEvidenceStep,
             progressKey: quizProgressKey,
             questionListKey: questionListButtonKey,
             questionKey: questionCardKey,
