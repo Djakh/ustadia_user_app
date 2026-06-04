@@ -17,6 +17,7 @@ class AskAiAnimatedMessageItemState extends State<AskAiAnimatedMessageItem>
   late final AnimationController animationController;
   late final Animation<Offset> offsetAnimation;
   late final Animation<double> opacityAnimation;
+  late final Animation<double> scaleAnimation;
 
   @override
   void initState() {
@@ -24,9 +25,11 @@ class AskAiAnimatedMessageItemState extends State<AskAiAnimatedMessageItem>
     animationController =
         AnimationController(vsync: this, duration: const Duration(milliseconds: 360));
     offsetAnimation =
-        Tween<Offset>(begin: Offset(widget.isMe ? 0.18 : -0.18, 0.04), end: Offset.zero)
+        Tween<Offset>(begin: Offset(widget.isMe ? 0.12 : -0.12, 0.03), end: Offset.zero)
             .animate(CurvedAnimation(parent: animationController, curve: Curves.easeOutCubic));
     opacityAnimation = CurvedAnimation(parent: animationController, curve: Curves.easeOutCubic);
+    scaleAnimation = Tween<double>(begin: 0.96, end: 1)
+        .animate(CurvedAnimation(parent: animationController, curve: Curves.easeOutCubic));
     animationController.forward();
   }
 
@@ -50,9 +53,13 @@ class AskAiAnimatedMessageItemState extends State<AskAiAnimatedMessageItem>
       opacity: opacityAnimation,
       child: SlideTransition(
           position: offsetAnimation,
-          child: AiChatMessageBubble(
-              key: ValueKey('${widget.message.id}:${widget.message.content.length}:${widget.message.isFinished}'),
-              message: widget.message,
-              isMe: widget.isMe,
-              useDarkTheme: true)));
+          child: ScaleTransition(
+              scale: scaleAnimation,
+              alignment: widget.isMe ? Alignment.centerRight : Alignment.centerLeft,
+              child: AiChatMessageBubble(
+                  key: ValueKey(
+                      '${widget.message.id}:${widget.message.content.length}:${widget.message.isFinished}'),
+                  message: widget.message,
+                  isMe: widget.isMe,
+                  useDarkTheme: true))));
 }

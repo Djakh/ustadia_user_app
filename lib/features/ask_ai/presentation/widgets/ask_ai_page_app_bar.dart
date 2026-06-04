@@ -21,19 +21,34 @@ class AskAiPageAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget timerChip(BuildContext context) => Padding(
       padding: const EdgeInsets.only(right: 16),
       child: Center(
-          child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          child: AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
               decoration: BoxDecoration(
-                  color: AppColors.white.withValues(alpha: 0.12), borderRadius: Style.border12),
+                  color: AppColors.white.withValues(alpha: 0.12),
+                  borderRadius: Style.border16,
+                  border: Border.all(color: AppColors.white.withValues(alpha: 0.08)),
+                  boxShadow: [
+                    BoxShadow(
+                        color: AppColors.black.withValues(alpha: 0.14),
+                        blurRadius: 14,
+                        offset: const Offset(0, 6))
+                  ]),
               child: Text(timerText,
                   style: Style.small2w5(context, color: TextColorRole.whiteColor)))));
 
   @override
   Widget build(BuildContext context) => AppBar(
-      backgroundColor: AppColors.secondary,
+      backgroundColor: AppColors.secondary.withValues(alpha: 0.96),
       elevation: 0,
-      leading:
-          IconButton(onPressed: onBack, icon: const Icon(Icons.arrow_back, color: AppColors.white)),
-      title: Text(title, style: Style.body2w6(context, color: TextColorRole.whiteColor)),
+      leading: Padding(
+          padding: const EdgeInsets.only(left: 4),
+          child: IconButton(
+              onPressed: onBack,
+              icon: const Icon(Icons.arrow_back_rounded, color: AppColors.white))),
+      title: Text(title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: Style.body2w6(context, color: TextColorRole.whiteColor)),
       actions: hasTimeLimit ? [timerChip(context)] : null);
 }

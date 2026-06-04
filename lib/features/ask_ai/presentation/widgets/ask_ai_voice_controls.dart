@@ -36,15 +36,23 @@ class AskAiVoiceControls extends StatelessWidget {
       height: 126,
       child: Stack(children: [
         Positioned(
-            left: 18,
+            left: 22,
             bottom: 42,
-            child: AskAiControlIconButton(
-                iconData: outputIcon,
-                onTap: onAudioOutputTap,
-                tooltipText: outputTooltip,
-                backgroundColor: outputMode == VoiceAudioOutputMode.speaker
-                    ? AppColors.primary
-                    : AppColors.gray700)),
+            child: TweenAnimationBuilder<double>(
+                key: ValueKey(outputMode),
+                tween: Tween(begin: 0.88, end: 1),
+                duration: const Duration(milliseconds: 360),
+                curve: Curves.easeOutBack,
+                builder: (context, value, child) => Transform.rotate(
+                    angle: (1 - value) * 0.45, child: Transform.scale(scale: value, child: child)),
+                child: AskAiControlIconButton(
+                    iconData: outputIcon,
+                    onTap: onAudioOutputTap,
+                    tooltipText: outputTooltip,
+                    backgroundColor: outputMode == VoiceAudioOutputMode.speaker
+                        ? AppColors.primary
+                        : AppColors.gray700,
+                    size: 50))),
         Align(
             alignment: Alignment.bottomCenter,
             child: AskAiMicrophoneButton(
@@ -53,12 +61,13 @@ class AskAiVoiceControls extends StatelessWidget {
                 labelText: labelText,
                 onTap: onMicrophoneTap)),
         Positioned(
-            right: 18,
+            right: 22,
             bottom: 42,
             child: AskAiControlIconButton(
                 iconData: Icons.keyboard_rounded,
                 onTap: onKeyboardTap,
                 tooltipText: 'Type a message'.tr(),
-                backgroundColor: AppColors.gray700))
+                backgroundColor: AppColors.gray700,
+                size: 50))
       ]));
 }

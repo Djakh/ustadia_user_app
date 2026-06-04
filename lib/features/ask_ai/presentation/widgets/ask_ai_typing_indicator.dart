@@ -49,9 +49,18 @@ class AskAiTypingIndicatorState extends State<AskAiTypingIndicator>
       child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           decoration: BoxDecoration(
-              color: AppColors.white.withValues(alpha: 0.08),
+              gradient: LinearGradient(colors: [
+                AppColors.white.withValues(alpha: 0.09),
+                AppColors.white.withValues(alpha: 0.055)
+              ]),
               borderRadius: Style.border16,
-              border: Border.all(color: AppColors.white.withValues(alpha: 0.08))),
+              border: Border.all(color: AppColors.white.withValues(alpha: 0.09)),
+              boxShadow: [
+                BoxShadow(
+                    color: AppColors.black.withValues(alpha: 0.14),
+                    blurRadius: 14,
+                    offset: const Offset(0, 8))
+              ]),
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             Text(widget.text, style: Style.bodyw5(context, color: TextColorRole.whiteColor)),
             const SizedBox(width: 10),

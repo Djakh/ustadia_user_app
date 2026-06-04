@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
-import 'package:ustadia_user_app/core/widgets/cached_images/cached_images_primary/cached_image_primary.dart';
 import 'package:ustadia_user_app/core/widgets/progress_bars/circle_progress_badge.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_unit_model.dart';
 
@@ -27,9 +27,9 @@ class LearnUnitCard extends StatelessWidget {
       size: isLocked ? 20 : 30,
       isLocked: isLocked);
 
-  Widget unitLabel(BuildContext context) => Text('Unit {number}'.tr(
-      namedArgs: {'number': unit.unitNumber.toString()}),
-      style: Style.small3w4(context, color: TextColorRole.primaryColor));
+  Widget unitLabel(BuildContext context) =>
+      Text('Unit {number}'.tr(namedArgs: {'number': unit.unitNumber.toString()}),
+          style: Style.small3w4(context, color: TextColorRole.primaryColor));
 
   Row unitLabelAndProgressBadge(BuildContext context) => Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -40,12 +40,16 @@ class LearnUnitCard extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
       style: Style.bodyw7(context).copyWith(color: titleColor(context)));
 
-  Widget get imagePreview => Align(
-      alignment: Alignment.bottomRight,
-      child: CachedImagePrimary(imageUrl: unit.imageUrl, height: 110, width: 110));
+  Widget imageFallback() => Image.asset(AppImages.unitBackground, fit: BoxFit.cover);
+
+  Widget get backgroundImage => Positioned.fill(
+      child: unit.imageUrl == null || unit.imageUrl!.isEmpty
+          ? imageFallback()
+          : Image.network(unit.imageUrl!,
+              fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) => imageFallback()));
 
   Widget view(BuildContext context) => Stack(children: [
-        Positioned(bottom: 0, right: 0, child: imagePreview),
+        backgroundImage,
         Positioned.fill(
             child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -60,11 +64,8 @@ class LearnUnitCard extends StatelessWidget {
   Widget build(BuildContext context) => GestureDetector(
       onTap: isLocked ? null : onTap,
       child: Container(
-          decoration: BoxDecoration(
-              color: context.cs.surface,
-              borderRadius: Style.border20,
-              boxShadow: const [
-                BoxShadow(color: AppColors.shadow, blurRadius: 12, offset: Offset(0, 6))
-              ]),
-          child: view(context)));
+          decoration: const BoxDecoration(boxShadow: [
+            BoxShadow(color: AppColors.shadow, blurRadius: 12, offset: Offset(0, 6))
+          ]),
+          child: ClipRRect(borderRadius: Style.border20, child: view(context))));
 }

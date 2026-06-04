@@ -319,7 +319,7 @@ void main() {
     expect(_richTextContaining(content), findsOneWidget);
   });
 
-  testWidgets('show answer opens sheet immediately while evidence refresh is loading',
+  testWidgets('show answer opens evidence sheet only after refresh returns evidence',
       (tester) async {
     const content = 'Here is answer text.';
     await _registerQuizDependencies({'q1': _submitResult('q1', isCorrect: false)},
@@ -335,11 +335,12 @@ void main() {
     await tester.tap(find.byIcon(Icons.visibility_rounded));
     await tester.pump();
 
-    expect(find.text('Answer evidence'), findsOneWidget);
-    expect(find.text('Loading answer...'), findsOneWidget);
+    expect(find.text('Answer evidence'), findsNothing);
+    expect(find.text('Loading answer...'), findsNothing);
 
     await tester.pumpAndSettle();
 
+    expect(find.text('Answer evidence'), findsOneWidget);
     expect(_richTextContaining(content), findsOneWidget);
   });
 }
