@@ -4,9 +4,11 @@ class DioErrorMessage {
   const DioErrorMessage();
 
   static const noInternetMessage = 'No internet connection. Please reconnect and try again.';
+  static const accountNotFoundMessage = 'Account not found';
 
   static String from(DioException error) {
     final data = error.response?.data;
+    if (_isDeletedAccountResponse(error, data)) return accountNotFoundMessage;
     if (data is Map && data['message'] != null) return data['message'].toString();
     if (error.type == DioExceptionType.connectionError ||
         error.type == DioExceptionType.connectionTimeout ||
@@ -15,6 +17,33 @@ class DioErrorMessage {
       return noInternetMessage;
     }
     return 'Request failed. Please try again.';
+  }
+
+  static bool _isDeletedAccountResponse(DioException error, Object? data) {
+    if (!_isAuthRequest(error)) return false;
+    if (_isAuthLoginRequest(error) && error.response?.statusCode == 404) return true;
+    if (data is Map && data['isDeleted'] == true) return true;
+    return _responseText(data).contains('deleted');
+  }
+
+  static bool _isAuthRequest(DioException error) {
+    final path = error.requestOptions.path.toLowerCase();
+    return path.contains('/auth/');
+  }
+
+  static bool _isAuthLoginRequest(DioException error) {
+    final path = error.requestOptions.path.toLowerCase();
+    return path.endsWith('/auth/login') || path.contains('/auth/login?');
+  }
+
+  static String _responseText(Object? data) {
+    if (data is Map) {
+      return data.values.map(_responseText).where((text) => text.isNotEmpty).join(' ');
+    }
+    if (data is Iterable) {
+      return data.map(_responseText).where((text) => text.isNotEmpty).join(' ');
+    }
+    return data?.toString().toLowerCase().trim() ?? '';
   }
 
   static bool isConnectionMessage(String? message) =>

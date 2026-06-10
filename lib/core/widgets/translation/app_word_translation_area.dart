@@ -5,67 +5,60 @@ import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/services/word_translation_service.dart';
 
-class TranslatableSectionContent extends StatefulWidget {
-  final String data;
-  final TextStyle? textStyle;
-  final TextAlign textAlign;
+class AppWordTranslationArea extends StatefulWidget {
+  final Widget child;
 
-  const TranslatableSectionContent({
-    super.key,
-    required this.data,
-    this.textStyle,
-    this.textAlign = TextAlign.start,
-  });
+  const AppWordTranslationArea({super.key, required this.child});
 
   @override
-  State<TranslatableSectionContent> createState() => _TranslatableSectionContentState();
+  State<AppWordTranslationArea> createState() => _AppWordTranslationAreaState();
 }
 
-class _TranslatableSectionContentState extends State<TranslatableSectionContent> {
+class _AppWordTranslationAreaState extends State<AppWordTranslationArea> {
   final WordTranslationService translationService = WordTranslationService();
   OverlayEntry? translationOverlay;
   Offset tooltipPosition = Offset.zero;
   String tooltipWord = '';
   String tooltipText = '';
-  String? selectedTokenKey;
+  String selectedText = '';
   bool isTooltipLoading = false;
+  bool didSetInitialLanguage = false;
   int translationRequestId = 0;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (didSetInitialLanguage) return;
+    WordTranslationPreferences.language.value =
+        WordTranslationLanguage.fromLocale(Localizations.localeOf(context).languageCode);
+    didSetInitialLanguage = true;
+  }
+
+  @override
   void dispose() {
-    translationOverlay?.remove();
-    translationOverlay = null;
+    removeTranslationOverlay();
     super.dispose();
   }
 
-  String get plainText => normalizeText(widget.data);
-
-  List<String> get paragraphs => plainText
-      .split(RegExp(r'\n{2,}'))
-      .map((paragraph) => paragraph.trim())
-      .where((paragraph) => paragraph.isNotEmpty)
-      .toList();
-
-  void setLanguage(WordTranslationLanguage value) {
-    WordTranslationPreferences.language.value = value;
-    if (tooltipWord.trim().isEmpty) return;
-    translateWord(tooltipWord, tooltipPosition, selectedTokenKey ?? '');
+  String normalizedSelection(String value) {
+    final normalized = value.trim().replaceAll(RegExp(r'\s+'), ' ');
+    if (!RegExp(r'[A-Za-z]').hasMatch(normalized)) return '';
+    return normalized.characters.take(WordTranslationService.maxTextLength).join();
   }
 
-  Future<void> translateWord(String rawWord, Offset position, String tokenKey) async {
-    final word = normalizedWord(rawWord);
-    if (word.isEmpty) return;
+  Future<void> translateText(String rawText, Offset position) async {
+    final text = normalizedSelection(rawText);
+    if (text.isEmpty) return;
     final requestId = ++translationRequestId;
     tooltipPosition = position;
-    tooltipWord = rawWord;
+    tooltipWord = text;
     tooltipText = 'Translating...'.tr();
-    setState(() => selectedTokenKey = tokenKey);
     isTooltipLoading = true;
     showTranslation();
 
     try {
       final translated =
-          await translationService.translateWord(word, WordTranslationPreferences.language.value);
+          await translationService.translateText(text, WordTranslationPreferences.language.value);
       if (!mounted || requestId != translationRequestId) return;
       tooltipText = translated;
       isTooltipLoading = false;
@@ -76,6 +69,11 @@ class _TranslatableSectionContentState extends State<TranslatableSectionContent>
       isTooltipLoading = false;
       translationOverlay?.markNeedsBuild();
     }
+  }
+
+  void changeLanguage(WordTranslationLanguage value) {
+    WordTranslationPreferences.language.value = value;
+    if (tooltipWord.isNotEmpty) translateText(tooltipWord, tooltipPosition);
   }
 
   void showTranslation() {
@@ -92,36 +90,25 @@ class _TranslatableSectionContentState extends State<TranslatableSectionContent>
     translationOverlay = null;
   }
 
-  void hideTranslation() {
-    removeTranslationOverlay();
-    if (selectedTokenKey == null || !mounted) return;
-    setState(() => selectedTokenKey = null);
-  }
-
-  String normalizedWord(String value) {
-    final match = RegExp(r"[A-Za-z]+(?:[-'][A-Za-z]+)?").firstMatch(value);
-    return match?.group(0) ?? '';
-  }
-
   Widget translationTooltip(BuildContext context) {
     final media = MediaQuery.of(context);
-    const maxWidth = 220.0;
+    const maxWidth = 246.0;
     final left = math.max(
         12.0, math.min(tooltipPosition.dx - maxWidth / 2, media.size.width - maxWidth - 12));
-    final top = math.max(media.padding.top + 8, tooltipPosition.dy - 76);
+    final top = math.max(media.padding.top + 8, tooltipPosition.dy - 96);
     return Positioned.fill(
         child: Material(
             color: Colors.transparent,
             child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                onTap: hideTranslation,
+                onTap: removeTranslationOverlay,
                 child: Stack(children: [
                   Positioned(
                       left: left,
                       top: top,
                       width: maxWidth,
                       child: GestureDetector(
-                          onTap: hideTranslation,
+                          onTap: () {},
                           child: DecoratedBox(
                               decoration: BoxDecoration(
                                   color: AppColors.gray900,
@@ -136,7 +123,7 @@ class _TranslatableSectionContentState extends State<TranslatableSectionContent>
                                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                                     Text(tooltipWord,
-                                        maxLines: 1,
+                                        maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: Style.small3w4(context)
                                             .copyWith(color: AppColors.gray300)),
@@ -168,7 +155,7 @@ class _TranslatableSectionContentState extends State<TranslatableSectionContent>
 
   Widget languageChip(WordTranslationLanguage item, WordTranslationLanguage selected) =>
       GestureDetector(
-          onTap: () => setLanguage(item),
+          onTap: () => changeLanguage(item),
           child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 3),
               padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
@@ -180,68 +167,34 @@ class _TranslatableSectionContentState extends State<TranslatableSectionContent>
               child: Text(item.label.tr(),
                   style: Style.small2w5(context).copyWith(color: AppColors.white))));
 
-  Widget tokenText(BuildContext context, String token, String tokenKey) {
-    final style = widget.textStyle ?? Style.bodyw4(context);
-    final isWord = normalizedWord(token).isNotEmpty;
-    final isSelected = selectedTokenKey == tokenKey;
-    if (!isWord) return Text('$token ', style: style, textAlign: widget.textAlign);
-    return GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onLongPressStart: (details) => translateWord(token, details.globalPosition, tokenKey),
-        child: AnimatedContainer(
-            duration: const Duration(milliseconds: 160),
-            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
-            decoration: BoxDecoration(
-                color: isSelected ? AppColors.greenE7 : AppColors.transparent,
-                borderRadius: Style.border8,
-                border: Border.all(color: isSelected ? AppColors.greenC6 : AppColors.transparent)),
-            child: Text('$token ',
-                style: isSelected
-                    ? style.copyWith(color: AppColors.green36, fontWeight: FontWeight.w700)
-                    : style,
-                textAlign: widget.textAlign)));
+  Widget selectionMenu(BuildContext context, SelectableRegionState state) {
+    final buttons = [...state.contextMenuButtonItems];
+    final anchors = state.contextMenuAnchors;
+    if (normalizedSelection(selectedText).isNotEmpty) {
+      buttons.insert(
+          0,
+          ContextMenuButtonItem(
+              label: 'Translate'.tr(),
+              onPressed: () {
+                state.hideToolbar();
+                translateText(selectedText, anchors.primaryAnchor);
+              }));
+    }
+    buttons.addAll(WordTranslationLanguage.values.map((language) => ContextMenuButtonItem(
+        label: language.label.tr(),
+        onPressed: () {
+          changeLanguage(language);
+          state.hideToolbar();
+        })));
+    return AdaptiveTextSelectionToolbar.buttonItems(anchors: anchors, buttonItems: buttons);
   }
-
-  Widget paragraphText(BuildContext context, String paragraph, int paragraphIndex) {
-    final tokens = paragraph.split(RegExp(r'\s+')).where((token) => token.isNotEmpty).toList();
-    return Wrap(
-        alignment: switch (widget.textAlign) {
-          TextAlign.center => WrapAlignment.center,
-          TextAlign.right || TextAlign.end => WrapAlignment.end,
-          _ => WrapAlignment.start,
-        },
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: tokens
-            .asMap()
-            .entries
-            .map((entry) => tokenText(context, entry.value, '$paragraphIndex:${entry.key}'))
-            .toList());
-  }
-
-  Widget get content => Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        ...paragraphs.asMap().entries.map((entry) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Builder(builder: (context) => paragraphText(context, entry.value, entry.key))))
-      ]);
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-      behavior: HitTestBehavior.translucent, onTap: hideTranslation, child: content);
-}
-
-String normalizeText(String value) {
-  var text = value
-      .replaceAll(RegExp(r'<\s*br\s*/?>', caseSensitive: false), '\n')
-      .replaceAll(RegExp(r'</\s*p\s*>', caseSensitive: false), '\n\n')
-      .replaceAll(RegExp(r'</\s*div\s*>', caseSensitive: false), '\n')
-      .replaceAll(RegExp(r'<[^>]*>'), ' ')
-      .replaceAll('&nbsp;', ' ')
-      .replaceAll('&amp;', '&')
-      .replaceAll('&quot;', '"')
-      .replaceAll('&#39;', "'")
-      .replaceAll('&lt;', '<')
-      .replaceAll('&gt;', '>');
-  text = text.replaceAll(RegExp(r'[ \t]+'), ' ');
-  text = text.replaceAll(RegExp(r' *\n *'), '\n');
-  return text.trim();
+  Widget build(BuildContext context) => SelectionArea(
+      onSelectionChanged: (content) => selectedText = content?.plainText ?? '',
+      contextMenuBuilder: selectionMenu,
+      child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: removeTranslationOverlay,
+          child: widget.child));
 }

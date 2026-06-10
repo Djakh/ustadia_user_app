@@ -164,7 +164,8 @@ class OtpPageState extends State<OtpPage> {
 
   Future<void> retryConnection() async {
     if (isAwaitingUser) {
-      userBloc.add(const UserProfileRequested());
+      userBloc.add(
+          UserProfileRequested(preferredLanguage: Localizations.localeOf(context).languageCode));
       return;
     }
     onConfirm();
@@ -286,7 +287,8 @@ class OtpPageState extends State<OtpPage> {
               }
               if (state.status == Status.success && state.action == AuthVerifyAction.verifyOtp) {
                 isAwaitingUser = true;
-                userBloc.add(const UserProfileRequested());
+                userBloc.add(UserProfileRequested(
+                    preferredLanguage: Localizations.localeOf(context).languageCode));
                 return;
               }
               if (state.status == Status.error && state.errorMessage != null) {

@@ -44,11 +44,15 @@ class EditAccountPageState extends State<EditAccountPage> {
     super.initState();
     userBloc = context.read<UserBloc>();
     imageUploadBloc = context.read<FileUploadBloc>();
-    if (userBloc.state.profile == null && userBloc.state.status != Status.loading) {
-      userBloc.add(const UserProfileRequested());
-    } else {
-      applyProfile(userBloc.state.profile);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (userBloc.state.profile == null && userBloc.state.status != Status.loading) {
+        userBloc.add(
+            UserProfileRequested(preferredLanguage: Localizations.localeOf(context).languageCode));
+      } else {
+        applyProfile(userBloc.state.profile);
+      }
+    });
   }
 
   @override

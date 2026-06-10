@@ -12,6 +12,7 @@ import 'package:ustadia_user_app/features/assignments/data/datasources/assignmen
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_stats_model.dart';
 import 'package:ustadia_user_app/features/learn/data/datasources/learn_remote_data_source.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/manual_review_result_component.dart';
 import 'package:ustadia_user_app/features/mock_exam/data/datasources/mock_exam_remote_data_source.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
@@ -94,6 +95,10 @@ class _QuizResultComponentState extends State<QuizResultComponent> {
   int get pending => stats?.pending ?? 0;
   double get scoreRatio => total > 0 ? correct / total : 0;
   bool get isVocabulary => widget.sectionModel?.sectionType == SectionType.vocabulary;
+  bool get isManualReviewSection =>
+      widget.sectionModel?.sectionType == SectionType.writing ||
+      widget.sectionModel?.sectionType == SectionType.speaking;
+  bool get shouldShowManualReviewResult => isManualReviewSection && pending > 0;
 
   Color get accentColor {
     if (scoreRatio >= 1) return AppColors.success;
@@ -306,6 +311,13 @@ class _QuizResultComponentState extends State<QuizResultComponent> {
   Widget build(BuildContext context) {
     if (hasRemoteStats && isLoading && stats == null) return loadingView();
     if (hasRemoteStats && errorMessage != null && stats == null) return errorView();
+    if (shouldShowManualReviewResult && widget.sectionModel != null) {
+      return ManualReviewResultComponent(
+          sectionModel: widget.sectionModel!,
+          stats: stats,
+          aiFeedback: widget.aiFeedback,
+          feedback: widget.feedback);
+    }
     return content(context);
   }
 }

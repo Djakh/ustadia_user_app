@@ -84,7 +84,8 @@ class _SplashPageState extends State<SplashPage> {
     final hasToken = authLocal.hasAccessToken();
     if (hasToken) {
       isCheckingUser = true;
-      userBloc.add(const UserProfileRequested());
+      userBloc.add(
+          UserProfileRequested(preferredLanguage: Localizations.localeOf(context).languageCode));
       isStarting = false;
       return;
     }

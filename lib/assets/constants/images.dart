@@ -90,4 +90,5 @@ class AppImages {
   static const learnSpeakingDefault = 'assets/svg/learn_speaking_default.svg';
   static const learnSpeakingListening = 'assets/svg/learn_speaking_listening.svg';
   static const feedbackIcon = 'assets/svg/feedback_icon.svg';
+  static const logo = 'assets/svg/logo.svg';
 }
