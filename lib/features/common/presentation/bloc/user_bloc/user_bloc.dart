@@ -23,7 +23,15 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   Future<void> handleProfileRequested(UserProfileRequested event, Emitter<UserState> emit) async {
     emit(state.copyWith(status: Status.loading, errorMessage: null));
     try {
-      final profile = await userRemoteDataSource.fetchProfile();
+      var profile = await userRemoteDataSource.fetchProfile();
+      final preferredLanguage = normalizedLanguage(event.preferredLanguage);
+      if (preferredLanguage != null && profile.language != preferredLanguage) {
+        profile = await userRemoteDataSource.updateProfile(
+            firstName: profile.firstName,
+            lastName: profile.lastName,
+            language: preferredLanguage,
+            profilePictureId: profile.profilePictureId);
+      }
       emit(state.copyWith(status: Status.success, profile: profile, errorMessage: null));
     } on DioException catch (error) {
       emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.from(error)));
@@ -59,5 +67,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     } catch (error) {
       emit(state.copyWith(status: Status.error, errorMessage: 'Request failed.'));
     }
+  }
+
+  String? normalizedLanguage(String? value) {
+    final language = value?.trim().toLowerCase();
+    if (language == null || language.isEmpty) return null;
+    if (language.startsWith('en')) return 'en';
+    if (language.startsWith('ru')) return 'ru';
+    if (language.startsWith('uz')) return 'uz';
+    return null;
   }
 }

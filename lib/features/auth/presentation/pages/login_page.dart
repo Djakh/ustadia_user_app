@@ -2,13 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/enums/status.dart';
-import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/connection/reload_conntection_button.dart';
@@ -55,6 +56,7 @@ class LoginPageState extends State<LoginPage> {
   bool showPasswordError = false;
   bool isEmailLogin = false;
   bool passwordVisible = false;
+  int authModeLogoTapCount = 0;
   final AuthLoginBloc authLoginBloc = sl<AuthLoginBloc>();
   final AuthPasswordBloc authPasswordBloc = sl<AuthPasswordBloc>();
   final AuthLocalDataSource authLocalDataSource = sl<AuthLocalDataSource>();
@@ -178,7 +180,8 @@ class LoginPageState extends State<LoginPage> {
       hideKeyboard();
       saveRememberedCredentials();
       isAwaitingUser = true;
-      userBloc.add(const UserProfileRequested());
+      userBloc.add(
+          UserProfileRequested(preferredLanguage: Localizations.localeOf(context).languageCode));
       return;
     }
     if (state.status == Status.error && state.errorMessage != null) {
@@ -259,27 +262,30 @@ class LoginPageState extends State<LoginPage> {
     hideKeyboard();
     setState(() {
       isEmailLogin = !isEmailLogin;
+      authModeLogoTapCount = 0;
       showError = false;
       showEmailError = false;
       showPasswordError = false;
     });
   }
 
+  void onLogoTap() {
+    authModeLogoTapCount++;
+    if (authModeLogoTapCount < 6) return;
+    toggleLoginMethod();
+  }
+
   void loadRememberedCredentials() {
     final shouldRemember = authLocalDataSource.isRememberMeEnabled();
     if (!shouldRemember) return;
-    final method = authLocalDataSource.getLastLoginMethod();
-    final lastEmail = authLocalDataSource.getLastEmail();
     final lastPhone = authLocalDataSource.getLastPhone();
+    final lastEmail = authLocalDataSource.getLastEmail();
     final lastPassword = authLocalDataSource.getLastPassword();
     setState(() {
       rememberMe = true;
-      isEmailLogin = method == 'email';
-      if (isEmailLogin) {
-        emailController.text = lastEmail;
-      } else {
-        phoneController.text = lastPhone;
-      }
+      isEmailLogin = false;
+      phoneController.text = lastPhone;
+      emailController.text = lastEmail;
       passwordController.text = lastPassword;
     });
   }
@@ -291,7 +297,7 @@ class LoginPageState extends State<LoginPage> {
     }
     await authLocalDataSource.setRememberMeEnabled(true);
     await authLocalDataSource.setLastLoginMethod(isEmailLogin ? 'email' : 'phone');
-    await authLocalDataSource.setLastEmail(emailController.text.trim());
+    await authLocalDataSource.setLastEmail(isEmailLogin ? emailController.text.trim() : '');
     await authLocalDataSource.setLastPhone(phoneController.text.trim());
     await authLocalDataSource.setLastPassword(passwordController.text.trim());
   }
@@ -361,7 +367,10 @@ class LoginPageState extends State<LoginPage> {
 
   /// --- Widgets ---
 
-  Widget get logo => Image.asset(AppImages.loginLogo, height: 50, width: 40);
+  Widget get logo => GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onLogoTap,
+      child: SvgPicture.asset(AppImages.logo, height: 70, width: 70));
 
   Widget get rememberCheckBox => Checkbox(
       value: rememberMe,
@@ -385,6 +394,16 @@ class LoginPageState extends State<LoginPage> {
             child: Text('Forgot Password?'.tr(), style: Style.small2w5(context)))
       ]);
 
+  Widget get emailTextField => InputField.email(
+      controller: emailController,
+      focusNode: emailFocusNode,
+      label: 'Email'.tr(),
+      hint: 'example@mail.com',
+      textInputAction: TextInputAction.next,
+      errorText: showEmailError ? 'Email is invalid.'.tr() : null,
+      onChanged: (value) => setState(() => showEmailError = false),
+      onSubmitted: (_) => passwordFocusNode.requestFocus());
+
   Widget get phoneTextField => InputField.phone(
       controller: phoneController,
       focusNode: phoneFocusNode,
@@ -392,16 +411,6 @@ class LoginPageState extends State<LoginPage> {
       textInputAction: TextInputAction.next,
       errorText: showError ? 'Phone number is invalid.'.tr() : null,
       onChanged: (value) => setState(() => showError = false),
-      onSubmitted: (_) => passwordFocusNode.requestFocus());
-
-  Widget get emailTextField => InputField.email(
-      controller: emailController,
-      focusNode: emailFocusNode,
-      label: 'Email'.tr(),
-      hint: 'e.g. name@email.com'.tr(),
-      textInputAction: TextInputAction.next,
-      errorText: showEmailError ? 'Email is invalid.'.tr() : null,
-      onChanged: (value) => setState(() => showEmailError = false),
       onSubmitted: (_) => passwordFocusNode.requestFocus());
 
   Widget get passwordField => InputField.password(
@@ -434,9 +443,11 @@ class LoginPageState extends State<LoginPage> {
                 style: Style.small3w5(context, color: TextColorRole.onSurface)))
       ]);
 
-  List<Widget> get fields => isEmailLogin
-      ? [emailTextField, const SizedBox(height: 12), passwordField]
-      : [phoneTextField, const SizedBox(height: 12), passwordField];
+  List<Widget> get fields => [
+        if (isEmailLogin) emailTextField else phoneTextField,
+        const SizedBox(height: 12),
+        passwordField
+      ];
 
   bool get hasConnectionIssue =>
       DioErrorMessage.isConnectionMessage(authLoginBloc.state.errorMessage) ||
@@ -448,7 +459,8 @@ class LoginPageState extends State<LoginPage> {
 
   Future<void> retryConnection() async {
     if (authLoginBloc.state.status == Status.success && isAwaitingUser) {
-      userBloc.add(const UserProfileRequested());
+      userBloc.add(
+          UserProfileRequested(preferredLanguage: Localizations.localeOf(context).languageCode));
       return;
     }
     onLogin();
@@ -480,15 +492,6 @@ class LoginPageState extends State<LoginPage> {
                 bloc: authLoginBloc,
                 builder: (context, state) => Button.primary(
                     onTap: onLogin, text: 'Log in'.tr(), isLoading: isAuthenticating)),
-            const SizedBox(height: 16),
-            divider,
-            const SizedBox(height: 16),
-            BlocBuilder<AuthLoginBloc, AuthLoginState>(
-                bloc: authLoginBloc,
-                builder: (context, state) => Button.border(
-                    onTap: toggleLoginMethod,
-                    text: isEmailLogin ? 'Log in with Phone'.tr() : 'Log in with Email'.tr(),
-                    isAvialable: !isAuthenticating)),
             if (hasConnectionIssue) ...[
               const SizedBox(height: 12),
               reloadConnectionButton,

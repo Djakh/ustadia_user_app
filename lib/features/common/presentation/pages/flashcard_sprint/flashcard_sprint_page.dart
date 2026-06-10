@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
@@ -56,11 +57,14 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   bool showMeaning = false;
   bool isFlashcardsOverviewVisible = false;
   bool shouldRefreshParent = false;
+  bool isPronouncing = false;
+  String? autoAdvanceFlashcardId;
   OverlayEntry? flashcardsOverviewEntry;
   final Set<int> _seenMeaning = {};
   final Set<int> _knownCards = {};
   final Set<int> _learningCards = {};
   final FlashcardStatusBloc statusBloc = sl<FlashcardStatusBloc>();
+  final FlutterTts tts = FlutterTts();
   FlashcardSprintResultStats? resultStats;
   final GlobalKey flashcardKey = GlobalKey(debugLabel: 'flashcard_card');
   final GlobalKey cardsButtonKey = GlobalKey(debugLabel: 'flashcard_cards_button');
@@ -92,6 +96,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   @override
   void initState() {
     super.initState();
+    configureTts();
     if (widget.sectionModel?.progressState == SectionProgressState.completed) {
       stage = FlashcardSprintStage.result;
     }
@@ -101,8 +106,50 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   void dispose() {
     flashcardsOverviewEntry?.remove();
     flashcardsOverviewEntry = null;
+    tts.stop();
     statusBloc.close();
     super.dispose();
+  }
+
+  Future<void> configureTts() async {
+    try {
+      await tts.setLanguage('en-US');
+      await tts.setSpeechRate(0.42);
+      await tts.setPitch(1.0);
+      await tts.setVolume(1.0);
+      await tts.awaitSpeakCompletion(true);
+      await selectPreferredVoice();
+      tts.setCompletionHandler(() {
+        if (mounted) setState(() => isPronouncing = false);
+      });
+      tts.setErrorHandler((_) {
+        if (mounted) setState(() => isPronouncing = false);
+      });
+    } catch (_) {}
+  }
+
+  Future<void> selectPreferredVoice() async {
+    try {
+      final voices = await tts.getVoices;
+      if (voices is! List) return;
+      final englishVoices = voices.whereType<Map>().where((voice) {
+        final locale = voice['locale']?.toString().toLowerCase() ?? '';
+        return locale == 'en-us' || locale.startsWith('en_') || locale.startsWith('en-');
+      }).toList();
+      if (englishVoices.isEmpty) return;
+      final preferred = englishVoices.firstWhere((voice) {
+        final name = voice['name']?.toString().toLowerCase() ?? '';
+        return name.contains('enhanced') ||
+            name.contains('premium') ||
+            name.contains('samantha') ||
+            name.contains('ava') ||
+            name.contains('google us');
+      }, orElse: () => englishVoices.first);
+      final name = preferred['name']?.toString();
+      final locale = preferred['locale']?.toString();
+      if (name == null || locale == null) return;
+      await tts.setVoice({'name': name, 'locale': locale});
+    } catch (_) {}
   }
 
   void toggleFace() {
@@ -130,6 +177,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   void onKnowIt() {
     if (isSubmitting) return;
     if (isCurrentCardAnswered) return;
+    autoAdvanceFlashcardId = current.id;
     _submitStatus('not_revealed');
     if (!_knownCards.contains(index)) {
       setState(() {
@@ -165,6 +213,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   void goToCard(int nextIndex, {bool closeFlashcardsOverview = false}) {
     if (isSubmitting) return;
     if (nextIndex < 0 || nextIndex >= cards.length) return;
+    stopPronunciation();
     setState(() {
       if (index != nextIndex) showMeaning = false;
       index = nextIndex;
@@ -219,8 +268,29 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
         flashcardId: current.id, status: status, isPractice: widget.isPractice));
   }
 
+  Future<void> pronounceCurrentWord() async {
+    final text = current.front.trim();
+    if (text.isEmpty || isPronouncing) return;
+    setState(() => isPronouncing = true);
+    try {
+      await tts.stop();
+      await tts.speak(text);
+      if (mounted) setState(() => isPronouncing = false);
+    } catch (_) {
+      if (mounted) setState(() => isPronouncing = false);
+    }
+  }
+
+  void stopPronunciation() {
+    if (isPronouncing && mounted) setState(() => isPronouncing = false);
+    tts.stop();
+  }
+
   void _handleStatusUpdate(FlashcardStatusState state) {
     if (state.status.isError && state.errorMessage != null) {
+      if (autoAdvanceFlashcardId == state.flashcardId) {
+        autoAdvanceFlashcardId = null;
+      }
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
       return;
     }
@@ -237,6 +307,10 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
           status: updatedStatus ?? card.status,
           isAnswered: widget.isPractice ? card.isAnswered : state.isAnswered ?? true,
         );
+      }
+      if (autoAdvanceFlashcardId == state.flashcardId) {
+        autoAdvanceFlashcardId = null;
+        goNextCard();
       }
     }
   }
@@ -255,6 +329,8 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
           flashcard: current,
           showMeaning: shouldShowMeaning,
           onToggle: toggleFace,
+          onPronounce: pronounceCurrentWord,
+          isPronouncing: isPronouncing,
           isLoading: isCurrentMeaningLoading,
           canFlip: canCurrentCardFlip));
 

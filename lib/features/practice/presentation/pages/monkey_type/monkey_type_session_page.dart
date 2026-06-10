@@ -30,6 +30,8 @@ class MonkeyTypeSessionPage extends StatefulWidget {
 class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
   final MonkeyTypeSessionBloc sessionBloc = sl<MonkeyTypeSessionBloc>();
   final TextEditingController controller = TextEditingController();
+  final ScrollController pageScrollController = ScrollController();
+  final ScrollController targetScrollController = ScrollController();
   final ScrollController inputScrollController = ScrollController();
   final Stopwatch stopwatch = Stopwatch();
   final GlobalKey progressKey = GlobalKey(debugLabel: 'monkey_type_progress');
@@ -42,6 +44,7 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
   int activeTextIndex = 0;
   int elapsedSeconds = 0;
   bool hasSubmitted = false;
+  String? positionedTextId;
 
   @override
   void initState() {
@@ -57,6 +60,8 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
     controller
       ..removeListener(onTypingChanged)
       ..dispose();
+    pageScrollController.dispose();
+    targetScrollController.dispose();
     inputScrollController.dispose();
     sessionBloc.close();
     super.dispose();
@@ -102,6 +107,7 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
 
   void resetCurrentText() {
     controller.clear();
+    resetTypingPosition();
     stopwatch
       ..reset()
       ..stop();
@@ -115,14 +121,49 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
 
   void previousText() {
     if (activeTextIndex == 0) return;
-    setState(() => activeTextIndex--);
+    setState(() {
+      activeTextIndex--;
+      positionedTextId = null;
+    });
     resetCurrentText();
   }
 
   void nextText(List<MonkeyTypeTextModel> texts) {
     if (activeTextIndex >= texts.length - 1) return;
-    setState(() => activeTextIndex++);
+    setState(() {
+      activeTextIndex++;
+      positionedTextId = null;
+    });
     resetCurrentText();
+  }
+
+  void resetTypingPosition() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (targetScrollController.hasClients) targetScrollController.jumpTo(0);
+      if (inputScrollController.hasClients) inputScrollController.jumpTo(0);
+    });
+  }
+
+  void positionAtCurrentTextStart(List<MonkeyTypeTextModel> texts) {
+    if (texts.isEmpty) return;
+    final text = texts[activeTextIndex.clamp(0, texts.length - 1)];
+    if (positionedTextId == text.id) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      resetTypingPosition();
+      if (!pageScrollController.hasClients) return;
+      positionedTextId = text.id;
+      pageScrollController.jumpTo(0);
+      final context = inputKey.currentContext;
+      if (context == null) return;
+      Scrollable.ensureVisible(
+        context,
+        alignment: 0.92,
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOutCubic,
+      );
+    });
   }
 
   void submitAnswer(List<MonkeyTypeTextModel> texts) {
@@ -155,23 +196,33 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
             Text(title, style: Style.small2w4(context, color: TextColorRole.greyColor))
           ])));
 
-  Widget targetTextView(String target, String typed) => PrimaryBox(
+  Widget targetTextView(String target, String typed, double height) => PrimaryBox(
       isTappable: false,
       width: double.infinity,
-      child: Wrap(
-          children: List.generate(target.length, (index) {
-        final hasTyped = index < typed.length;
-        final isCorrect = hasTyped && typed[index] == target[index];
-        return Text(target[index],
-            style: Style.body2w5(context).copyWith(
-                color: !hasTyped
-                    ? context.cs.onSurface
-                    : isCorrect
-                        ? AppColors.primary
-                        : AppColors.error,
-                backgroundColor:
-                    index == typed.length ? AppColors.primary.withValues(alpha: 0.12) : null));
-      })));
+      padding: EdgeInsets.zero,
+      child: SizedBox(
+          height: height,
+          child: Scrollbar(
+              controller: targetScrollController,
+              thumbVisibility: target.length > 240,
+              child: SingleChildScrollView(
+                  controller: targetScrollController,
+                  padding: const EdgeInsets.all(16),
+                  child: Wrap(
+                      children: List.generate(target.length, (index) {
+                    final hasTyped = index < typed.length;
+                    final isCorrect = hasTyped && typed[index] == target[index];
+                    return Text(target[index],
+                        style: Style.body2w5(context).copyWith(
+                            color: !hasTyped
+                                ? context.cs.onSurface
+                                : isCorrect
+                                    ? AppColors.primary
+                                    : AppColors.error,
+                            backgroundColor: index == typed.length
+                                ? AppColors.primary.withValues(alpha: 0.12)
+                                : null));
+                  }))))));
 
   Widget resultPanel(BuildContext context, String typed, String target) => PrimaryBox(
       isTappable: false,
@@ -201,92 +252,100 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
             child: Button.border(
                 onTap: previousText,
                 isAvialable: activeTextIndex > 0,
-                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  const Icon(Icons.chevron_left_rounded, size: 20),
-                  const SizedBox(width: 4),
-                  Text('Previous'.tr())
-                ]))),
+                child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      const Icon(Icons.chevron_left_rounded, size: 20),
+                      const SizedBox(width: 4),
+                      Text('Previous'.tr())
+                    ])))),
         const SizedBox(width: 10),
         Expanded(
             child: Button.border(
                 onTap: () => nextText(texts),
                 isAvialable: activeTextIndex < texts.length - 1,
-                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Text('Next'.tr()),
-                  const SizedBox(width: 4),
-                  const Icon(Icons.chevron_right_rounded, size: 20),
-                ])))
+                child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Text('Next'.tr()),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.chevron_right_rounded, size: 20),
+                    ]))))
       ]));
 
   Widget sessionView(
       BuildContext context, List<MonkeyTypeTextModel> texts, MonkeyTypeSessionState state) {
+    positionAtCurrentTextStart(texts);
     final target = targetText(texts);
     final typed = controller.text;
-    final isLast = activeTextIndex >= texts.length - 1;
     final inputHeight = (MediaQuery.sizeOf(context).height * 0.24).clamp(150.0, 230.0);
-    return ListView(physics: const AlwaysScrollableScrollPhysics(), children: [
-      const SizedBox(height: 20),
-      Text(widget.practice.description,
-          style: Style.small3w4(context, color: TextColorRole.greyColor)),
-      const SizedBox(height: 16),
-      KeyedSubtree(key: progressKey, child: textProgress(texts)),
-      const SizedBox(height: 10),
-      KeyedSubtree(
-          key: statsKey,
-          child: Row(children: [
-            statBox(context, 'WPM'.tr(), wpm(typed).toStringAsFixed(0)),
-            const SizedBox(width: 8),
-            statBox(context, 'Accuracy'.tr(), '${accuracy(typed, target).toStringAsFixed(0)}%'),
-            const SizedBox(width: 8),
-            statBox(context, 'Time'.tr(), '${elapsedSeconds}s')
-          ])),
-      const SizedBox(height: 16),
-      KeyedSubtree(key: targetTextKey, child: targetTextView(target, typed)),
-      const SizedBox(height: 14),
-      KeyedSubtree(
-          key: inputKey,
-          child: SizedBox(
-              height: inputHeight,
-              child: TextField(
-                  controller: controller,
-                  scrollController: inputScrollController,
-                  scrollPhysics: const AlwaysScrollableScrollPhysics(),
-                  keyboardType: TextInputType.multiline,
-                  expands: true,
-                  minLines: null,
-                  maxLines: null,
-                  enabled: !state.submitStatus.isLoading && !hasSubmitted,
-                  decoration: InputDecoration(
-                      hintText: 'Start typing'.tr(),
-                      filled: true,
-                      fillColor: context.cs.surface,
-                      suffixIcon: controller.text.isEmpty && !hasSubmitted
-                          ? null
-                          : IconButton(
-                              tooltip: 'Clear'.tr(),
-                              onPressed: resetCurrentText,
-                              icon: const Icon(Icons.cancel_rounded)),
-                      border: OutlineInputBorder(borderRadius: Style.border20),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: Style.border20,
-                          borderSide: const BorderSide(color: AppColors.grayF4)))))),
-      const SizedBox(height: 14),
-      if (state.submitStatus.isSuccess && hasSubmitted) resultPanel(context, typed, target),
-      if (state.submitStatus.isError && state.submitErrorMessage != null)
-        Text(state.submitErrorMessage!,
-            style: Style.small3w4(context).copyWith(color: AppColors.error)),
-      const SizedBox(height: 14),
-      KeyedSubtree(
-          key: submitKey,
-          child: Button.primary(
-              onTap: () => hasSubmitted && !isLast ? nextText(texts) : submitAnswer(texts),
-              isLoading: state.submitStatus.isLoading,
-              isAvialable: typed.trim().isNotEmpty,
-              text: hasSubmitted && !isLast ? 'Next text'.tr() : 'Submit'.tr())),
-      const SizedBox(height: 10),
-      navigationButtons(texts),
-      const SizedBox(height: 80),
-    ]);
+    final targetHeight = (MediaQuery.sizeOf(context).height * 0.26).clamp(170.0, 240.0);
+    return ListView(
+        controller: pageScrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          const SizedBox(height: 20),
+          Text(widget.practice.description,
+              style: Style.small3w4(context, color: TextColorRole.greyColor)),
+          const SizedBox(height: 16),
+          KeyedSubtree(key: progressKey, child: textProgress(texts)),
+          const SizedBox(height: 10),
+          KeyedSubtree(
+              key: statsKey,
+              child: Row(children: [
+                statBox(context, 'WPM'.tr(), wpm(typed).toStringAsFixed(0)),
+                const SizedBox(width: 8),
+                statBox(context, 'Accuracy'.tr(), '${accuracy(typed, target).toStringAsFixed(0)}%'),
+                const SizedBox(width: 8),
+                statBox(context, 'Time'.tr(), '${elapsedSeconds}s')
+              ])),
+          const SizedBox(height: 16),
+          KeyedSubtree(key: targetTextKey, child: targetTextView(target, typed, targetHeight)),
+          const SizedBox(height: 14),
+          KeyedSubtree(
+              key: inputKey,
+              child: SizedBox(
+                  height: inputHeight,
+                  child: TextField(
+                      controller: controller,
+                      scrollController: inputScrollController,
+                      scrollPhysics: const AlwaysScrollableScrollPhysics(),
+                      keyboardType: TextInputType.multiline,
+                      expands: true,
+                      minLines: null,
+                      maxLines: null,
+                      enabled: !state.submitStatus.isLoading && !hasSubmitted,
+                      decoration: InputDecoration(
+                          hintText: 'Start typing'.tr(),
+                          filled: true,
+                          fillColor: context.cs.surface,
+                          suffixIcon: controller.text.isEmpty && !hasSubmitted
+                              ? null
+                              : IconButton(
+                                  tooltip: 'Clear'.tr(),
+                                  onPressed: resetCurrentText,
+                                  icon: const Icon(Icons.cancel_rounded)),
+                          border: OutlineInputBorder(borderRadius: Style.border20),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: Style.border20,
+                              borderSide: const BorderSide(color: AppColors.grayF4)))))),
+          const SizedBox(height: 14),
+          if (state.submitStatus.isSuccess && hasSubmitted) resultPanel(context, typed, target),
+          if (state.submitStatus.isError && state.submitErrorMessage != null)
+            Text(state.submitErrorMessage!,
+                style: Style.small3w4(context).copyWith(color: AppColors.error)),
+          const SizedBox(height: 14),
+          KeyedSubtree(
+              key: submitKey,
+              child: Button.primary(
+                  onTap: hasSubmitted ? resetCurrentText : () => submitAnswer(texts),
+                  isLoading: state.submitStatus.isLoading,
+                  isAvialable: hasSubmitted || typed.trim().isNotEmpty,
+                  text: hasSubmitted ? 'Repeat'.tr() : 'Submit'.tr())),
+          const SizedBox(height: 10),
+          navigationButtons(texts),
+          const SizedBox(height: 80),
+        ]);
   }
 
   Widget get contentChecker =>

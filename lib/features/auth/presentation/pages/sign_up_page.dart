@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
@@ -43,6 +44,7 @@ class SignUpPageState extends State<SignUpPage> {
   bool showPasswordError = false;
   bool showConfirmError = false;
   bool isEmailSignUp = false;
+  int authModeLogoTapCount = 0;
   final AuthRegisterBloc authRegisterBloc = sl<AuthRegisterBloc>();
 
   /// --- Life cycle ---
@@ -95,8 +97,8 @@ class SignUpPageState extends State<SignUpPage> {
   void onSignUp() {
     final fullNameValid = isFullNameValid;
     final usernameValid = isUsernameValid;
-    final phoneValid = isEmailSignUp ? true : isPhoneValid;
-    final emailValid = isEmailSignUp ? isEmailValid : true;
+    final phoneValid = isEmailSignUp || isPhoneValid;
+    final emailValid = !isEmailSignUp || isEmailValid;
     final strong = isPasswordStrong;
     final match = passwordsMatch;
     setState(() {
@@ -126,10 +128,18 @@ class SignUpPageState extends State<SignUpPage> {
 
   void goToLogin() => context.go(loginRoute);
 
+  bool get isPhoneFormValid =>
+      isFullNameValid && isUsernameValid && isPhoneValid && isPasswordStrong && passwordsMatch;
+  bool get isEmailFormValid =>
+      isFullNameValid && isUsernameValid && isEmailValid && isPasswordStrong && passwordsMatch;
+  bool get hasConnectionIssue =>
+      DioErrorMessage.isConnectionMessage(authRegisterBloc.state.errorMessage);
+
   void toggleSignUpMethod() {
-    FocusScope.of(context).unfocus();
+    FocusManager.instance.primaryFocus?.unfocus();
     setState(() {
       isEmailSignUp = !isEmailSignUp;
+      authModeLogoTapCount = 0;
       showPhoneError = false;
       showEmailError = false;
       showPasswordError = false;
@@ -137,16 +147,18 @@ class SignUpPageState extends State<SignUpPage> {
     });
   }
 
-  bool get isEmailFormValid =>
-      isFullNameValid && isUsernameValid && isEmailValid && isPasswordStrong && passwordsMatch;
-  bool get isPhoneFormValid =>
-      isFullNameValid && isUsernameValid && isPhoneValid && isPasswordStrong && passwordsMatch;
-  bool get hasConnectionIssue =>
-      DioErrorMessage.isConnectionMessage(authRegisterBloc.state.errorMessage);
+  void onLogoTap() {
+    authModeLogoTapCount++;
+    if (authModeLogoTapCount < 6) return;
+    toggleSignUpMethod();
+  }
 
   /// --- Widgets ---
 
-  Widget get logo => Image.asset(AppImages.loginLogo, height: 50, width: 40);
+ Widget get logo => GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onLogoTap,
+      child: SvgPicture.asset(AppImages.logo, height: 70, width: 70));
 
   Widget rule(String text, bool met) => Row(children: [
         Icon(met ? Icons.check_circle : Icons.circle_outlined,
@@ -190,19 +202,19 @@ class SignUpPageState extends State<SignUpPage> {
             errorText: showUsernameError ? 'Username is required.'.tr() : null,
             onChanged: (value) => setState(() => showUsernameError = false)),
         const SizedBox(height: 12),
-        if (!isEmailSignUp)
+        if (isEmailSignUp)
+          InputField.email(
+              controller: emailController,
+              label: 'Email'.tr(),
+              hint: 'example@mail.com',
+              errorText: showEmailError ? 'Email is invalid.'.tr() : null,
+              onChanged: (value) => setState(() => showEmailError = false))
+        else
           InputField.phone(
               controller: phoneController,
               label: 'Phone number'.tr(),
               errorText: showPhoneError ? 'Phone number is invalid.'.tr() : null,
               onChanged: (value) => setState(() => showPhoneError = false)),
-        if (isEmailSignUp)
-          InputField.email(
-              controller: emailController,
-              label: 'Email'.tr(),
-              hint: 'e.g. name@email.com'.tr(),
-              errorText: showEmailError ? 'Email is invalid.'.tr() : null,
-              onChanged: (value) => setState(() => showEmailError = false)),
         const SizedBox(height: 12),
         InputField.password(
             controller: passwordController,
@@ -251,10 +263,6 @@ class SignUpPageState extends State<SignUpPage> {
               isAvialable: state.status != Status.loading,
               isLoading: state.status == Status.loading));
 
-  Widget get signUpMethodButton => Button.border(
-      onTap: toggleSignUpMethod,
-      text: (isEmailSignUp ? 'Register with Phone' : 'Register with Email').tr());
-
   Widget get view => PrimaryBackground(
       isHeader: false,
       child: ListView(children: [
@@ -273,8 +281,6 @@ class SignUpPageState extends State<SignUpPage> {
           const SizedBox(height: 12),
           ReloadConntectionButton(onReloadConnection: () async => onSignUp()),
         ],
-        const SizedBox(height: 16),
-        signUpMethodButton,
         const SizedBox(height: 16),
         footer
       ]));

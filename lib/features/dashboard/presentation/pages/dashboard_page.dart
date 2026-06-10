@@ -43,9 +43,13 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
-    if (userBloc.state.profile == null && userBloc.state.status != Status.loading) {
-      userBloc.add(const UserProfileRequested());
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (userBloc.state.profile == null && userBloc.state.status != Status.loading) {
+        userBloc.add(
+            UserProfileRequested(preferredLanguage: Localizations.localeOf(context).languageCode));
+      }
+    });
   }
 
   String fullImageUrl(String? url) {

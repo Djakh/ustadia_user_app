@@ -369,10 +369,10 @@ class TutorialPresets {
   static List<TutorialStepModel> section({String sectionType = 'lesson'}) {
     final introMessage = switch (sectionType) {
       'reading' =>
-        'Read the passage before opening the quiz. Long-press English words to translate them, and use video links when the text includes a lesson clip.'
+        'Read the passage before opening the quiz. Select or long-press English words and choose Translate from the menu when you need help.'
             .tr(),
       'grammar' =>
-        'Study the grammar rules first. Long-press a word if you need translation, then continue to the quiz when the rule feels clear.'
+        'Study the grammar rules first. Select or long-press a word and choose Translate if you need help, then continue when the rule feels clear.'
             .tr(),
       'listening' =>
         'Start by playing the audio and reading any instructions. In the quiz, the same audio stays available above the answers.'
@@ -390,13 +390,12 @@ class TutorialPresets {
     final steps = <TutorialStepModel>[
       TutorialStepModel(
           title: 'Section intro'.tr(), message: introMessage, icon: Icons.menu_book_rounded),
-      if (sectionType == 'reading' || sectionType == 'grammar')
-        TutorialStepModel(
-            title: 'Translate words'.tr(),
-            message:
-                'Long-press any English word in the text to see its translation. Use the language button above the text to switch between Uzbek and Russian.'
-                    .tr(),
-            icon: Icons.translate_rounded),
+      TutorialStepModel(
+          title: 'Translate words'.tr(),
+          message:
+              'Translation works across the app. Select or long-press an English word, tap Translate in the small menu, then switch Uzbek or Russian from the same menu or from the translation bubble.'
+                  .tr(),
+          icon: Icons.translate_rounded),
       TutorialStepModel(
           title: 'Start the task'.tr(),
           message:

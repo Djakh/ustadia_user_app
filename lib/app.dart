@@ -8,6 +8,7 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/next_task_blo
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/teacher_bloc/teacher_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
+import 'package:ustadia_user_app/core/widgets/translation/app_word_translation_area.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
 import 'package:ustadia_user_app/size_config.dart';
@@ -35,6 +36,11 @@ class UstadiaUserApp extends StatelessWidget {
                 locale: context.locale,
                 supportedLocales: context.supportedLocales,
                 localizationsDelegates: context.localizationDelegates,
+                builder: (context, child) => Overlay(initialEntries: [
+                      OverlayEntry(
+                          builder: (context) =>
+                              AppWordTranslationArea(child: child ?? const SizedBox.shrink()))
+                    ]),
                 routerConfig: appRouter));
       });
   @override

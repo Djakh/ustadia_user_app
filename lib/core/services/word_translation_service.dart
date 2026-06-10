@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:characters/characters.dart';
+import 'package:flutter/foundation.dart';
 
 enum WordTranslationLanguage {
   uzbek('uz'),
@@ -7,9 +9,28 @@ enum WordTranslationLanguage {
   final String code;
 
   const WordTranslationLanguage(this.code);
+
+  String get label => switch (this) {
+        WordTranslationLanguage.uzbek => 'Uzbek',
+        WordTranslationLanguage.russian => 'Russian',
+      };
+
+  static WordTranslationLanguage fromLocale(String languageCode) =>
+      languageCode.toLowerCase().startsWith('ru')
+          ? WordTranslationLanguage.russian
+          : WordTranslationLanguage.uzbek;
+}
+
+class WordTranslationPreferences {
+  WordTranslationPreferences._();
+
+  static final ValueNotifier<WordTranslationLanguage> language =
+      ValueNotifier<WordTranslationLanguage>(WordTranslationLanguage.uzbek);
 }
 
 class WordTranslationService {
+  static const int maxTextLength = 500;
+
   final Dio dio;
   final Map<String, String> _cache = {};
 
@@ -21,10 +42,14 @@ class WordTranslationService {
                 receiveTimeout: const Duration(seconds: 8),
                 responseType: ResponseType.json));
 
-  Future<String> translateWord(String word, WordTranslationLanguage language) async {
-    final normalized = word.trim().toLowerCase();
+  Future<String> translateWord(String word, WordTranslationLanguage language) =>
+      translateText(word, language);
+
+  Future<String> translateText(String text, WordTranslationLanguage language) async {
+    final normalized = text.trim().replaceAll(RegExp(r'\s+'), ' ');
     if (normalized.isEmpty) return '';
-    final cacheKey = '${language.code}:$normalized';
+    final limited = normalized.characters.take(maxTextLength).join();
+    final cacheKey = '${language.code}:${limited.toLowerCase()}';
     final cached = _cache[cacheKey];
     if (cached != null) return cached;
 
@@ -33,10 +58,10 @@ class WordTranslationService {
       'sl': 'en',
       'tl': language.code,
       'dt': 't',
-      'q': normalized,
+      'q': limited,
     });
     final translated = _readTranslatedText(response.data).trim();
-    if (translated.isEmpty) return normalized;
+    if (translated.isEmpty) return limited;
     _cache[cacheKey] = translated;
     return translated;
   }

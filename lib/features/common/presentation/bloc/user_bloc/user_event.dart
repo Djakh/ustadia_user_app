@@ -8,7 +8,12 @@ sealed class UserEvent extends Equatable {
 }
 
 class UserProfileRequested extends UserEvent {
-  const UserProfileRequested();
+  final String? preferredLanguage;
+
+  const UserProfileRequested({this.preferredLanguage});
+
+  @override
+  List<Object?> get props => [preferredLanguage];
 }
 
 class UserProfileReset extends UserEvent {

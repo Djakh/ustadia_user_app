@@ -44,9 +44,13 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
   @override
   void initState() {
     super.initState();
-    if (userBloc.state.profile == null) {
-      userBloc.add(const UserProfileRequested());
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (userBloc.state.profile == null) {
+        userBloc.add(
+            UserProfileRequested(preferredLanguage: Localizations.localeOf(context).languageCode));
+      }
+    });
     introSurveyBloc.add(const IntroSurveyRequested());
   }
 
@@ -96,12 +100,14 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
       syncPager(questions);
       if (questions.isNotEmpty) return;
       setState(() => isSubmitting = true);
-      userBloc.add(const UserProfileRequested());
+      userBloc.add(
+          UserProfileRequested(preferredLanguage: Localizations.localeOf(context).languageCode));
     }
   }
 
   /// --- Methods ---
-  Set<String> answeredQuestionIds(UserState userState) => userState.profile?.introAnswers
+  Set<String> answeredQuestionIds(UserState userState) =>
+      userState.profile?.introAnswers
           .map((item) => item.questionId)
           .where((id) => id.isNotEmpty)
           .toSet() ??
@@ -260,8 +266,7 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
             Text(message, textAlign: TextAlign.center),
             const SizedBox(height: 16),
             Button.primary(
-                onTap: () => introSurveyBloc.add(const IntroSurveyRequested()),
-                text: 'Retry'.tr())
+                onTap: () => introSurveyBloc.add(const IntroSurveyRequested()), text: 'Retry'.tr())
           ])));
 
   Widget buildContent(IntroSurveyState state, UserState userState) {
@@ -280,7 +285,8 @@ class IntroSurveyPageState extends State<IntroSurveyPage> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (!mounted || isSubmitting) return;
           setState(() => isSubmitting = true);
-          userBloc.add(const UserProfileRequested());
+          userBloc.add(UserProfileRequested(
+              preferredLanguage: Localizations.localeOf(context).languageCode));
         });
       }
       return const PrimaryLoadingIndicator();
