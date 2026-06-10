@@ -19,7 +19,7 @@ class SectionAnswerEvidenceView extends StatelessWidget {
 
   bool get hasTranscript => answer.transcript?.trim().isNotEmpty == true;
 
-  List<dom.Node> get contentNodes {
+  List<dom.Node> get _contentNodes {
     final fragment = html_parser.parseFragment(content);
     return fragment.nodes;
   }
@@ -84,28 +84,77 @@ class SectionAnswerEvidenceView extends StatelessWidget {
     }
   }
 
-  void _addTextSpans(dom.Text node, TextStyle style, List<TextSpan> spans, _PositionCursor cursor) {
+  _HtmlPositionMap _computePositionMap(List<dom.Node> nodes) {
+    final buffer = StringBuffer();
+    final segments = <_TextSegment>[];
+
+    void walk(dom.Node node) {
+      if (node is dom.Text) {
+        final text = node.text;
+        final start = buffer.length;
+        buffer.write(text);
+        final end = buffer.length;
+        segments.add(_TextSegment(node: node, start: start, end: end, text: text));
+        return;
+      }
+      for (final child in node.nodes) {
+        walk(child);
+      }
+    }
+
+    for (final node in nodes) {
+      walk(node);
+    }
+    return _HtmlPositionMap(cleanText: buffer.toString(), segments: segments);
+  }
+
+  _EvidenceRange? _evidenceRange(_HtmlPositionMap positionMap) {
+    if (!answer.hasEvidenceRangeData || positionMap.cleanText.isEmpty) return null;
+    final declaredStart = answer.startPosition!;
+    final declaredEnd = answer.endPosition!;
+    final cleanLength = positionMap.cleanText.length;
+    final start = declaredStart.clamp(0, cleanLength);
+    final end = declaredEnd.clamp(0, cleanLength);
+    if (end <= start) return null;
+
+    final transcript = answer.transcript?.trim();
+    if (transcript == null || transcript.isEmpty) {
+      return _EvidenceRange(start: start, end: end);
+    }
+
+    final declaredText = positionMap.cleanText.substring(start, end).trim();
+    if (declaredText == transcript) return _EvidenceRange(start: start, end: end);
+
+    final transcriptStart = nearestTranscriptStart(
+        cleanText: positionMap.cleanText, transcript: transcript, preferredStart: declaredStart);
+    if (transcriptStart == null) return _EvidenceRange(start: start, end: end);
+    return _EvidenceRange(start: transcriptStart, end: transcriptStart + transcript.length);
+  }
+
+  void _addTextSpans(dom.Text node, TextStyle style, List<TextSpan> spans,
+      Map<dom.Text, _TextSegment> segmentByNode, _EvidenceRange? range) {
     final text = node.text;
     if (text.isEmpty) return;
-    final nodeStart = cursor.value;
-    final nodeEnd = nodeStart + text.length;
-    cursor.value = nodeEnd;
+    final segment = segmentByNode[node];
+    if (segment == null) {
+      spans.add(TextSpan(text: text, style: style));
+      return;
+    }
+    final nodeStart = segment.start;
+    final nodeEnd = segment.end;
 
-    if (!answer.hasEvidenceRangeData) {
+    if (range == null) {
       spans.add(TextSpan(text: text, style: style));
       return;
     }
 
-    final highlightStart = answer.startPosition!;
-    final highlightEnd = answer.endPosition!;
-
-    if (highlightEnd <= nodeStart || highlightStart >= nodeEnd) {
+    if (range.end <= nodeStart || range.start >= nodeEnd) {
       spans.add(TextSpan(text: text, style: style));
       return;
     }
 
-    final localStart = (highlightStart - nodeStart).clamp(0, text.length);
-    final localEnd = (highlightEnd - nodeStart).clamp(0, text.length);
+    final localStart = (range.start - nodeStart).clamp(0, text.length);
+    final localEnd = (range.end - nodeStart).clamp(0, text.length);
 
     if (localStart > 0) {
       spans.add(TextSpan(text: text.substring(0, localStart), style: style));
@@ -119,9 +168,10 @@ class SectionAnswerEvidenceView extends StatelessWidget {
     }
   }
 
-  void _addNodeSpans(dom.Node node, TextStyle style, List<TextSpan> spans, _PositionCursor cursor) {
+  void _addNodeSpans(dom.Node node, TextStyle style, List<TextSpan> spans,
+      Map<dom.Text, _TextSegment> segmentByNode, _EvidenceRange? range) {
     if (node is dom.Text) {
-      _addTextSpans(node, style, spans, cursor);
+      _addTextSpans(node, style, spans, segmentByNode, range);
       return;
     }
     if (node is dom.Element && node.localName == 'br') {
@@ -130,14 +180,15 @@ class SectionAnswerEvidenceView extends StatelessWidget {
     }
     final nextStyle = node is dom.Element ? _styleForElement(node, style) : style;
     for (final child in node.nodes) {
-      _addNodeSpans(child, nextStyle, spans, cursor);
+      _addNodeSpans(child, nextStyle, spans, segmentByNode, range);
     }
   }
 
-  Widget _paragraph(BuildContext context, dom.Node node, _PositionCursor cursor) {
+  Widget _paragraph(BuildContext context, dom.Node node, Map<dom.Text, _TextSegment> segmentByNode,
+      _EvidenceRange? range) {
     final style = textStyle ?? Style.bodyw4(context);
     final spans = <TextSpan>[];
-    _addNodeSpans(node, style, spans, cursor);
+    _addNodeSpans(node, style, spans, segmentByNode, range);
     if (node is dom.Text && node.text.trim().isEmpty) return const SizedBox.shrink();
     if (spans.isEmpty) return const SizedBox.shrink();
     return Padding(
@@ -148,11 +199,14 @@ class SectionAnswerEvidenceView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!answer.hasAnswerEvidenceData) return const SizedBox.shrink();
-    final cursor = _PositionCursor();
+    final nodes = _contentNodes;
+    final positionMap = _computePositionMap(nodes);
+    final segmentByNode = {for (final segment in positionMap.segments) segment.node: segment};
+    final range = _evidenceRange(positionMap);
     final contentView = content.isNotEmpty
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: contentNodes.map((node) => _paragraph(context, node, cursor)).toList())
+            children: nodes.map((node) => _paragraph(context, node, segmentByNode, range)).toList())
         : const SizedBox.shrink();
     return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -160,6 +214,44 @@ class SectionAnswerEvidenceView extends StatelessWidget {
   }
 }
 
-class _PositionCursor {
-  int value = 0;
+@visibleForTesting
+int? nearestTranscriptStart(
+    {required String cleanText, required String transcript, required int preferredStart}) {
+  if (cleanText.isEmpty || transcript.isEmpty) return null;
+  var bestIndex = -1;
+  var bestDistance = 1 << 62;
+  var index = cleanText.indexOf(transcript);
+  while (index != -1) {
+    final distance = (index - preferredStart).abs();
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      bestIndex = index;
+    }
+    index = cleanText.indexOf(transcript, index + transcript.length);
+  }
+  return bestIndex == -1 ? null : bestIndex;
+}
+
+class _HtmlPositionMap {
+  final String cleanText;
+  final List<_TextSegment> segments;
+
+  const _HtmlPositionMap({required this.cleanText, required this.segments});
+}
+
+class _TextSegment {
+  final dom.Text node;
+  final int start;
+  final int end;
+  final String text;
+
+  const _TextSegment(
+      {required this.node, required this.start, required this.end, required this.text});
+}
+
+class _EvidenceRange {
+  final int start;
+  final int end;
+
+  const _EvidenceRange({required this.start, required this.end});
 }
