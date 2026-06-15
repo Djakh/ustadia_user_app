@@ -45,6 +45,7 @@ class VoiceAgentPageState extends State<VoiceAgentPage>
   static const Duration initialAssistantFirstSyncDelay = Duration(milliseconds: 1400);
   static const Duration initialAssistantRetryDelay = Duration(milliseconds: 2400);
   static const Duration assistantTurnSyncDelay = Duration(milliseconds: 1100);
+  static const Duration assistantWaitingSyncDelay = Duration(milliseconds: 1800);
   static const Duration latestMessagesSyncThrottle = Duration(milliseconds: 1200);
   static const Duration blockedMessagesSyncRetryDelay = Duration(milliseconds: 800);
 
@@ -419,17 +420,20 @@ class VoiceAgentPageState extends State<VoiceAgentPage>
 
   void startAssistantWaitingState({bool stopMicrophone = true}) {
     assistantResponseTimer?.cancel();
+    assistantTurnMessagesSyncTimer?.cancel();
     if (stopMicrophone && voiceCallNotifier.micEnabled) {
       unawaited(voiceCallNotifier.setMicrophoneEnabled(false));
     }
     if (!waitingForAssistantResponse && mounted) {
       setState(() => waitingForAssistantResponse = true);
     }
+    assistantTurnMessagesSyncTimer = Timer(assistantWaitingSyncDelay, syncWaitingMessages);
     assistantResponseTimer = Timer(assistantResponseTimeout, handleAssistantResponseTimeout);
   }
 
   void clearAssistantWaitingState() {
     assistantResponseTimer?.cancel();
+    assistantTurnMessagesSyncTimer?.cancel();
     if (!waitingForAssistantResponse || !mounted) return;
     setState(() => waitingForAssistantResponse = false);
   }
@@ -437,6 +441,12 @@ class VoiceAgentPageState extends State<VoiceAgentPage>
   void handleAssistantResponseTimeout() {
     if (!mounted || !waitingForAssistantResponse) return;
     setState(() => waitingForAssistantResponse = false);
+    voiceCallNotifier.recoverFromAssistantWaitTimeout();
+    requestLatestMessages(force: true);
+  }
+
+  void syncWaitingMessages() {
+    if (!mounted || !waitingForAssistantResponse || isClosing) return;
     requestLatestMessages(force: true);
   }
 
@@ -603,6 +613,7 @@ class VoiceAgentPageState extends State<VoiceAgentPage>
               voiceCallNotifier.isConnecting || voiceCallNotifier.isMicrophoneTransitioning,
           isRecording: voiceCallNotifier.micEnabled && !waitingForAssistantResponse,
           outputMode: voiceCallNotifier.outputMode,
+          hasExternalOutputRoute: voiceCallNotifier.hasExternalOutputRoute,
           labelText: microphoneButtonText(),
           onMicrophoneTap: canTapMicrophone ? onMicTap : null,
           onAudioOutputTap: voiceCallNotifier.toggleAudioOutputMode,

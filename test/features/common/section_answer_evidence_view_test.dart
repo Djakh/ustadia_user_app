@@ -27,6 +27,22 @@ void main() {
     expect(_highlightedTexts(), contains('world'));
   });
 
+  testWidgets('highlights multiple evidence ranges in the same content', (tester) async {
+    const content = '<p>Alpha beta gamma delta epsilon</p>';
+    const cleanText = 'Alpha beta gamma delta epsilon';
+    final alphaStart = cleanText.indexOf('Alpha');
+    final alphaEnd = alphaStart + 'Alpha'.length;
+    final deltaStart = cleanText.indexOf('delta');
+    final deltaEnd = deltaStart + 'delta'.length;
+
+    await _pumpEvidenceView(tester, content: content, positions: [
+      SectionEvidencePosition(start: deltaStart, end: deltaEnd),
+      SectionEvidencePosition(start: alphaStart, end: alphaEnd),
+    ]);
+
+    expect(_highlightedTexts(), containsAll(['Alpha', 'delta']));
+  });
+
   test('nearestTranscriptStart chooses the transcript occurrence closest to declared start', () {
     const cleanText = 'alpha beta gamma alpha beta';
     final preferredStart = cleanText.lastIndexOf('alpha beta') + 2;
@@ -39,7 +55,10 @@ void main() {
 }
 
 Future<void> _pumpEvidenceView(WidgetTester tester,
-    {required String content, required int start, required int end}) async {
+    {required String content,
+    int? start,
+    int? end,
+    List<SectionEvidencePosition> positions = const []}) async {
   await tester.pumpWidget(MaterialApp(
       home: Scaffold(
           body: SectionAnswerEvidenceView(
@@ -55,7 +74,8 @@ Future<void> _pumpEvidenceView(WidgetTester tester,
                   startPosition: start,
                   endPosition: end,
                   audioStartTime: null,
-                  audioEndTime: null)))));
+                  audioEndTime: null,
+                  positions: positions)))));
   await tester.pumpAndSettle();
 }
 

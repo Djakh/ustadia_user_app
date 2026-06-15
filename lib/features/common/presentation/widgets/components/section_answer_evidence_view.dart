@@ -108,31 +108,53 @@ class SectionAnswerEvidenceView extends StatelessWidget {
     return _HtmlPositionMap(cleanText: buffer.toString(), segments: segments);
   }
 
-  _EvidenceRange? _evidenceRange(_HtmlPositionMap positionMap) {
-    if (!answer.hasEvidenceRangeData || positionMap.cleanText.isEmpty) return null;
-    final declaredStart = answer.startPosition!;
-    final declaredEnd = answer.endPosition!;
+  List<_EvidenceRange> _evidenceRanges(_HtmlPositionMap positionMap) {
+    if (!answer.hasEvidenceRangeData || positionMap.cleanText.isEmpty) return const [];
     final cleanLength = positionMap.cleanText.length;
-    final start = declaredStart.clamp(0, cleanLength);
-    final end = declaredEnd.clamp(0, cleanLength);
-    if (end <= start) return null;
+    final ranges = <_EvidenceRange>[];
 
-    final transcript = answer.transcript?.trim();
-    if (transcript == null || transcript.isEmpty) {
-      return _EvidenceRange(start: start, end: end);
+    for (final position in answer.evidencePositions) {
+      final start = position.start.clamp(0, cleanLength);
+      final end = position.end.clamp(0, cleanLength);
+      if (end > start) ranges.add(_EvidenceRange(start: start, end: end));
     }
 
-    final declaredText = positionMap.cleanText.substring(start, end).trim();
-    if (declaredText == transcript) return _EvidenceRange(start: start, end: end);
+    if (ranges.isEmpty) return const [];
 
-    final transcriptStart = nearestTranscriptStart(
-        cleanText: positionMap.cleanText, transcript: transcript, preferredStart: declaredStart);
-    if (transcriptStart == null) return _EvidenceRange(start: start, end: end);
-    return _EvidenceRange(start: transcriptStart, end: transcriptStart + transcript.length);
+    final transcript = answer.transcript?.trim();
+    if (ranges.length == 1 && transcript != null && transcript.isNotEmpty) {
+      final range = ranges.first;
+      final declaredText = positionMap.cleanText.substring(range.start, range.end).trim();
+      if (declaredText == transcript) return ranges;
+
+      final transcriptStart = nearestTranscriptStart(
+          cleanText: positionMap.cleanText, transcript: transcript, preferredStart: range.start);
+      if (transcriptStart != null) {
+        return [_EvidenceRange(start: transcriptStart, end: transcriptStart + transcript.length)];
+      }
+    }
+
+    return _mergeRanges(ranges);
+  }
+
+  List<_EvidenceRange> _mergeRanges(List<_EvidenceRange> ranges) {
+    if (ranges.isEmpty) return const [];
+    final sorted = [...ranges]..sort((a, b) => a.start.compareTo(b.start));
+    final merged = <_EvidenceRange>[];
+    for (final range in sorted) {
+      if (merged.isEmpty || range.start > merged.last.end) {
+        merged.add(range);
+        continue;
+      }
+      final last = merged.removeLast();
+      merged
+          .add(_EvidenceRange(start: last.start, end: range.end > last.end ? range.end : last.end));
+    }
+    return merged;
   }
 
   void _addTextSpans(dom.Text node, TextStyle style, List<TextSpan> spans,
-      Map<dom.Text, _TextSegment> segmentByNode, _EvidenceRange? range) {
+      Map<dom.Text, _TextSegment> segmentByNode, List<_EvidenceRange> ranges) {
     final text = node.text;
     if (text.isEmpty) return;
     final segment = segmentByNode[node];
@@ -143,35 +165,37 @@ class SectionAnswerEvidenceView extends StatelessWidget {
     final nodeStart = segment.start;
     final nodeEnd = segment.end;
 
-    if (range == null) {
+    final intersections = ranges
+        .where((range) => range.end > nodeStart && range.start < nodeEnd)
+        .map((range) => _EvidenceRange(
+            start: (range.start - nodeStart).clamp(0, text.length),
+            end: (range.end - nodeStart).clamp(0, text.length)))
+        .where((range) => range.end > range.start)
+        .toList();
+
+    if (intersections.isEmpty) {
       spans.add(TextSpan(text: text, style: style));
       return;
     }
 
-    if (range.end <= nodeStart || range.start >= nodeEnd) {
-      spans.add(TextSpan(text: text, style: style));
-      return;
-    }
-
-    final localStart = (range.start - nodeStart).clamp(0, text.length);
-    final localEnd = (range.end - nodeStart).clamp(0, text.length);
-
-    if (localStart > 0) {
-      spans.add(TextSpan(text: text.substring(0, localStart), style: style));
-    }
-    if (localEnd > localStart) {
+    var cursor = 0;
+    for (final range in _mergeRanges(intersections)) {
+      if (range.start > cursor) {
+        spans.add(TextSpan(text: text.substring(cursor, range.start), style: style));
+      }
       spans.add(
-          TextSpan(text: text.substring(localStart, localEnd), style: highlightedStyle(style)));
+          TextSpan(text: text.substring(range.start, range.end), style: highlightedStyle(style)));
+      cursor = range.end;
     }
-    if (localEnd < text.length) {
-      spans.add(TextSpan(text: text.substring(localEnd), style: style));
+    if (cursor < text.length) {
+      spans.add(TextSpan(text: text.substring(cursor), style: style));
     }
   }
 
   void _addNodeSpans(dom.Node node, TextStyle style, List<TextSpan> spans,
-      Map<dom.Text, _TextSegment> segmentByNode, _EvidenceRange? range) {
+      Map<dom.Text, _TextSegment> segmentByNode, List<_EvidenceRange> ranges) {
     if (node is dom.Text) {
-      _addTextSpans(node, style, spans, segmentByNode, range);
+      _addTextSpans(node, style, spans, segmentByNode, ranges);
       return;
     }
     if (node is dom.Element && node.localName == 'br') {
@@ -180,15 +204,15 @@ class SectionAnswerEvidenceView extends StatelessWidget {
     }
     final nextStyle = node is dom.Element ? _styleForElement(node, style) : style;
     for (final child in node.nodes) {
-      _addNodeSpans(child, nextStyle, spans, segmentByNode, range);
+      _addNodeSpans(child, nextStyle, spans, segmentByNode, ranges);
     }
   }
 
   Widget _paragraph(BuildContext context, dom.Node node, Map<dom.Text, _TextSegment> segmentByNode,
-      _EvidenceRange? range) {
+      List<_EvidenceRange> ranges) {
     final style = textStyle ?? Style.bodyw4(context);
     final spans = <TextSpan>[];
-    _addNodeSpans(node, style, spans, segmentByNode, range);
+    _addNodeSpans(node, style, spans, segmentByNode, ranges);
     if (node is dom.Text && node.text.trim().isEmpty) return const SizedBox.shrink();
     if (spans.isEmpty) return const SizedBox.shrink();
     return Padding(
@@ -202,11 +226,12 @@ class SectionAnswerEvidenceView extends StatelessWidget {
     final nodes = _contentNodes;
     final positionMap = _computePositionMap(nodes);
     final segmentByNode = {for (final segment in positionMap.segments) segment.node: segment};
-    final range = _evidenceRange(positionMap);
+    final ranges = _evidenceRanges(positionMap);
     final contentView = content.isNotEmpty
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: nodes.map((node) => _paragraph(context, node, segmentByNode, range)).toList())
+            children:
+                nodes.map((node) => _paragraph(context, node, segmentByNode, ranges)).toList())
         : const SizedBox.shrink();
     return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -79,12 +79,14 @@ class SectionQuestionModel {
                 'user_selected': answer['user_selected'],
               }).toList()}');
     }
-    final blankAnswers = (json['blank_answers'] as List<dynamic>?)
+    final blankAnswersJson = json['blank_answers'] ?? json['blankAnswers'];
+    final userBlankAnswersJson = json['user_blank_answers'] ?? json['userBlankAnswers'];
+    final blankAnswers = (blankAnswersJson as List<dynamic>?)
             ?.whereType<Map<String, dynamic>>()
             .map(SectionBlankAnswer.fromJson)
             .toList() ??
         const [];
-    final userBlankAnswers = (json['user_blank_answers'] as List<dynamic>?)
+    final userBlankAnswers = (userBlankAnswersJson as List<dynamic>?)
             ?.whereType<Map<String, dynamic>>()
             .map(SectionBlankAnswer.fromJson)
             .toList() ??
@@ -112,7 +114,7 @@ class SectionQuestionModel {
       isAnswered: _toBoolOrNull(
           json['is_answered'] ?? json['isAnswered'] ?? json['isCompleted'] ?? json['completed']),
       answers: answers,
-      numberOfBlanks: _toInt(json['number_of_blanks']),
+      numberOfBlanks: _toInt(json['number_of_blanks'] ?? json['numberOfBlanks']),
       blankAnswers: blankAnswers,
       userBlankAnswers: userBlankAnswers,
       source: source,
@@ -187,10 +189,54 @@ class SectionQuestionModel {
 class SectionBlankAnswer {
   final int position;
   final String? answer;
+  final String? transcript;
+  final double? audioStartTime;
+  final double? audioEndTime;
+  final List<SectionEvidencePosition> positions;
 
-  const SectionBlankAnswer({required this.position, required this.answer});
+  const SectionBlankAnswer(
+      {required this.position,
+      required this.answer,
+      this.transcript,
+      this.audioStartTime,
+      this.audioEndTime,
+      this.positions = const []});
+
+  bool get hasEvidenceRangeData => positions.isNotEmpty;
+
+  bool get hasAudioEvidenceData =>
+      audioStartTime != null &&
+      audioEndTime != null &&
+      audioStartTime! >= 0 &&
+      audioEndTime! > audioStartTime!;
+
+  bool get hasAnswerEvidenceData => hasEvidenceRangeData || hasAudioEvidenceData;
+
+  SectionAnswerModel toEvidenceAnswer(String questionId) => SectionAnswerModel(
+      id: 'blank_$position',
+      questionId: questionId,
+      answerText: answer ?? '',
+      isCorrect: true,
+      userSelected: false,
+      orderIndex: position,
+      transcript: transcript,
+      startPosition: null,
+      endPosition: null,
+      audioStartTime: audioStartTime,
+      audioEndTime: audioEndTime,
+      positions: positions);
 
   factory SectionBlankAnswer.fromJson(Map<String, dynamic> json) => SectionBlankAnswer(
       position: int.tryParse(json['position']?.toString() ?? '') ?? 0,
-      answer: json['answer']?.toString());
+      answer: json['answer']?.toString(),
+      transcript: json['transcript']?.toString(),
+      audioStartTime: _toDoubleOrNull(json['audio_start_time'] ?? json['audioStartTime']),
+      audioEndTime: _toDoubleOrNull(json['audio_end_time'] ?? json['audioEndTime']),
+      positions: sectionEvidencePositionsFromJson(json['positions']));
+
+  static double? _toDoubleOrNull(dynamic value) {
+    if (value == null) return null;
+    if (value is num) return value.toDouble();
+    return double.tryParse(value.toString());
+  }
 }

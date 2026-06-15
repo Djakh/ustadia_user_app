@@ -102,6 +102,46 @@ void main() {
     expect(find.byIcon(Icons.visibility_rounded), findsNothing);
   });
 
+  testWidgets('fill blank creates one input even when server omits blank count and placeholder',
+      (tester) async {
+    await _registerQuizDependencies({'q1': _submitResult('q1', isCorrect: false)});
+    await _pumpQuiz(tester, [_question(id: 'q1', type: 'fill-blank')]);
+
+    expect(find.byType(TextField), findsOneWidget);
+  });
+
+  testWidgets('fill blank evidence sheet uses positions from blank answers', (tester) async {
+    const content = 'Reading passage shows the exact blank answer here.';
+    final start = content.indexOf('exact blank answer');
+    final end = start + 'exact blank answer'.length;
+    await _registerQuizDependencies({'q1': _submitResult('q1', isCorrect: false)});
+    await _pumpQuiz(
+        tester,
+        [
+          _question(id: 'q1', type: 'fill-blank', numberOfBlanks: 1, blankAnswers: [
+            {
+              'answer': 'answer',
+              'position': 1,
+              'positions': [
+                {'start': start, 'end': end}
+              ]
+            }
+          ])
+        ],
+        sectionContent: content);
+
+    await tester.enterText(find.byType(TextField), 'wrong');
+    await tester.pump();
+    await tester.tap(find.text('Submit'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.visibility_rounded));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Answer evidence'), findsOneWidget);
+    expect(_richTextContaining('exact blank answer'), findsOneWidget);
+  });
+
   testWidgets('short answer locks input after submit and does not show answer button',
       (tester) async {
     await _registerQuizDependencies({'q1': _submitResult('q1', isCorrect: false)});
@@ -220,6 +260,36 @@ void main() {
     expect(find.byIcon(Icons.visibility_rounded), findsOneWidget);
   });
 
+  testWidgets('listening evidence sheet marks transcript text when audio timing is present',
+      (tester) async {
+    const transcript = 'Speaker A: Hello. Speaker B: The answer is here.';
+    final answerStart = transcript.indexOf('The answer');
+    final answerEnd = answerStart + 'The answer'.length;
+
+    await _registerQuizDependencies({'q1': _submitResult('q1', isCorrect: false)});
+    await _pumpQuiz(
+        tester,
+        [
+          _choiceQuestion(
+              id: 'q1',
+              textEvidenceStart: answerStart,
+              textEvidenceEnd: answerEnd,
+              withAudioEvidence: true)
+        ],
+        sectionContent: transcript);
+
+    await tester.tap(find.text('False'));
+    await tester.pump();
+    await tester.tap(find.text('Submit'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.visibility_rounded));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Audio answer time'), findsOneWidget);
+    expect(_richTextContaining('The answer'), findsOneWidget);
+  });
+
   testWidgets('listening transcript text is shown only in answer evidence sheet', (tester) async {
     const transcript = 'Speaker A: Hello. Speaker B: This is the answer.';
     final answerStart = transcript.indexOf('Speaker B');
@@ -298,6 +368,29 @@ void main() {
     expect(find.byIcon(Icons.visibility_rounded), findsOneWidget);
   });
 
+  testWidgets('first submit uses refreshed section content for evidence marking', (tester) async {
+    const content = 'Listening transcript contains the answer line.';
+    final start = content.indexOf('answer line');
+    final end = start + 'answer line'.length;
+    await _registerQuizDependencies({'q1': _submitResult('q1', isCorrect: false)},
+        freshContent: content,
+        freshQuestions: [
+          _choiceQuestion(id: 'q1', textEvidenceStart: start, textEvidenceEnd: end)
+        ]);
+    await _pumpQuiz(tester, [_choiceQuestion(id: 'q1')]);
+
+    await tester.tap(find.text('False'));
+    await tester.pump();
+    await tester.tap(find.text('Submit'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.visibility_rounded));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Answer evidence'), findsOneWidget);
+    expect(_richTextContaining('answer line'), findsOneWidget);
+  });
+
   testWidgets('first submit shows answer button even when review data needs refresh',
       (tester) async {
     const content = 'Here is answer text.';
@@ -347,14 +440,15 @@ void main() {
 
 Future<void> _registerQuizDependencies(Map<String, Map<String, dynamic>> results,
     {List<SectionQuestionModel> freshQuestions = const [],
+    String freshContent = '',
     Duration fetchDelay = Duration.zero}) async {
   await sl.reset();
   SharedPreferences.setMockInitialValues({});
   final prefs = await SharedPreferences.getInstance();
   final tutorialStorage = TutorialStorageService(prefs: prefs);
   await tutorialStorage.setTutorialEnabled(false);
-  final learnRemoteDataSource =
-      _FakeLearnRemoteDataSource(results, freshQuestions: freshQuestions, fetchDelay: fetchDelay);
+  final learnRemoteDataSource = _FakeLearnRemoteDataSource(results,
+      freshQuestions: freshQuestions, freshContent: freshContent, fetchDelay: fetchDelay);
 
   sl.registerSingleton<TutorialStorageService>(tutorialStorage);
   sl.registerFactory(() => QuestionAnswerBloc(
@@ -431,6 +525,7 @@ SectionQuestionModel _shortAnswerQuestion({required String id}) =>
 SectionQuestionModel _question(
         {required String id,
         required String type,
+        String? title,
         List<Map<String, dynamic>>? answers,
         List<Map<String, dynamic>>? blankAnswers,
         int numberOfBlanks = 0,
@@ -439,7 +534,7 @@ SectionQuestionModel _question(
       'id': id,
       'section_id': 'section',
       'type': type,
-      'title': 'Question $id',
+      'title': title ?? 'Question $id',
       'description': null,
       'difficulty_id': 'difficulty',
       'order_index': 0,
@@ -460,6 +555,7 @@ Map<String, dynamic> _answer(
         int orderIndex = 0,
         int? startPosition,
         int? endPosition,
+        List<Map<String, int>> positions = const [],
         double? audioStartTime,
         double? audioEndTime,
         String? transcript}) =>
@@ -472,6 +568,7 @@ Map<String, dynamic> _answer(
       'user_selected': false,
       'start_position': startPosition,
       'end_position': endPosition,
+      'positions': positions,
       'audio_start_time': audioStartTime,
       'audio_end_time': audioEndTime,
       'transcript': transcript,
@@ -480,10 +577,11 @@ Map<String, dynamic> _answer(
 class _FakeLearnRemoteDataSource extends LearnRemoteDataSource {
   final Map<String, Map<String, dynamic>> results;
   final List<SectionQuestionModel> freshQuestions;
+  final String freshContent;
   final Duration fetchDelay;
 
   _FakeLearnRemoteDataSource(this.results,
-      {this.freshQuestions = const [], this.fetchDelay = Duration.zero})
+      {this.freshQuestions = const [], this.freshContent = '', this.fetchDelay = Duration.zero})
       : super(dio: Dio());
 
   @override
@@ -502,7 +600,7 @@ class _FakeLearnRemoteDataSource extends LearnRemoteDataSource {
       'id': sectionId,
       'title': 'Section',
       'type': 'reading',
-      'content': '',
+      'content': freshContent,
       'order_index': 0,
       'questions': freshQuestions.map((question) => _questionToJson(question)).toList(),
     });
@@ -521,7 +619,16 @@ Map<String, dynamic> _questionToJson(SectionQuestionModel question) => {
       'is_answered': question.isAnswered,
       'number_of_blanks': question.numberOfBlanks,
       'blank_answers': question.blankAnswers
-          .map((item) => {'position': item.position, 'answer': item.answer})
+          .map((item) => {
+                'position': item.position,
+                'answer': item.answer,
+                'transcript': item.transcript,
+                'audio_start_time': item.audioStartTime,
+                'audio_end_time': item.audioEndTime,
+                'positions': item.positions
+                    .map((position) => {'start': position.start, 'end': position.end})
+                    .toList(),
+              })
           .toList(),
       'user_blank_answers': question.userBlankAnswers
           .map((item) => {'position': item.position, 'answer': item.answer})
@@ -537,6 +644,9 @@ Map<String, dynamic> _questionToJson(SectionQuestionModel question) => {
                 'transcript': answer.transcript,
                 'start_position': answer.startPosition,
                 'end_position': answer.endPosition,
+                'positions': answer.positions
+                    .map((position) => {'start': position.start, 'end': position.end})
+                    .toList(),
                 'audio_start_time': answer.audioStartTime,
                 'audio_end_time': answer.audioEndTime,
               })

@@ -37,6 +37,11 @@ class _QuizQuestionDraft {
   });
 }
 
+int blankPlaceholderCount(String value) {
+  if (value.trim().isEmpty) return 0;
+  return RegExp(r'_{2,}|…+|\.{3,}').allMatches(value).length;
+}
+
 class SectionQuizComponent extends StatefulWidget {
   final List<SectionQuestionModel> questions;
   final ValueChanged<int> onFinish;
@@ -70,6 +75,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
   final Set<String> submittedQuestionIds = {};
   final Map<String, _QuizQuestionDraft> questionDrafts = {};
   final Map<String, LearnQuestionAnswerResultModel> questionResults = {};
+  String? refreshedSectionContent;
   final GlobalKey quizProgressKey = GlobalKey(debugLabel: 'quiz_progress');
   final GlobalKey questionListButtonKey = GlobalKey(debugLabel: 'quiz_question_list_button');
   final GlobalKey questionCardKey = GlobalKey(debugLabel: 'quiz_question_card');
@@ -120,6 +126,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       closeQuestionsOverview();
       questionDrafts.clear();
       questionResults.clear();
+      refreshedSectionContent = null;
       _syncSubmittedQuestions();
       if (questions.isNotEmpty) _syncQuestionState();
     }
@@ -142,9 +149,15 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       ? currentQuestion.maxSelections!
       : currentAnswers.length;
 
-  int get blanksCount => currentQuestion.numberOfBlanks > 0
-      ? currentQuestion.numberOfBlanks
-      : currentQuestion.blankAnswers.length;
+  int get blanksCount {
+    if (currentQuestion.numberOfBlanks > 0) return currentQuestion.numberOfBlanks;
+    if (currentQuestion.blankAnswers.isNotEmpty) return currentQuestion.blankAnswers.length;
+    if (currentQuestion.userBlankAnswers.isNotEmpty) return currentQuestion.userBlankAnswers.length;
+    final placeholderCount = blankPlaceholderCount(currentQuestion.title);
+    if (placeholderCount > 0) return placeholderCount;
+    return isFillBlank ? 1 : 0;
+  }
+
   bool get isFirstQuestion => questionIndex == 0;
   bool get isLastQuestion => questionIndex == questions.length - 1;
   int get submittedCount => questions.where((question) => isQuestionSubmitted(question)).length;
@@ -500,36 +513,81 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       currentAnswers.isNotEmpty &&
       currentAnswers.every((answer) => !answer.isCorrect);
 
-  SectionAnswerModel? currentEvidenceAnswer(QuestionAnswerState answerState) {
-    final correctIds = effectiveCorrectAnswerIds(answerState);
-    for (final answer in currentAnswers) {
-      if (answer.hasAnswerEvidence) return answer;
-      if (correctIds.contains(answer.id) && answer.hasAnswerEvidenceData) return answer;
+  String get effectiveSectionContent {
+    final refreshedContent = refreshedSectionContent;
+    if (refreshedContent != null && refreshedContent.trim().isNotEmpty) {
+      return refreshedContent;
     }
-    if (!hasSubmitted) return null;
-    for (final answer in currentAnswers) {
-      if (answer.hasAnswerEvidenceData) return answer;
+    return widget.sectionContent;
+  }
+
+  int evidenceAnswerScore(SectionAnswerModel answer, Set<String> correctIds) {
+    if (!answer.hasAnswerEvidenceData) return -1;
+    final isCorrectEvidence = answer.isCorrect || correctIds.contains(answer.id);
+    if (!isCorrectEvidence && !hasSubmitted) return -1;
+
+    var score = 0;
+    if (isCorrectEvidence) score += 100;
+    if (answer.hasEvidenceRangeData && effectiveSectionContent.trim().isNotEmpty) score += 40;
+    if (answer.hasAudioEvidenceData) score += 20;
+    if (answer.hasEvidenceRangeData) score += 10;
+    return score;
+  }
+
+  SectionAnswerModel? currentBlankEvidenceAnswer(QuestionAnswerState answerState) {
+    if (!isFillBlank || !hasSubmitted) return null;
+    final blankAnswers = effectiveCorrectBlankAnswers(answerState);
+    for (final answer in blankAnswers) {
+      if (answer.hasAnswerEvidenceData) return answer.toEvidenceAnswer(currentQuestion.id);
+    }
+    for (final answer in currentQuestion.blankAnswers) {
+      if (answer.hasAnswerEvidenceData) return answer.toEvidenceAnswer(currentQuestion.id);
     }
     return null;
+  }
+
+  SectionAnswerModel? currentEvidenceAnswer(QuestionAnswerState answerState) {
+    final blankEvidenceAnswer = currentBlankEvidenceAnswer(answerState);
+    if (blankEvidenceAnswer != null) return blankEvidenceAnswer;
+
+    final correctIds = effectiveCorrectAnswerIds(answerState);
+    SectionAnswerModel? selectedAnswer;
+    var selectedScore = -1;
+
+    for (final answer in currentAnswers) {
+      final score = evidenceAnswerScore(answer, correctIds);
+      if (score > selectedScore) {
+        selectedScore = score;
+        selectedAnswer = answer;
+      }
+    }
+
+    return selectedScore >= 0 ? selectedAnswer : null;
   }
 
   bool hasCurrentAnswerEvidence(QuestionAnswerState answerState) {
     final answer = currentEvidenceAnswer(answerState);
     if (answer == null) return false;
     if (answer.hasAudioEvidenceData) return true;
-    return answer.hasEvidenceRangeData && widget.sectionContent.isNotEmpty;
+    return answer.hasEvidenceRangeData && effectiveSectionContent.trim().isNotEmpty;
   }
 
   List<SectionBlankAnswer> effectiveCorrectBlankAnswers(QuestionAnswerState answerState) {
     final result = currentQuestionResult(answerState);
     final resultAnswers = result?.correctBlankAnswers
-            .map((item) => SectionBlankAnswer(position: item.position, answer: item.answer))
-            .where((item) => item.answer?.trim().isNotEmpty == true)
+            .map((item) => SectionBlankAnswer(
+                position: item.position,
+                answer: item.answer,
+                transcript: item.transcript,
+                audioStartTime: item.audioStartTime,
+                audioEndTime: item.audioEndTime,
+                positions: item.positions))
+            .where((item) => item.answer?.trim().isNotEmpty == true || item.hasAnswerEvidenceData)
             .toList() ??
         const <SectionBlankAnswer>[];
     if (resultAnswers.isNotEmpty) return resultAnswers;
     return currentQuestion.blankAnswers
-        .where((item) => item.answer?.trim().isNotEmpty == true)
+        .where((item) => item.answer?.trim().isNotEmpty == true || item.hasAnswerEvidenceData)
         .toList();
   }
 
@@ -777,7 +835,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
             if (answer == null) return answerEvidenceMissingView(sheetContext);
             return SingleChildScrollView(
                 child: SectionAnswerEvidenceView(
-                    content: widget.sectionContent,
+                    content: effectiveSectionContent,
                     answer: answer,
                     textStyle: Style.bodyw4(sheetContext)));
           });
@@ -838,6 +896,7 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
       }
       if (freshQuestion == null) return null;
       questions[questionIndex] = freshQuestion;
+      refreshedSectionContent = detail.content;
       submittedQuestionIds.add(freshQuestion.id);
       hasSubmitted = true;
       if (mounted) setState(() {});

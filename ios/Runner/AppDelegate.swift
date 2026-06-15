@@ -28,6 +28,7 @@ import UserNotifications
         name: VoiceAgentAudioRouteController.channelName,
         binaryMessenger: registrar.messenger()
       )
+      voiceAgentAudioRouteController.methodChannel = channel
       channel.setMethodCallHandler { [weak self] call, result in
         self?.handleAudioRouteMethodCall(call: call, result: result)
       }
@@ -98,6 +99,7 @@ final class VoiceAgentAudioRouteController {
   var previousMode: AVAudioSession.Mode?
   var previousOptions: AVAudioSession.CategoryOptions = []
   var observersRegistered = false
+  var methodChannel: FlutterMethodChannel?
 
   func startVoiceAgentSession(outputMode: VoiceAgentOutputMode = .speaker, reason: String) -> [String: Any] {
     if !sessionStarted {
@@ -144,7 +146,8 @@ final class VoiceAgentAudioRouteController {
 
   func configureRoute(outputMode: VoiceAgentOutputMode, reason: String) {
     do {
-      let options = categoryOptions(outputMode: outputMode)
+      let hasExternalOutput = hasExternalOutputRoute()
+      let options = categoryOptions(outputMode: outputMode, hasExternalOutput: hasExternalOutput)
       if audioSession.category != .playAndRecord ||
           audioSession.mode != .videoChat ||
           audioSession.categoryOptions != options {
@@ -155,7 +158,7 @@ final class VoiceAgentAudioRouteController {
         )
       }
       try audioSession.setActive(true)
-      if hasExternalOutputRoute() {
+      if hasExternalOutput {
         try audioSession.overrideOutputAudioPort(.none)
       } else if outputMode == .speaker {
         try audioSession.overrideOutputAudioPort(.speaker)
@@ -168,9 +171,12 @@ final class VoiceAgentAudioRouteController {
     logAudioRoute(reason: reason)
   }
 
-  func categoryOptions(outputMode: VoiceAgentOutputMode) -> AVAudioSession.CategoryOptions {
+  func categoryOptions(
+    outputMode: VoiceAgentOutputMode,
+    hasExternalOutput: Bool
+  ) -> AVAudioSession.CategoryOptions {
     var options: AVAudioSession.CategoryOptions = [.allowBluetoothHFP, .allowBluetoothA2DP, .allowAirPlay]
-    if outputMode == .speaker {
+    if outputMode == .speaker && !hasExternalOutput {
       options.insert(.defaultToSpeaker)
     }
     return options
@@ -212,6 +218,7 @@ final class VoiceAgentAudioRouteController {
     logAudioRoute(reason: "route_change:\(reason)")
     if sessionStarted {
       applyCurrentRoute(reason: "route_change:\(reason)")
+      notifyFlutterRouteChanged(reason: "route_change:\(reason)")
     }
   }
 
@@ -286,5 +293,12 @@ final class VoiceAgentAudioRouteController {
 
   func logAudioRoute(reason: String) {
     NSLog("[VoiceAgentAudioRoute] \(collectRouteSnapshot(reason: reason))")
+  }
+
+  func notifyFlutterRouteChanged(reason: String) {
+    let snapshot = collectRouteSnapshot(reason: reason)
+    DispatchQueue.main.async { [weak self] in
+      self?.methodChannel?.invokeMethod("voiceAgentAudioRouteChanged", arguments: snapshot)
+    }
   }
 }
