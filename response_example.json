@@ -1,420 +1,290 @@
 {
-  "data": [
-    {
-      "id": "9ac318a0-b160-41ad-b754-6d5e335c8b0f",
-      "unit_id": "da53107f-5c43-4b13-8d6c-bf5f5465f5ec",
-      "type": "listening",
-      "title": "hello",
-      "content": "All the transcripts",
-      "audio_file_id": "260a55bb-b5fb-460c-9d0b-52fa03fbbf80",
-      "image_id": null,
-      "flashcard_set_id": null,
-      "order_index": 1,
-      "audio_file": {
-        "id": "260a55bb-b5fb-460c-9d0b-52fa03fbbf80",
-        "url": "/uploads/0b/eb/0bebac0badd6fcf77af44ce533c142a01f0661e9b9639b17d7a8b42dd85fdb95.mp3",
-        "path": "0b/eb/0bebac0badd6fcf77af44ce533c142a01f0661e9b9639b17d7a8b42dd85fdb95.mp3",
-        "filename": "0bebac0badd6fcf77af44ce533c142a01f0661e9b9639b17d7a8b42dd85fdb95.mp3",
+    "id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
+    "unit_id": "c59b978a-bc81-465c-95b6-dfaf6f4ef9d2",
+    "type": "listening",
+    "title": "Listening",
+    "content": "<p>Good morning everyone. Today I'd like to tell you about our city library. The library was established in 1998 and has become one of the most popular places for students and local residents.</p><p>The library opens at 8:00 a.m. and closes at 8:00 p.m. from Monday to Friday. On weekends, it opens at 10:00 a.m. and closes at 5:00 p.m.</p><p>There are more than 50,000 books available, including novels, textbooks, magazines, and reference materials. Visitors can borrow up to five books at a time for a period of two weeks.</p><p>The library also offers free internet access and study rooms for students. Every Wednesday evening, a reading club meets to discuss books and share recommendations.</p><p>Last year, more than 10,000 people visited the library. The management plans to expand the children's section and introduce new digital resources in the future.</p>",
+    "audio_file_id": "62cb1a31-a9ef-443e-aac1-0877c1c49fc7",
+    "image_id": null,
+    "flashcard_set_id": null,
+    "order_index": 1,
+    "audio_file": {
+        "id": "62cb1a31-a9ef-443e-aac1-0877c1c49fc7",
+        "filename": "abbcc5397d2d0dff077e22b1dec0075329a5b80e16e5b8b195b85a4736d99a8d.mp3",
+        "path": "ab/bc/abbcc5397d2d0dff077e22b1dec0075329a5b80e16e5b8b195b85a4736d99a8d.mp3",
         "mimetype": "audio/mpeg",
-        "created_at": "2026-05-28T00:00:54.734908"
-      },
-      "image": null,
-      "flashcard_set": null,
-      "link_positions": [],
-      "questions": [
-        {
-          "id": "f97dfcab-a789-4b9b-a060-9827ef257a69",
-          "xp": 5,
-          "type": "true-false",
-          "title": "New one",
-          "answers": [
-            {
-              "id": "29c0416b-fb53-4c77-ae2b-898947071103",
-              "is_correct": true,
-              "transcript": "Transcript 123",
-              "answer_text": "True",
-              "order_index": 0,
-              "question_id": "f97dfcab-a789-4b9b-a060-9827ef257a69",
-              "end_position": null,
-              "user_selected": true,
-              "audio_end_time": 9.4,
-              "start_position": null,
-              "audio_start_time": 1.7
-            },
-            {
-              "id": "d70dc6f4-a2e3-4f60-abeb-f99127cfa962",
-              "is_correct": false,
-              "transcript": "",
-              "answer_text": "False",
-              "order_index": 1,
-              "question_id": "f97dfcab-a789-4b9b-a060-9827ef257a69",
-              "end_position": null,
-              "user_selected": false,
-              "audio_end_time": 0,
-              "start_position": null,
-              "audio_start_time": 0
-            }
-          ],
-          "difficulty": {
-            "id": "db90a1e0-7e23-477e-acb5-b6423aa01d6a",
-            "name": {
-              "en": "Intermediate",
-              "ru": "Средний",
-              "uz": "O'rta"
-            },
-            "description": {
-              "en": "Intermediate level for typing practice",
-              "ru": "Средний уровень для тренировки печати",
-              "uz": "O'rta darajasi uchun mashq"
-            }
-          },
-          "section_id": "9ac318a0-b160-41ad-b754-6d5e335c8b0f",
-          "description": "New one",
-          "is_answered": true,
-          "order_index": 0,
-          "user_answer": {
-            "id": "14b6c201-5358-4741-a82a-853110c78946",
-            "created_at": "2026-06-02T17:03:45.602148",
-            "is_correct": true,
-            "user_input_text": null
-          },
-          "blank_answers": null
-        },
-        {
-          "id": "cdc39580-24e9-4a76-974d-313388472999",
-          "xp": 5,
-          "type": "true-false-not-given",
-          "title": "New one 2",
-          "answers": [
-            {
-              "id": "33d808d7-2baf-4eee-9963-257ebf2ee89e",
-              "is_correct": null,
-              "transcript": null,
-              "answer_text": "True",
-              "order_index": 0,
-              "question_id": "cdc39580-24e9-4a76-974d-313388472999",
-              "end_position": null,
-              "user_selected": false,
-              "audio_end_time": 3.6,
-              "start_position": null,
-              "audio_start_time": 0
-            },
-            {
-              "id": "b8cad2b6-cffe-4deb-a3cb-7e22808e0301",
-              "is_correct": null,
-              "transcript": null,
-              "answer_text": "False",
-              "order_index": 1,
-              "question_id": "cdc39580-24e9-4a76-974d-313388472999",
-              "end_position": null,
-              "user_selected": false,
-              "audio_end_time": null,
-              "start_position": null,
-              "audio_start_time": null
-            },
-            {
-              "id": "ab974cb6-8246-4990-bba2-5a1d534c3581",
-              "is_correct": null,
-              "transcript": null,
-              "answer_text": "Not_Given",
-              "order_index": 2,
-              "question_id": "cdc39580-24e9-4a76-974d-313388472999",
-              "end_position": null,
-              "user_selected": false,
-              "audio_end_time": null,
-              "start_position": null,
-              "audio_start_time": null
-            }
-          ],
-          "difficulty": {
-            "id": "a0871ca2-c169-4c9f-9b73-754f4168ef7a",
-            "name": {
-              "en": "Advanced",
-              "ru": "Продвинутый",
-              "uz": "Ilg'or"
-            },
-            "description": {
-              "en": "Advanced level for typing practice",
-              "ru": "Продвинутый уровень для тренировки печати",
-              "uz": "Ilg'or darajasi uchun mashq"
-            }
-          },
-          "section_id": "9ac318a0-b160-41ad-b754-6d5e335c8b0f",
-          "description": "New one 2",
-          "is_answered": false,
-          "order_index": 1,
-          "user_answer": null,
-          "blank_answers": null
-        },
-        {
-          "id": "d6cede02-6274-4135-9850-5fb34dd1c94d",
-          "xp": 5,
-          "type": "multiple-choice",
-          "title": "New one 3",
-          "answers": [
-            {
-              "id": "c743c3d7-283a-45c9-ab78-d40a700d654a",
-              "is_correct": null,
-              "transcript": null,
-              "answer_text": "True answer",
-              "order_index": 0,
-              "question_id": "d6cede02-6274-4135-9850-5fb34dd1c94d",
-              "end_position": null,
-              "user_selected": false,
-              "audio_end_time": 12.7,
-              "start_position": null,
-              "audio_start_time": 1
-            },
-            {
-              "id": "7cc9b05d-9c95-4b8d-a408-09ad6b5de985",
-              "is_correct": null,
-              "transcript": null,
-              "answer_text": "False answer",
-              "order_index": 0,
-              "question_id": "d6cede02-6274-4135-9850-5fb34dd1c94d",
-              "end_position": null,
-              "user_selected": false,
-              "audio_end_time": null,
-              "start_position": null,
-              "audio_start_time": null
-            }
-          ],
-          "difficulty": {
-            "id": "ec0f38bf-ac3b-44eb-b88b-394e5c842ecc",
-            "name": {
-              "en": "Beginner",
-              "ru": "Начинающий",
-              "uz": "Boshlang'ich"
-            },
-            "description": {
-              "en": "Beginner level for typing practice",
-              "ru": "Начальный уровень для тренировки печати",
-              "uz": "Boshlang'ich darajasi uchun mashq"
-            }
-          },
-          "section_id": "9ac318a0-b160-41ad-b754-6d5e335c8b0f",
-          "description": "New one 3",
-          "is_answered": false,
-          "order_index": 2,
-          "user_answer": null,
-          "blank_answers": null
-        }
-      ],
-      "totalQuestions": 3,
-      "answeredQuestions": 1,
-      "isCompleted": false,
-      "isLocked": false
+        "url": "/uploads/ab/bc/abbcc5397d2d0dff077e22b1dec0075329a5b80e16e5b8b195b85a4736d99a8d.mp3",
+        "created_at": "2026-06-04T22:21:34.743535"
     },
-    {
-      "id": "3422b77e-b3dd-4cf5-9133-3536bd22d373",
-      "unit_id": "da53107f-5c43-4b13-8d6c-bf5f5465f5ec",
-      "type": "reading",
-      "title": "New reading",
-      "content": "<p>The Importance of Sleep Sleep is one of the most essential biological functions for human beings. Although modern society often treats sleep as less important than work or study, scientists have repeatedly demonstrated that insufficient sleep negatively affects memory, concentration, emotional stability, and physical health. Adults generally require between seven and nine hours of sleep each night, while teenagers and children need even more due to their ongoing physical and mental development. During sleep, the brain processes information collected throughout the day. Researchers explain that memories become stronger because the brain reorganizes and stores important details while sleeping. This is one reason why students who sleep properly often perform better on exams compared to those who stay awake all night studying. Sleep also helps regulate emotions. People who are sleep deprived may become more anxious, impatient, or emotionally sensitive. In addition to supporting mental health, sleep plays a critical role in maintaining physical health. During deep sleep, the body repairs muscles, strengthens the immune system, and releases hormones necessary for growth and recovery. Several medical studies have shown that long-term sleep deprivation increases the risk of heart disease, diabetes, obesity, and depression. Experts therefore recommend maintaining a regular sleep schedule and limiting screen time before bed. However, achieving healthy sleep patterns has become increasingly difficult in the digital age. Smartphones, laptops, and social media platforms encourage people to remain mentally active late into the night. Blue light emitted from electronic screens can interfere with the production of melatonin, the hormone responsible for helping people fall asleep. As a result, many individuals experience insomnia or poor-quality sleep without fully understanding the cause. Some companies and schools have started recognizing the importance of sleep and are adjusting schedules to support healthier lifestyles. Certain workplaces now allow flexible starting hours, while some educational institutions begin classes later in the morning to better match students’ natural sleep cycles. Researchers believe these changes may improve productivity, academic performance, and overall wellbeing in the future.</p>",
-      "audio_file_id": null,
-      "image_id": null,
-      "flashcard_set_id": null,
-      "order_index": 1,
-      "audio_file": null,
-      "image": null,
-      "flashcard_set": null,
-      "link_positions": [],
-      "questions": [
+    "image": null,
+    "flashcard_set": null,
+    "questions": [
         {
-          "id": "2f236a89-6e35-4102-bcb5-c35a93863681",
-          "xp": 5,
-          "type": "true-false",
-          "title": "New question",
-          "answers": [
-            {
-              "id": "d061d3f3-6079-4d68-b195-652863550e6e",
-              "is_correct": true,
-              "transcript": "The Importance of Sleep Sleep is one of the most essential biological functions for human beings. Although modern society often treats sleep as less important than work or study, scientists have repeatedly demonstrated that insufficient sleep negatively affects memory, concentration, emotional stability, and physical health. Adults generally require between seven and nine hours of sleep each night, while teenagers and children need even more due to their ongoing physical and mental development.",
-              "answer_text": "True",
-              "order_index": 0,
-              "question_id": "2f236a89-6e35-4102-bcb5-c35a93863681",
-              "end_position": 500,
-              "user_selected": true,
-              "audio_end_time": null,
-              "start_position": 0,
-              "audio_start_time": null
+            "id": "ea536661-846f-4d38-85fe-36dc46eee205",
+            "section_id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
+            "type": "fill-blank",
+            "title": "Listen to the audio and complete the sentence.",
+            "description": "The library was established in _____.",
+            "difficulty_id": "c7b8c9d0-e1f2-41d4-a716-446655440003",
+            "order_index": 0,
+            "xp": 5,
+            "is_answered": true,
+            "number_of_blanks": 1,
+            "blank_answers": [
+                {
+                    "answer": "1998",
+                    "position": 1,
+                    "positions": [
+                        {
+                            "end": 322,
+                            "start": 10
+                        }
+                    ],
+                    "transcript": "ng everyone. Today I'd like to tell you about our city library. The library was established in 1998 and has become one of the most popular places for students and local residents.\n\nThe library opens at 8:00 a.m. and closes at 8:00 p.m. from Monday to Friday. On weekends, it opens at 10:00 a.m. and closes at 5:00",
+                    "audio_end_time": null,
+                    "audio_start_time": null
+                }
+            ],
+            "user_blank_answers": [
+                {
+                    "answer": "pinko",
+                    "position": 1
+                }
+            ],
+            "user_answer": {
+                "id": "7e41c5ea-8aad-4f2d-83ba-c9f207dd339a",
+                "user_file": null,
+                "created_at": "2026-06-15T13:50:42.890658",
+                "is_correct": false,
+                "user_audio": null,
+                "ai_feedback": null,
+                "user_file_id": null,
+                "user_audio_id": null,
+                "user_input_text": null
             },
-            {
-              "id": "71bf2746-a00e-494d-a271-ce97c540b1bc",
-              "is_correct": false,
-              "transcript": "",
-              "answer_text": "False",
-              "order_index": 1,
-              "question_id": "2f236a89-6e35-4102-bcb5-c35a93863681",
-              "end_position": null,
-              "user_selected": false,
-              "audio_end_time": null,
-              "start_position": null,
-              "audio_start_time": null
-            }
-          ],
-          "difficulty": {
-            "id": "db90a1e0-7e23-477e-acb5-b6423aa01d6a",
-            "name": {
-              "en": "Intermediate",
-              "ru": "Средний",
-              "uz": "O'rta"
-            },
-            "description": {
-              "en": "Intermediate level for typing practice",
-              "ru": "Средний уровень для тренировки печати",
-              "uz": "O'rta darajasi uchun mashq"
-            }
-          },
-          "section_id": "3422b77e-b3dd-4cf5-9133-3536bd22d373",
-          "description": "New question",
-          "is_answered": true,
-          "order_index": 0,
-          "user_answer": {
-            "id": "cd844246-7c41-48e4-926c-dc64e5d61fc2",
-            "created_at": "2026-06-01T18:51:24.90707",
-            "is_correct": true,
-            "user_input_text": null
-          },
-          "blank_answers": null
+            "answers": null,
+            "max_selections": 0
         },
         {
-          "id": "a27f8e3b-94dd-4cfa-902c-c1829632fb54",
-          "xp": 5,
-          "type": "true-false-not-given",
-          "title": "New question 2",
-          "answers": [
-            {
-              "id": "d0a51394-64d2-45c8-b209-77bfed75d3d1",
-              "is_correct": true,
-              "transcript": "Adults generally require between seven and nine hours of sleep each night, while teenagers and children need even more due to their ongoing physical and mental development. During sleep, the brain processes information collected throughout the day. Researchers explain that memories become stronger because the brain reorganizes and stores important details while sleeping. This is one reason why students who sleep properly often perform better on exams compared to those who stay awake all night studying. Sleep also helps regulate emotions. People who are sleep deprived may become more anxious, impatient, or emotionally sensitive. In addition to supporting mental health, sleep plays a critical role in maintaining physical health.",
-              "answer_text": "True",
-              "order_index": 0,
-              "question_id": "a27f8e3b-94dd-4cfa-902c-c1829632fb54",
-              "end_position": 1064,
-              "user_selected": false,
-              "audio_end_time": null,
-              "start_position": 327,
-              "audio_start_time": null
+            "id": "b6dec134-5dd0-4adb-9170-56f3ad8f089a",
+            "section_id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
+            "type": "fill-blank",
+            "title": "Listen to the audio and complete the sentence.",
+            "description": "The library opens at _____ a.m. on weekdays.",
+            "difficulty_id": "c7b8c9d0-e1f2-41d4-a716-446655440003",
+            "order_index": 1,
+            "xp": 5,
+            "is_answered": true,
+            "number_of_blanks": 1,
+            "blank_answers": [
+                {
+                    "answer": "8:00",
+                    "position": 1,
+                    "positions": null,
+                    "transcript": null,
+                    "audio_end_time": null,
+                    "audio_start_time": null
+                }
+            ],
+            "user_blank_answers": [
+                {
+                    "answer": "pol",
+                    "position": 1
+                }
+            ],
+            "user_answer": {
+                "id": "36d240ca-3f83-46a5-81dd-47341c2b7567",
+                "user_file": null,
+                "created_at": "2026-06-15T13:50:59.100817",
+                "is_correct": false,
+                "user_audio": null,
+                "ai_feedback": null,
+                "user_file_id": null,
+                "user_audio_id": null,
+                "user_input_text": null
             },
-            {
-              "id": "618d00b8-89bc-4dcf-8dc2-85a68e0753ed",
-              "is_correct": false,
-              "transcript": "",
-              "answer_text": "False",
-              "order_index": 1,
-              "question_id": "a27f8e3b-94dd-4cfa-902c-c1829632fb54",
-              "end_position": null,
-              "user_selected": false,
-              "audio_end_time": null,
-              "start_position": null,
-              "audio_start_time": null
-            },
-            {
-              "id": "57653a01-ba5c-4d7a-a215-5b70eebd4bad",
-              "is_correct": false,
-              "transcript": null,
-              "answer_text": "Not_Given",
-              "order_index": 2,
-              "question_id": "a27f8e3b-94dd-4cfa-902c-c1829632fb54",
-              "end_position": null,
-              "user_selected": true,
-              "audio_end_time": null,
-              "start_position": null,
-              "audio_start_time": null
-            }
-          ],
-          "difficulty": {
-            "id": "ec0f38bf-ac3b-44eb-b88b-394e5c842ecc",
-            "name": {
-              "en": "Beginner",
-              "ru": "Начинающий",
-              "uz": "Boshlang'ich"
-            },
-            "description": {
-              "en": "Beginner level for typing practice",
-              "ru": "Начальный уровень для тренировки печати",
-              "uz": "Boshlang'ich darajasi uchun mashq"
-            }
-          },
-          "section_id": "3422b77e-b3dd-4cf5-9133-3536bd22d373",
-          "description": "New question 2",
-          "is_answered": true,
-          "order_index": 1,
-          "user_answer": {
-            "id": "9b8ca20f-2b92-4895-841b-f1dd6fe5ca9b",
-            "created_at": "2026-06-02T16:12:48.880842",
-            "is_correct": false,
-            "user_input_text": null
-          },
-          "blank_answers": null
+            "answers": null,
+            "max_selections": 0
         },
         {
-          "id": "79fbad6f-0b43-406a-b5db-ea2e7e3b0a1c",
-          "xp": 5,
-          "type": "multiple-choice",
-          "title": "New question 3",
-          "answers": [
-            {
-              "id": "c0284e9e-7ca8-4269-ad60-28efd3a5024e",
-              "is_correct": null,
-              "transcript": null,
-              "answer_text": "True answer",
-              "order_index": 0,
-              "question_id": "79fbad6f-0b43-406a-b5db-ea2e7e3b0a1c",
-              "end_position": null,
-              "user_selected": false,
-              "audio_end_time": null,
-              "start_position": null,
-              "audio_start_time": null
+            "id": "4810b547-3485-4e7f-8de7-3ab12942437d",
+            "section_id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
+            "type": "fill-blank",
+            "title": "Listen to the audio and complete the sentence.",
+            "description": "Visitors can borrow up to _____ books at a time.",
+            "difficulty_id": "c7b8c9d0-e1f2-41d4-a716-446655440003",
+            "order_index": 2,
+            "xp": 5,
+            "is_answered": true,
+            "number_of_blanks": 1,
+            "blank_answers": [
+                {
+                    "answer": "five",
+                    "position": 1,
+                    "positions": [
+                        {
+                            "end": 370,
+                            "start": 303
+                        }
+                    ],
+                    "transcript": "and closes at 5:00 p.m.\n\nThere are more than 50,000 books available,",
+                    "audio_end_time": null,
+                    "audio_start_time": null
+                }
+            ],
+            "user_blank_answers": [
+                {
+                    "answer": "polio",
+                    "position": 1
+                }
+            ],
+            "user_answer": {
+                "id": "f62d9a87-54e5-4dff-b083-177ad209a2be",
+                "user_file": null,
+                "created_at": "2026-06-15T13:51:06.032937",
+                "is_correct": false,
+                "user_audio": null,
+                "ai_feedback": null,
+                "user_file_id": null,
+                "user_audio_id": null,
+                "user_input_text": null
             },
-            {
-              "id": "9adb2bf9-8de7-4a9e-836d-bedc85b8952a",
-              "is_correct": null,
-              "transcript": null,
-              "answer_text": "False answer",
-              "order_index": 0,
-              "question_id": "79fbad6f-0b43-406a-b5db-ea2e7e3b0a1c",
-              "end_position": null,
-              "user_selected": false,
-              "audio_end_time": null,
-              "start_position": null,
-              "audio_start_time": null
-            }
-          ],
-          "difficulty": {
-            "id": "ec0f38bf-ac3b-44eb-b88b-394e5c842ecc",
-            "name": {
-              "en": "Beginner",
-              "ru": "Начинающий",
-              "uz": "Boshlang'ich"
-            },
-            "description": {
-              "en": "Beginner level for typing practice",
-              "ru": "Начальный уровень для тренировки печати",
-              "uz": "Boshlang'ich darajasi uchun mashq"
-            }
-          },
-          "section_id": "3422b77e-b3dd-4cf5-9133-3536bd22d373",
-          "description": "New question 3",
-          "is_answered": false,
-          "order_index": 2,
-          "user_answer": null,
-          "blank_answers": null
+            "answers": null,
+            "max_selections": 0
+        },
+        {
+            "id": "59f20c5e-4f8b-4b61-a20e-ccc9d173403f",
+            "section_id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
+            "type": "fill-blank",
+            "title": "Listen to the audio and complete the sentence.",
+            "description": "Books can be borrowed for _____ weeks.",
+            "difficulty_id": "c7b8c9d0-e1f2-41d4-a716-446655440003",
+            "order_index": 3,
+            "xp": 5,
+            "is_answered": false,
+            "number_of_blanks": 1,
+            "blank_answers": [
+                {
+                    "answer": null,
+                    "position": 1,
+                    "positions": null,
+                    "transcript": null,
+                    "audio_end_time": null,
+                    "audio_start_time": null
+                }
+            ],
+            "user_blank_answers": null,
+            "user_answer": null,
+            "answers": null,
+            "max_selections": 0
+        },
+        {
+            "id": "e067fbae-1186-4f9e-8b95-6d66dee36bdb",
+            "section_id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
+            "type": "fill-blank",
+            "title": "Listen to the audio and complete the sentence.",
+            "description": "The reading club meets every _____ evening.",
+            "difficulty_id": "c7b8c9d0-e1f2-41d4-a716-446655440003",
+            "order_index": 4,
+            "xp": 5,
+            "is_answered": false,
+            "number_of_blanks": 1,
+            "blank_answers": [
+                {
+                    "answer": null,
+                    "position": 1,
+                    "positions": null,
+                    "transcript": null,
+                    "audio_end_time": null,
+                    "audio_start_time": null
+                }
+            ],
+            "user_blank_answers": null,
+            "user_answer": null,
+            "answers": null,
+            "max_selections": 0
+        },
+        {
+            "id": "d8634a36-de27-4fef-9e22-dbe8b5b04db0",
+            "section_id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
+            "type": "fill-blank",
+            "title": "Listen to the audio and complete the sentence.",
+            "description": "More than _____ people visited the library last year.",
+            "difficulty_id": "c7b8c9d0-e1f2-41d4-a716-446655440003",
+            "order_index": 5,
+            "xp": 5,
+            "is_answered": false,
+            "number_of_blanks": 1,
+            "blank_answers": [
+                {
+                    "answer": null,
+                    "position": 1,
+                    "positions": null,
+                    "transcript": null,
+                    "audio_end_time": null,
+                    "audio_start_time": null
+                }
+            ],
+            "user_blank_answers": null,
+            "user_answer": null,
+            "answers": null,
+            "max_selections": 0
+        },
+        {
+            "id": "394e1ef2-ac6d-4cea-9f30-8e2582ba699f",
+            "section_id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
+            "type": "true-false",
+            "title": "true false",
+            "description": "true false",
+            "difficulty_id": "a0871ca2-c169-4c9f-9b73-754f4168ef7a",
+            "order_index": 6,
+            "xp": 5,
+            "is_answered": false,
+            "number_of_blanks": 0,
+            "blank_answers": null,
+            "user_blank_answers": null,
+            "user_answer": null,
+            "answers": [
+                {
+                    "id": "c1059aad-9dcc-4f05-8f97-144452d0554d",
+                    "question_id": "394e1ef2-ac6d-4cea-9f30-8e2582ba699f",
+                    "answer_text": "True",
+                    "transcript": null,
+                    "positions": [
+                        {
+                            "start": 463,
+                            "end": 654
+                        }
+                    ],
+                    "audio_start_time": null,
+                    "audio_end_time": null,
+                    "is_correct": null,
+                    "order_index": 0,
+                    "user_selected": false
+                },
+                {
+                    "id": "fdf0266d-2663-4729-8d2c-4ced94ae0fbf",
+                    "question_id": "394e1ef2-ac6d-4cea-9f30-8e2582ba699f",
+                    "answer_text": "False",
+                    "transcript": null,
+                    "positions": null,
+                    "audio_start_time": null,
+                    "audio_end_time": null,
+                    "is_correct": null,
+                    "order_index": 1,
+                    "user_selected": false
+                }
+            ],
+            "max_selections": 1
         }
-      ],
-      "totalQuestions": 3,
-      "answeredQuestions": 2,
-      "isCompleted": false,
-      "isLocked": false
-    }
-  ],
-  "total": 2,
-  "page": 1,
-  "limit": 10,
-  "totalPages": 1,
-  "unit": {
-    "id": "da53107f-5c43-4b13-8d6c-bf5f5465f5ec",
-    "title": "Hgjdfhx"
-  }
+    ],
+    "totalQuestions": 7,
+    "answeredQuestions": 3,
+    "correctAnswers": 0,
+    "incorrectAnswers": 3,
+    "flashcardsTotal": 0,
+    "flashcardsProgress": 0,
+    "isCompleted": false,
+    "link_positions": [],
+    "isLocked": false
 }

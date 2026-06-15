@@ -1,16 +1,30 @@
+import 'package:ustadia_user_app/features/common/data/models/section_model/section_answer_model.dart';
+
 class LearnQuestionAnswerBlankResultModel {
   final int position;
   final String answer;
+  final String? transcript;
+  final double? audioStartTime;
+  final double? audioEndTime;
+  final List<SectionEvidencePosition> positions;
 
   const LearnQuestionAnswerBlankResultModel({
     required this.position,
     required this.answer,
+    required this.transcript,
+    required this.audioStartTime,
+    required this.audioEndTime,
+    required this.positions,
   });
 
   factory LearnQuestionAnswerBlankResultModel.fromJson(Map<String, dynamic> json) {
     return LearnQuestionAnswerBlankResultModel(
       position: _toInt(json['position']),
       answer: json['answer']?.toString() ?? '',
+      transcript: json['transcript']?.toString(),
+      audioStartTime: _toDoubleOrNull(json['audio_start_time'] ?? json['audioStartTime']),
+      audioEndTime: _toDoubleOrNull(json['audio_end_time'] ?? json['audioEndTime']),
+      positions: sectionEvidencePositionsFromJson(json['positions']),
     );
   }
 
@@ -18,6 +32,12 @@ class LearnQuestionAnswerBlankResultModel {
     if (value is int) return value;
     if (value is num) return value.toInt();
     return int.tryParse(value?.toString() ?? '') ?? 0;
+  }
+
+  static double? _toDoubleOrNull(dynamic value) {
+    if (value == null) return null;
+    if (value is num) return value.toDouble();
+    return double.tryParse(value.toString());
   }
 }
 

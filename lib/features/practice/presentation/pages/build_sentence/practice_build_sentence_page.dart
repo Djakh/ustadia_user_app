@@ -60,6 +60,7 @@ class _PracticeBuildSentencePageState extends State<PracticeBuildSentencePage> {
 
   Widget get view => PrimaryBackground(
       title: widget.set.title.isEmpty ? 'Build the sentence' : widget.set.title,
+      isScrollable: true,
       child: Center(
           child: correctOrder.isEmpty
               ? Text('No questions found'.tr())

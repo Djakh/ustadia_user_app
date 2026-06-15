@@ -64,6 +64,7 @@ class _PracticeWordMatchPageState extends State<PracticeWordMatchPage> {
 
   Widget get view => PrimaryBackground(
       title: widget.set.title.isEmpty ? 'Word match' : widget.set.title,
+      isScrollable: true,
       child: Column(children: [
         const SizedBox(height: 24),
         KeyedSubtree(

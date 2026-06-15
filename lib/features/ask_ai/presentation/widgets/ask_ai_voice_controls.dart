@@ -9,6 +9,7 @@ class AskAiVoiceControls extends StatelessWidget {
   final bool isConnecting;
   final bool isRecording;
   final VoiceAudioOutputMode outputMode;
+  final bool hasExternalOutputRoute;
   final String labelText;
   final VoidCallback? onMicrophoneTap;
   final VoidCallback? onAudioOutputTap;
@@ -19,17 +20,28 @@ class AskAiVoiceControls extends StatelessWidget {
       required this.isConnecting,
       required this.isRecording,
       required this.outputMode,
+      required this.hasExternalOutputRoute,
       required this.labelText,
       required this.onMicrophoneTap,
       required this.onAudioOutputTap,
       required this.onKeyboardTap});
 
-  IconData get outputIcon => outputMode == VoiceAudioOutputMode.speaker
-      ? Icons.volume_up_rounded
-      : Icons.phone_in_talk_rounded;
+  IconData get outputIcon => hasExternalOutputRoute
+      ? Icons.headphones_rounded
+      : outputMode == VoiceAudioOutputMode.speaker
+          ? Icons.volume_up_rounded
+          : Icons.phone_in_talk_rounded;
 
-  String get outputTooltip =>
-      outputMode == VoiceAudioOutputMode.speaker ? 'Speaker'.tr() : 'Phone'.tr();
+  String get outputTooltip => hasExternalOutputRoute
+      ? 'Headphones'.tr()
+      : outputMode == VoiceAudioOutputMode.speaker
+          ? 'Speaker'.tr()
+          : 'Phone'.tr();
+
+  Color get outputButtonColor {
+    if (hasExternalOutputRoute) return AppColors.gray700;
+    return outputMode == VoiceAudioOutputMode.speaker ? AppColors.primary : AppColors.gray700;
+  }
 
   @override
   Widget build(BuildContext context) => SizedBox(
@@ -47,11 +59,9 @@ class AskAiVoiceControls extends StatelessWidget {
                     angle: (1 - value) * 0.45, child: Transform.scale(scale: value, child: child)),
                 child: AskAiControlIconButton(
                     iconData: outputIcon,
-                    onTap: onAudioOutputTap,
+                    onTap: hasExternalOutputRoute ? null : onAudioOutputTap,
                     tooltipText: outputTooltip,
-                    backgroundColor: outputMode == VoiceAudioOutputMode.speaker
-                        ? AppColors.primary
-                        : AppColors.gray700,
+                    backgroundColor: outputButtonColor,
                     size: 50))),
         Align(
             alignment: Alignment.bottomCenter,

@@ -44,31 +44,27 @@ class PracticeSpeedMixResultPage extends StatelessWidget {
         backgroundColor: context.cs.surface,
         body: PrimaryBackground(
             title: 'Speed Mix'.tr(),
+            isScrollable: true,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const Spacer(),
                 summaryImage,
                 const SizedBox(height: 12),
                 titleText(context),
                 const SizedBox(height: 6),
                 statLine(
                     context,
-                    'Completed: {completed} / {total}'.tr(namedArgs: {
-                      'completed': '${stats.completed}',
-                      'total': '${stats.total}'
-                    })),
+                    'Completed: {completed} / {total}'.tr(
+                        namedArgs: {'completed': '${stats.completed}', 'total': '${stats.total}'})),
                 const SizedBox(height: 6),
-                statLine(context, 'Correct answers: {correct}'.tr(namedArgs: {
-                  'correct': '${stats.correct}'
-                })),
+                statLine(context,
+                    'Correct answers: {correct}'.tr(namedArgs: {'correct': '${stats.correct}'})),
                 const SizedBox(height: 6),
                 statLine(
                     context,
-                    'Remaining: {remaining}'.tr(namedArgs: {
-                      'remaining': '${stats.total - stats.completed}'
-                    })),
-                const Spacer(),
+                    'Remaining: {remaining}'
+                        .tr(namedArgs: {'remaining': '${stats.total - stats.completed}'})),
+                const SizedBox(height: 32),
                 Button.primary(onTap: () => onPlayAgain(context), text: 'Play again'.tr()),
                 const SizedBox(height: 10),
                 Button.border(onTap: () => onBackToPractice(context), text: 'Back to practice'.tr())

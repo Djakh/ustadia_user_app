@@ -30,10 +30,12 @@ class MainActivity : FlutterFragmentActivity() {
 
   override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
     super.configureFlutterEngine(flutterEngine)
-    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VoiceAgentAudioRouteController.channelName)
-        .setMethodCallHandler { call, result ->
-          handleAudioRouteMethodCall(call, result)
-        }
+    val channel =
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VoiceAgentAudioRouteController.channelName)
+    voiceAgentAudioRouteController.methodChannel = channel
+    channel.setMethodCallHandler { call, result ->
+      handleAudioRouteMethodCall(call, result)
+    }
   }
 
   fun handleAudioRouteMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -93,6 +95,7 @@ class VoiceAgentAudioRouteController(context: Context) {
   var currentOutputMode = VoiceAgentOutputMode.speaker
   var previousAudioMode = AudioManager.MODE_NORMAL
   var previousSpeakerphoneState = false
+  var methodChannel: MethodChannel? = null
 
   val audioDeviceCallback =
       object : AudioDeviceCallback() {
@@ -100,6 +103,7 @@ class VoiceAgentAudioRouteController(context: Context) {
           logAudioRoute("devices_added")
           if (sessionStarted) {
             applyCurrentRoute("devices_added")
+            notifyFlutterRouteChanged("devices_added")
           }
         }
 
@@ -107,6 +111,7 @@ class VoiceAgentAudioRouteController(context: Context) {
           logAudioRoute("devices_removed")
           if (sessionStarted) {
             applyCurrentRoute("devices_removed")
+            notifyFlutterRouteChanged("devices_removed")
           }
         }
       }
@@ -172,7 +177,12 @@ class VoiceAgentAudioRouteController(context: Context) {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
       if (externalOutputConnected) {
-        audioManager.clearCommunicationDevice()
+        val externalDevice = preferredExternalCommunicationDevice()
+        if (externalDevice != null) {
+          audioManager.setCommunicationDevice(externalDevice)
+        } else {
+          audioManager.clearCommunicationDevice()
+        }
       } else {
         val deviceType =
             if (outputMode == VoiceAgentOutputMode.speaker) {
@@ -204,6 +214,25 @@ class VoiceAgentAudioRouteController(context: Context) {
     logAudioRoute(reason)
   }
 
+  fun preferredExternalCommunicationDevice(): AudioDeviceInfo? {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return null
+    val preferredTypes =
+        listOf(
+            AudioDeviceInfo.TYPE_BLUETOOTH_SCO,
+            AudioDeviceInfo.TYPE_BLE_HEADSET,
+            AudioDeviceInfo.TYPE_WIRED_HEADSET,
+            AudioDeviceInfo.TYPE_USB_HEADSET,
+            AudioDeviceInfo.TYPE_WIRED_HEADPHONES,
+            AudioDeviceInfo.TYPE_USB_DEVICE,
+            AudioDeviceInfo.TYPE_BLUETOOTH_A2DP,
+            AudioDeviceInfo.TYPE_BLE_SPEAKER)
+    for (type in preferredTypes) {
+      val device = audioManager.availableCommunicationDevices.firstOrNull { it.type == type }
+      if (device != null) return device
+    }
+    return null
+  }
+
   fun hasExternalOutputRoute(): Boolean {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
       return audioManager.isWiredHeadsetOn || audioManager.isBluetoothScoOn || audioManager.isBluetoothA2dpOn
@@ -230,6 +259,13 @@ class VoiceAgentAudioRouteController(context: Context) {
 
   fun logAudioRoute(reason: String) {
     Log.d(tag, "route snapshot: ${collectRouteSnapshot(reason)}")
+  }
+
+  fun notifyFlutterRouteChanged(reason: String) {
+    val snapshot = collectRouteSnapshot(reason)
+    mainHandler.post {
+      methodChannel?.invokeMethod("voiceAgentAudioRouteChanged", snapshot)
+    }
   }
 
   fun collectRouteSnapshot(reason: String): Map<String, Any> {

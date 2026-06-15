@@ -26,10 +26,12 @@ class VoiceCallNotifier extends ChangeNotifier {
   EventsListener<RoomEvent>? livekitListener;
   AudioVisualizer? assistantAudioVisualizer;
   CancelListenFunc? assistantAudioVisualizerSubscription;
+  StreamSubscription<Map<String, dynamic>>? audioRouteChangesSubscription;
   String? assistantTrackSid;
 
   VoiceUiState voiceUiState = VoiceUiState.connecting;
   VoiceAudioOutputMode outputMode = VoiceAudioOutputMode.speaker;
+  bool externalOutputConnected = false;
   bool isConnecting = false;
   bool isDisposed = false;
   bool isMicrophoneTransitioning = false;
@@ -56,13 +58,17 @@ class VoiceCallNotifier extends ChangeNotifier {
   Future<void>? disconnectOperation;
   Future<void>? audioOutputModeOperation;
 
-  VoiceCallNotifier({required this.aiChatRemoteDataSource, required this.topicId});
+  VoiceCallNotifier({required this.aiChatRemoteDataSource, required this.topicId}) {
+    audioRouteChangesSubscription = VoiceAgentAudioRouteService.instance.routeChanges
+        .listen((snapshot) => unawaited(handleNativeAudioRouteChanged(snapshot)));
+  }
 
   bool get isConnected => room?.connectionState == ConnectionState.connected;
   bool get isAgentTurn => assistantAudioLocked;
   bool get canStartUserTurn =>
       isConnected && !isConnecting && voiceUiState != VoiceUiState.connecting;
   bool get isSpeakerMode => outputMode == VoiceAudioOutputMode.speaker;
+  bool get hasExternalOutputRoute => externalOutputConnected;
 
   bool isActiveConnectAttempt(int attemptId) => !isDisposed && attemptId == connectAttemptId;
 
@@ -192,6 +198,7 @@ class VoiceCallNotifier extends ChangeNotifier {
   }
 
   Future<void> toggleAudioOutputMode() async {
+    if (externalOutputConnected) return;
     final nextMode = outputMode == VoiceAudioOutputMode.speaker
         ? VoiceAudioOutputMode.phone
         : VoiceAudioOutputMode.speaker;
@@ -199,6 +206,7 @@ class VoiceCallNotifier extends ChangeNotifier {
   }
 
   Future<void> setAudioOutputMode(VoiceAudioOutputMode nextMode) async {
+    if (externalOutputConnected) return;
     if (outputMode == nextMode) return;
     outputMode = nextMode;
     notifySafely();
@@ -300,17 +308,41 @@ class VoiceCallNotifier extends ChangeNotifier {
     final isSpeakerOutput = targetMode == VoiceAudioOutputMode.speaker;
     final modeName = targetMode.name;
     try {
-      await VoiceAgentAudioRouteService.instance
+      final snapshot = await VoiceAgentAudioRouteService.instance
           .applyOutputMode(outputMode: modeName, reason: reason);
+      updateExternalOutputRouteFromSnapshot(snapshot, notify: false);
       audioSessionActive = true;
       if (isDisposed || !identical(room, roomValue)) return;
       if (roomValue != null) {
-        await roomValue.setSpeakerOn(isSpeakerOutput, forceSpeakerOutput: isSpeakerOutput);
+        final shouldForceSpeaker = isSpeakerOutput && !externalOutputConnected;
+        await roomValue.setSpeakerOn(shouldForceSpeaker, forceSpeakerOutput: shouldForceSpeaker);
       }
+      notifySafely();
     } catch (error, stackTrace) {
       debugPrint('[VoiceAudioOutput] apply failed: $error');
       debugPrintStack(stackTrace: stackTrace);
     }
+  }
+
+  Future<void> handleNativeAudioRouteChanged(Map<String, dynamic> snapshot) async {
+    if (isDisposed) return;
+    final changed = updateExternalOutputRouteFromSnapshot(snapshot, notify: false);
+    final roomValue = room;
+    if (roomValue != null && isConnected) {
+      final shouldForceSpeaker = isSpeakerMode && !externalOutputConnected;
+      await roomValue.setSpeakerOn(shouldForceSpeaker, forceSpeakerOutput: shouldForceSpeaker);
+    }
+    if (changed) notifySafely();
+  }
+
+  bool updateExternalOutputRouteFromSnapshot(Map<String, dynamic>? snapshot,
+      {required bool notify}) {
+    if (snapshot == null) return false;
+    final nextValue = snapshot['externalOutputConnected'] == true;
+    if (externalOutputConnected == nextValue) return false;
+    externalOutputConnected = nextValue;
+    if (notify) notifySafely();
+    return true;
   }
 
   Future<void> stopAudioSession({required String reason}) {
@@ -539,6 +571,22 @@ class VoiceCallNotifier extends ChangeNotifier {
     });
   }
 
+  void recoverFromAssistantWaitTimeout() {
+    if (isDisposed) return;
+    thinkingTimer?.cancel();
+    speakingSilenceTimer?.cancel();
+    clearAssistantAudioLock();
+    userSpeaking = false;
+    localSpeaking = false;
+    localAudioLevel = 0;
+    userTurnHasSpeech = false;
+    if (voiceUiState != VoiceUiState.error && voiceUiState != VoiceUiState.connecting) {
+      setVoiceState(VoiceUiState.listening);
+      return;
+    }
+    notifySafely();
+  }
+
   void startListeningTransition() {
     speakingSilenceTimer?.cancel();
     speakingSilenceTimer = Timer(const Duration(milliseconds: 1500), () {
@@ -622,6 +670,7 @@ class VoiceCallNotifier extends ChangeNotifier {
     localAudioLevel = 0;
     localSpeaking = false;
     audioSessionActive = false;
+    externalOutputConnected = false;
     voiceUiState = VoiceUiState.connecting;
     lastLivekitEvent = '';
     errorMessage = null;
@@ -665,6 +714,8 @@ class VoiceCallNotifier extends ChangeNotifier {
     thinkingTimer?.cancel();
     speakingSilenceTimer?.cancel();
     assistantAudioLockTimer?.cancel();
+    audioRouteChangesSubscription?.cancel();
+    audioRouteChangesSubscription = null;
     thinkingTimer = null;
     speakingSilenceTimer = null;
     assistantAudioLockTimer = null;
@@ -693,6 +744,7 @@ class VoiceCallNotifier extends ChangeNotifier {
     localAudioLevel = 0;
     localSpeaking = false;
     audioSessionActive = false;
+    externalOutputConnected = false;
     lastLivekitEvent = '';
     Future<void>(() async {
       currentListener?.dispose();

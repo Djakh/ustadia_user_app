@@ -71,20 +71,21 @@ class PracticeWritingAssessmentPageState extends State<PracticeWritingAssessment
         onChanged: (_) => setState(() {}),
       );
 
-  Widget responseArea(BuildContext context) => Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+  Widget responseArea(BuildContext context) =>
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(selectedPrompt ?? '', style: Style.bodyw5(context)),
         const SizedBox(height: 12),
         responseTextField,
         const SizedBox(height: 8),
         Text('{count} words'.tr(namedArgs: {'count': '$wordCount'}),
             style: Style.small3w4(context, color: TextColorRole.greyColor)),
-        const Spacer(),
+        const SizedBox(height: 24),
         Button.primary(onTap: onSubmit, text: 'Submit'.tr())
-      ]));
+      ]);
 
   Widget get view => PrimaryBackground(
       title: 'Writing assessment'.tr(),
+      isScrollable: true,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const SizedBox(height: 24),
         if (selectedPrompt == null) promptContent(context) else responseArea(context),

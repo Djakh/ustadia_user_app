@@ -94,12 +94,10 @@ class PracticeSpeedMixPlayPageState extends State<PracticeSpeedMixPlayPage> {
   }
 
   List<PracticeWordMatchCardData> _wordMatchSources(List<(String, String)> pairs) => List.generate(
-      pairs.length,
-      (index) => PracticeWordMatchCardData(pairId: index, text: pairs[index].$1));
+      pairs.length, (index) => PracticeWordMatchCardData(pairId: index, text: pairs[index].$1));
 
   List<PracticeWordMatchCardData> _wordMatchTargets(List<(String, String)> pairs) => List.generate(
-      pairs.length,
-      (index) => PracticeWordMatchCardData(pairId: index, text: pairs[index].$2));
+      pairs.length, (index) => PracticeWordMatchCardData(pairId: index, text: pairs[index].$2));
 
   PracticeListenTapQuestionModel _listenQuestionFromTask(SpeedMixTaskModel task) {
     final options = List.generate(
@@ -253,23 +251,27 @@ class PracticeSpeedMixPlayPageState extends State<PracticeSpeedMixPlayPage> {
     }
   }
 
-  Widget get view => Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+  Widget get view => ListView(
+        padding: EdgeInsets.zero,
+        physics: const AlwaysScrollableScrollPhysics(),
         children: [
           const SizedBox(height: 24),
           header,
           const SizedBox(height: 12),
           if (isSentenceTask) ...[
-            Expanded(child: Center(child: currentTaskBody)),
+            Center(child: currentTaskBody),
             const SizedBox(height: 16),
             Text('Answer as many as you can!'.tr(),
+                textAlign: TextAlign.center,
                 style: Style.small3w4(context, color: TextColorRole.greyColor)),
           ] else ...[
             currentTaskBody,
             const SizedBox(height: 20),
             Text('Answer as many as you can!'.tr(),
+                textAlign: TextAlign.center,
                 style: Style.small3w4(context, color: TextColorRole.greyColor)),
           ],
+          const SizedBox(height: 24),
         ],
       );
 
@@ -278,8 +280,5 @@ class PracticeSpeedMixPlayPageState extends State<PracticeSpeedMixPlayPage> {
       listener: nextPracticeListener,
       child: Scaffold(
           backgroundColor: context.cs.surface,
-          body: PrimaryBackground(
-              title: 'Speed Mix'.tr(),
-              isScrollable: !isSentenceTask,
-              child: isSentenceTask ? SizedBox.expand(child: view) : view)));
+          body: PrimaryBackground(title: 'Speed Mix'.tr(), isScrollable: false, child: view)));
 }
