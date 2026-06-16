@@ -9,11 +9,12 @@ class NotificationsRemoteDataSource {
   Future<List<NotificationApiModel>> fetchNotifications() async {
     final response = await dio.get('/notifications');
     final data = response.data;
-    final items = data is List ? data : (data as Map<String, dynamic>)['data'] as List<dynamic>? ?? [];
-    return items
-        .whereType<Map<String, dynamic>>()
-        .map(NotificationApiModel.fromJson)
-        .toList();
+    final items = data is List
+        ? data
+        : (data as Map<String, dynamic>)['items'] as List<dynamic>? ??
+            data['data'] as List<dynamic>? ??
+            [];
+    return items.whereType<Map<String, dynamic>>().map(NotificationApiModel.fromJson).toList();
   }
 
   Future<void> markNotificationRead(String notificationId) async {

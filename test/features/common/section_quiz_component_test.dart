@@ -82,6 +82,51 @@ void main() {
     expect(find.byIcon(Icons.check), findsNWidgets(2));
   });
 
+  testWidgets('multiple choice evidence sheet combines positions from multiple correct answers',
+      (tester) async {
+    const content = 'Alpha evidence is here. Beta evidence is here.';
+    final alphaStart = content.indexOf('Alpha evidence');
+    final alphaEnd = alphaStart + 'Alpha evidence'.length;
+    final betaStart = content.indexOf('Beta evidence');
+    final betaEnd = betaStart + 'Beta evidence'.length;
+    await _registerQuizDependencies({'q1': _submitResult('q1', isCorrect: false)});
+    await _pumpQuiz(
+        tester,
+        [
+          _question(id: 'q1', type: 'multiple-choice', maxSelections: 2, answers: [
+            _answer(id: 'q1_a', questionId: 'q1', text: 'Correct one', isCorrect: true, positions: [
+              {'start': alphaStart, 'end': alphaEnd}
+            ]),
+            _answer(
+                id: 'q1_b',
+                questionId: 'q1',
+                text: 'Correct two',
+                isCorrect: true,
+                orderIndex: 1,
+                positions: [
+                  {'start': betaStart, 'end': betaEnd}
+                ]),
+            _answer(
+                id: 'q1_c',
+                questionId: 'q1',
+                text: 'Wrong choice',
+                isCorrect: false,
+                orderIndex: 2),
+          ])
+        ],
+        sectionContent: content);
+
+    await tester.tap(find.text('Wrong choice'));
+    await tester.pump();
+    await tester.tap(find.text('Submit'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.visibility_rounded));
+    await tester.pumpAndSettle();
+
+    expect(_highlightedTexts(), containsAll(['Alpha evidence', 'Beta evidence']));
+  });
+
   testWidgets('fill blank shows correct blank answer and locks input after first submit',
       (tester) async {
     await _registerQuizDependencies({'q1': _submitResult('q1', isCorrect: false)});
@@ -140,6 +185,48 @@ void main() {
 
     expect(find.text('Answer evidence'), findsOneWidget);
     expect(_richTextContaining('exact blank answer'), findsOneWidget);
+  });
+
+  testWidgets('fill blank evidence sheet combines positions from multiple blank answers',
+      (tester) async {
+    const content = 'First evidence appears here. Second evidence appears later.';
+    final firstStart = content.indexOf('First evidence');
+    final firstEnd = firstStart + 'First evidence'.length;
+    final secondStart = content.indexOf('Second evidence');
+    final secondEnd = secondStart + 'Second evidence'.length;
+    await _registerQuizDependencies({'q1': _submitResult('q1', isCorrect: false)});
+    await _pumpQuiz(
+        tester,
+        [
+          _question(id: 'q1', type: 'fill-blank', numberOfBlanks: 2, blankAnswers: [
+            {
+              'answer': 'first',
+              'position': 1,
+              'positions': [
+                {'start': firstStart, 'end': firstEnd}
+              ]
+            },
+            {
+              'answer': 'second',
+              'position': 2,
+              'positions': [
+                {'start': secondStart, 'end': secondEnd}
+              ]
+            }
+          ])
+        ],
+        sectionContent: content);
+
+    await tester.enterText(find.byType(TextField).at(0), 'wrong');
+    await tester.enterText(find.byType(TextField).at(1), 'wrong');
+    await tester.pump();
+    await tester.tap(find.text('Submit'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.visibility_rounded));
+    await tester.pumpAndSettle();
+
+    expect(_highlightedTexts(), containsAll(['First evidence', 'Second evidence']));
   });
 
   testWidgets('short answer locks input after submit and does not show answer button',
@@ -660,3 +747,21 @@ class _FakeAssignmentsRemoteDataSource extends AssignmentsRemoteDataSource {
 
 Finder _richTextContaining(String text) => find
     .byWidgetPredicate((widget) => widget is RichText && widget.text.toPlainText().contains(text));
+
+List<String> _highlightedTexts() {
+  final highlighted = <String>[];
+  for (final richText in find.byType(RichText).evaluate()) {
+    final widget = richText.widget as RichText;
+    _collectHighlightedTexts(widget.text, highlighted);
+  }
+  return highlighted;
+}
+
+void _collectHighlightedTexts(InlineSpan span, List<String> output) {
+  if (span is TextSpan) {
+    final hasHighlight = span.style?.backgroundColor != null;
+    final text = span.text;
+    if (hasHighlight && text != null && text.isNotEmpty) output.add(text);
+    span.children?.forEach((child) => _collectHighlightedTexts(child, output));
+  }
+}

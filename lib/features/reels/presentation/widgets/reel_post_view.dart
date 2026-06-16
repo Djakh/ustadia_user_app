@@ -76,56 +76,60 @@ class ReelPostView extends StatelessWidget {
   Widget info(BuildContext context) => Positioned(
       left: 16,
       right: 86,
-      bottom: 32,
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            authorRow(context),
-            if (post.title.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Text(post.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: Style.body2w7(context).copyWith(color: AppColors.white))
-            ],
-            if (post.description.isNotEmpty) ...[
-              const SizedBox(height: 6),
-              Text(post.description,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: Style.small3w4(context).copyWith(color: AppColors.white))
-            ],
-            const SizedBox(height: 8),
-            Row(children: [
-              const Icon(Icons.visibility_rounded, color: AppColors.white, size: 16),
-              const SizedBox(width: 4),
-              Text(countLabel(post.viewsCount),
-                  style: Style.small2w5(context).copyWith(color: AppColors.white))
-            ])
-          ]));
+      bottom: 12,
+      child: SafeArea(
+          top: false,
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                authorRow(context),
+                if (post.title.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Text(post.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Style.body2w7(context).copyWith(color: AppColors.white))
+                ],
+                if (post.description.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  Text(post.description,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: Style.small3w4(context).copyWith(color: AppColors.white))
+                ],
+                const SizedBox(height: 8),
+                Row(children: [
+                  const Icon(Icons.visibility_rounded, color: AppColors.white, size: 16),
+                  const SizedBox(width: 4),
+                  Text(countLabel(post.viewsCount),
+                      style: Style.small2w5(context).copyWith(color: AppColors.white))
+                ])
+              ])));
 
   Widget actions(BuildContext context) => Positioned(
       right: 14,
-      bottom: 34,
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        ReelActionButton(
-            icon: post.isLiked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-            iconColor: post.isLiked ? AppColors.error : AppColors.white,
-            label: countLabel(post.likesCount),
-            onTap: onLike),
-        ReelActionButton(
-            icon: Icons.mode_comment_outlined,
-            label: countLabel(post.commentsCount),
-            onTap: onComments)
-      ]));
+      bottom: 14,
+      child: SafeArea(
+          top: false,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            ReelActionButton(
+                icon: post.isLiked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                iconColor: post.isLiked ? AppColors.error : AppColors.white,
+                label: countLabel(post.likesCount),
+                onTap: onLike),
+            ReelActionButton(
+                icon: Icons.mode_comment_outlined,
+                label: countLabel(post.commentsCount),
+                onTap: onComments)
+          ])));
 
   @override
   Widget build(BuildContext context) => GestureDetector(
       onDoubleTap: onLike,
       child: Stack(fit: StackFit.expand, children: [
         mediaView,
-        gradientOverlay(),
+        IgnorePointer(child: gradientOverlay()),
         info(context),
         actions(context),
       ]));

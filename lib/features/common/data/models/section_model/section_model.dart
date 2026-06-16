@@ -166,6 +166,17 @@ class SectionModel {
                 status == 'expired'
             ? SectionProgressState.completed
             : SectionProgressState.inProgress;
+    final audioFileValue = json['audio_file'] ??
+        json['audioFile'] ??
+        json['audio'] ??
+        json['audio_url'] ??
+        json['audioUrl'] ??
+        json['audio_file_url'] ??
+        json['audioFileUrl'];
+    final audioFileId = json['audio_file_id']?.toString() ??
+        json['audioFileId']?.toString() ??
+        json['audio_id']?.toString() ??
+        json['audioId']?.toString();
 
     return SectionModel(
         id: resolvedSectionId,
@@ -179,8 +190,8 @@ class SectionModel {
         assignmentId: assignmentId,
         mockId: resolvedMockId,
         mockAttemptId: resolvedMockAttemptId,
-        audioFileId: json['audio_file_id']?.toString(),
-        audioFile: LearnAudioFileModel.fromDynamic(json['audio_file']),
+        audioFileId: audioFileId,
+        audioFile: LearnAudioFileModel.fromDynamic(audioFileValue),
         flashCardSetId: json['flashcard_set_id']?.toString(),
         flashCardSet: json['flashcard_set'] is Map<String, dynamic>
             ? LearnFlashcardSetModel.fromJson(json['flashcard_set'] as Map<String, dynamic>)
