@@ -41,6 +41,7 @@ import 'package:ustadia_user_app/features/mock_exam/presentation/bloc/mock_exam_
 import 'package:ustadia_user_app/features/meets/data/datasources/student_meets_remote_data_source.dart';
 import 'package:ustadia_user_app/features/meets/presentation/bloc/student_meets_bloc/student_meets_bloc.dart';
 import 'package:ustadia_user_app/features/notifications/data/datasources/notifications_remote_data_source.dart';
+import 'package:ustadia_user_app/features/notifications/data/services/notification_badge_store.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/bloc/notifications_bloc/notifications_bloc.dart';
 import 'package:ustadia_user_app/features/practice/data/datasources/practice_remote_data_source.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/monkey_type_practices_bloc/monkey_type_practices_bloc.dart';
@@ -82,8 +83,8 @@ Future<void> initDependencies() async {
   // Features - Auth
   sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSource(
       dio: DioClient.create(
-             //baseUrl: 'https://backend.ustadia.findecor.io',
-          baseUrl: 'https://dev.backend.ustadia.findecor.io',
+          baseUrl: 'https://backend.ustadia.findecor.io',
+         //  baseUrl: 'https://dev.backend.ustadia.findecor.io',
           accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken(),
           onUnauthorized: () => SessionLogoutService.logout(
               authLocalDataSource: sl<AuthLocalDataSource>(),
@@ -169,7 +170,10 @@ Future<void> initDependencies() async {
   // Features - Notifications
   sl.registerLazySingleton<NotificationsRemoteDataSource>(
       () => NotificationsRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
-  sl.registerFactory(() => NotificationsBloc(notificationsRemoteDataSource: sl()));
+  sl.registerLazySingleton<NotificationBadgeStore>(
+      () => NotificationBadgeStore(notificationsRemoteDataSource: sl()));
+  sl.registerFactory(
+      () => NotificationsBloc(notificationsRemoteDataSource: sl(), notificationBadgeStore: sl()));
 
   // Features - Assignments
   sl.registerLazySingleton<AssignmentsRemoteDataSource>(

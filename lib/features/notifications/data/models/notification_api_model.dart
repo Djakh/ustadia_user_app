@@ -36,7 +36,8 @@ class NotificationInvitationModel {
         updatedAt: updatedAt,
       );
 
-  factory NotificationInvitationModel.fromJson(Map<String, dynamic> json) => NotificationInvitationModel(
+  factory NotificationInvitationModel.fromJson(Map<String, dynamic> json) =>
+      NotificationInvitationModel(
         id: json['id']?.toString() ?? '',
         teacherId: json['teacher_id']?.toString() ?? '',
         studentId: json['student_id']?.toString() ?? '',
@@ -111,13 +112,21 @@ class NotificationApiModel {
         type: json['type']?.toString() ?? '',
         title: json['title']?.toString() ?? '',
         message: json['message']?.toString() ?? '',
-        isRead: json['is_read'] == true,
+        isRead: _toBool(json['is_read'] ?? json['isRead']),
         invitation: json['invitation'] is Map<String, dynamic>
             ? NotificationInvitationModel.fromJson(json['invitation'] as Map<String, dynamic>)
             : null,
         createdAt: _parseDate(json['created_at']),
         updatedAt: _parseDate(json['updated_at']),
       );
+}
+
+bool _toBool(dynamic value) {
+  if (value == null) return false;
+  if (value is bool) return value;
+  if (value is num) return value != 0;
+  final normalized = value.toString().trim().toLowerCase();
+  return normalized == 'true' || normalized == '1';
 }
 
 DateTime _parseDate(dynamic value) {

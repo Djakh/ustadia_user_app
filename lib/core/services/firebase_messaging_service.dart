@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -24,6 +25,10 @@ class FirebaseMessagingService {
   static const _channelDescription = 'General notifications';
   static final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
+  static final StreamController<RemoteMessage> _messageController =
+      StreamController<RemoteMessage>.broadcast();
+
+  static Stream<RemoteMessage> get notificationMessages => _messageController.stream;
 
   static Future<void> _initLocalNotifications() async {
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -35,8 +40,8 @@ class FirebaseMessagingService {
     await _localNotifications.initialize(settings,
         onDidReceiveNotificationResponse: (_) => openNotificationsPage(),
         onDidReceiveBackgroundNotificationResponse: onDidReceiveBackgroundNotificationResponse);
-    final androidPlugin = _localNotifications.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+    final androidPlugin = _localNotifications
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
     if (androidPlugin != null) {
       await androidPlugin.createNotificationChannel(const AndroidNotificationChannel(
         _channelId,
@@ -76,6 +81,7 @@ class FirebaseMessagingService {
 
     FirebaseMessaging.onMessage.listen((message) async {
       debugPrint('FCM foreground message: ${message.messageId}');
+      _messageController.add(message);
       final notification = message.notification;
       final title = notification?.title ?? message.data['title']?.toString();
       final body = notification?.body ?? message.data['body']?.toString();
@@ -98,11 +104,13 @@ class FirebaseMessagingService {
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       debugPrint('FCM message opened: ${message.messageId}');
+      _messageController.add(message);
       openNotificationsPage();
     });
 
     final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
+      _messageController.add(initialMessage);
       openNotificationsPage();
     }
   }

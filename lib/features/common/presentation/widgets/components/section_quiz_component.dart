@@ -534,14 +534,50 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     return score;
   }
 
+  SectionAnswerModel combinedEvidenceAnswer(List<SectionAnswerModel> answers) {
+    final positions = <SectionEvidencePosition>[];
+    final audioStartTimes = <double>[];
+    final audioEndTimes = <double>[];
+    for (final answer in answers) {
+      positions.addAll(answer.evidencePositions);
+      if (answer.hasAudioEvidenceData) {
+        audioStartTimes.add(answer.audioStartTime!);
+        audioEndTimes.add(answer.audioEndTime!);
+      }
+    }
+    final singleAnswer = answers.length == 1 ? answers.first : null;
+    return SectionAnswerModel(
+        id: answers.map((answer) => answer.id).join(','),
+        questionId: currentQuestion.id,
+        answerText:
+            answers.map((answer) => answer.answerText).where((text) => text.isNotEmpty).join(', '),
+        isCorrect: true,
+        userSelected: false,
+        orderIndex: 0,
+        transcript: singleAnswer?.transcript,
+        startPosition: null,
+        endPosition: null,
+        audioStartTime:
+            audioStartTimes.isEmpty ? null : audioStartTimes.reduce((a, b) => a < b ? a : b),
+        audioEndTime: audioEndTimes.isEmpty ? null : audioEndTimes.reduce((a, b) => a > b ? a : b),
+        positions: positions);
+  }
+
   SectionAnswerModel? currentBlankEvidenceAnswer(QuestionAnswerState answerState) {
     if (!isFillBlank || !hasSubmitted) return null;
     final blankAnswers = effectiveCorrectBlankAnswers(answerState);
-    for (final answer in blankAnswers) {
-      if (answer.hasAnswerEvidenceData) return answer.toEvidenceAnswer(currentQuestion.id);
-    }
-    for (final answer in currentQuestion.blankAnswers) {
-      if (answer.hasAnswerEvidenceData) return answer.toEvidenceAnswer(currentQuestion.id);
+    final blankEvidenceAnswers = blankAnswers
+        .where((answer) => answer.hasAnswerEvidenceData)
+        .map((answer) => answer.toEvidenceAnswer(currentQuestion.id))
+        .toList();
+    if (blankEvidenceAnswers.isNotEmpty) return combinedEvidenceAnswer(blankEvidenceAnswers);
+
+    final questionBlankEvidenceAnswers = currentQuestion.blankAnswers
+        .where((answer) => answer.hasAnswerEvidenceData)
+        .map((answer) => answer.toEvidenceAnswer(currentQuestion.id))
+        .toList();
+    if (questionBlankEvidenceAnswers.isNotEmpty) {
+      return combinedEvidenceAnswer(questionBlankEvidenceAnswers);
     }
     return null;
   }
@@ -551,18 +587,25 @@ class _SectionQuizComponentState extends State<SectionQuizComponent> {
     if (blankEvidenceAnswer != null) return blankEvidenceAnswer;
 
     final correctIds = effectiveCorrectAnswerIds(answerState);
-    SectionAnswerModel? selectedAnswer;
+    final candidates = <SectionAnswerModel>[];
+    SectionAnswerModel? fallbackAnswer;
     var selectedScore = -1;
 
     for (final answer in currentAnswers) {
       final score = evidenceAnswerScore(answer, correctIds);
+      if (score >= 0 && (answer.isCorrect || correctIds.contains(answer.id))) {
+        candidates.add(answer);
+      }
       if (score > selectedScore) {
         selectedScore = score;
-        selectedAnswer = answer;
+        fallbackAnswer = answer;
       }
     }
 
-    return selectedScore >= 0 ? selectedAnswer : null;
+    if (candidates.isNotEmpty) return combinedEvidenceAnswer(candidates);
+    return selectedScore >= 0 && fallbackAnswer != null
+        ? combinedEvidenceAnswer([fallbackAnswer])
+        : null;
   }
 
   bool hasCurrentAnswerEvidence(QuestionAnswerState answerState) {

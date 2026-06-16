@@ -4,13 +4,16 @@ import 'package:ustadia_user_app/core/enums/status.dart';
 import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/features/notifications/data/datasources/notifications_remote_data_source.dart';
 import 'package:ustadia_user_app/features/notifications/data/models/notification_api_model.dart';
+import 'package:ustadia_user_app/features/notifications/data/services/notification_badge_store.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/bloc/notifications_bloc/notifications_event.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/bloc/notifications_bloc/notifications_state.dart';
 
 class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   final NotificationsRemoteDataSource notificationsRemoteDataSource;
+  final NotificationBadgeStore notificationBadgeStore;
 
-  NotificationsBloc({required this.notificationsRemoteDataSource})
+  NotificationsBloc(
+      {required this.notificationsRemoteDataSource, required this.notificationBadgeStore})
       : super(const NotificationsState()) {
     on<NotificationsRequested>(handleNotificationsRequested);
     on<NotificationsMarkedAllRead>(handleNotificationsMarkedAllRead);
@@ -29,7 +32,9 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     }
     try {
       final notifications = await notificationsRemoteDataSource.fetchNotifications();
-      emit(state.copyWith(status: Status.success, notifications: notifications, errorMessage: null));
+      notificationBadgeStore.setNotifications(notifications);
+      emit(
+          state.copyWith(status: Status.success, notifications: notifications, errorMessage: null));
     } on DioException catch (error) {
       if (!shouldShowLoading) return;
       emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.from(error)));
@@ -61,6 +66,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       await notificationsRemoteDataSource.acceptInvitation(event.invitationId);
       final updated = _updateInvitationStatus(
           event.notificationId, event.invitationId, state.notifications, 'accepted');
+      notificationBadgeStore.setNotifications(updated);
       emit(state.copyWith(
         actionStatus: Status.success,
         notifications: updated,
@@ -86,6 +92,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       await notificationsRemoteDataSource.rejectInvitation(event.invitationId);
       final updated = _updateInvitationStatus(
           event.notificationId, event.invitationId, state.notifications, 'rejected');
+      notificationBadgeStore.setNotifications(updated);
       emit(state.copyWith(
         actionStatus: Status.success,
         notifications: updated,
@@ -128,6 +135,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       final updated = state.notifications
           .map((item) => item.id == notificationId ? item.copyWith(isRead: true) : item)
           .toList();
+      notificationBadgeStore.setNotifications(updated);
       emit(state.copyWith(
         actionStatus: Status.success,
         notifications: updated,
@@ -154,6 +162,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       await notificationsRemoteDataSource.markAllNotificationsRead();
       if (emit.isDone) return;
       final updated = state.notifications.map((item) => item.copyWith(isRead: true)).toList();
+      notificationBadgeStore.markAllReadLocally();
       emit(state.copyWith(
         actionStatus: Status.success,
         notifications: updated,

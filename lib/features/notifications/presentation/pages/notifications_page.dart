@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/mixins/format_date.dart';
+import 'package:ustadia_user_app/core/services/firebase_messaging_service.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/listviews/primary_list_view.dart';
@@ -32,17 +32,13 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
   final NotificationsBloc notificationsBloc = sl<NotificationsBloc>();
   BuildContext? dialogContext;
   bool shouldReloadTeachers = false;
-  StreamSubscription<RemoteMessage>? messageSubscription;
-  StreamSubscription<RemoteMessage>? messageOpenedSubscription;
+  StreamSubscription? messageSubscription;
 
   @override
   void initState() {
     super.initState();
     notificationsBloc.add(const NotificationsRequested());
-    messageSubscription = FirebaseMessaging.onMessage.listen((_) {
-      notificationsBloc.add(const NotificationsRequested(showLoading: false));
-    });
-    messageOpenedSubscription = FirebaseMessaging.onMessageOpenedApp.listen((_) {
+    messageSubscription = FirebaseMessagingService.notificationMessages.listen((_) {
       notificationsBloc.add(const NotificationsRequested(showLoading: false));
     });
   }
@@ -50,7 +46,6 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
   @override
   void dispose() {
     messageSubscription?.cancel();
-    messageOpenedSubscription?.cancel();
     notificationsBloc.close();
     super.dispose();
   }
@@ -78,9 +73,8 @@ class _NotificationsPageState extends State<NotificationsPage> with FormatDateMi
         return BlocBuilder<NotificationsBloc, NotificationsState>(
             bloc: notificationsBloc,
             builder: (context, state) {
-              final notificationItem = state.notifications.firstWhere(
-                  (item) => item.id == notification.id,
-                  orElse: () => notification);
+              final notificationItem = state.notifications
+                  .firstWhere((item) => item.id == notification.id, orElse: () => notification);
               final invitation = notificationItem.invitation;
               final showActions =
                   notificationItem.isInvitation && canRespondToInvitation(notificationItem);

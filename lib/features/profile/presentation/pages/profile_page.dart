@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/constants/images.dart';
+import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
@@ -14,6 +17,7 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/use
 import 'package:ustadia_user_app/features/profile/data/models/profile_badge_model.dart';
 import 'package:ustadia_user_app/features/profile/data/models/profile_statistics_model.dart';
 import 'package:ustadia_user_app/features/profile/data/models/profile_stats_model.dart';
+import 'package:ustadia_user_app/features/notifications/data/services/notification_badge_store.dart';
 import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/bottom_sheets/level_picker_sheet.dart';
 import 'package:ustadia_user_app/features/profile/presentation/widgets/cards/badge_item_card.dart';
@@ -32,6 +36,7 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage> {
   final ProfileStatisticsStore statisticsStore = sl<ProfileStatisticsStore>();
+  final NotificationBadgeStore notificationBadgeStore = sl<NotificationBadgeStore>();
   final GlobalKey userCardKey = GlobalKey(debugLabel: 'profile_user_card');
   final GlobalKey statsKey = GlobalKey(debugLabel: 'profile_stats');
   final GlobalKey notificationsKey = GlobalKey(debugLabel: 'profile_notifications');
@@ -46,6 +51,7 @@ class ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     statisticsStore.refreshIfNeeded();
+    unawaited(notificationBadgeStore.refreshIfNeeded());
   }
 
   /// --- Data ---
@@ -127,16 +133,47 @@ class ProfilePageState extends State<ProfilePage> {
         .showSnackBar(SnackBar(content: Text('Level can be changed only in system lessons'.tr())));
   }
 
-  Widget headerIcon(IconData icon, AlignmentGeometry alignment, Function() onPressed, {Key? key}) =>
+  Future<void> openNotifications() async {
+    await notificationBadgeStore.refresh(force: true);
+    if (!mounted) return;
+    context.push(notificationsRoute);
+  }
+
+  Widget notificationBadge(int count) {
+    if (count <= 0) return const SizedBox.shrink();
+    final label = count > 99 ? '99+' : count.toString();
+    return Positioned(
+        right: 4,
+        top: 5,
+        child: Container(
+            constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: AppColors.error,
+                borderRadius: BorderRadius.circular(999),
+                border: Border.all(color: AppColors.white, width: 1.5)),
+            child: Text(label,
+                style: Style.small3w5(context)
+                    .copyWith(color: AppColors.white, fontSize: 10, height: 1))));
+  }
+
+  Widget headerIcon(IconData icon, AlignmentGeometry alignment, Function() onPressed,
+          {Key? key, int badgeCount = 0}) =>
       Align(
           alignment: alignment,
-          child: IconButton(key: key, onPressed: onPressed, icon: Icon(icon, size: 22)));
+          child: Stack(clipBehavior: Clip.none, children: [
+            IconButton(key: key, onPressed: onPressed, icon: Icon(icon, size: 22)),
+            notificationBadge(badgeCount)
+          ]));
 
   Widget header(BuildContext context) =>
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        headerIcon(
-            Icons.notifications, Alignment.centerLeft, () => context.push(notificationsRoute),
-            key: notificationsKey),
+        ValueListenableBuilder<int>(
+            valueListenable: notificationBadgeStore.unreadCount,
+            builder: (context, count, _) => headerIcon(
+                Icons.notifications, Alignment.centerLeft, openNotifications,
+                key: notificationsKey, badgeCount: count)),
         Text('Profile'.tr(), style: Style.body2w6(context)),
         headerIcon(Icons.settings, Alignment.centerRight, () => context.push(settingsRoute),
             key: settingsKey)

@@ -16,7 +16,13 @@ class LearnAudioFileModel {
   });
 
   static LearnAudioFileModel? fromDynamic(dynamic value) {
-    if (value is Map<String, dynamic>) return LearnAudioFileModel.fromJson(value);
+    if (value is Map<String, dynamic>) {
+      final nestedValue = value['file'] ?? value['audio_file'] ?? value['audioFile'];
+      if (nestedValue is Map<String, dynamic> || nestedValue is String) {
+        return LearnAudioFileModel.fromDynamic(nestedValue);
+      }
+      return LearnAudioFileModel.fromJson(value);
+    }
     if (value == null) return null;
     return LearnAudioFileModel(
       id: '',
@@ -33,7 +39,12 @@ class LearnAudioFileModel {
         filename: json['filename']?.toString() ?? '',
         path: json['path']?.toString() ?? '',
         mimetype: json['mimetype']?.toString() ?? '',
-        url: json['url']?.toString() ?? '',
+        url: json['url']?.toString() ??
+            json['audio_url']?.toString() ??
+            json['audioUrl']?.toString() ??
+            json['file_url']?.toString() ??
+            json['fileUrl']?.toString() ??
+            '',
         createdAt: json['created_at']?.toString() ?? '',
       );
 }

@@ -80,18 +80,47 @@ class MockExamRemoteDataSource {
         '$baseUrl/$mockExamId/attempts/$attemptId/sections/$sectionId/start',
         options: freshRequestOptions);
     final data = response.data as Map<String, dynamic>;
-    final sectionData = data['section'] is Map<String, dynamic>
-        ? Map<String, dynamic>.from(data['section'] as Map<String, dynamic>)
-        : data['sub_section'] is Map<String, dynamic>
-            ? Map<String, dynamic>.from(data['sub_section'] as Map<String, dynamic>)
-            : Map<String, dynamic>.from(data);
-    sectionData['questions'] ??= data['questions'];
-    sectionData['time_remaining_seconds'] ??= data['time_remaining_seconds'];
-    sectionData['time_limit_seconds'] ??= data['time_limit_seconds'];
-    sectionData['deadline_at'] ??= data['deadline_at'];
-    sectionData['status'] ??= data['status'];
+    final sectionData = sectionStartData(data);
     return SectionModel.fromJson(sectionData,
         source: SectionSource.mockExam, mockId: mockExamId, mockAttemptId: attemptId);
+  }
+
+  Map<String, dynamic> sectionStartData(Map<String, dynamic> data) {
+    final payload = mapValue(data['data']) ?? data;
+    final sectionData = mapValue(payload['section']) ??
+        mapValue(payload['sub_section']) ??
+        mapValue(payload['subSection']) ??
+        mapValue(payload['current_section']) ??
+        mapValue(payload['currentSection']) ??
+        mapValue(payload['section_detail']) ??
+        mapValue(payload['sectionDetail']) ??
+        payload;
+    final result = Map<String, dynamic>.from(sectionData);
+    mergeSectionStartFields(result, data);
+    if (!identical(payload, data)) mergeSectionStartFields(result, payload);
+    return result;
+  }
+
+  Map<String, dynamic>? mapValue(dynamic value) =>
+      value is Map<String, dynamic> ? Map<String, dynamic>.from(value) : null;
+
+  void mergeSectionStartFields(Map<String, dynamic> sectionData, Map<String, dynamic> source) {
+    sectionData['questions'] ??= source['questions'];
+    sectionData['time_remaining_seconds'] ??=
+        source['time_remaining_seconds'] ?? source['timeRemainingSeconds'];
+    sectionData['time_limit_seconds'] ??=
+        source['time_limit_seconds'] ?? source['timeLimitSeconds'];
+    sectionData['deadline_at'] ??= source['deadline_at'] ?? source['deadlineAt'];
+    sectionData['status'] ??= source['status'];
+    sectionData['audio_file_id'] ??=
+        source['audio_file_id'] ?? source['audioFileId'] ?? source['audio_id'] ?? source['audioId'];
+    sectionData['audio_file'] ??= source['audio_file'] ??
+        source['audioFile'] ??
+        source['audio'] ??
+        source['audio_url'] ??
+        source['audioUrl'] ??
+        source['audio_file_url'] ??
+        source['audioFileUrl'];
   }
 
   Future<Map<String, dynamic>> submitMockExamAnswer({
