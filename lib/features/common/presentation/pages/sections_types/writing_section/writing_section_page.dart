@@ -228,7 +228,7 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       ]);
 
   Widget get sectionContent => HtmlText(
-      data: widget.sectionModel.content,
+      data: detailBloc.state.detail?.content ?? '',
       textAlign: TextAlign.justify,
       textStyle: Style.small3w4(context, color: TextColorRole.greyColor));
 

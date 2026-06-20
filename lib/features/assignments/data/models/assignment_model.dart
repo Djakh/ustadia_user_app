@@ -48,6 +48,7 @@ class AssignmentModel {
   SectionModel? get firstSection => sections.isNotEmpty ? sections.first : null;
 
   factory AssignmentModel.fromJson(Map<String, dynamic> json) {
+    final assignmentId = json['id']?.toString() ?? '';
     final sectionsJson = json['sections'];
     final parsedDeadline = parseDate(json['deadline']);
     final createdAt = parseDate(json['created_at']);
@@ -55,7 +56,7 @@ class AssignmentModel {
     final completedTaskPercentage = toIntValue(json['completedTaskPercentage']);
     final progressValue = completedTaskPercentage;
     return AssignmentModel(
-        id: json['id'] as String? ?? '',
+        id: assignmentId,
         title: json['title'] as String? ?? '',
         description: json['description'] as String? ?? '',
         status: json['status'] as String? ?? '',
@@ -72,7 +73,8 @@ class AssignmentModel {
         progress: progressValue,
         sections: sectionsJson is List
             ? sectionsJson
-                .map((item) => SectionModel.fromJson(item as Map<String, dynamic>))
+                .map((item) => SectionModel.fromJson(item as Map<String, dynamic>,
+                    source: SectionSource.assignment, assignmentId: assignmentId))
                 .toList()
             : const []);
   }

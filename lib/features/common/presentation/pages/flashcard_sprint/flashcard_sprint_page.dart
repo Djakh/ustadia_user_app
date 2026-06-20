@@ -10,12 +10,17 @@ import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:ustadia_user_app/core/widgets/connection/reload_conntection_button.dart';
+import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_set_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/flashcard_status_bloc/flashcard_status_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/flashcard_status_bloc/flashcard_status_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/flashcard_status_bloc/flashcard_status_state.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_event.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_state.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_result_page.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_navigation_circle_button.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/flashcard_view.dart';
@@ -65,6 +70,10 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   final Set<int> _learningCards = {};
   final FlashcardStatusBloc statusBloc = sl<FlashcardStatusBloc>();
   final FlutterTts tts = FlutterTts();
+  SectionDetailBloc? detailBloc;
+  LearnFlashcardSetModel resolvedFlashcardSet = const LearnFlashcardSetModel.empty();
+  SectionModel? resolvedSectionModel;
+  bool didHandleUnavailableFlashcards = false;
   FlashcardSprintResultStats? resultStats;
   final GlobalKey flashcardKey = GlobalKey(debugLabel: 'flashcard_card');
   final GlobalKey cardsButtonKey = GlobalKey(debugLabel: 'flashcard_cards_button');
@@ -72,7 +81,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   final GlobalKey mainButtonKey = GlobalKey(debugLabel: 'flashcard_main_action');
   final GlobalKey nextButtonKey = GlobalKey(debugLabel: 'flashcard_next');
 
-  List<LearnFlashcardModel> get cards => widget.flashcardSetModel.flashcards;
+  List<LearnFlashcardModel> get cards => resolvedFlashcardSet.flashcards;
   LearnFlashcardModel get current => cards[index];
   String get progress => 'Card {current} of {total}'
       .tr(namedArgs: {'current': cards.isEmpty ? '0' : '${index + 1}', 'total': '${cards.length}'});
@@ -80,7 +89,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   bool get isSubmitting => statusBloc.state.status.isLoading;
   bool get isCurrentMeaningLoading => isSubmitting && statusBloc.state.flashcardId == current.id;
   bool get shouldShowMeaning => showMeaning;
-  bool get isSectionVocabulary => widget.sectionModel != null && !widget.isPractice;
+  bool get isSectionVocabulary => resolvedSectionModel != null && !widget.isPractice;
   bool get isFirstCard => index == 0;
   bool get isLastCard => index == cards.length - 1;
   bool get isCurrentCardAnswered => isCardAnswered(index);
@@ -96,9 +105,15 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   @override
   void initState() {
     super.initState();
+    resolvedFlashcardSet = widget.flashcardSetModel;
+    resolvedSectionModel = widget.sectionModel;
     configureTts();
-    if (widget.sectionModel?.progressState == SectionProgressState.completed) {
+    if (resolvedSectionModel?.progressState == SectionProgressState.completed) {
       stage = FlashcardSprintStage.result;
+    }
+    if (isSectionVocabulary) {
+      detailBloc = sl<SectionDetailBloc>();
+      loadSectionDetail();
     }
   }
 
@@ -107,8 +122,51 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
     flashcardsOverviewEntry?.remove();
     flashcardsOverviewEntry = null;
     tts.stop();
+    detailBloc?.close();
     statusBloc.close();
     super.dispose();
+  }
+
+  void loadSectionDetail() {
+    final section = resolvedSectionModel;
+    if (section == null || section.id.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => closeForUnavailableFlashcards());
+      return;
+    }
+    detailBloc?.add(SectionDetailRequested(
+        sectionId: section.id,
+        source: section.source,
+        unitId: section.unitId,
+        lessonId: section.lessonId,
+        assignmentId: section.assignmentId,
+        mockExamId: section.mockId,
+        mockAttemptId: section.mockAttemptId));
+  }
+
+  void handleSectionDetail(BuildContext context, SectionDetailState state) {
+    if (!state.status.isSuccess) return;
+    final detail = state.detail;
+    final flashcardSet = detail?.flashCardSet;
+    if (detail == null || flashcardSet == null || flashcardSet.flashcards.isEmpty) {
+      closeForUnavailableFlashcards();
+      return;
+    }
+    setState(() {
+      resolvedSectionModel = detail;
+      resolvedFlashcardSet = flashcardSet;
+      stage = detail.progressState == SectionProgressState.completed
+          ? FlashcardSprintStage.result
+          : FlashcardSprintStage.cards;
+    });
+  }
+
+  void closeForUnavailableFlashcards() {
+    if (didHandleUnavailableFlashcards || !mounted) return;
+    didHandleUnavailableFlashcards = true;
+    final messenger = ScaffoldMessenger.of(context);
+    if (context.canPop()) context.pop();
+    messenger.showSnackBar(
+        SnackBar(content: Text('Flashcards are not available for this section.'.tr())));
   }
 
   Future<void> configureTts() async {
@@ -318,7 +376,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   /// --- Widgets ---
 
   Widget get header => Column(children: [
-        Text(widget.flashcardSetModel.title, style: Style.body3w7(context)),
+        Text(resolvedFlashcardSet.title, style: Style.body3w7(context)),
         const SizedBox(height: 4),
         Text(progress, style: Style.small3w4(context, color: TextColorRole.greyColor))
       ]);
@@ -589,11 +647,11 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
           nextKey: nextButtonKey),
       child: PrimaryBackground(
           header: header,
-          headerTooltipText: widget.flashcardSetModel.title,
+          headerTooltipText: resolvedFlashcardSet.title,
           child: flashcardsContent(context)));
 
   Widget get resultView {
-    final sectionModel = widget.sectionModel;
+    final sectionModel = resolvedSectionModel;
     if (isSectionVocabulary && sectionModel != null) {
       return PrimaryBackground(
           isHeader: false,
@@ -605,13 +663,26 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
 
   Widget get emptyView => PrimaryBackground(
       header: header,
-      headerTooltipText: widget.flashcardSetModel.title,
+      headerTooltipText: resolvedFlashcardSet.title,
       child: Center(
           child: Text('No flashcards found.'.tr(),
               style: Style.bodyw5(context, color: TextColorRole.greyColor))));
 
-  @override
-  Widget build(BuildContext context) => BlocConsumer<FlashcardStatusBloc, FlashcardStatusState>(
+  Widget get loadingView => Scaffold(
+      backgroundColor: context.cs.surface,
+      body: PrimaryBackground(
+          title: resolvedSectionModel?.title ?? 'Vocabulary'.tr(),
+          isScrollable: false,
+          child: const Center(child: PrimaryLoadingIndicator())));
+
+  Widget get detailErrorView => Scaffold(
+      backgroundColor: context.cs.surface,
+      body: PrimaryBackground(
+          title: resolvedSectionModel?.title ?? 'Vocabulary'.tr(),
+          isScrollable: false,
+          child: Center(child: ReloadConntectionButton(onReloadConnection: loadSectionDetail))));
+
+  Widget get flashcardView => BlocConsumer<FlashcardStatusBloc, FlashcardStatusState>(
       bloc: statusBloc,
       listener: (context, state) => _handleStatusUpdate(state),
       builder: (context, state) => Scaffold(
@@ -631,4 +702,20 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
                   : cards.isEmpty
                       ? emptyView
                       : view)));
+
+  @override
+  Widget build(BuildContext context) {
+    final sectionDetailBloc = detailBloc;
+    if (!isSectionVocabulary || sectionDetailBloc == null) return flashcardView;
+    return BlocConsumer<SectionDetailBloc, SectionDetailState>(
+        bloc: sectionDetailBloc,
+        listener: handleSectionDetail,
+        builder: (context, state) {
+          if (state.status.isError) return detailErrorView;
+          if (!state.status.isSuccess || resolvedFlashcardSet.flashcards.isEmpty) {
+            return loadingView;
+          }
+          return flashcardView;
+        });
+  }
 }

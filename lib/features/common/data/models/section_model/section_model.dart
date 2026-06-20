@@ -114,7 +114,7 @@ class SectionModel {
   }
 
   factory SectionModel.fromJson(Map<String, dynamic> json,
-      {SectionSource? source, String? mockId, String? mockAttemptId}) {
+      {SectionSource? source, String? assignmentId, String? mockId, String? mockAttemptId}) {
     final resolvedSectionId = json['id']?.toString() ??
         json['section_id']?.toString() ??
         json['sectionId']?.toString() ??
@@ -124,22 +124,24 @@ class SectionModel {
     final orderIndex = toInt(json['order_index']);
     final questionsJson = json['questions'];
     final totalQuestions = toInt(json['totalQuestions'] ??
+        json['totalquestions'] ??
         json['taskCount'] ??
         json['questions_count'] ??
         (questionsJson is List ? questionsJson.length : null));
     final answeredQuestionsValue = json['answeredQuestions'] ??
+        json['answeredquestions'] ??
         json['CompletedTaskCount'] ??
         json['completedTaskCount'] ??
         json['answered_questions_count'];
     final answeredQuestions = answeredQuestionsValue == null ? null : toInt(answeredQuestionsValue);
     final type = SectionTypeX.fromApi(json['type']?.toString() ?? '');
-    final assignmentId = json['assignment_id']?.toString();
+    final resolvedAssignmentId = assignmentId ?? json['assignment_id']?.toString();
     final resolvedMockId = mockId ?? json['mock_id']?.toString();
     final resolvedMockAttemptId =
         mockAttemptId ?? json['attempt_id']?.toString() ?? json['mock_attempt_id']?.toString();
     final lessonId = json['lesson_id']?.toString() ?? json['lessonId']?.toString();
     final resolvedSource = source ??
-        (assignmentId != null
+        (resolvedAssignmentId != null
             ? SectionSource.assignment
             : resolvedMockId != null
                 ? SectionSource.mockExam
@@ -148,7 +150,7 @@ class SectionModel {
             ?.whereType<Map<String, dynamic>>()
             .map((item) => SectionQuestionModel.fromJson(item,
                 source: resolvedSource,
-                assignmentId: assignmentId,
+                assignmentId: resolvedAssignmentId,
                 mockExamId: resolvedMockId,
                 mockAttemptId: resolvedMockAttemptId,
                 sectionId: resolvedSectionId,
@@ -159,9 +161,10 @@ class SectionModel {
     questions.sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
     final status = json['status']?.toString() ?? '';
     final isAvailable = _toBool(json['is_available'], fallback: status != 'locked');
-    SectionProgressState progressState = _toBool(json['isLocked']) || status == 'locked'
+    final isLocked = _toBool(json['isLocked'] ?? json['islocked']);
+    SectionProgressState progressState = isLocked || status == 'locked'
         ? SectionProgressState.locked
-        : _toBool(json['isCompleted'] ?? json['is_completed']) ||
+        : _toBool(json['isCompleted'] ?? json['is_completed'] ?? json['iscompleted']) ||
                 status == 'completed' ||
                 status == 'expired'
             ? SectionProgressState.completed
@@ -187,7 +190,7 @@ class SectionModel {
         orderIndex: orderIndex,
         totalQuestions: totalQuestions,
         answeredQuestions: answeredQuestions,
-        assignmentId: assignmentId,
+        assignmentId: resolvedAssignmentId,
         mockId: resolvedMockId,
         mockAttemptId: resolvedMockAttemptId,
         audioFileId: audioFileId,
@@ -203,7 +206,7 @@ class SectionModel {
         progressState: progressState,
         sectionType: type,
         sectionStringType: json['type'],
-        isLocked: _toBool(json['isLocked']) || status == 'locked' || !isAvailable,
+        isLocked: isLocked || status == 'locked' || !isAvailable,
         timeLimit: json['time_limit'] ?? json['time_limit_seconds'],
         timeRemainingSeconds: toIntOrNull(json['time_remaining_seconds']),
         deadlineAt: DateTime.tryParse(json['deadline_at']?.toString() ?? ''),

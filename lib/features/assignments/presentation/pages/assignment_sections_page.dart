@@ -75,10 +75,6 @@ class AssignmentSectionsPageState extends State<AssignmentSectionsPage> {
         navigation = context.push(learnGrammarRoute, extra: sectionModel);
         break;
       case SectionType.vocabulary:
-        if (sectionModel.flashCardSet == null &&
-            sectionModel.progressState != SectionProgressState.completed) {
-          return;
-        }
         navigation = context.push(
           flashcardSprintRoute,
           extra: FlashcardSprintParams(

@@ -25,7 +25,8 @@ class AssignmentsRemoteDataSource {
     final response = await dio.get('/students/assignments/$assignmentId/sections/$sectionId',
         options: freshRequestOptions);
     final data = response.data as Map<String, dynamic>;
-    return SectionModel.fromJson(data);
+    return SectionModel.fromJson(data,
+        source: SectionSource.assignment, assignmentId: assignmentId);
   }
 
   Future<List<SectionModel>> fetchAssignmentSections({required String assignmentId}) async {
@@ -34,7 +35,11 @@ class AssignmentsRemoteDataSource {
     final data = response.data;
     final items =
         data is List ? data : (data as Map<String, dynamic>)['data'] as List<dynamic>? ?? [];
-    return items.whereType<Map<String, dynamic>>().map(SectionModel.fromJson).toList();
+    return items
+        .whereType<Map<String, dynamic>>()
+        .map((item) => SectionModel.fromJson(item,
+            source: SectionSource.assignment, assignmentId: assignmentId))
+        .toList();
   }
 
   Future<SectionStatsModel> fetchAssignmentSectionStats(

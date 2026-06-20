@@ -1,290 +1,91 @@
 {
-    "id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
-    "unit_id": "c59b978a-bc81-465c-95b6-dfaf6f4ef9d2",
-    "type": "listening",
-    "title": "Listening",
-    "content": "<p>Good morning everyone. Today I'd like to tell you about our city library. The library was established in 1998 and has become one of the most popular places for students and local residents.</p><p>The library opens at 8:00 a.m. and closes at 8:00 p.m. from Monday to Friday. On weekends, it opens at 10:00 a.m. and closes at 5:00 p.m.</p><p>There are more than 50,000 books available, including novels, textbooks, magazines, and reference materials. Visitors can borrow up to five books at a time for a period of two weeks.</p><p>The library also offers free internet access and study rooms for students. Every Wednesday evening, a reading club meets to discuss books and share recommendations.</p><p>Last year, more than 10,000 people visited the library. The management plans to expand the children's section and introduce new digital resources in the future.</p>",
-    "audio_file_id": "62cb1a31-a9ef-443e-aac1-0877c1c49fc7",
-    "image_id": null,
-    "flashcard_set_id": null,
-    "order_index": 1,
-    "audio_file": {
-        "id": "62cb1a31-a9ef-443e-aac1-0877c1c49fc7",
-        "filename": "abbcc5397d2d0dff077e22b1dec0075329a5b80e16e5b8b195b85a4736d99a8d.mp3",
-        "path": "ab/bc/abbcc5397d2d0dff077e22b1dec0075329a5b80e16e5b8b195b85a4736d99a8d.mp3",
-        "mimetype": "audio/mpeg",
-        "url": "/uploads/ab/bc/abbcc5397d2d0dff077e22b1dec0075329a5b80e16e5b8b195b85a4736d99a8d.mp3",
-        "created_at": "2026-06-04T22:21:34.743535"
+  "data": [
+    {
+      "id": "ae8c0484-7888-4abd-b40e-6a2ba7339212",
+      "unit_id": "70ff2d9f-d1c7-48f2-8266-cd94cf7f37ed",
+      "type": "grammar",
+      "title": "Present Simple | Continuous | Perfect",
+      "content": "<blockquote><h2>Eng asosiy farq (1 qarashda)</h2></blockquote><ul><li><p><strong>Present Simple</strong> → odat, fakt</p></li><li><p><strong>Present Continuous</strong> → hozir davom etayotgan / vaqtinchalik holat</p></li><li><p><strong>Present Perfect</strong> → o‘tmish + hozir natijasi yoki tajriba</p></li></ul><hr><blockquote><h2>1. <strong>Present Simple</strong></h2></blockquote><p>--&gt; <em>Nima odatda bo‘ladi?</em></p><p><strong>Qachon ishlatiladi?</strong></p><ul><li><p>kundalik odatlar</p></li><li><p>umumiy haqiqatlar</p></li><li><p>jadval / reja</p></li></ul><p><strong>Signal so‘zlar:</strong><br>always, usually, often, every day, on Mondays</p><p><strong>Misollar:</strong></p><ul><li><p>I <strong>work</strong> in an office.</p></li><li><p>She <strong>gets up</strong> at 7 a.m.</p></li><li><p>Water <strong>boils</strong> at 100°C.</p></li></ul><hr><blockquote><h2>2. <strong>Present Continuous</strong></h2></blockquote><p>--&gt; <em>Hozir nima bo‘lyapti?</em></p><p><strong>Qachon ishlatiladi?</strong></p><ul><li><p>gapirayotgan paytda davom etayotgan ish</p></li><li><p>vaqtinchalik holat</p></li><li><p>yaqin kelajak rejasi</p></li></ul><p><strong>Signal so‘zlar:</strong><br>now, at the moment, today, this week</p><p><strong>Misollar:</strong></p><ul><li><p>I <strong>am working</strong> now.</p></li><li><p>She <strong>is studying</strong> for exams this week.</p></li><li><p>We <strong>are meeting</strong> him tonight.</p></li></ul><hr><blockquote><h2>3. <strong>Present Perfect</strong></h2></blockquote><p>--&gt; <em>Nima bo‘lib ulgurgan? Natijasi hozir muhim.</em></p><p><strong>Qachon ishlatiladi?</strong></p><ul><li><p>tajriba (ever / never)</p></li><li><p>hozirga ta’siri bor ish</p></li><li><p>hali tugamagan vaqt (this week, today)</p></li></ul><p><strong>Signal so‘zlar:</strong><br>ever, never, already, yet, just, recently</p><p><strong>Misollar:</strong></p><ul><li><p>I <strong>have finished</strong> my work.</p></li><li><p>She <strong>has never been</strong> abroad.</p></li><li><p>We <strong>have met</strong> him today.</p></li></ul><p></p><blockquote><h2><u>1 qatorli eslab qolish</u></h2></blockquote><ul><li><p><strong>Simple</strong> → <em>har doim</em></p></li><li><p><strong>Continuous</strong> → <em>hozir</em></p></li><li><p><strong>Perfect</strong> → <em>Shu paytgacha qilingan ish-harakatlar/ qachonligi muhim emas.</em></p></li></ul><p></p>",
+      "audio_file_id": null,
+      "image_id": null,
+      "flashcard_set_id": null,
+      "order_index": 1,
+      "audio_file": null,
+      "image": null,
+      "totalquestions": 10,
+      "answeredquestions": 0,
+      "iscompleted": false,
+      "islocked": false,
+      "link_positions": []
     },
-    "image": null,
-    "flashcard_set": null,
-    "questions": [
-        {
-            "id": "ea536661-846f-4d38-85fe-36dc46eee205",
-            "section_id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
-            "type": "fill-blank",
-            "title": "Listen to the audio and complete the sentence.",
-            "description": "The library was established in _____.",
-            "difficulty_id": "c7b8c9d0-e1f2-41d4-a716-446655440003",
-            "order_index": 0,
-            "xp": 5,
-            "is_answered": true,
-            "number_of_blanks": 1,
-            "blank_answers": [
-                {
-                    "answer": "1998",
-                    "position": 1,
-                    "positions": [
-                        {
-                            "end": 322,
-                            "start": 10
-                        }
-                    ],
-                    "transcript": "ng everyone. Today I'd like to tell you about our city library. The library was established in 1998 and has become one of the most popular places for students and local residents.\n\nThe library opens at 8:00 a.m. and closes at 8:00 p.m. from Monday to Friday. On weekends, it opens at 10:00 a.m. and closes at 5:00",
-                    "audio_end_time": null,
-                    "audio_start_time": null
-                }
-            ],
-            "user_blank_answers": [
-                {
-                    "answer": "pinko",
-                    "position": 1
-                }
-            ],
-            "user_answer": {
-                "id": "7e41c5ea-8aad-4f2d-83ba-c9f207dd339a",
-                "user_file": null,
-                "created_at": "2026-06-15T13:50:42.890658",
-                "is_correct": false,
-                "user_audio": null,
-                "ai_feedback": null,
-                "user_file_id": null,
-                "user_audio_id": null,
-                "user_input_text": null
-            },
-            "answers": null,
-            "max_selections": 0
-        },
-        {
-            "id": "b6dec134-5dd0-4adb-9170-56f3ad8f089a",
-            "section_id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
-            "type": "fill-blank",
-            "title": "Listen to the audio and complete the sentence.",
-            "description": "The library opens at _____ a.m. on weekdays.",
-            "difficulty_id": "c7b8c9d0-e1f2-41d4-a716-446655440003",
-            "order_index": 1,
-            "xp": 5,
-            "is_answered": true,
-            "number_of_blanks": 1,
-            "blank_answers": [
-                {
-                    "answer": "8:00",
-                    "position": 1,
-                    "positions": null,
-                    "transcript": null,
-                    "audio_end_time": null,
-                    "audio_start_time": null
-                }
-            ],
-            "user_blank_answers": [
-                {
-                    "answer": "pol",
-                    "position": 1
-                }
-            ],
-            "user_answer": {
-                "id": "36d240ca-3f83-46a5-81dd-47341c2b7567",
-                "user_file": null,
-                "created_at": "2026-06-15T13:50:59.100817",
-                "is_correct": false,
-                "user_audio": null,
-                "ai_feedback": null,
-                "user_file_id": null,
-                "user_audio_id": null,
-                "user_input_text": null
-            },
-            "answers": null,
-            "max_selections": 0
-        },
-        {
-            "id": "4810b547-3485-4e7f-8de7-3ab12942437d",
-            "section_id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
-            "type": "fill-blank",
-            "title": "Listen to the audio and complete the sentence.",
-            "description": "Visitors can borrow up to _____ books at a time.",
-            "difficulty_id": "c7b8c9d0-e1f2-41d4-a716-446655440003",
-            "order_index": 2,
-            "xp": 5,
-            "is_answered": true,
-            "number_of_blanks": 1,
-            "blank_answers": [
-                {
-                    "answer": "five",
-                    "position": 1,
-                    "positions": [
-                        {
-                            "end": 370,
-                            "start": 303
-                        }
-                    ],
-                    "transcript": "and closes at 5:00 p.m.\n\nThere are more than 50,000 books available,",
-                    "audio_end_time": null,
-                    "audio_start_time": null
-                }
-            ],
-            "user_blank_answers": [
-                {
-                    "answer": "polio",
-                    "position": 1
-                }
-            ],
-            "user_answer": {
-                "id": "f62d9a87-54e5-4dff-b083-177ad209a2be",
-                "user_file": null,
-                "created_at": "2026-06-15T13:51:06.032937",
-                "is_correct": false,
-                "user_audio": null,
-                "ai_feedback": null,
-                "user_file_id": null,
-                "user_audio_id": null,
-                "user_input_text": null
-            },
-            "answers": null,
-            "max_selections": 0
-        },
-        {
-            "id": "59f20c5e-4f8b-4b61-a20e-ccc9d173403f",
-            "section_id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
-            "type": "fill-blank",
-            "title": "Listen to the audio and complete the sentence.",
-            "description": "Books can be borrowed for _____ weeks.",
-            "difficulty_id": "c7b8c9d0-e1f2-41d4-a716-446655440003",
-            "order_index": 3,
-            "xp": 5,
-            "is_answered": false,
-            "number_of_blanks": 1,
-            "blank_answers": [
-                {
-                    "answer": null,
-                    "position": 1,
-                    "positions": null,
-                    "transcript": null,
-                    "audio_end_time": null,
-                    "audio_start_time": null
-                }
-            ],
-            "user_blank_answers": null,
-            "user_answer": null,
-            "answers": null,
-            "max_selections": 0
-        },
-        {
-            "id": "e067fbae-1186-4f9e-8b95-6d66dee36bdb",
-            "section_id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
-            "type": "fill-blank",
-            "title": "Listen to the audio and complete the sentence.",
-            "description": "The reading club meets every _____ evening.",
-            "difficulty_id": "c7b8c9d0-e1f2-41d4-a716-446655440003",
-            "order_index": 4,
-            "xp": 5,
-            "is_answered": false,
-            "number_of_blanks": 1,
-            "blank_answers": [
-                {
-                    "answer": null,
-                    "position": 1,
-                    "positions": null,
-                    "transcript": null,
-                    "audio_end_time": null,
-                    "audio_start_time": null
-                }
-            ],
-            "user_blank_answers": null,
-            "user_answer": null,
-            "answers": null,
-            "max_selections": 0
-        },
-        {
-            "id": "d8634a36-de27-4fef-9e22-dbe8b5b04db0",
-            "section_id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
-            "type": "fill-blank",
-            "title": "Listen to the audio and complete the sentence.",
-            "description": "More than _____ people visited the library last year.",
-            "difficulty_id": "c7b8c9d0-e1f2-41d4-a716-446655440003",
-            "order_index": 5,
-            "xp": 5,
-            "is_answered": false,
-            "number_of_blanks": 1,
-            "blank_answers": [
-                {
-                    "answer": null,
-                    "position": 1,
-                    "positions": null,
-                    "transcript": null,
-                    "audio_end_time": null,
-                    "audio_start_time": null
-                }
-            ],
-            "user_blank_answers": null,
-            "user_answer": null,
-            "answers": null,
-            "max_selections": 0
-        },
-        {
-            "id": "394e1ef2-ac6d-4cea-9f30-8e2582ba699f",
-            "section_id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
-            "type": "true-false",
-            "title": "true false",
-            "description": "true false",
-            "difficulty_id": "a0871ca2-c169-4c9f-9b73-754f4168ef7a",
-            "order_index": 6,
-            "xp": 5,
-            "is_answered": false,
-            "number_of_blanks": 0,
-            "blank_answers": null,
-            "user_blank_answers": null,
-            "user_answer": null,
-            "answers": [
-                {
-                    "id": "c1059aad-9dcc-4f05-8f97-144452d0554d",
-                    "question_id": "394e1ef2-ac6d-4cea-9f30-8e2582ba699f",
-                    "answer_text": "True",
-                    "transcript": null,
-                    "positions": [
-                        {
-                            "start": 463,
-                            "end": 654
-                        }
-                    ],
-                    "audio_start_time": null,
-                    "audio_end_time": null,
-                    "is_correct": null,
-                    "order_index": 0,
-                    "user_selected": false
-                },
-                {
-                    "id": "fdf0266d-2663-4729-8d2c-4ced94ae0fbf",
-                    "question_id": "394e1ef2-ac6d-4cea-9f30-8e2582ba699f",
-                    "answer_text": "False",
-                    "transcript": null,
-                    "positions": null,
-                    "audio_start_time": null,
-                    "audio_end_time": null,
-                    "is_correct": null,
-                    "order_index": 1,
-                    "user_selected": false
-                }
-            ],
-            "max_selections": 1
-        }
-    ],
-    "totalQuestions": 7,
-    "answeredQuestions": 3,
-    "correctAnswers": 0,
-    "incorrectAnswers": 3,
-    "flashcardsTotal": 0,
-    "flashcardsProgress": 0,
-    "isCompleted": false,
-    "link_positions": [],
-    "isLocked": false
+    {
+      "id": "e1fde520-9c5c-4e50-888f-b590033ac732",
+      "unit_id": "70ff2d9f-d1c7-48f2-8266-cd94cf7f37ed",
+      "type": "reading",
+      "title": "Travel around Europe in 5 stops",
+      "content": "<p><strong>Read a text about travelling to different European countries. For questions 1–10, choose the correct paragraph (A–E). The paragraphs may be chosen more than once.</strong></p><p></p><p><strong>A. Spain</strong></p><p>This is a very popular country because it’s a great place for different kinds of trips. You can find hot and sunny beaches on the Mediterranean Sea, high mountains perfect for hiking, and cooler coasts along the Atlantic Ocean. Big cities like Barcelona and Madrid can be expensive, but areas like Andalusia in the south and Galicia in the northwest are much cheaper. The weather in Spain can be different depending on where you are, but July and August are particularly hot months in most parts of the country!</p><p><strong>B. Italy</strong></p><p>Italy is known internationally for its delicious food, elegant fashion, and fast cars, but its culture changes from one part of the country to another. In the north, where the Alps are, the weather is colder and people visit ski resorts for winter holidays. Big cities like Milan and Turin are busy and modern. The food often includes rich sauces, butter, and cream. The middle of the country has hills and countryside. The weather is mild, and meals include simple, fresh foods like tomatoes and olive oil. In the south and on the islands, the weather is warmer for most of the year. Life is more relaxed, and people eat a lot of fruit, vegetables, and seafood. From north to south, however, Italy is rich in art and history.</p><p><strong>C. Germany</strong></p><p>Germany has different kinds of landscapes in the south: from thick forests and gentle hills to high mountains–the other side of the Italian Alps. Like in nearby countries, the food here is rich and filling, perfect for cold weather. In the north, you can find flat land. The weather across Germany is generally mild with warm summers and cold winters. Backpackers love travelling around by bus and train because they work well and are usually on time. Berlin, Germany’s capital city, and Munich are a must-see; they’re a mix of modern art and important historical sites.</p><p><strong>D. The Czech Republic</strong></p><p>Officially renamed Czechia in 2016, this country is located in the center of Europe, connecting the east and the west of Europe. Life in the Czech Republic is relaxed, and the locals often enjoy spending time in the countryside. In the cities, there’s a good mix of culture and modern life, especially in Prague, the capital. On one side of the Vltava River, there’s Prague’s Old Town with its famous clock and lively squares. On the other side, you’ll find the Lesser Town, with quieter streets and beautiful historical buildings.</p><p><strong>E. Poland</strong></p><p>Travelling from west to east, Poland is one of the first Eastern European countries you reach. It’s a very large country and it has different landscapes: from the sandy beaches of the Baltic Sea to the Tatra Mountains in the south. If you love history, especially events from World War II, you should definitely visit Poland. Although not as cheap as other eastern countries, Poland is much cheaper than western ones. Like Germany, its neighbouring country, Poland has a mild climate, with warm summers and cold winters.</p>",
+      "audio_file_id": null,
+      "image_id": null,
+      "flashcard_set_id": null,
+      "order_index": 2,
+      "audio_file": null,
+      "image": null,
+      "totalquestions": 10,
+      "answeredquestions": 0,
+      "iscompleted": false,
+      "islocked": false,
+      "link_positions": []
+    },
+    {
+      "id": "3169a2dd-aa53-4be0-a594-6a4c551c49dc",
+      "unit_id": "70ff2d9f-d1c7-48f2-8266-cd94cf7f37ed",
+      "type": "listening",
+      "title": "Where did you stay?",
+      "content": "<p>🎧 <strong>Dialogue 1</strong></p><p>FRIEND: So, how was Miami, Alex? Did you stay in a hotel downtown?<br>ALEX: No, we went with a vacation rental. It was an apartment near the beach, really close to Ocean Drive.<br>FRIEND: Was it OK?<br>ALEX: The apartment was spacious and super clean, and it had a little balcony with a sea view.<br>FRIEND: Sounds perfect!<br>ALEX: It was, mostly. The décor was modern, and we had everything we needed. But the mattress was too firm, and the air conditioning was a little noisy at night.<br>FRIEND: That's annoying. Did it have a kitchen?<br>ALEX: Yep! Fully equipped. We cooked breakfast there most days, which helped us save money.<br>FRIEND: And what about the area?<br>ALEX: It was very central – close to everything. Restaurants, shops, even a bike rental place. It was a little noisy during the day but quiet at night.<br>FRIEND: Nice. Would you stay there again?<br>ALEX: Absolutely. It felt more like home than a hotel – and the host made everything really easy.</p><p><br>🎧 <strong>Dialogue 2</strong></p><p>FRIEND: So, Emily, how was your trip to Edinburgh? Where did you stay?<br>EMILY: We found a small B&amp;B just outside the city centre. It was a family-run place – very cosy and quiet.<br>FRIEND: Sounds lovely. Was the room nice?<br>EMILY: It was spotless, and the bed was quite comfortable. But the room was a bit cramped, and there wasn't much space for our luggage.<br>FRIEND: That can be annoying. Were the owners friendly?<br>EMILY: Very friendly and helpful. They gave us tips on what to see and even recommended a few local restaurants.<br>FRIEND: What about breakfast?<br>EMILY: Breakfast was included and homemade, which was great. They didn't have loads of options, but the food was very tasty.<br>FRIEND: Was it expensive?<br>EMILY: Not really. It was quite affordable compared to other places in the city.<br>FRIEND: And was it easy to get around?<br>EMILY: Fairly. There was a bus into town, but it only came every 30 minutes, so we had to wait a couple of times.<br>FRIEND: Still, sounds better than some places I've stayed!<br>EMILY: Overall, it was a pleasant stay. Not perfect, but good value for money.</p><p><br>🎧 <strong>Dialogue 3</strong></p><p>FRIEND: So, where did you stay in Vegas, Ben?<br>BEN: We stayed at one of the big resorts on the Strip. The place was huge – restaurants, a pool, shops, everything.<br>FRIEND: Sounds amazing.<br>BEN: It was, but there were some downsides. The room was modern, and the bed was comfortable, but it was right next to the elevator, so it was noisy at night.<br>FRIEND: That's annoying. Did you ask to change rooms?<br>BEN: We tried, but they were fully booked. Also, the food at the hotel restaurant was pretty tasteless and overpriced.<br>FRIEND: That's disappointing.<br>BEN: Yeah, and the staff were helpful, but they always seemed rushed. I guess the place was understaffed.<br>FRIEND: Still, must have been exciting staying there.<br>BEN: Definitely. The location was super convenient, and there was always something to do. But I'd choose a quieter place next time.</p>",
+      "audio_file_id": "938a385d-1d66-4cd7-b45f-a7ce13fd191f",
+      "image_id": null,
+      "flashcard_set_id": null,
+      "order_index": 4,
+      "audio_file": {
+        "id": "938a385d-1d66-4cd7-b45f-a7ce13fd191f",
+        "url": "/uploads/72/48/72485dbcb615a06a72e5c8905bbab90c69aa3363ddf4b056a02675d381df4b5f.mp3",
+        "path": "72/48/72485dbcb615a06a72e5c8905bbab90c69aa3363ddf4b056a02675d381df4b5f.mp3",
+        "filename": "72485dbcb615a06a72e5c8905bbab90c69aa3363ddf4b056a02675d381df4b5f.mp3",
+        "mimetype": "audio/mpeg",
+        "created_at": "2026-02-06T10:30:15.378826"
+      },
+      "image": null,
+      "totalquestions": 7,
+      "answeredquestions": 0,
+      "iscompleted": false,
+      "islocked": false,
+      "link_positions": []
+    },
+    {
+      "id": "09b253f2-3e60-4349-9c3a-88908ba7f590",
+      "unit_id": "70ff2d9f-d1c7-48f2-8266-cd94cf7f37ed",
+      "type": "vocabulary",
+      "title": "Vocabulary",
+      "content": null,
+      "audio_file_id": null,
+      "image_id": null,
+      "flashcard_set_id": "18bd325b-a770-4662-8f9e-5c2e4a611d40",
+      "order_index": 5,
+      "audio_file": null,
+      "image": null,
+      "totalquestions": 0,
+      "answeredquestions": 0,
+      "iscompleted": true,
+      "islocked": false,
+      "link_positions": []
+    }
+  ],
+  "total": 4,
+  "page": 1,
+  "limit": 10,
+  "totalPages": 1,
+  "unit": {
+    "id": "70ff2d9f-d1c7-48f2-8266-cd94cf7f37ed",
+    "title": "Present Simple | Continuous | Perfect"
+  }
 }
