@@ -173,9 +173,8 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<NotificationBadgeStore>(
       () => NotificationBadgeStore(notificationsRemoteDataSource: sl()));
   sl.registerFactory(
-      () => NotificationsBloc(notificationsRemoteDataSource: sl(), notificationBadgeStore: sl()));
+      () => NotificationsBloc(notificationsRemoteDataSource: sl(), notificationBadgeStore: sl())); 
 
-  // Features - Assignments
   sl.registerLazySingleton<AssignmentsRemoteDataSource>(
       () => AssignmentsRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
   sl.registerLazySingleton(() => AssignmentSectionsStore(remoteDataSource: sl()));

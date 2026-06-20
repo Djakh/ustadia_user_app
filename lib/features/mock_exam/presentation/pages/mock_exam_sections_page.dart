@@ -149,7 +149,6 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
         navigation = context.push(learnGrammarRoute, extra: section);
         break;
       case SectionType.vocabulary:
-        if (section.flashCardSet == null) return;
         navigation = context.push(flashcardSprintRoute,
             extra: FlashcardSprintParams(
                 set: section.flashCardSet ?? const LearnFlashcardSetModel.empty(),
