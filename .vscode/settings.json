@@ -1,4 +1,11 @@
 {
   "dart.flutterSdkPath": ".fvm/versions/3.38.5",
+  "dart.env": {
+    "PATH": "/Users/safiabakeryiticloud.com/.gem/ruby/2.6.0/bin:/Users/safiabakeryiticloud.com/fvm/bin:/Users/safiabakeryiticloud.com/fvm/default/bin:/Users/safiabakeryiticloud.com/Library/Android/sdk/platform-tools:/Users/safiabakeryiticloud.com/Library/Android/sdk/emulator:/Users/safiabakeryiticloud.com/Library/Android/sdk/cmdline-tools/latest/bin:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+    "JAVA_HOME": "/Applications/Android Studio.app/Contents/jbr/Contents/Home",
+    "ANDROID_HOME": "/Users/safiabakeryiticloud.com/Library/Android/sdk",
+    "ANDROID_SDK_ROOT": "/Users/safiabakeryiticloud.com/Library/Android/sdk"
+  },
+  "java.jdt.ls.java.home": "/Applications/Android Studio.app/Contents/jbr/Contents/Home",
   "java.configuration.updateBuildConfiguration": "interactive"
 }
