@@ -1,91 +1,236 @@
 {
-  "data": [
+  "id": "21a0d5cb-3b85-4de6-ad04-2633e0fda801",
+  "title": "new monkey type",
+  "description": "new monkey type adsadsa",
+  "isPublic": false,
+  "teacher_id": "907bf3b8-d31a-4537-938e-6386766da97b",
+  "created_at": "2026-05-18T08:18:12.227Z",
+  "updated_at": "2026-05-18T11:02:47.220Z",
+  "difficulty_levels": [
     {
-      "id": "ae8c0484-7888-4abd-b40e-6a2ba7339212",
-      "unit_id": "70ff2d9f-d1c7-48f2-8266-cd94cf7f37ed",
-      "type": "grammar",
-      "title": "Present Simple | Continuous | Perfect",
-      "content": "<blockquote><h2>Eng asosiy farq (1 qarashda)</h2></blockquote><ul><li><p><strong>Present Simple</strong> → odat, fakt</p></li><li><p><strong>Present Continuous</strong> → hozir davom etayotgan / vaqtinchalik holat</p></li><li><p><strong>Present Perfect</strong> → o‘tmish + hozir natijasi yoki tajriba</p></li></ul><hr><blockquote><h2>1. <strong>Present Simple</strong></h2></blockquote><p>--&gt; <em>Nima odatda bo‘ladi?</em></p><p><strong>Qachon ishlatiladi?</strong></p><ul><li><p>kundalik odatlar</p></li><li><p>umumiy haqiqatlar</p></li><li><p>jadval / reja</p></li></ul><p><strong>Signal so‘zlar:</strong><br>always, usually, often, every day, on Mondays</p><p><strong>Misollar:</strong></p><ul><li><p>I <strong>work</strong> in an office.</p></li><li><p>She <strong>gets up</strong> at 7 a.m.</p></li><li><p>Water <strong>boils</strong> at 100°C.</p></li></ul><hr><blockquote><h2>2. <strong>Present Continuous</strong></h2></blockquote><p>--&gt; <em>Hozir nima bo‘lyapti?</em></p><p><strong>Qachon ishlatiladi?</strong></p><ul><li><p>gapirayotgan paytda davom etayotgan ish</p></li><li><p>vaqtinchalik holat</p></li><li><p>yaqin kelajak rejasi</p></li></ul><p><strong>Signal so‘zlar:</strong><br>now, at the moment, today, this week</p><p><strong>Misollar:</strong></p><ul><li><p>I <strong>am working</strong> now.</p></li><li><p>She <strong>is studying</strong> for exams this week.</p></li><li><p>We <strong>are meeting</strong> him tonight.</p></li></ul><hr><blockquote><h2>3. <strong>Present Perfect</strong></h2></blockquote><p>--&gt; <em>Nima bo‘lib ulgurgan? Natijasi hozir muhim.</em></p><p><strong>Qachon ishlatiladi?</strong></p><ul><li><p>tajriba (ever / never)</p></li><li><p>hozirga ta’siri bor ish</p></li><li><p>hali tugamagan vaqt (this week, today)</p></li></ul><p><strong>Signal so‘zlar:</strong><br>ever, never, already, yet, just, recently</p><p><strong>Misollar:</strong></p><ul><li><p>I <strong>have finished</strong> my work.</p></li><li><p>She <strong>has never been</strong> abroad.</p></li><li><p>We <strong>have met</strong> him today.</p></li></ul><p></p><blockquote><h2><u>1 qatorli eslab qolish</u></h2></blockquote><ul><li><p><strong>Simple</strong> → <em>har doim</em></p></li><li><p><strong>Continuous</strong> → <em>hozir</em></p></li><li><p><strong>Perfect</strong> → <em>Shu paytgacha qilingan ish-harakatlar/ qachonligi muhim emas.</em></p></li></ul><p></p>",
-      "audio_file_id": null,
-      "image_id": null,
-      "flashcard_set_id": null,
-      "order_index": 1,
-      "audio_file": null,
-      "image": null,
-      "totalquestions": 10,
-      "answeredquestions": 0,
-      "iscompleted": false,
-      "islocked": false,
-      "link_positions": []
-    },
-    {
-      "id": "e1fde520-9c5c-4e50-888f-b590033ac732",
-      "unit_id": "70ff2d9f-d1c7-48f2-8266-cd94cf7f37ed",
-      "type": "reading",
-      "title": "Travel around Europe in 5 stops",
-      "content": "<p><strong>Read a text about travelling to different European countries. For questions 1–10, choose the correct paragraph (A–E). The paragraphs may be chosen more than once.</strong></p><p></p><p><strong>A. Spain</strong></p><p>This is a very popular country because it’s a great place for different kinds of trips. You can find hot and sunny beaches on the Mediterranean Sea, high mountains perfect for hiking, and cooler coasts along the Atlantic Ocean. Big cities like Barcelona and Madrid can be expensive, but areas like Andalusia in the south and Galicia in the northwest are much cheaper. The weather in Spain can be different depending on where you are, but July and August are particularly hot months in most parts of the country!</p><p><strong>B. Italy</strong></p><p>Italy is known internationally for its delicious food, elegant fashion, and fast cars, but its culture changes from one part of the country to another. In the north, where the Alps are, the weather is colder and people visit ski resorts for winter holidays. Big cities like Milan and Turin are busy and modern. The food often includes rich sauces, butter, and cream. The middle of the country has hills and countryside. The weather is mild, and meals include simple, fresh foods like tomatoes and olive oil. In the south and on the islands, the weather is warmer for most of the year. Life is more relaxed, and people eat a lot of fruit, vegetables, and seafood. From north to south, however, Italy is rich in art and history.</p><p><strong>C. Germany</strong></p><p>Germany has different kinds of landscapes in the south: from thick forests and gentle hills to high mountains–the other side of the Italian Alps. Like in nearby countries, the food here is rich and filling, perfect for cold weather. In the north, you can find flat land. The weather across Germany is generally mild with warm summers and cold winters. Backpackers love travelling around by bus and train because they work well and are usually on time. Berlin, Germany’s capital city, and Munich are a must-see; they’re a mix of modern art and important historical sites.</p><p><strong>D. The Czech Republic</strong></p><p>Officially renamed Czechia in 2016, this country is located in the center of Europe, connecting the east and the west of Europe. Life in the Czech Republic is relaxed, and the locals often enjoy spending time in the countryside. In the cities, there’s a good mix of culture and modern life, especially in Prague, the capital. On one side of the Vltava River, there’s Prague’s Old Town with its famous clock and lively squares. On the other side, you’ll find the Lesser Town, with quieter streets and beautiful historical buildings.</p><p><strong>E. Poland</strong></p><p>Travelling from west to east, Poland is one of the first Eastern European countries you reach. It’s a very large country and it has different landscapes: from the sandy beaches of the Baltic Sea to the Tatra Mountains in the south. If you love history, especially events from World War II, you should definitely visit Poland. Although not as cheap as other eastern countries, Poland is much cheaper than western ones. Like Germany, its neighbouring country, Poland has a mild climate, with warm summers and cold winters.</p>",
-      "audio_file_id": null,
-      "image_id": null,
-      "flashcard_set_id": null,
-      "order_index": 2,
-      "audio_file": null,
-      "image": null,
-      "totalquestions": 10,
-      "answeredquestions": 0,
-      "iscompleted": false,
-      "islocked": false,
-      "link_positions": []
-    },
-    {
-      "id": "3169a2dd-aa53-4be0-a594-6a4c551c49dc",
-      "unit_id": "70ff2d9f-d1c7-48f2-8266-cd94cf7f37ed",
-      "type": "listening",
-      "title": "Where did you stay?",
-      "content": "<p>🎧 <strong>Dialogue 1</strong></p><p>FRIEND: So, how was Miami, Alex? Did you stay in a hotel downtown?<br>ALEX: No, we went with a vacation rental. It was an apartment near the beach, really close to Ocean Drive.<br>FRIEND: Was it OK?<br>ALEX: The apartment was spacious and super clean, and it had a little balcony with a sea view.<br>FRIEND: Sounds perfect!<br>ALEX: It was, mostly. The décor was modern, and we had everything we needed. But the mattress was too firm, and the air conditioning was a little noisy at night.<br>FRIEND: That's annoying. Did it have a kitchen?<br>ALEX: Yep! Fully equipped. We cooked breakfast there most days, which helped us save money.<br>FRIEND: And what about the area?<br>ALEX: It was very central – close to everything. Restaurants, shops, even a bike rental place. It was a little noisy during the day but quiet at night.<br>FRIEND: Nice. Would you stay there again?<br>ALEX: Absolutely. It felt more like home than a hotel – and the host made everything really easy.</p><p><br>🎧 <strong>Dialogue 2</strong></p><p>FRIEND: So, Emily, how was your trip to Edinburgh? Where did you stay?<br>EMILY: We found a small B&amp;B just outside the city centre. It was a family-run place – very cosy and quiet.<br>FRIEND: Sounds lovely. Was the room nice?<br>EMILY: It was spotless, and the bed was quite comfortable. But the room was a bit cramped, and there wasn't much space for our luggage.<br>FRIEND: That can be annoying. Were the owners friendly?<br>EMILY: Very friendly and helpful. They gave us tips on what to see and even recommended a few local restaurants.<br>FRIEND: What about breakfast?<br>EMILY: Breakfast was included and homemade, which was great. They didn't have loads of options, but the food was very tasty.<br>FRIEND: Was it expensive?<br>EMILY: Not really. It was quite affordable compared to other places in the city.<br>FRIEND: And was it easy to get around?<br>EMILY: Fairly. There was a bus into town, but it only came every 30 minutes, so we had to wait a couple of times.<br>FRIEND: Still, sounds better than some places I've stayed!<br>EMILY: Overall, it was a pleasant stay. Not perfect, but good value for money.</p><p><br>🎧 <strong>Dialogue 3</strong></p><p>FRIEND: So, where did you stay in Vegas, Ben?<br>BEN: We stayed at one of the big resorts on the Strip. The place was huge – restaurants, a pool, shops, everything.<br>FRIEND: Sounds amazing.<br>BEN: It was, but there were some downsides. The room was modern, and the bed was comfortable, but it was right next to the elevator, so it was noisy at night.<br>FRIEND: That's annoying. Did you ask to change rooms?<br>BEN: We tried, but they were fully booked. Also, the food at the hotel restaurant was pretty tasteless and overpriced.<br>FRIEND: That's disappointing.<br>BEN: Yeah, and the staff were helpful, but they always seemed rushed. I guess the place was understaffed.<br>FRIEND: Still, must have been exciting staying there.<br>BEN: Definitely. The location was super convenient, and there was always something to do. But I'd choose a quieter place next time.</p>",
-      "audio_file_id": "938a385d-1d66-4cd7-b45f-a7ce13fd191f",
-      "image_id": null,
-      "flashcard_set_id": null,
-      "order_index": 4,
-      "audio_file": {
-        "id": "938a385d-1d66-4cd7-b45f-a7ce13fd191f",
-        "url": "/uploads/72/48/72485dbcb615a06a72e5c8905bbab90c69aa3363ddf4b056a02675d381df4b5f.mp3",
-        "path": "72/48/72485dbcb615a06a72e5c8905bbab90c69aa3363ddf4b056a02675d381df4b5f.mp3",
-        "filename": "72485dbcb615a06a72e5c8905bbab90c69aa3363ddf4b056a02675d381df4b5f.mp3",
-        "mimetype": "audio/mpeg",
-        "created_at": "2026-02-06T10:30:15.378826"
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "name": {
+        "en": "Beginner",
+        "ru": "Начинающий",
+        "uz": "Yangi boshlovchi"
       },
-      "image": null,
-      "totalquestions": 7,
-      "answeredquestions": 0,
-      "iscompleted": false,
-      "islocked": false,
-      "link_positions": []
+      "description": {
+        "en": "Beginner level for absolute beginners with no prior language knowledge",
+        "ru": "Уровень начинающих для абсолютных новичков без предварительных знаний языка",
+        "uz": "Yangi boshlovchilar uchun oldindan hech qanday til bilimisiz bo'lganlar uchun"
+      },
+      "isPublic": true,
+      "teacher_id": null,
+      "created_at": "2026-02-06T05:10:16.547Z",
+      "updated_at": "2026-02-06T05:10:16.547Z"
     },
     {
-      "id": "09b253f2-3e60-4349-9c3a-88908ba7f590",
-      "unit_id": "70ff2d9f-d1c7-48f2-8266-cd94cf7f37ed",
-      "type": "vocabulary",
-      "title": "Vocabulary",
-      "content": null,
-      "audio_file_id": null,
-      "image_id": null,
-      "flashcard_set_id": "18bd325b-a770-4662-8f9e-5c2e4a611d40",
-      "order_index": 5,
-      "audio_file": null,
-      "image": null,
-      "totalquestions": 0,
-      "answeredquestions": 0,
-      "iscompleted": true,
-      "islocked": false,
-      "link_positions": []
+      "id": "a7b8c9d0-e1f2-41d4-a716-446655440001",
+      "name": {
+        "en": "Elementary",
+        "ru": "Элементарный",
+        "uz": "Boshlangʻich"
+      },
+      "description": {
+        "en": "Elementary level for beginners learning basic vocabulary and simple sentence structures",
+        "ru": "Элементарный уровень для начинающих изучение базовой лексики и простых структур предложений",
+        "uz": "Boshlangʻich daraja - asosiy leksika va oddiy gaplarni oʻrganayotgan boshlangʻich oʻquvchilar uchun"
+      },
+      "isPublic": true,
+      "teacher_id": null,
+      "created_at": "2026-02-06T05:10:16.563Z",
+      "updated_at": "2026-02-06T05:10:16.563Z"
+    },
+    {
+      "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
+      "name": {
+        "en": "Pre-Intermediate",
+        "ru": "Допромежуточный",
+        "uz": "Oʻrta-oldi"
+      },
+      "description": {
+        "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
+        "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
+        "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
+      },
+      "isPublic": true,
+      "teacher_id": null,
+      "created_at": "2026-02-06T05:10:16.570Z",
+      "updated_at": "2026-02-06T05:10:16.570Z"
+    },
+    {
+      "id": "c7b8c9d0-e1f2-41d4-a716-446655440003",
+      "name": {
+        "en": "Intermediate",
+        "ru": "Промежуточный",
+        "uz": "Oʻrta"
+      },
+      "description": {
+        "en": "Intermediate level for students comfortable with standard language usage and more varied topics",
+        "ru": "Промежуточный уровень для студентов, удобных со стандартным использованием языка и более разнообразными темами",
+        "uz": "Oʻrta daraja - standart til foydalanishiga oʻzboshimchas va koʻplab mavzularga mos keluvchi talabalar uchun"
+      },
+      "isPublic": true,
+      "teacher_id": null,
+      "created_at": "2026-02-06T05:10:16.577Z",
+      "updated_at": "2026-02-06T05:10:16.577Z"
+    },
+    {
+      "id": "c09dd55a-eeed-4c94-9257-6c2b6847a8e5",
+      "name": {
+        "en": "New ",
+        "ru": "New ",
+        "uz": "New "
+      },
+      "description": {
+        "en": "",
+        "ru": "",
+        "uz": ""
+      },
+      "isPublic": false,
+      "teacher_id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "created_at": "2026-02-14T02:21:31.081Z",
+      "updated_at": "2026-02-14T02:21:31.081Z"
+    },
+    {
+      "id": "abaf8cfa-748e-4ed9-9c9a-b9d3f79189e1",
+      "name": {
+        "en": "Advanced",
+        "ru": "Advanced",
+        "uz": "Advanced"
+      },
+      "description": {
+        "en": "Advanced",
+        "ru": "Advanced",
+        "uz": "Advanced"
+      },
+      "isPublic": false,
+      "teacher_id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "created_at": "2026-02-24T07:26:29.566Z",
+      "updated_at": "2026-02-24T07:26:29.566Z"
+    },
+    {
+      "id": "ec0f38bf-ac3b-44eb-b88b-394e5c842ecc",
+      "name": {
+        "en": "Beginner",
+        "ru": "Начинающий",
+        "uz": "Boshlang'ich"
+      },
+      "description": {
+        "en": "Beginner level for typing practice",
+        "ru": "Начальный уровень для тренировки печати",
+        "uz": "Boshlang'ich darajasi uchun mashq"
+      },
+      "isPublic": true,
+      "teacher_id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
+      "created_at": "2026-05-18T12:13:04.278Z",
+      "updated_at": "2026-05-18T12:13:04.278Z"
+    },
+    {
+      "id": "db90a1e0-7e23-477e-acb5-b6423aa01d6a",
+      "name": {
+        "en": "Intermediate",
+        "ru": "Средний",
+        "uz": "O'rta"
+      },
+      "description": {
+        "en": "Intermediate level for typing practice",
+        "ru": "Средний уровень для тренировки печати",
+        "uz": "O'rta darajasi uchun mashq"
+      },
+      "isPublic": true,
+      "teacher_id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
+      "created_at": "2026-05-18T12:13:04.347Z",
+      "updated_at": "2026-05-18T12:13:04.347Z"
+    },
+    {
+      "id": "a0871ca2-c169-4c9f-9b73-754f4168ef7a",
+      "name": {
+        "en": "Advanced",
+        "ru": "Продвинутый",
+        "uz": "Ilg'or"
+      },
+      "description": {
+        "en": "Advanced level for typing practice",
+        "ru": "Продвинутый уровень для тренировки печати",
+        "uz": "Ilg'or darajasi uchun mashq"
+      },
+      "isPublic": true,
+      "teacher_id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
+      "created_at": "2026-05-18T12:13:04.355Z",
+      "updated_at": "2026-05-18T12:13:04.355Z"
     }
   ],
-  "total": 4,
-  "page": 1,
-  "limit": 10,
-  "totalPages": 1,
-  "unit": {
-    "id": "70ff2d9f-d1c7-48f2-8266-cd94cf7f37ed",
-    "title": "Present Simple | Continuous | Perfect"
-  }
+  "teacher": {
+    "id": "907bf3b8-d31a-4537-938e-6386766da97b",
+    "firstName": "Sarkorbek",
+    "lastName": "Abilkosimov",
+    "email": "abilkosimovsarkor@gmail.com",
+    "phoneNumber": null,
+    "providers": [
+      {
+        "provider": "email",
+        "identifier": "abilkosimovsarkor@gmail.com",
+        "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
+      }
+    ],
+    "roles": [
+      "teacher",
+      "user"
+    ],
+    "language": "en",
+    "level_id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
+    "permissions": [
+      "feed"
+    ],
+    "created_at": "2025-12-24T10:32:44.479Z",
+    "xp": "40",
+    "isDeleted": false,
+    "reasoningSessions": [],
+    "level": {
+      "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
+      "name": {
+        "en": "Pre-Intermediate",
+        "ru": "Допромежуточный",
+        "uz": "Oʻrta-oldi"
+      },
+      "description": {
+        "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
+        "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
+        "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
+      },
+      "isPublic": true,
+      "teacher_id": null,
+      "created_at": "2026-02-06T05:10:16.570Z",
+      "updated_at": "2026-02-06T05:10:16.570Z"
+    },
+    "balance": {
+      "id": "d57180d4-1a55-40e0-a1af-f682fa0b637d",
+      "amount": "0",
+      "user_id": "907bf3b8-d31a-4537-938e-6386766da97b",
+      "created_at": "2026-04-24T04:43:06.555Z"
+    },
+    "profilePicture": {
+      "id": "c571a76d-e602-4428-8790-e82778a80da1",
+      "filename": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
+      "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-10 Ð² 17.00.47.png",
+      "path": "37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
+      "hash": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42",
+      "mimetype": "image/png",
+      "url": "/uploads/37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
+      "uploaded_by_id": null,
+      "created_at": "2026-04-16T13:48:20.295Z"
+    }
+  },
+  "texts": [
+    {
+      "id": "6cd93b8c-1e7c-480c-9da6-7b34742a2bf0",
+      "text": "asdasdsa",
+      "order_index": 0,
+      "practice_id": "21a0d5cb-3b85-4de6-ad04-2633e0fda801",
+      "created_at": "2026-05-18T11:02:54.954Z",
+      "updated_at": "2026-05-18T11:02:54.954Z"
+    }
+  ],
+  "monkeyTypeUrl": "https://students.ustadia.com/monkey-type/21a0d5cb-3b85-4de6-ad04-2633e0fda801"
 }

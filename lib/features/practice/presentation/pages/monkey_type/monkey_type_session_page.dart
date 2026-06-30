@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
@@ -17,6 +18,7 @@ import 'package:ustadia_user_app/features/practice/presentation/bloc/monkey_type
 import 'package:ustadia_user_app/features/practice/presentation/bloc/monkey_type_session_bloc/monkey_type_session_event.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/monkey_type_session_bloc/monkey_type_session_state.dart';
 import 'package:ustadia_user_app/injection_container.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MonkeyTypeSessionPage extends StatefulWidget {
   final MonkeyTypePracticeModel practice;
@@ -186,6 +188,59 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
         timeTakenSeconds: effectiveSeconds));
   }
 
+  Future<void> copyPracticeLink(String url) async {
+    await Clipboard.setData(ClipboardData(text: url));
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Link copied'.tr())));
+  }
+
+  Future<void> openPracticeLink(String url) async {
+    final uri = Uri.tryParse(url);
+    final isWebLink = uri != null && (uri.scheme == 'https' || uri.scheme == 'http');
+    if (!isWebLink) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid link'.tr())));
+      }
+      return;
+    }
+    final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!opened && mounted) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Could not open link'.tr())));
+    }
+  }
+
+  Future<void> showPracticeLinkSheet(String url) => showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheetContext) => SafeArea(
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                ListTile(
+                    leading: const Icon(Icons.copy_rounded),
+                    title: Text('Copy link'.tr()),
+                    onTap: () {
+                      Navigator.of(sheetContext).pop();
+                      copyPracticeLink(url);
+                    }),
+                ListTile(
+                    leading: const Icon(Icons.open_in_browser_rounded),
+                    title: Text('Open in browser'.tr()),
+                    onTap: () {
+                      Navigator.of(sheetContext).pop();
+                      openPracticeLink(url);
+                    })
+              ]))));
+
+  Widget practiceLinkButton(String url) => Button.border(
+      onTap: () => showPracticeLinkSheet(url),
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        const Icon(Icons.link_rounded, size: 20),
+        const SizedBox(width: 8),
+        Text('Practice link'.tr())
+      ]));
+
   Widget statBox(BuildContext context, String title, String value) => Expanded(
       child: PrimaryBox(
           isTappable: false,
@@ -280,13 +335,19 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
     final typed = controller.text;
     final inputHeight = (MediaQuery.sizeOf(context).height * 0.24).clamp(150.0, 230.0);
     final targetHeight = (MediaQuery.sizeOf(context).height * 0.26).clamp(170.0, 240.0);
+    final practice = state.practice ?? widget.practice;
+    final practiceUrl = practice.monkeyTypeUrl;
     return ListView(
         controller: pageScrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
           const SizedBox(height: 20),
-          Text(widget.practice.description,
+          Text(practice.description,
               style: Style.small3w4(context, color: TextColorRole.greyColor)),
+          if (practiceUrl != null) ...[
+            const SizedBox(height: 12),
+            practiceLinkButton(practiceUrl),
+          ],
           const SizedBox(height: 16),
           KeyedSubtree(key: progressKey, child: textProgress(texts)),
           const SizedBox(height: 10),
@@ -342,8 +403,10 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
                   isLoading: state.submitStatus.isLoading,
                   isAvialable: hasSubmitted || typed.trim().isNotEmpty,
                   text: hasSubmitted ? 'Repeat'.tr() : 'Submit'.tr())),
-          const SizedBox(height: 10),
-          navigationButtons(texts),
+          if (texts.length > 1) ...[
+            const SizedBox(height: 10),
+            navigationButtons(texts),
+          ],
           const SizedBox(height: 80),
         ]);
   }

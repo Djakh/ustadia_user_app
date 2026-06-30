@@ -6,6 +6,7 @@ class MonkeyTypePracticeModel {
   final String teacherId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final String? monkeyTypeUrl;
   final List<MonkeyTypeTextModel> texts;
 
   const MonkeyTypePracticeModel({
@@ -16,6 +17,7 @@ class MonkeyTypePracticeModel {
     required this.teacherId,
     required this.createdAt,
     required this.updatedAt,
+    this.monkeyTypeUrl,
     this.texts = const [],
   });
 
@@ -33,9 +35,15 @@ class MonkeyTypePracticeModel {
       teacherId: json['teacher_id']?.toString() ?? json['teacherId']?.toString() ?? '',
       createdAt: DateTime.tryParse(json['created_at']?.toString() ?? ''),
       updatedAt: DateTime.tryParse(json['updated_at']?.toString() ?? ''),
+      monkeyTypeUrl: _nullableString(json['monkeyTypeUrl'] ?? json['monkey_type_url']),
       texts: texts,
     );
   }
+}
+
+String? _nullableString(dynamic value) {
+  final text = value?.toString().trim() ?? '';
+  return text.isEmpty ? null : text;
 }
 
 class MonkeyTypeTextModel {

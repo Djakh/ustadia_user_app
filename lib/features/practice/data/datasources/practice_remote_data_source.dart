@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_set_model.dart';
 import 'package:ustadia_user_app/features/practice/data/models/monkey_type_model.dart';
 import 'package:ustadia_user_app/features/practice/data/models/practice_listen_tap_set_model.dart';
@@ -13,12 +14,21 @@ class PracticeRemoteDataSource {
 
   PracticeRemoteDataSource({required this.dio});
 
+  Options get freshRequestOptions =>
+      CacheOptions(policy: CachePolicy.noCache, store: MemCacheStore()).toOptions();
+
   Future<List<LearnFlashcardSetModel>> fetchFlashcardSets() async {
     final response = await dio.get('/students/practice/flashcards');
     final data = response.data;
     final items =
         data is List ? data : (data as Map<String, dynamic>)['data'] as List<dynamic>? ?? [];
     return items.whereType<Map<String, dynamic>>().map(LearnFlashcardSetModel.fromJson).toList();
+  }
+
+  Future<LearnFlashcardSetModel> fetchFlashcardSet(String setId) async {
+    final response =
+        await dio.get('/students/practice/flashcards/$setId', options: freshRequestOptions);
+    return LearnFlashcardSetModel.fromJson(_detailFrom(response.data));
   }
 
   Future<List<PracticeListenTapSetModel>> fetchListenTapSets() async {
@@ -29,12 +39,24 @@ class PracticeRemoteDataSource {
     return items.whereType<Map<String, dynamic>>().map(PracticeListenTapSetModel.fromJson).toList();
   }
 
+  Future<PracticeListenTapSetModel> fetchListenTapSet(String setId) async {
+    final response =
+        await dio.get('/students/practice/listen-tap/$setId', options: freshRequestOptions);
+    return PracticeListenTapSetModel.fromJson(_detailFrom(response.data));
+  }
+
   Future<List<PracticeWordMatchSetModel>> fetchWordMatchSets() async {
     final response = await dio.get('/students/practice/word-match');
     final data = response.data;
     final items =
         data is List ? data : (data as Map<String, dynamic>)['data'] as List<dynamic>? ?? [];
     return items.whereType<Map<String, dynamic>>().map(PracticeWordMatchSetModel.fromJson).toList();
+  }
+
+  Future<PracticeWordMatchSetModel> fetchWordMatchSet(String setId) async {
+    final response =
+        await dio.get('/students/practice/word-match/$setId', options: freshRequestOptions);
+    return PracticeWordMatchSetModel.fromJson(_detailFrom(response.data));
   }
 
   Future<List<PracticeSentenceBuilderSetModel>> fetchSentenceBuilderSets() async {
@@ -48,6 +70,12 @@ class PracticeRemoteDataSource {
         .toList();
   }
 
+  Future<PracticeSentenceBuilderSetModel> fetchSentenceBuilderSet(String setId) async {
+    final response =
+        await dio.get('/students/practice/sentence-builder/$setId', options: freshRequestOptions);
+    return PracticeSentenceBuilderSetModel.fromJson(_detailFrom(response.data));
+  }
+
   Future<List<MonkeyTypePracticeModel>> fetchMonkeyTypePractices() async {
     final response = await dio.get('/student/monkey-type');
     final data = response.data;
@@ -56,24 +84,21 @@ class PracticeRemoteDataSource {
     return items.whereType<Map<String, dynamic>>().map(MonkeyTypePracticeModel.fromJson).toList();
   }
 
+  Future<MonkeyTypePracticeModel> fetchMonkeyTypePractice(String practiceId) async {
+    final response =
+        await dio.get('/student/monkey-type/$practiceId', options: freshRequestOptions);
+    return MonkeyTypePracticeModel.fromJson(_detailFrom(response.data));
+  }
+
   Future<List<MonkeyTypeTextModel>> fetchMonkeyTypeTexts(String practiceId) async {
-    final detailResponse = await dio.get('/student/monkey-type/$practiceId');
-    final detailData = detailResponse.data;
-    final detail = detailData is Map<String, dynamic>
-        ? detailData['data'] is Map<String, dynamic>
-            ? detailData['data'] as Map<String, dynamic>
-            : detailData
-        : <String, dynamic>{};
-    final detailTexts = _listFrom(detail['texts'])
-        .whereType<Map<String, dynamic>>()
-        .map(MonkeyTypeTextModel.fromJson)
-        .toList();
+    final detailTexts = (await fetchMonkeyTypePractice(practiceId)).texts;
     if (detailTexts.isNotEmpty) {
       detailTexts.sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
       return detailTexts;
     }
 
-    final response = await dio.get('/student/monkey-type/$practiceId/texts');
+    final response =
+        await dio.get('/student/monkey-type/$practiceId/texts', options: freshRequestOptions);
     final data = response.data;
     final items =
         data is List ? data : _listFrom((data as Map<String, dynamic>)['data'] ?? data['texts']);
@@ -164,3 +189,14 @@ class PracticeRemoteDataSource {
 }
 
 List<dynamic> _listFrom(dynamic value) => value is List ? value : const [];
+
+Map<String, dynamic> _detailFrom(dynamic value) {
+  if (value is! Map<String, dynamic>) {
+    throw const FormatException('Practice detail response is not an object.');
+  }
+  for (final key in const ['data', 'item', 'result']) {
+    final nested = value[key];
+    if (nested is Map<String, dynamic>) return nested;
+  }
+  return value;
+}

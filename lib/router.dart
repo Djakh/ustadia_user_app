@@ -42,6 +42,7 @@ import 'package:ustadia_user_app/features/mock_exam/data/models/mock_exam_attemp
 import 'package:ustadia_user_app/features/mock_exam/data/models/mock_exam_model.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:ustadia_user_app/features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:ustadia_user_app/features/practice/data/datasources/practice_remote_data_source.dart';
 import 'package:ustadia_user_app/features/practice/data/models/monkey_type_model.dart';
 import 'package:ustadia_user_app/features/practice/data/models/practice_listen_tap_set_model.dart';
 import 'package:ustadia_user_app/features/practice/data/models/practice_sentence_builder_set_model.dart';
@@ -60,6 +61,7 @@ import 'package:ustadia_user_app/features/practice/presentation/pages/speed_mix/
 import 'package:ustadia_user_app/features/practice/presentation/pages/word_match/practice_word_match_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/word_match/practice_word_match_sets_page.dart';
 import 'package:ustadia_user_app/features/practice/presentation/pages/writing_assesment/practice_writing_assessment_page.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/practice_detail_loader.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/edit_account_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/leaderboard_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/profile_image_view_page.dart';
@@ -71,6 +73,7 @@ import 'package:ustadia_user_app/features/reels/data/models/reel_post_model.dart
 import 'package:ustadia_user_app/features/reels/presentation/pages/reel_user_profile_page.dart';
 import 'package:ustadia_user_app/features/reels/presentation/pages/reels_page.dart';
 import 'package:ustadia_user_app/features/splash/presentation/pages/splash_page.dart';
+import 'package:ustadia_user_app/injection_container.dart';
 
 /// --------------------
 /// Authentication (absolute)
@@ -331,6 +334,12 @@ final appRouter = GoRouter(
         builder: (context, state) {
           final extra = state.extra;
           if (extra is FlashcardSprintParams) {
+            if (extra.isPractice && extra.set.id.isNotEmpty) {
+              return PracticeDetailLoader<LearnFlashcardSetModel>(
+                  title: extra.set.title,
+                  load: () => sl<PracticeRemoteDataSource>().fetchFlashcardSet(extra.set.id),
+                  builder: (set) => FlashcardSprintPage(flashcardSetModel: set, isPractice: true));
+            }
             return FlashcardSprintPage(
                 flashcardSetModel: extra.set,
                 isPractice: extra.isPractice,
@@ -502,7 +511,10 @@ final appRouter = GoRouter(
                   builder: (context, state) {
                     final extra = state.extra;
                     if (extra is PracticeWordMatchSetModel) {
-                      return PracticeWordMatchPage(set: extra);
+                      return PracticeDetailLoader<PracticeWordMatchSetModel>(
+                          title: extra.title,
+                          load: () => sl<PracticeRemoteDataSource>().fetchWordMatchSet(extra.id),
+                          builder: (set) => PracticeWordMatchPage(set: set));
                     }
                     return _tutorialPage(
                         pageId: TutorialPageIds.practiceSets,
@@ -516,7 +528,11 @@ final appRouter = GoRouter(
                   builder: (context, state) {
                     final extra = state.extra;
                     if (extra is PracticeSentenceBuilderSetModel) {
-                      return PracticeBuildSentencePage(set: extra);
+                      return PracticeDetailLoader<PracticeSentenceBuilderSetModel>(
+                          title: extra.title,
+                          load: () =>
+                              sl<PracticeRemoteDataSource>().fetchSentenceBuilderSet(extra.id),
+                          builder: (set) => PracticeBuildSentencePage(set: set));
                     }
                     return _tutorialPage(
                         pageId: TutorialPageIds.practiceSets,
@@ -546,7 +562,11 @@ final appRouter = GoRouter(
                   path: listenTapPath,
                   parentNavigatorKey: _rootKey,
                   builder: (context, state) {
-                    return PracticeListenTapPage(set: state.extra as PracticeListenTapSetModel);
+                    final set = state.extra as PracticeListenTapSetModel;
+                    return PracticeDetailLoader<PracticeListenTapSetModel>(
+                        title: set.title,
+                        load: () => sl<PracticeRemoteDataSource>().fetchListenTapSet(set.id),
+                        builder: (detail) => PracticeListenTapPage(set: detail));
                   },
                 ),
                 GoRoute(

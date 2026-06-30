@@ -24,8 +24,12 @@ class MonkeyTypeSessionBloc extends Bloc<MonkeyTypeSessionEvent, MonkeyTypeSessi
     if (event.practiceId.isEmpty) return;
     emit(state.copyWith(status: Status.loading, texts: const [], errorMessage: null));
     try {
-      final texts = await practiceRemoteDataSource.fetchMonkeyTypeTexts(event.practiceId);
-      emit(state.copyWith(status: Status.success, texts: texts, errorMessage: null));
+      final practice = await practiceRemoteDataSource.fetchMonkeyTypePractice(event.practiceId);
+      final texts = practice.texts.isNotEmpty
+          ? practice.texts
+          : await practiceRemoteDataSource.fetchMonkeyTypeTexts(event.practiceId);
+      emit(state.copyWith(
+          status: Status.success, practice: practice, texts: texts, errorMessage: null));
     } on DioException catch (error) {
       emit(state.copyWith(status: Status.error, errorMessage: DioErrorMessage.from(error)));
     } catch (_) {

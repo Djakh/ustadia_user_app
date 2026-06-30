@@ -4,6 +4,7 @@ import 'package:ustadia_user_app/features/practice/data/models/monkey_type_model
 
 class MonkeyTypeSessionState extends Equatable {
   final Status status;
+  final MonkeyTypePracticeModel? practice;
   final List<MonkeyTypeTextModel> texts;
   final String? errorMessage;
   final Status submitStatus;
@@ -12,6 +13,7 @@ class MonkeyTypeSessionState extends Equatable {
 
   const MonkeyTypeSessionState({
     this.status = Status.initial,
+    this.practice,
     this.texts = const [],
     this.errorMessage,
     this.submitStatus = Status.initial,
@@ -21,6 +23,7 @@ class MonkeyTypeSessionState extends Equatable {
 
   MonkeyTypeSessionState copyWith({
     Status? status,
+    MonkeyTypePracticeModel? practice,
     List<MonkeyTypeTextModel>? texts,
     String? errorMessage,
     Status? submitStatus,
@@ -29,6 +32,7 @@ class MonkeyTypeSessionState extends Equatable {
   }) =>
       MonkeyTypeSessionState(
         status: status ?? this.status,
+        practice: practice ?? this.practice,
         texts: texts ?? this.texts,
         errorMessage: errorMessage,
         submitStatus: submitStatus ?? this.submitStatus,
@@ -38,5 +42,5 @@ class MonkeyTypeSessionState extends Equatable {
 
   @override
   List<Object?> get props =>
-      [status, texts, errorMessage, submitStatus, answer, submitErrorMessage];
+      [status, practice, texts, errorMessage, submitStatus, answer, submitErrorMessage];
 }

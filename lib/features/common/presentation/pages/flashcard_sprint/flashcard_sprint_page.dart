@@ -23,11 +23,12 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/section_detai
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_state.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_result_page.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_navigation_circle_button.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_quiz_component.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/flashcard_view.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
-enum FlashcardSprintStage { cards, result }
+enum FlashcardSprintStage { cards, quiz, result }
 
 class FlashcardSprintParams {
   final LearnFlashcardSetModel set;
@@ -111,7 +112,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
     if (resolvedSectionModel?.progressState == SectionProgressState.completed) {
       stage = FlashcardSprintStage.result;
     }
-    if (isSectionVocabulary) {
+    if (isSectionVocabulary && stage != FlashcardSprintStage.result) {
       detailBloc = sl<SectionDetailBloc>();
       loadSectionDetail();
     }
@@ -147,16 +148,20 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
     if (!state.status.isSuccess) return;
     final detail = state.detail;
     final flashcardSet = detail?.flashCardSet;
-    if (detail == null || flashcardSet == null || flashcardSet.flashcards.isEmpty) {
+    final hasFlashcards = flashcardSet != null && flashcardSet.flashcards.isNotEmpty;
+    final hasQuestions = detail?.questions.isNotEmpty == true;
+    if (detail == null || (!hasFlashcards && !hasQuestions)) {
       closeForUnavailableFlashcards();
       return;
     }
     setState(() {
       resolvedSectionModel = detail;
-      resolvedFlashcardSet = flashcardSet;
+      if (hasFlashcards) resolvedFlashcardSet = flashcardSet;
       stage = detail.progressState == SectionProgressState.completed
           ? FlashcardSprintStage.result
-          : FlashcardSprintStage.cards;
+          : hasFlashcards
+              ? FlashcardSprintStage.cards
+              : FlashcardSprintStage.quiz;
     });
   }
 
@@ -317,6 +322,19 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
       _learningCards.clear();
       showMeaning = false;
       _seenMeaning.clear();
+    });
+  }
+
+  void finishSectionQuiz(int _) {
+    final section = resolvedSectionModel;
+    if (section?.source == SectionSource.mockExam) {
+      context.pop(true);
+      return;
+    }
+    if (!mounted) return;
+    setState(() {
+      shouldRefreshParent = true;
+      stage = FlashcardSprintStage.result;
     });
   }
 
@@ -661,6 +679,29 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
     return FlashcardSprintResultView(stats: resultStats);
   }
 
+  Widget get sectionQuizView {
+    final section = resolvedSectionModel!;
+    return PrimaryBackground(
+        header: Column(children: [
+          Text(section.title,
+              maxLines: 1, overflow: TextOverflow.ellipsis, style: Style.body2w6(context)),
+          const SizedBox(height: 2),
+          Text(section.sectionTypeLabel.toUpperCase(),
+              style: Style.small3w4(context, color: TextColorRole.greyColor))
+        ]),
+        headerTooltipText: section.title,
+        padding: EdgeInsets.zero,
+        margin: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+        applyBottomSafeArea: false,
+        isScrollable: false,
+        alwaysScrollable: false,
+        child: SectionQuizComponent(
+            questions: section.questions,
+            sectionContent: section.content,
+            sectionType: 'vocabulary',
+            onFinish: finishSectionQuiz));
+  }
+
   Widget get emptyView => PrimaryBackground(
       header: header,
       headerTooltipText: resolvedFlashcardSet.title,
@@ -699,9 +740,11 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
               },
               child: stage == FlashcardSprintStage.result
                   ? resultView
-                  : cards.isEmpty
-                      ? emptyView
-                      : view)));
+                  : stage == FlashcardSprintStage.quiz
+                      ? sectionQuizView
+                      : cards.isEmpty
+                          ? emptyView
+                          : view)));
 
   @override
   Widget build(BuildContext context) {
@@ -712,9 +755,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
         listener: handleSectionDetail,
         builder: (context, state) {
           if (state.status.isError) return detailErrorView;
-          if (!state.status.isSuccess || resolvedFlashcardSet.flashcards.isEmpty) {
-            return loadingView;
-          }
+          if (!state.status.isSuccess) return loadingView;
           return flashcardView;
         });
   }
