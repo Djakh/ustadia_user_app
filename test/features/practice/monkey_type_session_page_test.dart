@@ -31,7 +31,7 @@ void main() {
     ];
     await _registerMonkeyTypeDependencies(texts);
 
-    tester.view.physicalSize = const Size(390, 844);
+    tester.view.physicalSize = const Size(390, 1300);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
@@ -73,6 +73,9 @@ void main() {
     await tester.pumpWidget(MaterialApp.router(routerConfig: router));
     await tester.pumpAndSettle();
 
+    expect(find.text('Previous'), findsNothing);
+    expect(find.text('Next'), findsNothing);
+
     await tester.enterText(find.byType(TextField), 'Large text');
     await tester.pump();
     await tester.ensureVisible(find.text('Submit'));
@@ -87,6 +90,28 @@ void main() {
 
     expect(tester.widget<TextField>(find.byType(TextField)).controller?.text, '');
     expect(find.text('Submit'), findsOneWidget);
+  });
+
+  testWidgets('practice link opens copy and browser actions', (tester) async {
+    await _registerMonkeyTypeDependencies([_text(id: 'text_1', orderIndex: 0)]);
+
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final router = GoRouter(routes: [
+      GoRoute(path: '/', builder: (_, __) => MonkeyTypeSessionPage(practice: _practice())),
+    ]);
+
+    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Practice link'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Copy link'), findsOneWidget);
+    expect(find.text('Open in browser'), findsOneWidget);
   });
 }
 
@@ -126,6 +151,20 @@ class _FakePracticeRemoteDataSource extends PracticeRemoteDataSource {
   final List<MonkeyTypeTextModel> texts;
 
   _FakePracticeRemoteDataSource(this.texts) : super(dio: Dio());
+
+  @override
+  Future<MonkeyTypePracticeModel> fetchMonkeyTypePractice(String practiceId) async =>
+      MonkeyTypePracticeModel(
+        id: practiceId,
+        title: 'Monkey Type detail',
+        description: 'Typing practice detail',
+        isPublic: true,
+        teacherId: '',
+        createdAt: null,
+        updatedAt: null,
+        monkeyTypeUrl: 'https://students.ustadia.com/monkey-type/$practiceId',
+        texts: texts,
+      );
 
   @override
   Future<List<MonkeyTypeTextModel>> fetchMonkeyTypeTexts(String practiceId) async => texts;

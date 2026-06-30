@@ -14,7 +14,9 @@ import 'package:ustadia_user_app/features/common/data/repositories/flashcard_rep
 import 'package:ustadia_user_app/features/common/data/datasources/user_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/flashcard_status_bloc/flashcard_status_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_bloc.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/section_question_answer_bloc/section_question_answer_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_page.dart';
+import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
 import 'package:ustadia_user_app/features/dashboard/data/services/current_unit_store.dart';
 import 'package:ustadia_user_app/features/learn/data/datasources/learn_remote_data_source.dart';
 import 'package:ustadia_user_app/features/mock_exam/data/datasources/mock_exam_remote_data_source.dart';
@@ -78,6 +80,24 @@ void main() {
     expect(find.text('hello'), findsOneWidget);
   });
 
+  testWidgets('section vocabulary loads question quiz when flashcard set is null', (tester) async {
+    await _registerFlashcardDependencies(sectionResponse: _sectionQuestionResponse());
+    await _pumpSectionFlashcards(tester);
+
+    expect(find.text('The ___ rises in the east.'), findsOneWidget);
+    expect(find.byType(TextField), findsOneWidget);
+    expect(find.text('Flashcards are not available for this section.'), findsNothing);
+  });
+
+  testWidgets('completed section vocabulary opens its result instead of flashcards',
+      (tester) async {
+    await _registerFlashcardDependencies(sectionResponse: _sectionDetailResponse());
+    await _pumpSectionFlashcards(tester, isCompleted: true);
+
+    expect(find.byType(QuizResultComponent), findsOneWidget);
+    expect(find.text('Card 1 of 2'), findsNothing);
+  });
+
   testWidgets('section vocabulary closes when detailed flashcards are missing', (tester) async {
     await _registerFlashcardDependencies(sectionResponse: _sectionDetailResponse(hasSet: false));
     await _pumpSectionFlashcards(tester);
@@ -93,24 +113,35 @@ Future<void> _registerFlashcardDependencies({Map<String, dynamic>? sectionRespon
   final prefs = await SharedPreferences.getInstance();
   final tutorialStorage = TutorialStorageService(prefs: prefs);
   await tutorialStorage.setTutorialEnabled(false);
+  final dio = sectionResponse == null ? Dio() : _responseDio(sectionResponse);
+  final learnRemoteDataSource = LearnRemoteDataSource(dio: dio);
+  final assignmentsRemoteDataSource = AssignmentsRemoteDataSource(dio: dio);
+  final mockExamRemoteDataSource = MockExamRemoteDataSource(dio: dio);
+  final profileStatisticsStore =
+      ProfileStatisticsStore(userRemoteDataSource: UserRemoteDataSource(dio: Dio()));
+  final currentUnitStore = CurrentUnitStore(learnRemoteDataSource: learnRemoteDataSource);
 
   sl.registerSingleton<TutorialStorageService>(tutorialStorage);
+  sl.registerSingleton<LearnRemoteDataSource>(learnRemoteDataSource);
   sl.registerFactory(() => FlashcardStatusBloc(
       flashcardRepository: _FakeFlashcardRepository(),
-      profileStatisticsStore:
-          ProfileStatisticsStore(userRemoteDataSource: UserRemoteDataSource(dio: Dio())),
-      currentUnitStore:
-          CurrentUnitStore(learnRemoteDataSource: LearnRemoteDataSource(dio: Dio()))));
+      profileStatisticsStore: profileStatisticsStore,
+      currentUnitStore: currentUnitStore));
+  sl.registerFactory(() => QuestionAnswerBloc(
+      learnRemoteDataSource: learnRemoteDataSource,
+      assignmentsRemoteDataSource: assignmentsRemoteDataSource,
+      mockExamRemoteDataSource: mockExamRemoteDataSource,
+      profileStatisticsStore: profileStatisticsStore,
+      currentUnitStore: currentUnitStore));
   if (sectionResponse != null) {
-    final dio = _responseDio(sectionResponse);
     sl.registerFactory(() => SectionDetailBloc(
-        learnRemoteDataSource: LearnRemoteDataSource(dio: dio),
-        assignmentsRemoteDataSource: AssignmentsRemoteDataSource(dio: dio),
-        mockExamRemoteDataSource: MockExamRemoteDataSource(dio: dio)));
+        learnRemoteDataSource: learnRemoteDataSource,
+        assignmentsRemoteDataSource: assignmentsRemoteDataSource,
+        mockExamRemoteDataSource: mockExamRemoteDataSource));
   }
 }
 
-Future<void> _pumpSectionFlashcards(WidgetTester tester) async {
+Future<void> _pumpSectionFlashcards(WidgetTester tester, {bool isCompleted = false}) async {
   tester.view.physicalSize = const Size(430, 1100);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
@@ -122,7 +153,8 @@ Future<void> _pumpSectionFlashcards(WidgetTester tester) async {
     'lesson_id': 'lesson_1',
     'type': 'vocabulary',
     'title': 'Vocabulary',
-    'flashcard_set_id': 'set_1'
+    'flashcard_set_id': 'set_1',
+    'iscompleted': isCompleted,
   });
   final router = GoRouter(routes: [
     GoRoute(
@@ -170,6 +202,36 @@ Map<String, dynamic> _sectionDetailResponse({bool hasSet = true}) => {
             {'id': 'card_2', 'front': 'world', 'back': 'dunyo', 'order': 1, 'status': ''}
           ]
         }
+    };
+
+Map<String, dynamic> _sectionQuestionResponse() => {
+      'id': 'section_1',
+      'unit_id': 'unit_1',
+      'lesson_id': 'lesson_1',
+      'type': 'vocabulary',
+      'title': 'Vocabulary Fill Blanks',
+      'content': 'Practice vocabulary with fill-in-the-blank exercises',
+      'flashcard_set_id': null,
+      'flashcard_set': null,
+      'questions': [
+        {
+          'id': 'question_1',
+          'section_id': 'section_1',
+          'type': 'fill-blank',
+          'title': 'The ___ rises in the east.',
+          'order_index': 1,
+          'is_answered': false,
+          'number_of_blanks': 1,
+          'blank_answers': [
+            {'answer': null, 'position': 1}
+          ],
+          'answers': null,
+          'max_selections': 0,
+        }
+      ],
+      'totalQuestions': 1,
+      'isCompleted': false,
+      'isLocked': false,
     };
 
 LearnFlashcardSetModel _set() => LearnFlashcardSetModel(
