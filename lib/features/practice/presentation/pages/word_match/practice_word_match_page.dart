@@ -32,17 +32,39 @@ class _PracticeWordMatchPageState extends State<PracticeWordMatchPage> {
 
   /// --- Data ---
 
-  List<PracticeWordMatchCardData> get sources => widget.set.options
-      .where((option) => option.isSource)
-      .map((option) => PracticeWordMatchCardData(pairId: option.pairId, text: option.word))
-      .toList();
+  List<PracticeWordMatchOptionModel> get inlinePairs =>
+      widget.set.options.where((option) => option.hasInlineMatch).toList();
 
-  List<PracticeWordMatchCardData> get targets => widget.set.options
-      .where((option) => !option.isSource)
-      .map((option) => PracticeWordMatchCardData(pairId: option.pairId, text: option.word))
-      .toList();
+  int pairIdFor(PracticeWordMatchOptionModel option, int index) =>
+      option.pairId != 0 ? option.pairId : index + 1;
 
-  int get totalPairs => sources.length;
+  List<PracticeWordMatchCardData> get sources {
+    if (inlinePairs.isNotEmpty) {
+      return List.generate(
+          inlinePairs.length,
+          (index) => PracticeWordMatchCardData(
+              pairId: pairIdFor(inlinePairs[index], index), text: inlinePairs[index].word));
+    }
+    return widget.set.options
+        .where((option) => option.isSource)
+        .map((option) => PracticeWordMatchCardData(pairId: option.pairId, text: option.word))
+        .toList();
+  }
+
+  List<PracticeWordMatchCardData> get targets {
+    if (inlinePairs.isNotEmpty) {
+      return List.generate(
+          inlinePairs.length,
+          (index) => PracticeWordMatchCardData(
+              pairId: pairIdFor(inlinePairs[index], index), text: inlinePairs[index].match!));
+    }
+    return widget.set.options
+        .where((option) => !option.isSource)
+        .map((option) => PracticeWordMatchCardData(pairId: option.pairId, text: option.word))
+        .toList();
+  }
+
+  int get totalPairs => inlinePairs.isNotEmpty ? inlinePairs.length : sources.length;
 
   @override
   void dispose() {
@@ -54,7 +76,7 @@ class _PracticeWordMatchPageState extends State<PracticeWordMatchPage> {
     statusBloc.add(PracticeWordMatchStatusRequested(
         wordMatchId: widget.set.id,
         status: 'completed',
-        correctAnswers: 1,
+        correctAnswers: totalPairs,
         wrongAnswers: wrongAttempts));
   }
 

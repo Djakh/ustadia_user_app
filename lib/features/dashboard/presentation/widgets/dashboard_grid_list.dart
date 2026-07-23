@@ -31,9 +31,22 @@ class DashboardQuickGridList extends StatelessWidget {
 
   void goToLeadboard(BuildContext context) => context.push(leaderboardRoute);
 
-  bool assignmentsEnabled(UserProfileModel? profile) {
+  bool teacherScopedFeaturesEnabled(UserProfileModel? profile) {
     final teacherId = profile?.currentTeacher?.id;
     return teacherId != null && teacherId.isNotEmpty;
+  }
+
+  bool assignmentsEnabled(UserProfileModel? profile) => teacherScopedFeaturesEnabled(profile);
+
+  bool mockExamEnabled(UserProfileModel? profile) => teacherScopedFeaturesEnabled(profile);
+
+  void onMockExamTap(BuildContext context, UserProfileModel? profile) {
+    if (mockExamEnabled(profile)) {
+      goToMockExam(context);
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('To access mock exams, please choose a teacher'.tr())));
   }
 
   void onAssignmentsTap(BuildContext context, UserProfileModel? profile) {
@@ -47,7 +60,7 @@ class DashboardQuickGridList extends StatelessWidget {
 
   /// --- Widgets ---
 
-  Widget lessonAndChat(BuildContext context) => Column(children: [
+  Widget lessonAndChat(BuildContext context, UserProfileModel? profile) => Column(children: [
         DashboardGridCard(
             key: mockExamKey,
             title: 'Mock exam'.tr(),
@@ -55,7 +68,8 @@ class DashboardQuickGridList extends StatelessWidget {
             cardColor: AppColors.orangeBE,
             height: 118,
             backImage: AppImages.lessonCardBack,
-            onTap: () => goToMockExam(context)),
+            onTap: () => onMockExamTap(context, profile),
+            isEnabled: mockExamEnabled(profile)),
         const SizedBox(height: 12),
         DashboardGridCard(
             key: reelsKey,
@@ -91,7 +105,7 @@ class DashboardQuickGridList extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocBuilder<UserBloc, UserState>(builder: (context, state) {
         return Row(children: [
-          Expanded(child: lessonAndChat(context)),
+          Expanded(child: lessonAndChat(context, state.profile)),
           const SizedBox(width: 10),
           Expanded(child: chatAndLideBoard(context, state.profile))
         ]);

@@ -14,6 +14,7 @@ class AskAiMessagesPanel extends StatelessWidget {
   final bool showTypingIndicator;
   final double topPadding;
   final double bottomPadding;
+  final ValueChanged<AiChatMessageModel>? onReport;
 
   const AskAiMessagesPanel(
       {super.key,
@@ -24,7 +25,8 @@ class AskAiMessagesPanel extends StatelessWidget {
       required this.errorMessage,
       required this.showTypingIndicator,
       required this.topPadding,
-      required this.bottomPadding});
+      required this.bottomPadding,
+      this.onReport});
 
   Widget get loadingView => const Center(
       child: CircularProgressIndicator(
@@ -42,7 +44,8 @@ class AskAiMessagesPanel extends StatelessWidget {
       scrollController: scrollController,
       isPaginating: isPaginating,
       topPadding: topPadding,
-      bottomPadding: bottomPadding);
+      bottomPadding: bottomPadding,
+      onReport: onReport);
 
   @override
   Widget build(BuildContext context) => Container(

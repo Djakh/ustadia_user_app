@@ -13,6 +13,7 @@ import 'package:ustadia_user_app/features/common/data/models/flash_card_model/fl
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/flashcard_sprint/flashcard_sprint_page.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_timer_badge.dart';
+import 'package:ustadia_user_app/features/mock_exam/data/datasources/mock_exam_remote_data_source.dart';
 import 'package:ustadia_user_app/features/mock_exam/data/models/mock_exam_attempt_model.dart';
 import 'package:ustadia_user_app/features/mock_exam/data/models/mock_exam_model.dart';
 import 'package:ustadia_user_app/features/mock_exam/presentation/bloc/mock_exam_sections_bloc/mock_exam_sections_bloc.dart';
@@ -20,6 +21,7 @@ import 'package:ustadia_user_app/features/mock_exam/presentation/bloc/mock_exam_
 import 'package:ustadia_user_app/features/mock_exam/presentation/bloc/mock_exam_sections_bloc/mock_exam_sections_state.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 import 'package:ustadia_user_app/router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MockExamSectionsPage extends StatefulWidget {
   final String mockExamId;
@@ -39,6 +41,7 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
   String deadlineAttemptId = '';
   bool didNavigateAway = false;
   bool isRefreshingAttempt = false;
+  bool isOpeningBrowserExam = false;
 
   @override
   void initState() {
@@ -121,6 +124,28 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
 
   Future<void> reloadAttempt() async => loadAttempt();
 
+  Future<void> openExamInBrowser() async {
+    if (widget.mockExamId.isEmpty || isOpeningBrowserExam) return;
+    setState(() => isOpeningBrowserExam = true);
+    try {
+      final token = await sl<MockExamRemoteDataSource>()
+          .generateMockExamTempToken(mockExamId: widget.mockExamId);
+      final uri = Uri.tryParse(token.url);
+      if (uri == null || !uri.hasScheme) {
+        throw Exception('Mock exam link is not available yet'.tr());
+      }
+      final didLaunch = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (!didLaunch) {
+        throw Exception('Could not open mock exam link'.tr());
+      }
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
+    } finally {
+      if (mounted) setState(() => isOpeningBrowserExam = false);
+    }
+  }
+
   String title(MockExamSectionsState state) {
     if (state.title.isNotEmpty) return state.title;
     if (widget.exam?.title.isNotEmpty == true) return widget.exam!.title;
@@ -156,6 +181,9 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
         break;
       case SectionType.writing:
         navigation = context.push(learnWritingRoute, extra: section);
+        break;
+      case SectionType.article:
+        navigation = context.push(learnArticleRoute, extra: section);
         break;
     }
     await navigation;
@@ -194,6 +222,14 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
     if (text.isEmpty) return const SizedBox.shrink();
     return Text(text, style: Style.bodyw4(context, color: TextColorRole.greyColor));
   }
+
+  Widget browserButton(BuildContext context) => Button.border(
+      onTap: openExamInBrowser,
+      text: 'Open mock exam in browser'.tr(),
+      isLoading: isOpeningBrowserExam,
+      borderColor: AppColors.primary.withValues(alpha: 0.25),
+      textColor: AppColors.primary,
+      color: AppColors.white);
 
   String get countdownLabel {
     final duration = remainingDuration;
@@ -466,6 +502,8 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
           onRefresh: reloadAttempt,
           child: ListView(physics: const AlwaysScrollableScrollPhysics(), children: [
             descriptionText(context, state),
+            const SizedBox(height: 14),
+            browserButton(context),
             if (hasDeadline) ...[const SizedBox(height: 14), countdownCard(context)],
             const SizedBox(height: 20),
             content(state),

@@ -7,9 +7,14 @@ class AiChatMessageBubble extends StatelessWidget {
   final AiChatMessageModel message;
   final bool isMe;
   final bool useDarkTheme;
+  final VoidCallback? onReport;
 
   const AiChatMessageBubble(
-      {super.key, required this.message, required this.isMe, this.useDarkTheme = false});
+      {super.key,
+      required this.message,
+      required this.isMe,
+      this.useDarkTheme = false,
+      this.onReport});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +60,16 @@ class AiChatMessageBubble extends StatelessWidget {
                         ]
                       : null),
               child: Text(message.content,
-                  style: Style.bodyw5(context).copyWith(color: textColor, height: 1.45))))
+                  style: Style.bodyw5(context).copyWith(color: textColor, height: 1.45)))),
+      if (!isMe && onReport != null)
+        TextButton.icon(
+            onPressed: onReport,
+            icon:
+                Icon(Icons.flag_outlined, size: 14, color: AppColors.white.withValues(alpha: 0.68)),
+            label: Opacity(
+                opacity: 0.68,
+                child: Text('Report AI response'.tr(),
+                    style: Style.small2w4(context, color: TextColorRole.whiteColor))))
     ]);
   }
 }

@@ -35,11 +35,11 @@ import 'package:ustadia_user_app/features/learn/presentation/bloc/audio_bloc/aud
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_lessons_bloc/learn_lessons_bloc.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_sections_bloc/learn_sections_bloc.dart';
 import 'package:ustadia_user_app/features/learn/presentation/bloc/learn_units_bloc/learn_units_bloc.dart';
+import 'package:ustadia_user_app/features/meets/data/datasources/student_meets_remote_data_source.dart';
+import 'package:ustadia_user_app/features/meets/presentation/bloc/student_meets_bloc/student_meets_bloc.dart';
 import 'package:ustadia_user_app/features/mock_exam/data/datasources/mock_exam_remote_data_source.dart';
 import 'package:ustadia_user_app/features/mock_exam/presentation/bloc/mock_exam_list_bloc/mock_exam_list_bloc.dart';
 import 'package:ustadia_user_app/features/mock_exam/presentation/bloc/mock_exam_sections_bloc/mock_exam_sections_bloc.dart';
-import 'package:ustadia_user_app/features/meets/data/datasources/student_meets_remote_data_source.dart';
-import 'package:ustadia_user_app/features/meets/presentation/bloc/student_meets_bloc/student_meets_bloc.dart';
 import 'package:ustadia_user_app/features/notifications/data/datasources/notifications_remote_data_source.dart';
 import 'package:ustadia_user_app/features/notifications/data/services/notification_badge_store.dart';
 import 'package:ustadia_user_app/features/notifications/presentation/bloc/notifications_bloc/notifications_bloc.dart';
@@ -65,6 +65,9 @@ import 'core/network/dio_client.dart';
 
 final sl = GetIt.instance;
 
+const apiBaseUrl = 'https://backend.ustadia.findecor.io';
+//const apiBaseUrl ='https://dev.backend.ustadia.findecor.io';
+
 Future<void> initDependencies() async {
   // Core
   final prefs = await SharedPreferences.getInstance();
@@ -72,6 +75,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<TutorialStorageService>(() => TutorialStorageService(prefs: sl()));
   sl.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSource(prefs: sl()));
   sl.registerLazySingleton<Dio>(() => DioClient.create(
+      baseUrl: apiBaseUrl,
       accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken(),
       onUnauthorized: () => SessionLogoutService.logout(
           authLocalDataSource: sl<AuthLocalDataSource>(),
@@ -83,8 +87,7 @@ Future<void> initDependencies() async {
   // Features - Auth
   sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSource(
       dio: DioClient.create(
-          baseUrl: 'https://backend.ustadia.findecor.io',
-         //  baseUrl: 'https://dev.backend.ustadia.findecor.io',
+          baseUrl: apiBaseUrl,
           accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken(),
           onUnauthorized: () => SessionLogoutService.logout(
               authLocalDataSource: sl<AuthLocalDataSource>(),

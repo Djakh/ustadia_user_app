@@ -14,8 +14,9 @@ class ReadingSectionIntro extends StatelessWidget {
   /// --- Widgets ---
 
   Widget content(BuildContext context) => SingleChildScrollView(
-        child: TranslatableSectionContent(
-            data: sectionModel.content, textStyle: Style.bodyw4(context)),
+        child: Column(children: [
+          TranslatableSectionContent(data: sectionModel.content, textStyle: Style.bodyw4(context))
+        ]),
       );
 
   Widget view(BuildContext context) => Column(children: [

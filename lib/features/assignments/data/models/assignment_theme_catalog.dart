@@ -20,6 +20,8 @@ class AssignmentThemeCatalog {
         return writing;
       case 'vocabulary':
         return vocabulary;
+      case 'article':
+        return article;
       default:
         return reading;
     }
@@ -66,4 +68,11 @@ class AssignmentThemeCatalog {
       backgroundColor: AppColors.blueFF,
       accentColor: AppColors.blueB3,
       emoji: '📖');
+
+  static AssignmentTypeTheme get article => AssignmentTypeTheme(
+      label: 'Article'.tr(),
+      textColor: AppColors.blueD3,
+      backgroundColor: AppColors.blueFF,
+      accentColor: AppColors.blueD3,
+      emoji: '📰');
 }

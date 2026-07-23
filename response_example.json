@@ -1,236 +1,209 @@
 {
-  "id": "21a0d5cb-3b85-4de6-ad04-2633e0fda801",
-  "title": "new monkey type",
-  "description": "new monkey type adsadsa",
-  "isPublic": false,
-  "teacher_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-  "created_at": "2026-05-18T08:18:12.227Z",
-  "updated_at": "2026-05-18T11:02:47.220Z",
-  "difficulty_levels": [
+  "data": [
     {
-      "id": "550e8400-e29b-41d4-a716-446655440000",
-      "name": {
-        "en": "Beginner",
-        "ru": "Начинающий",
-        "uz": "Yangi boshlovchi"
-      },
-      "description": {
-        "en": "Beginner level for absolute beginners with no prior language knowledge",
-        "ru": "Уровень начинающих для абсолютных новичков без предварительных знаний языка",
-        "uz": "Yangi boshlovchilar uchun oldindan hech qanday til bilimisiz bo'lganlar uchun"
-      },
-      "isPublic": true,
-      "teacher_id": null,
-      "created_at": "2026-02-06T05:10:16.547Z",
-      "updated_at": "2026-02-06T05:10:16.547Z"
+      "id": "80099b02-3377-4220-b370-ac5a1193f5c0",
+      "unit_id": "c59b978a-bc81-465c-95b6-dfaf6f4ef9d2",
+      "type": "reading",
+      "title": "Reading Practise",
+      "content": "<p>Reading is one of the most effective ways to improve language skills. People who read regularly often develop a wider vocabulary and better understanding of grammar. Reading also helps learners become familiar with different writing styles and expressions used by native speakers.</p><p>Many experts recommend reading for at least twenty minutes each day. This habit can improve concentration and critical thinking skills. In addition, reading exposes learners to new ideas, cultures, and perspectives that they may not encounter in their daily lives.</p><p>Technology has made reading more accessible than ever before. Today, people can access books, articles, and educational materials from their phones, tablets, or computers. However, despite these advantages, many individuals still struggle to maintain a consistent reading habit.</p><p>One reason is that social media and other forms of digital entertainment compete for people's attention. As a result, many learners spend less time reading than they intend to. Creating a reading schedule and setting realistic goals can help build a sustainable habit.</p><p>Research has shown that individuals who read frequently are more likely to perform well academically and professionally. Reading not only improves language ability but also strengthens memory and analytical thinking. For these reasons, educators continue to encourage students to make reading a regular part of their daily routine.</p>",
+      "audio_file_id": null,
+      "image_id": null,
+      "flashcard_set_id": null,
+      "order_index": 1,
+      "audio_file": null,
+      "image": null,
+      "totalquestions": 7,
+      "answeredquestions": 4,
+      "flashcardstotal": 0,
+      "flashcardsprogress": 0,
+      "iscompleted": false,
+      "islocked": false,
+      "link_positions": []
     },
     {
-      "id": "a7b8c9d0-e1f2-41d4-a716-446655440001",
-      "name": {
-        "en": "Elementary",
-        "ru": "Элементарный",
-        "uz": "Boshlangʻich"
-      },
-      "description": {
-        "en": "Elementary level for beginners learning basic vocabulary and simple sentence structures",
-        "ru": "Элементарный уровень для начинающих изучение базовой лексики и простых структур предложений",
-        "uz": "Boshlangʻich daraja - asosiy leksika va oddiy gaplarni oʻrganayotgan boshlangʻich oʻquvchilar uchun"
-      },
-      "isPublic": true,
-      "teacher_id": null,
-      "created_at": "2026-02-06T05:10:16.563Z",
-      "updated_at": "2026-02-06T05:10:16.563Z"
+      "id": "cb968ea8-3f5e-433b-b314-f7afd165eeaa",
+      "unit_id": "c59b978a-bc81-465c-95b6-dfaf6f4ef9d2",
+      "type": "grammar",
+      "title": "Past Perfect",
+      "content": null,
+      "audio_file_id": null,
+      "image_id": null,
+      "flashcard_set_id": null,
+      "order_index": 1,
+      "audio_file": null,
+      "image": null,
+      "totalquestions": 5,
+      "answeredquestions": 1,
+      "flashcardstotal": 0,
+      "flashcardsprogress": 0,
+      "iscompleted": false,
+      "islocked": false,
+      "link_positions": []
     },
     {
-      "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-      "name": {
-        "en": "Pre-Intermediate",
-        "ru": "Допромежуточный",
-        "uz": "Oʻrta-oldi"
-      },
-      "description": {
-        "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
-        "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
-        "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
-      },
-      "isPublic": true,
-      "teacher_id": null,
-      "created_at": "2026-02-06T05:10:16.570Z",
-      "updated_at": "2026-02-06T05:10:16.570Z"
+      "id": "31be295f-c7fd-44c1-a685-6e8a1bf24d0a",
+      "unit_id": "c59b978a-bc81-465c-95b6-dfaf6f4ef9d2",
+      "type": "vocabulary",
+      "title": "Vocabulary",
+      "content": null,
+      "audio_file_id": null,
+      "image_id": null,
+      "flashcard_set_id": "acf2dd69-6a74-4c87-a847-37ebdb58b6bf",
+      "order_index": 1,
+      "audio_file": null,
+      "image": null,
+      "totalquestions": 0,
+      "answeredquestions": 0,
+      "flashcardstotal": 19,
+      "flashcardsprogress": 0,
+      "iscompleted": false,
+      "islocked": false,
+      "link_positions": []
     },
     {
-      "id": "c7b8c9d0-e1f2-41d4-a716-446655440003",
-      "name": {
-        "en": "Intermediate",
-        "ru": "Промежуточный",
-        "uz": "Oʻrta"
+      "id": "a9f059db-a7b4-4661-b830-bfde9d2b9054",
+      "unit_id": "c59b978a-bc81-465c-95b6-dfaf6f4ef9d2",
+      "type": "listening",
+      "title": "Listening",
+      "content": "<p>Good morning everyone. Today I'd like to tell you about our city library. The library was established in 1998 and has become one of the most popular places for students and local residents.</p><p>The library opens at 8:00 a.m. and closes at 8:00 p.m. from Monday to Friday. On weekends, it opens at 10:00 a.m. and closes at 5:00 p.m.</p><p>There are more than 50,000 books available, including novels, textbooks, magazines, and reference materials. Visitors can borrow up to five books at a time for a period of two weeks.</p><p>The library also offers free internet access and study rooms for students. Every Wednesday evening, a reading club meets to discuss books and share recommendations.</p><p>Last year, more than 10,000 people visited the library. The management plans to expand the children's section and introduce new digital resources in the future.</p>",
+      "audio_file_id": "62cb1a31-a9ef-443e-aac1-0877c1c49fc7",
+      "image_id": null,
+      "flashcard_set_id": null,
+      "order_index": 1,
+      "audio_file": {
+        "id": "62cb1a31-a9ef-443e-aac1-0877c1c49fc7",
+        "url": "/uploads/ab/bc/abbcc5397d2d0dff077e22b1dec0075329a5b80e16e5b8b195b85a4736d99a8d.mp3",
+        "path": "ab/bc/abbcc5397d2d0dff077e22b1dec0075329a5b80e16e5b8b195b85a4736d99a8d.mp3",
+        "filename": "abbcc5397d2d0dff077e22b1dec0075329a5b80e16e5b8b195b85a4736d99a8d.mp3",
+        "mimetype": "application/octet-stream",
+        "created_at": "2026-06-04T22:21:34.743535"
       },
-      "description": {
-        "en": "Intermediate level for students comfortable with standard language usage and more varied topics",
-        "ru": "Промежуточный уровень для студентов, удобных со стандартным использованием языка и более разнообразными темами",
-        "uz": "Oʻrta daraja - standart til foydalanishiga oʻzboshimchas va koʻplab mavzularga mos keluvchi talabalar uchun"
-      },
-      "isPublic": true,
-      "teacher_id": null,
-      "created_at": "2026-02-06T05:10:16.577Z",
-      "updated_at": "2026-02-06T05:10:16.577Z"
+      "image": null,
+      "totalquestions": 7,
+      "answeredquestions": 3,
+      "flashcardstotal": 0,
+      "flashcardsprogress": 0,
+      "iscompleted": false,
+      "islocked": false,
+      "link_positions": []
     },
     {
-      "id": "c09dd55a-eeed-4c94-9257-6c2b6847a8e5",
-      "name": {
-        "en": "New ",
-        "ru": "New ",
-        "uz": "New "
-      },
-      "description": {
-        "en": "",
-        "ru": "",
-        "uz": ""
-      },
-      "isPublic": false,
-      "teacher_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-      "created_at": "2026-02-14T02:21:31.081Z",
-      "updated_at": "2026-02-14T02:21:31.081Z"
+      "id": "ad325c5e-6fbf-4172-b083-d8d2a87a7876",
+      "unit_id": "c59b978a-bc81-465c-95b6-dfaf6f4ef9d2",
+      "type": "speaking",
+      "title": "Practice Speaking",
+      "content": "<p>Speak clearly and answer the questions in complete sentences. Try to provide reasons and examples to support your ideas. Aim to speak for 1–2 minutes for each question.</p>",
+      "audio_file_id": null,
+      "image_id": null,
+      "flashcard_set_id": null,
+      "order_index": 1,
+      "audio_file": null,
+      "image": null,
+      "totalquestions": 5,
+      "answeredquestions": 1,
+      "flashcardstotal": 0,
+      "flashcardsprogress": 0,
+      "iscompleted": false,
+      "islocked": false,
+      "link_positions": []
     },
     {
-      "id": "abaf8cfa-748e-4ed9-9c9a-b9d3f79189e1",
-      "name": {
-        "en": "Advanced",
-        "ru": "Advanced",
-        "uz": "Advanced"
+      "id": "0da676ec-8131-443c-a94d-b88db7f00bd7",
+      "unit_id": "c59b978a-bc81-465c-95b6-dfaf6f4ef9d2",
+      "type": "article",
+      "title": "article",
+      "content": "",
+      "audio_file_id": null,
+      "image_id": "62ccd11e-455b-4e57-b9c0-8405b151c076",
+      "flashcard_set_id": null,
+      "order_index": 3,
+      "audio_file": null,
+      "image": {
+        "id": "62ccd11e-455b-4e57-b9c0-8405b151c076",
+        "url": "/uploads/52/ff/52ffe27b5e8d57cd9457fb5272ca35fe67ac917d8e868229c842d802806243dc.jpg",
+        "path": "52/ff/52ffe27b5e8d57cd9457fb5272ca35fe67ac917d8e868229c842d802806243dc.jpg",
+        "filename": "52ffe27b5e8d57cd9457fb5272ca35fe67ac917d8e868229c842d802806243dc.jpg",
+        "mimetype": "image/jpeg",
+        "created_at": "2026-07-21T11:25:15.963829"
       },
-      "description": {
-        "en": "Advanced",
-        "ru": "Advanced",
-        "uz": "Advanced"
-      },
-      "isPublic": false,
-      "teacher_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-      "created_at": "2026-02-24T07:26:29.566Z",
-      "updated_at": "2026-02-24T07:26:29.566Z"
-    },
-    {
-      "id": "ec0f38bf-ac3b-44eb-b88b-394e5c842ecc",
-      "name": {
-        "en": "Beginner",
-        "ru": "Начинающий",
-        "uz": "Boshlang'ich"
-      },
-      "description": {
-        "en": "Beginner level for typing practice",
-        "ru": "Начальный уровень для тренировки печати",
-        "uz": "Boshlang'ich darajasi uchun mashq"
-      },
-      "isPublic": true,
-      "teacher_id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
-      "created_at": "2026-05-18T12:13:04.278Z",
-      "updated_at": "2026-05-18T12:13:04.278Z"
-    },
-    {
-      "id": "db90a1e0-7e23-477e-acb5-b6423aa01d6a",
-      "name": {
-        "en": "Intermediate",
-        "ru": "Средний",
-        "uz": "O'rta"
-      },
-      "description": {
-        "en": "Intermediate level for typing practice",
-        "ru": "Средний уровень для тренировки печати",
-        "uz": "O'rta darajasi uchun mashq"
-      },
-      "isPublic": true,
-      "teacher_id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
-      "created_at": "2026-05-18T12:13:04.347Z",
-      "updated_at": "2026-05-18T12:13:04.347Z"
-    },
-    {
-      "id": "a0871ca2-c169-4c9f-9b73-754f4168ef7a",
-      "name": {
-        "en": "Advanced",
-        "ru": "Продвинутый",
-        "uz": "Ilg'or"
-      },
-      "description": {
-        "en": "Advanced level for typing practice",
-        "ru": "Продвинутый уровень для тренировки печати",
-        "uz": "Ilg'or darajasi uchun mashq"
-      },
-      "isPublic": true,
-      "teacher_id": "60ba18a2-cf13-4964-8590-9aeece9d712b",
-      "created_at": "2026-05-18T12:13:04.355Z",
-      "updated_at": "2026-05-18T12:13:04.355Z"
+      "totalquestions": 1,
+      "answeredquestions": 0,
+      "flashcardstotal": 0,
+      "flashcardsprogress": 0,
+      "iscompleted": false,
+      "islocked": false,
+      "link_positions": [
+        {
+          "id": "af818799-2c03-4424-954b-c7ea6e0e65c0",
+          "x": 13.312682714436775,
+          "y": 22.61718804577145,
+          "width": 71.65515954469117,
+          "height": 8.584242661338774,
+          "link": null,
+          "file_id": "c1f434b6-d294-4092-8efe-992e097e46e9",
+          "file": {
+            "id": "c1f434b6-d294-4092-8efe-992e097e46e9",
+            "filename": "0582abd19e9c1146d7f55c3e70945cba8dcff3c0eb0520ee9bb27bf4c8095413.mp4",
+            "url": "/uploads/05/82/0582abd19e9c1146d7f55c3e70945cba8dcff3c0eb0520ee9bb27bf4c8095413.mp4"
+          }
+        },
+        {
+          "id": "32b90029-7511-4aef-909d-1a2d6d2c3dfa",
+          "x": 14.329541626719871,
+          "y": 50.945900064993644,
+          "width": 72.56860052341098,
+          "height": 14.999369464626959,
+          "link": "https://www.youtube.com/watch?v=I6RfOY_7leA",
+          "file_id": null,
+          "file": null
+        },
+        {
+          "id": "41778810-3bd6-4aa3-b409-f366cad4204f",
+          "x": 13.533542352240044,
+          "y": 78.16329896107172,
+          "width": 67.79260487653201,
+          "height": 7.1520172281665,
+          "link": "https://www.youtube.com/watch?v=I6RfOY_7leA",
+          "file_id": null,
+          "file": null
+        },
+        {
+          "id": "bd15cde8-96e1-49e4-9d35-486af3782eff",
+          "x": 13.75853704049263,
+          "y": 67.23736604585528,
+          "width": 19.490203396155994,
+          "height": 10.253400956599094,
+          "link": null,
+          "file_id": "d9c5e0cb-6def-4e8e-9edc-24230d1de135",
+          "file": {
+            "id": "d9c5e0cb-6def-4e8e-9edc-24230d1de135",
+            "filename": "80ac0417eba537571798d27363f85844bfc094d96b782148aee5880918e464a0.mp4",
+            "url": "/uploads/80/ac/80ac0417eba537571798d27363f85844bfc094d96b782148aee5880918e464a0.mp4"
+          }
+        },
+        {
+          "id": "1cba3b8f-9bc5-4fe6-8467-de87c5cc8ed7",
+          "x": 38.98115320022392,
+          "y": 67.80964888994453,
+          "width": 15.222740561049946,
+          "height": 6.00896986293715,
+          "link": null,
+          "file_id": "d9c5e0cb-6def-4e8e-9edc-24230d1de135",
+          "file": {
+            "id": "d9c5e0cb-6def-4e8e-9edc-24230d1de135",
+            "filename": "80ac0417eba537571798d27363f85844bfc094d96b782148aee5880918e464a0.mp4",
+            "url": "/uploads/80/ac/80ac0417eba537571798d27363f85844bfc094d96b782148aee5880918e464a0.mp4"
+          }
+        }
+      ]
     }
   ],
-  "teacher": {
-    "id": "907bf3b8-d31a-4537-938e-6386766da97b",
-    "firstName": "Sarkorbek",
-    "lastName": "Abilkosimov",
-    "email": "abilkosimovsarkor@gmail.com",
-    "phoneNumber": null,
-    "providers": [
-      {
-        "provider": "email",
-        "identifier": "abilkosimovsarkor@gmail.com",
-        "verifiedAt": "2026-01-10T04:32:41.838235+00:00"
-      }
-    ],
-    "roles": [
-      "teacher",
-      "user"
-    ],
-    "language": "en",
-    "level_id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-    "permissions": [
-      "feed"
-    ],
-    "created_at": "2025-12-24T10:32:44.479Z",
-    "xp": "40",
-    "isDeleted": false,
-    "reasoningSessions": [],
-    "level": {
-      "id": "b7b8c9d0-e1f2-41d4-a716-446655440002",
-      "name": {
-        "en": "Pre-Intermediate",
-        "ru": "Допромежуточный",
-        "uz": "Oʻrta-oldi"
-      },
-      "description": {
-        "en": "Pre-Intermediate level for developing language skills with more complex grammar and vocabulary",
-        "ru": "Допромежуточный уровень для развития языковых навыков с более сложной грамматикой и лексикой",
-        "uz": "Oʻrta-oldi daraja - yanada murakkab grammatika va leksika bilan til koʻnikmalarini rivojlantirish uchun"
-      },
-      "isPublic": true,
-      "teacher_id": null,
-      "created_at": "2026-02-06T05:10:16.570Z",
-      "updated_at": "2026-02-06T05:10:16.570Z"
-    },
-    "balance": {
-      "id": "d57180d4-1a55-40e0-a1af-f682fa0b637d",
-      "amount": "0",
-      "user_id": "907bf3b8-d31a-4537-938e-6386766da97b",
-      "created_at": "2026-04-24T04:43:06.555Z"
-    },
-    "profilePicture": {
-      "id": "c571a76d-e602-4428-8790-e82778a80da1",
-      "filename": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-      "received_filename": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° 2026-04-10 Ð² 17.00.47.png",
-      "path": "37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-      "hash": "378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42",
-      "mimetype": "image/png",
-      "url": "/uploads/37/8c/378cb96d769dbe6ef5c43a7db25f9188f76e8903e62ca0ab2e6208bafe0b9c42.png",
-      "uploaded_by_id": null,
-      "created_at": "2026-04-16T13:48:20.295Z"
-    }
-  },
-  "texts": [
-    {
-      "id": "6cd93b8c-1e7c-480c-9da6-7b34742a2bf0",
-      "text": "asdasdsa",
-      "order_index": 0,
-      "practice_id": "21a0d5cb-3b85-4de6-ad04-2633e0fda801",
-      "created_at": "2026-05-18T11:02:54.954Z",
-      "updated_at": "2026-05-18T11:02:54.954Z"
-    }
-  ],
-  "monkeyTypeUrl": "https://students.ustadia.com/monkey-type/21a0d5cb-3b85-4de6-ad04-2633e0fda801"
+  "total": 6,
+  "page": 1,
+  "limit": 10,
+  "totalPages": 1,
+  "unit": {
+    "id": "c59b978a-bc81-465c-95b6-dfaf6f4ef9d2",
+    "title": "Introduction for Reading Practices"
+  }
 }

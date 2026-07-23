@@ -15,10 +15,10 @@ class PracticeListenTapStatusResponse {
 
   factory PracticeListenTapStatusResponse.fromJson(Map<String, dynamic> json) =>
       PracticeListenTapStatusResponse(
-        listenTapId: json['listenTapId']?.toString() ?? '',
+        listenTapId: (json['listenTapId'] ?? json['listen_tap_id'])?.toString() ?? '',
         status: json['status']?.toString() ?? '',
-        correctAnswers: _toInt(json['correctAnswers']),
-        wrongAnswers: _toInt(json['wrongAnswers']),
+        correctAnswers: _toInt(json['correctAnswers'] ?? json['correct_answers']),
+        wrongAnswers: _toInt(json['wrongAnswers'] ?? json['wrong_answers']),
         message: json['message']?.toString() ?? '',
       );
 }

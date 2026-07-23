@@ -11,6 +11,9 @@ class ReelPostView extends StatelessWidget {
   final ReelPostModel post;
   final bool isActive;
   final bool shouldPreload;
+  final Duration? initialPosition;
+  final ValueChanged<Duration>? onPositionChanged;
+  final ReelVideoControllerCache controllerCache;
   final String Function(String path) resolveUrl;
   final VoidCallback onLike;
   final VoidCallback onComments;
@@ -21,6 +24,9 @@ class ReelPostView extends StatelessWidget {
     required this.post,
     required this.isActive,
     this.shouldPreload = true,
+    this.initialPosition,
+    this.onPositionChanged,
+    required this.controllerCache,
     required this.resolveUrl,
     required this.onLike,
     required this.onComments,
@@ -33,11 +39,28 @@ class ReelPostView extends StatelessWidget {
     return value.toString();
   }
 
+  /// The reels service exposes an optimized streaming endpoint by appending
+  /// `/stream` to the uploaded file URL. Keep query parameters and fragments
+  /// intact when building that URL.
+  String streamUrl(String url) {
+    if (url.isEmpty) return url;
+    final uri = Uri.tryParse(url);
+    if (uri == null || uri.path.endsWith('/stream')) return url;
+    final path = uri.path.endsWith('/') ? uri.path.substring(0, uri.path.length - 1) : uri.path;
+    return uri.replace(path: '$path/stream').toString();
+  }
+
   Widget get mediaView {
     if (post.isVideo) {
+      final originalVideoUrl = resolveUrl(post.videoPath);
       return ReelVideoPlayer(
-          videoUrl: resolveUrl(post.videoPath),
+          videoUrl: streamUrl(originalVideoUrl),
+          fallbackVideoUrl: originalVideoUrl,
+          placeholderUrl: post.primaryImagePath.isEmpty ? null : resolveUrl(post.primaryImagePath),
           isActive: isActive,
+          initialPosition: initialPosition,
+          onPositionChanged: onPositionChanged,
+          controllerCache: controllerCache,
           shouldInitialize: shouldPreload);
     }
     return CachedImagePrimary(
@@ -125,12 +148,13 @@ class ReelPostView extends StatelessWidget {
           ])));
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-      onDoubleTap: onLike,
-      child: Stack(fit: StackFit.expand, children: [
-        mediaView,
-        IgnorePointer(child: gradientOverlay()),
-        info(context),
-        actions(context),
-      ]));
+  Widget build(BuildContext context) => RepaintBoundary(
+      child: GestureDetector(
+          onDoubleTap: onLike,
+          child: Stack(fit: StackFit.expand, children: [
+            mediaView,
+            IgnorePointer(child: gradientOverlay()),
+            info(context),
+            actions(context),
+          ])));
 }

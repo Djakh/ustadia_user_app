@@ -14,7 +14,8 @@ class ReelsRemoteDataSource {
       CacheOptions(policy: CachePolicy.noCache, store: MemCacheStore()).toOptions();
 
   Future<PaginationResult<ReelPostModel>> fetchPosts({int page = 1, int limit = 20}) async {
-    final response = await dio.get('/feed/posts', options: freshRequestOptions);
+    final response = await dio.get('/feed/posts',
+        queryParameters: {'page': page, 'limit': limit}, options: freshRequestOptions);
     if (response.data is List) {
       final posts = (response.data as List<dynamic>)
           .whereType<Map<String, dynamic>>()

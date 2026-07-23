@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors_scheme.dart';
 
 class AppTheme {
@@ -8,6 +9,11 @@ class AppTheme {
       colorScheme: AppColorScheme.light,
       scaffoldBackgroundColor: AppColorScheme.light.surface,
       brightness: Brightness.light,
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: AppColors.primary,
+        selectionColor: AppColors.greenE7.withValues(alpha: 0.9),
+        selectionHandleColor: AppColors.primary,
+      ),
     );
   }
 
@@ -17,6 +23,11 @@ class AppTheme {
       colorScheme: AppColorScheme.dark,
       scaffoldBackgroundColor: AppColorScheme.dark.surface,
       brightness: Brightness.dark,
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: AppColors.primary,
+        selectionColor: AppColors.greenE7.withValues(alpha: 0.35),
+        selectionHandleColor: AppColors.primary,
+      ),
     );
   }
 }

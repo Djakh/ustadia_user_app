@@ -666,26 +666,12 @@ class _GuidedTutorialOverlayContentState extends State<GuidedTutorialOverlayCont
             child: Transform.translate(offset: Offset(0, 10 * (1 - value)), child: child));
       });
 
-  Widget speechActions(BuildContext context, TutorialBubbleLayout layout) =>
-      controlEntrance(Row(children: [
-        Flexible(
-            child: _TutorialTapScale(
-                child: TextButton(
-                    onPressed: isTransitioning ? null : widget.onClose,
-                    style: TextButton.styleFrom(
-                        minimumSize: const Size(0, 30),
-                        padding: EdgeInsets.symmetric(horizontal: layout.isCompact ? 6 : 10),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                    child: Text('Skip'.tr(),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Style.small2w5(context))))),
-        SizedBox(width: layout.isCompact ? 4 : 8),
-        ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: layout.isCompact ? 82 : 96),
-            child: _TutorialTapScale(
-                child: compactPrimaryAction(context, isLastStep ? 'Done'.tr() : 'Next'.tr())))
-      ]));
+  Widget speechActions(BuildContext context, TutorialBubbleLayout layout) => controlEntrance(Align(
+      alignment: Alignment.centerRight,
+      child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: layout.isCompact ? 82 : 96),
+          child: _TutorialTapScale(
+              child: compactPrimaryAction(context, isLastStep ? 'Done'.tr() : 'Next'.tr())))));
 
   Widget speechBubble(BuildContext context, TutorialBubbleLayout layout) {
     final horizontalPadding = layout.isCompact ? 14.0 : 18.0;
@@ -853,21 +839,23 @@ class _GuidedTutorialOverlayContentState extends State<GuidedTutorialOverlayCont
     final layout = currentLayout;
     final idleDy = currentIdleDy;
 
-    return Material(
-        color: Colors.transparent,
-        child: Stack(children: [
-          Positioned.fill(
-              child: CustomPaint(painter: TutorialScrimPainter(targetRect: currentTargetRect))),
-          if (currentTargetRect != null) focusHighlight(currentTargetRect!),
-          if (layout != null) ...[
-            Positioned(
-                left: layout.bubbleOffset.dx,
-                top: layout.bubbleOffset.dy + idleDy,
-                width: layout.bubbleWidth,
-                child: animatedSpeechBlock(context, layout)),
-            animatedMascot(layout),
-          ]
-        ]));
+    return PopScope<void>(
+        canPop: false,
+        child: Material(
+            color: Colors.transparent,
+            child: Stack(children: [
+              Positioned.fill(
+                  child: CustomPaint(painter: TutorialScrimPainter(targetRect: currentTargetRect))),
+              if (currentTargetRect != null) focusHighlight(currentTargetRect!),
+              if (layout != null) ...[
+                Positioned(
+                    left: layout.bubbleOffset.dx,
+                    top: layout.bubbleOffset.dy + idleDy,
+                    width: layout.bubbleWidth,
+                    child: animatedSpeechBlock(context, layout)),
+                animatedMascot(layout),
+              ]
+            ])));
   }
 }
 

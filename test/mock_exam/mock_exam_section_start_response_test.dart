@@ -4,6 +4,26 @@ import 'package:ustadia_user_app/features/common/data/models/section_model/secti
 import 'package:ustadia_user_app/features/mock_exam/data/datasources/mock_exam_remote_data_source.dart';
 
 void main() {
+  test('mock exam requests use the injected Dio base URL', () async {
+    final dio = Dio(BaseOptions(baseUrl: 'https://backend.ustadia.findecor.io'));
+    final requestedUris = <Uri>[];
+    dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
+      requestedUris.add(options.uri);
+      handler.resolve(Response(requestOptions: options, data: const {'items': []}));
+    }));
+    final dataSource = MockExamRemoteDataSource(dio: dio);
+
+    await dataSource.fetchMockExams();
+    await dataSource.generateMockExamTempToken(mockExamId: 'mock-1');
+
+    expect(requestedUris.map((uri) => uri.origin),
+        everyElement('https://backend.ustadia.findecor.io'));
+    expect(requestedUris.map((uri) => uri.path), [
+      '/student/ielts-mocks',
+      '/student/ielts-mocks/mock-1/generate-temp-token',
+    ]);
+  });
+
   test('mock section start response keeps audio from data wrapper', () {
     final dataSource = MockExamRemoteDataSource(dio: Dio());
 

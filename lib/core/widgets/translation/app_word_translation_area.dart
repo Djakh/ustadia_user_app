@@ -15,12 +15,14 @@ class AppWordTranslationArea extends StatefulWidget {
 }
 
 class _AppWordTranslationAreaState extends State<AppWordTranslationArea> {
+  final GlobalKey<SelectionAreaState> selectionAreaKey = GlobalKey<SelectionAreaState>();
   final WordTranslationService translationService = WordTranslationService();
   OverlayEntry? translationOverlay;
   Offset tooltipPosition = Offset.zero;
   String tooltipWord = '';
   String tooltipText = '';
   String selectedText = '';
+  SelectableRegionState? activeSelectableRegion;
   bool isTooltipLoading = false;
   bool didSetInitialLanguage = false;
   int translationRequestId = 0;
@@ -90,6 +92,15 @@ class _AppWordTranslationAreaState extends State<AppWordTranslationArea> {
     translationOverlay = null;
   }
 
+  void dismissSelectionAndTranslation() {
+    removeTranslationOverlay();
+    selectedText = '';
+    final selectableRegion =
+        activeSelectableRegion ?? selectionAreaKey.currentState?.selectableRegion;
+    selectableRegion?.hideToolbar();
+    selectableRegion?.clearSelection();
+  }
+
   Widget translationTooltip(BuildContext context) {
     final media = MediaQuery.of(context);
     const maxWidth = 246.0;
@@ -101,7 +112,7 @@ class _AppWordTranslationAreaState extends State<AppWordTranslationArea> {
             color: Colors.transparent,
             child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                onTap: removeTranslationOverlay,
+                onTap: dismissSelectionAndTranslation,
                 child: Stack(children: [
                   Positioned(
                       left: left,
@@ -168,6 +179,7 @@ class _AppWordTranslationAreaState extends State<AppWordTranslationArea> {
                   style: Style.small2w5(context).copyWith(color: AppColors.white))));
 
   Widget selectionMenu(BuildContext context, SelectableRegionState state) {
+    activeSelectableRegion = state;
     final buttons = [...state.contextMenuButtonItems];
     final anchors = state.contextMenuAnchors;
     if (normalizedSelection(selectedText).isNotEmpty) {
@@ -190,11 +202,12 @@ class _AppWordTranslationAreaState extends State<AppWordTranslationArea> {
   }
 
   @override
-  Widget build(BuildContext context) => SelectionArea(
-      onSelectionChanged: (content) => selectedText = content?.plainText ?? '',
-      contextMenuBuilder: selectionMenu,
-      child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: removeTranslationOverlay,
+  Widget build(BuildContext context) => Listener(
+      behavior: HitTestBehavior.translucent,
+      onPointerDown: (_) => dismissSelectionAndTranslation(),
+      child: SelectionArea(
+          key: selectionAreaKey,
+          onSelectionChanged: (content) => selectedText = content?.plainText ?? '',
+          contextMenuBuilder: selectionMenu,
           child: widget.child));
 }

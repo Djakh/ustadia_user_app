@@ -7,7 +7,10 @@ import 'package:ustadia_user_app/features/learn/presentation/widgets/cards/learn
 
 class LearnWritingBottomSheet extends StatelessWidget {
   final Function(LearnWritingMethodType type) onTap;
-  const LearnWritingBottomSheet({super.key, required this.onTap});
+  final bool canUploadPaperWriting;
+
+  const LearnWritingBottomSheet(
+      {super.key, required this.onTap, this.canUploadPaperWriting = true});
 
   Container view(BuildContext context) => Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
@@ -17,12 +20,14 @@ class LearnWritingBottomSheet extends StatelessWidget {
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         Text('How do you want to write?'.tr(), style: Style.body2w7(context)),
         const SizedBox(height: 16),
-        LearnWritingMethodCard(
-            title: 'Upload paper writing'.tr(),
-            subtitle: 'Take a photo of your notebook'.tr(),
-            image: AppImages.learnWritingUploadMethod,
-            onTap: () => onTap(LearnWritingMethodType.upload)),
-        const SizedBox(height: 8),
+        if (canUploadPaperWriting) ...[
+          LearnWritingMethodCard(
+              title: 'Upload paper writing'.tr(),
+              subtitle: 'Take a photo of your notebook'.tr(),
+              image: AppImages.learnWritingUploadMethod,
+              onTap: () => onTap(LearnWritingMethodType.upload)),
+          const SizedBox(height: 8),
+        ],
         LearnWritingMethodCard(
             title: 'In-app writing'.tr(),
             subtitle: 'Type directly in the app'.tr(),

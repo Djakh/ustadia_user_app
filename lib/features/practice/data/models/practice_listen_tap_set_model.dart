@@ -18,10 +18,11 @@ class PracticeListenTapOptionModel {
   factory PracticeListenTapOptionModel.fromJson(Map<String, dynamic> json) =>
       PracticeListenTapOptionModel(
         id: json['id']?.toString() ?? '',
-        listenTapQuestionId: json['listenTapQuestionId']?.toString() ?? '',
-        word: json['word']?.toString() ?? '',
-        isCorrect: json['isCorrect'] == true,
-        order: _toInt(json['order']),
+        listenTapQuestionId:
+            (json['listenTapQuestionId'] ?? json['listen_tap_question_id'])?.toString() ?? '',
+        word: (json['word'] ?? json['text'])?.toString() ?? '',
+        isCorrect: _toBool(json['isCorrect'] ?? json['is_correct']),
+        order: _toInt(json['order'] ?? json['orderIndex'] ?? json['order_index']),
       );
 }
 
@@ -45,7 +46,7 @@ class PracticeListenTapQuestionModel {
   int get correctIndex => options.indexWhere((option) => option.isCorrect);
 
   factory PracticeListenTapQuestionModel.fromJson(Map<String, dynamic> json) {
-    final options = (json['options'] as List<dynamic>?)
+    final options = _listFromAny(json, const ['options', 'answers'])
             ?.whereType<Map<String, dynamic>>()
             .map(PracticeListenTapOptionModel.fromJson)
             .toList() ??
@@ -53,9 +54,9 @@ class PracticeListenTapQuestionModel {
     options.sort((a, b) => a.order.compareTo(b.order));
     return PracticeListenTapQuestionModel(
       id: json['id']?.toString() ?? '',
-      listenTapId: json['listenTapId']?.toString() ?? '',
-      audioId: json['audioId']?.toString() ?? '',
-      order: _toInt(json['order']),
+      listenTapId: (json['listenTapId'] ?? json['listen_tap_id'])?.toString() ?? '',
+      audioId: (json['audioId'] ?? json['audio_id'])?.toString() ?? '',
+      order: _toInt(json['order'] ?? json['orderIndex'] ?? json['order_index']),
       options: options,
       audio: LearnAudioFileModel.fromDynamic(json['audio']),
     );
@@ -86,7 +87,11 @@ class PracticeListenTapSetModel {
   });
 
   factory PracticeListenTapSetModel.fromJson(Map<String, dynamic> json) {
-    final questions = (json['questions'] as List<dynamic>?)
+    final questions = _listFromAny(json, const [
+          'questions',
+          'listenTapQuestions',
+          'listen_tap_questions',
+        ])
             ?.whereType<Map<String, dynamic>>()
             .map(PracticeListenTapQuestionModel.fromJson)
             .toList() ??
@@ -97,13 +102,28 @@ class PracticeListenTapSetModel {
       title: json['title']?.toString() ?? '',
       description: json['description']?.toString() ?? '',
       difficulty: json['difficulty']?.toString(),
-      isPublic: json['isPublic'] == true,
-      isPublished: json['isPublished'] == true,
-      totalQuestions: _toInt(json['totalQuestions']),
-      answeredQuestions: _toInt(json['answeredQuestions']),
+      isPublic: _toBool(json['isPublic'] ?? json['is_public']),
+      isPublished: _toBool(json['isPublished'] ?? json['is_published']),
+      totalQuestions:
+          _toInt(json['totalQuestions'] ?? json['total_questions'], fallback: questions.length),
+      answeredQuestions: _toInt(json['answeredQuestions'] ?? json['answered_questions']),
       questions: questions,
     );
   }
+}
+
+List<dynamic>? _listFromAny(Map<String, dynamic> json, List<String> keys) {
+  for (final key in keys) {
+    final value = json[key];
+    if (value is List<dynamic>) return value;
+  }
+  return null;
+}
+
+bool _toBool(dynamic value) {
+  if (value is bool) return value;
+  final text = value?.toString().toLowerCase();
+  return text == 'true' || text == '1';
 }
 
 int _toInt(dynamic value, {int fallback = 0}) {

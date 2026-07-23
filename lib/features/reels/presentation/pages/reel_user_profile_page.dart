@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
+import 'package:ustadia_user_app/core/compliance/report_reason_dialog.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/network/api_url_resolver.dart';
 import 'package:ustadia_user_app/core/widgets/cached_images/avatars/user_avatar.dart';
@@ -73,6 +74,20 @@ class _ReelUserProfilePageState extends State<ReelUserProfilePage> {
     profileBloc.add(ReelUserProfileRequested(userId: widget.userId));
   }
 
+  Future<void> reportProfile() async {
+    final reason = await showReportReasonDialog(context,
+        title: 'Report profile image',
+        reasons: const [
+          'Inappropriate image',
+          'Personal information',
+          'Harassment or impersonation',
+          'Other'
+        ]);
+    if (!mounted || reason == null) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Profile reporting is not available yet. Please contact support.'.tr())));
+  }
+
   Widget profileHeader(ReelUserProfileState state) {
     final user = state.user ?? widget.initialAuthor;
     final name = user?.fullName ?? 'Ustadia';
@@ -93,7 +108,11 @@ class _ReelUserProfilePageState extends State<ReelUserProfilePage> {
               const SizedBox(width: 5),
               Text('Posts'.tr(), style: Style.small3w4(context, color: TextColorRole.greyColor))
             ])
-          ]))
+          ])),
+          IconButton(
+              tooltip: 'Report profile image'.tr(),
+              onPressed: reportProfile,
+              icon: const Icon(Icons.flag_outlined))
         ]));
   }
 

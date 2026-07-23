@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
+import 'package:ustadia_user_app/core/compliance/report_reason_dialog.dart';
 import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
@@ -551,6 +552,22 @@ class VoiceAgentPageState extends State<VoiceAgentPage>
     }
   }
 
+  Future<void> reportAiResponse(AiChatMessageModel message) async {
+    final reason = await showReportReasonDialog(context,
+        title: 'Report AI response',
+        reasons: const [
+          'Inappropriate content',
+          'Incorrect or misleading response',
+          'Unsafe advice',
+          'Other'
+        ]);
+    if (!mounted || reason == null) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+            'AI response reporting is not available yet. Please contact support and include the response details.'
+                .tr())));
+  }
+
   Widget messagesPanel(AskAiState state) => AskAiMessagesPanel(
       messages: state.messages,
       scrollController: scrollController,
@@ -559,6 +576,7 @@ class VoiceAgentPageState extends State<VoiceAgentPage>
       showTypingIndicator: waitingForAssistantResponse,
       topPadding: messagesTopPadding,
       bottomPadding: activeMessagesBottomPadding,
+      onReport: reportAiResponse,
       errorMessage:
           state.messagesStatus.isError && state.messages.isEmpty ? state.errorMessage : null);
 
@@ -681,7 +699,7 @@ class VoiceAgentPageState extends State<VoiceAgentPage>
           child: Scaffold(
               backgroundColor: AppColors.secondary,
               appBar: AskAiPageAppBar(
-                  title: widget.topic.title,
+                  title: 'AI English Tutor'.tr(),
                   hasTimeLimit: hasTimeLimit,
                   timerText: timerValue(),
                   onBack: onAppBarBack),

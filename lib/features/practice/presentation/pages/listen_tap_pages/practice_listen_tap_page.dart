@@ -17,6 +17,7 @@ import 'package:ustadia_user_app/features/practice/data/models/practice_listen_t
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_status_bloc/practice_listen_tap_status_bloc.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_status_bloc/practice_listen_tap_status_event.dart';
 import 'package:ustadia_user_app/features/practice/presentation/bloc/practice_listen_tap_status_bloc/practice_listen_tap_status_state.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/practice_questions_overview.dart';
 import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
@@ -41,12 +42,15 @@ class PracticeListenTapPageState extends State<PracticeListenTapPage> {
   final GlobalKey submitKey = GlobalKey(debugLabel: 'listen_tap_submit');
 
   int listeningIndex = 0;
-  int correctCount = 0;
   final Set<int> countedIndices = {};
+  final Set<int> correctIndices = {};
+  final Map<int, int?> selectedIndices = {};
+  final Set<int> revealedIndices = {};
   int? selectedIndex;
   bool hasSubmitted = false;
   bool showCorrectAnswer = false;
   bool showResult = false;
+  bool showOverview = false;
 
   /// --- Getters ---
 
@@ -55,6 +59,15 @@ class PracticeListenTapPageState extends State<PracticeListenTapPage> {
   PracticeListenTapQuestionModel get current => questions[listeningIndex];
 
   double get progress => (listeningIndex + 1) / questions.length;
+
+  int get correctCount => correctIndices.length;
+
+  bool get allQuestionsCompleted =>
+      questions.isNotEmpty && countedIndices.length >= questions.length;
+
+  bool get isFirstQuestion => listeningIndex == 0;
+
+  bool get isLastQuestion => listeningIndex >= questions.length - 1;
 
   String getNumberInWords(int number) {
     switch (number) {
@@ -102,34 +115,89 @@ class PracticeListenTapPageState extends State<PracticeListenTapPage> {
 
   /// --- Methods ---
 
-  void onNext() {
-    if (statusBloc.state.status.isLoading) return;
-    if (!countedIndices.contains(listeningIndex)) {
-      countedIndices.add(listeningIndex);
-      if (selectedIndex == current.correctIndex) {
-        correctCount++;
-      }
+  void saveCurrentQuestionState() {
+    selectedIndices[listeningIndex] = selectedIndex;
+    if (showCorrectAnswer) {
+      revealedIndices.add(listeningIndex);
+    } else {
+      revealedIndices.remove(listeningIndex);
     }
-    if (listeningIndex == questions.length - 1) {
-      final wrongCount = countedIndices.length - correctCount;
-      statusBloc.add(PracticeListenTapStatusRequested(
-          listenTapId: widget.set.id,
-          status: 'completed',
-          correctAnswers: correctCount,
-          wrongAnswers: wrongCount < 0 ? 0 : wrongCount));
+  }
+
+  void syncQuestionState() {
+    selectedIndex = selectedIndices[listeningIndex];
+    hasSubmitted = countedIndices.contains(listeningIndex);
+    showCorrectAnswer = revealedIndices.contains(listeningIndex);
+  }
+
+  void submitCompleted() {
+    final wrongCount = countedIndices.length - correctIndices.length;
+    statusBloc.add(PracticeListenTapStatusRequested(
+        listenTapId: widget.set.id,
+        status: 'completed',
+        correctAnswers: correctIndices.length,
+        wrongAnswers: wrongCount < 0 ? 0 : wrongCount));
+  }
+
+  void finishOrReview() {
+    if (allQuestionsCompleted) {
+      submitCompleted();
       return;
     }
+    saveCurrentQuestionState();
+    setState(() => showOverview = true);
+  }
+
+  void goToQuestion(int index) {
+    if (statusBloc.state.status.isLoading) return;
+    if (index < 0 || index >= questions.length) return;
+    saveCurrentQuestionState();
     setState(() {
-      listeningIndex++;
-      selectedIndex = null;
-      hasSubmitted = false;
-      showCorrectAnswer = false;
+      showOverview = false;
+      listeningIndex = index;
+      syncQuestionState();
     });
+  }
+
+  void goPreviousQuestion() {
+    if (isFirstQuestion) return;
+    goToQuestion(listeningIndex - 1);
+  }
+
+  void goNextQuestion() {
+    if (statusBloc.state.status.isLoading) return;
+    if (isLastQuestion) {
+      finishOrReview();
+      return;
+    }
+    goToQuestion(listeningIndex + 1);
   }
 
   void submitCurrentAnswer() {
     if (selectedIndex == null || hasSubmitted) return;
-    setState(() => hasSubmitted = true);
+    setState(() {
+      hasSubmitted = true;
+      countedIndices.add(listeningIndex);
+      selectedIndices[listeningIndex] = selectedIndex;
+      if (selectedIndex == current.correctIndex) {
+        correctIndices.add(listeningIndex);
+      } else {
+        correctIndices.remove(listeningIndex);
+      }
+    });
+  }
+
+  void repeatQuestion() {
+    if (statusBloc.state.status.isLoading) return;
+    setState(() {
+      selectedIndex = null;
+      hasSubmitted = false;
+      showCorrectAnswer = false;
+      selectedIndices.remove(listeningIndex);
+      countedIndices.remove(listeningIndex);
+      correctIndices.remove(listeningIndex);
+      revealedIndices.remove(listeningIndex);
+    });
   }
 
   void selectOption(int index) {
@@ -256,7 +324,7 @@ class PracticeListenTapPageState extends State<PracticeListenTapPage> {
           : 'Choose an answer to continue.'.tr();
     }
     if (questionWasCorrect) {
-      return 'Tap continue to move to the next question.'.tr();
+      return 'You can go next, go back, or repeat this question.'.tr();
     }
     if (showCorrectAnswer) {
       return 'The correct answer is now marked for review.'.tr();
@@ -269,33 +337,61 @@ class PracticeListenTapPageState extends State<PracticeListenTapPage> {
 
   Widget showAnswerButton() => Button.border(
       onTap: () => setState(() => showCorrectAnswer = true),
-      height: 52,
+      height: 44,
       color: AppColors.white,
       borderColor: isResultState
           ? AppColors.white.withValues(alpha: 0.75)
           : AppColors.orange033.withValues(alpha: 0.35),
-      child: Icon(Icons.visibility_rounded,
-          size: 20, color: isResultState ? resultPanelColor : AppColors.orange033));
-
-  Widget submitButton(PracticeListenTapStatusState statusState) {
-    final label = hasSubmitted ? 'Continue' : 'Submit';
-    return KeyedSubtree(
-        key: submitKey,
-        child: Button.primary(
-            onTap: hasSubmitted ? onNext : submitCurrentAnswer,
-            text: label.tr(),
-            color: isResultState ? AppColors.white : null,
-            textColor: isResultState ? resultPanelColor : null,
-            isLoading: statusState.status.isLoading,
-            isAvialable: hasSubmitted || selectedIndex != null));
-  }
+      textColor: isResultState ? resultPanelColor : AppColors.orange033,
+      text: 'Show answer'.tr());
 
   Widget actionButtons(PracticeListenTapStatusState statusState) {
-    if (!canRevealCorrectAnswer) return submitButton(statusState);
-    return Row(children: [
-      SizedBox(width: 84, child: showAnswerButton()),
-      const SizedBox(width: 12),
-      Expanded(child: submitButton(statusState))
+    final nextLabel = hasSubmitted
+        ? isLastQuestion
+            ? allQuestionsCompleted
+                ? 'Finish'
+                : 'Review'
+            : 'Next'
+        : 'Next';
+    return Column(children: [
+      if (hasSubmitted) ...[
+        Button.border(
+            onTap: repeatQuestion,
+            text: 'Repeat'.tr(),
+            height: 44,
+            color: isResultState ? AppColors.white : null,
+            textColor: isResultState ? resultPanelColor : null,
+            borderColor: isResultState ? AppColors.white.withValues(alpha: 0.75) : null,
+            isAvialable: !statusState.status.isLoading),
+        const SizedBox(height: 8),
+      ],
+      if (canRevealCorrectAnswer) ...[
+        showAnswerButton(),
+        const SizedBox(height: 8),
+      ],
+      Row(children: [
+        Expanded(
+            child: Button.border(
+                onTap: goPreviousQuestion,
+                text: 'Back'.tr(),
+                height: 44,
+                color: isResultState ? AppColors.white : null,
+                textColor: isResultState ? resultPanelColor : null,
+                borderColor: isResultState ? AppColors.white.withValues(alpha: 0.75) : null,
+                isAvialable: !isFirstQuestion && !statusState.status.isLoading)),
+        const SizedBox(width: 10),
+        Expanded(
+            child: KeyedSubtree(
+                key: submitKey,
+                child: Button.primary(
+                    onTap: hasSubmitted ? goNextQuestion : submitCurrentAnswer,
+                    text: hasSubmitted ? nextLabel.tr() : 'Submit'.tr(),
+                    height: 44,
+                    color: isResultState ? AppColors.white : null,
+                    textColor: isResultState ? resultPanelColor : null,
+                    isLoading: statusState.status.isLoading,
+                    isAvialable: hasSubmitted || selectedIndex != null))),
+      ])
     ]);
   }
 
@@ -346,7 +442,12 @@ class PracticeListenTapPageState extends State<PracticeListenTapPage> {
   Widget get quizView => BlocBuilder<PracticeListenTapStatusBloc, PracticeListenTapStatusState>(
       bloc: statusBloc,
       builder: (context, statusState) {
-        final panelHeight = 210.0 + MediaQuery.of(context).padding.bottom;
+        final panelHeight = (hasSubmitted
+                ? canRevealCorrectAnswer
+                    ? 300.0
+                    : 248.0
+                : 210.0) +
+            MediaQuery.of(context).padding.bottom;
         return Stack(children: [
           Positioned.fill(
               child: ListView(
@@ -356,7 +457,7 @@ class PracticeListenTapPageState extends State<PracticeListenTapPage> {
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Column(children: [
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 34),
                       KeyedSubtree(
                           key: progressKey,
                           child: Column(
@@ -395,20 +496,31 @@ class PracticeListenTapPageState extends State<PracticeListenTapPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.cs.surface,
-      body: GuidedTutorialPage(
-          pageId: '${TutorialPageIds.practiceSession}.listen_tap',
-          steps: TutorialPresets.listenTapPractice(
-              progressKey: progressKey,
-              audioKey: audioKey,
-              optionsKey: optionsKey,
-              bottomPanelKey: bottomPanelKey,
-              submitKey: submitKey),
-          child: PrimaryBackground(
-              title: widget.set.title,
-              padding: EdgeInsets.zero,
-              margin: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-              applyBottomSafeArea: false,
-              isScrollable: false,
-              alwaysScrollable: false,
-              child: view)));
+      body: questions.isEmpty
+          ? PrimaryBackground(
+              title: widget.set.title, child: Center(child: Text('No questions found'.tr())))
+          : showOverview
+              ? PracticeQuestionsOverview(
+                  title: widget.set.title,
+                  total: questions.length,
+                  completedIndices: countedIndices,
+                  onQuestionTap: goToQuestion,
+                  onContinueIncomplete: () => setState(() => showOverview = false),
+                  onShowResult: submitCompleted)
+              : GuidedTutorialPage(
+                  pageId: '${TutorialPageIds.practiceSession}.listen_tap',
+                  steps: TutorialPresets.listenTapPractice(
+                      progressKey: progressKey,
+                      audioKey: audioKey,
+                      optionsKey: optionsKey,
+                      bottomPanelKey: bottomPanelKey,
+                      submitKey: submitKey),
+                  child: PrimaryBackground(
+                      title: widget.set.title,
+                      padding: EdgeInsets.zero,
+                      margin: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                      applyBottomSafeArea: false,
+                      isScrollable: false,
+                      alwaysScrollable: false,
+                      child: view)));
 }

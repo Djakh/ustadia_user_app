@@ -32,7 +32,7 @@ class LearnFlashcardSetModel {
         notRevealedCount = 0;
 
   factory LearnFlashcardSetModel.fromJson(Map<String, dynamic> json) {
-    final items = (json['flashcards'] as List<dynamic>?)
+    final items = ((json['flashcards'] ?? json['flash_cards']) as List<dynamic>?)
             ?.whereType<Map<String, dynamic>>()
             .map(LearnFlashcardModel.fromJson)
             .toList() ??
@@ -44,9 +44,9 @@ class LearnFlashcardSetModel {
       description: json['description']?.toString() ?? '',
       flashcards: items,
       difficulty: json['difficulty']?.toString(),
-      totalFlashcards: _toIntOrNull(json['totalFlashcards']),
-      revealedCount: _toIntOrNull(json['revealedCount']),
-      notRevealedCount: _toIntOrNull(json['notRevealedCount']),
+      totalFlashcards: _toIntOrNull(json['totalFlashcards'] ?? json['total_flashcards']),
+      revealedCount: _toIntOrNull(json['revealedCount'] ?? json['revealed_count']),
+      notRevealedCount: _toIntOrNull(json['notRevealedCount'] ?? json['not_revealed_count']),
     );
   }
 

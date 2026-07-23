@@ -121,7 +121,7 @@ class _TranslatableSectionContentState extends State<TranslatableSectionContent>
                       top: top,
                       width: maxWidth,
                       child: GestureDetector(
-                          onTap: hideTranslation,
+                          onTap: () {},
                           child: DecoratedBox(
                               decoration: BoxDecoration(
                                   color: AppColors.gray900,
