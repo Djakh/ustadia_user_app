@@ -29,7 +29,7 @@ class UstadiaUserApp extends StatelessWidget {
               BlocProvider(create: (_) => sl<TeacherBloc>()..add(const TeachersRequested())),
             ],
             child: MaterialApp.router(
-                title: 'Ustadia User'.tr(),
+                title: 'Ustadia User',
                 theme: AppTheme.light(),
                 darkTheme: AppTheme.dark(),
                 themeMode: ThemeMode.light,

@@ -62,6 +62,7 @@ class AppImages {
   static const arrowLeft = 'assets/icons/arrow_left.png';
 
   /// --- SVG ---
+  static const learnArticle = 'assets/svg/learn_article.svg';
   static const leaderboardFirstPlace = 'assets/svg/leaderboard_first_place.svg';
   static const leaderboardSecondPlace = 'assets/svg/leaderboard_second_place.svg';
   static const leaderboardThirdPlace = 'assets/svg/leaderboard_third_place.svg';

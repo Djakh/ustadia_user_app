@@ -24,6 +24,7 @@ import 'package:ustadia_user_app/features/common/presentation/pages/sections_typ
 import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/reading_section/reading_section_page.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/speaking_section/speaking_section_page.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/writing_section/writing_section_page.dart';
+import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/article_section/article_section_page.dart';
 import 'package:ustadia_user_app/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:ustadia_user_app/features/home/presentation/home_page.dart';
 import 'package:ustadia_user_app/features/intro_survey/presentation/pages/intro_survey_page.dart';
@@ -117,6 +118,8 @@ const learnGrammarRoute = '$learnUnitsRoute/$learnGrammarPath';
 
 const learnWritingPath = 'writing';
 const learnWritingRoute = '$learnUnitsRoute/$learnWritingPath';
+const learnArticlePath = 'article';
+const learnArticleRoute = '$learnUnitsRoute/$learnArticlePath';
 
 const flashcardSprintPath = 'flashcard-sprint';
 const mockExamPath = 'mock-exam';
@@ -216,6 +219,7 @@ SectionModel _placeholderSectionModel(SectionType type) => SectionModel(
       SectionType.grammar => 'Grammar'.tr(),
       SectionType.writing => 'Writing'.tr(),
       SectionType.vocabulary => 'Vocabulary'.tr(),
+      SectionType.article => 'Article'.tr(),
     },
     content: type == SectionType.reading ? 'No data found'.tr() : '',
     orderIndex: 0,
@@ -492,6 +496,11 @@ final appRouter = GoRouter(
                             parentNavigatorKey: _rootKey,
                             builder: (context, state) => WritingSectionPage(
                                 sectionModel: _resolveSectionModel(state, SectionType.writing))),
+                        GoRoute(
+                            path: learnArticlePath,
+                            parentNavigatorKey: _rootKey,
+                            builder: (context, state) => ArticleSectionPage(
+                                sectionModel: _resolveSectionModel(state, SectionType.article))),
                       ]),
                 ]),
           ],

@@ -16,10 +16,13 @@ class PracticeSentenceBuilderWordModel {
   factory PracticeSentenceBuilderWordModel.fromJson(Map<String, dynamic> json) =>
       PracticeSentenceBuilderWordModel(
         id: json['id']?.toString() ?? '',
-        sentenceBuilderQuestionId: json['sentenceBuilderQuestionId']?.toString() ?? '',
+        sentenceBuilderQuestionId:
+            (json['sentenceBuilderQuestionId'] ?? json['sentence_builder_question_id'])
+                    ?.toString() ??
+                '',
         word: json['word']?.toString() ?? '',
-        correctPosition: _toInt(json['correctPosition']),
-        order: _toInt(json['order']),
+        correctPosition: _toInt(json['correctPosition'] ?? json['correct_position']),
+        order: _toInt(json['order'] ?? json['orderIndex'] ?? json['order_index']),
       );
 }
 
@@ -48,7 +51,11 @@ class PracticeSentenceBuilderQuestionModel {
   }
 
   factory PracticeSentenceBuilderQuestionModel.fromJson(Map<String, dynamic> json) {
-    final words = (json['words'] as List<dynamic>?)
+    final words = _listFromAny(json, const [
+          'words',
+          'sentenceBuilderWords',
+          'sentence_builder_words',
+        ])
             ?.whereType<Map<String, dynamic>>()
             .map(PracticeSentenceBuilderWordModel.fromJson)
             .toList() ??
@@ -56,11 +63,12 @@ class PracticeSentenceBuilderQuestionModel {
     words.sort((a, b) => a.order.compareTo(b.order));
     return PracticeSentenceBuilderQuestionModel(
       id: json['id']?.toString() ?? '',
-      sentenceBuilderId: json['sentenceBuilderId']?.toString() ?? '',
-      audioId: json['audioId']?.toString(),
+      sentenceBuilderId:
+          (json['sentenceBuilderId'] ?? json['sentence_builder_id'])?.toString() ?? '',
+      audioId: (json['audioId'] ?? json['audio_id'])?.toString(),
       hint: json['hint']?.toString(),
       translation: json['translation']?.toString(),
-      order: _toInt(json['order']),
+      order: _toInt(json['order'] ?? json['orderIndex'] ?? json['order_index']),
       words: words,
     );
   }
@@ -92,7 +100,11 @@ class PracticeSentenceBuilderSetModel {
   });
 
   factory PracticeSentenceBuilderSetModel.fromJson(Map<String, dynamic> json) {
-    final questions = (json['questions'] as List<dynamic>?)
+    final questions = _listFromAny(json, const [
+          'questions',
+          'sentenceBuilderQuestions',
+          'sentence_builder_questions',
+        ])
             ?.whereType<Map<String, dynamic>>()
             .map(PracticeSentenceBuilderQuestionModel.fromJson)
             .toList() ??
@@ -103,14 +115,29 @@ class PracticeSentenceBuilderSetModel {
       title: json['title']?.toString() ?? '',
       description: json['description']?.toString() ?? '',
       difficulty: json['difficulty']?.toString(),
-      isPublic: json['isPublic'] == true,
-      isPublished: json['isPublished'] == true,
+      isPublic: _toBool(json['isPublic'] ?? json['is_public']),
+      isPublished: _toBool(json['isPublished'] ?? json['is_published']),
       status: json['status']?.toString() ?? '',
-      totalQuestions: _toInt(json['totalQuestions']),
-      answeredQuestions: _toInt(json['answeredQuestions']),
+      totalQuestions:
+          _toInt(json['totalQuestions'] ?? json['total_questions'], fallback: questions.length),
+      answeredQuestions: _toInt(json['answeredQuestions'] ?? json['answered_questions']),
       questions: questions,
     );
   }
+}
+
+List<dynamic>? _listFromAny(Map<String, dynamic> json, List<String> keys) {
+  for (final key in keys) {
+    final value = json[key];
+    if (value is List<dynamic>) return value;
+  }
+  return null;
+}
+
+bool _toBool(dynamic value) {
+  if (value is bool) return value;
+  final text = value?.toString().toLowerCase();
+  return text == 'true' || text == '1';
 }
 
 int _toInt(dynamic value, {int fallback = 0}) {

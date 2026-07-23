@@ -5,8 +5,10 @@ import 'package:ustadia_user_app/features/ask_ai/presentation/widgets/ai_chat_me
 class AskAiAnimatedMessageItem extends StatefulWidget {
   final AiChatMessageModel message;
   final bool isMe;
+  final VoidCallback? onReport;
 
-  const AskAiAnimatedMessageItem({super.key, required this.message, required this.isMe});
+  const AskAiAnimatedMessageItem(
+      {super.key, required this.message, required this.isMe, this.onReport});
 
   @override
   State<AskAiAnimatedMessageItem> createState() => AskAiAnimatedMessageItemState();
@@ -61,5 +63,6 @@ class AskAiAnimatedMessageItemState extends State<AskAiAnimatedMessageItem>
                       '${widget.message.id}:${widget.message.content.length}:${widget.message.isFinished}'),
                   message: widget.message,
                   isMe: widget.isMe,
-                  useDarkTheme: true))));
+                  useDarkTheme: true,
+                  onReport: widget.onReport))));
 }

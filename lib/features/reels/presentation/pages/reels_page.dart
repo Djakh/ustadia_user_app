@@ -17,6 +17,7 @@ import 'package:ustadia_user_app/features/reels/presentation/bloc/reels_bloc/ree
 import 'package:ustadia_user_app/features/reels/presentation/bloc/reels_bloc/reels_state.dart';
 import 'package:ustadia_user_app/features/reels/presentation/widgets/reel_comments_sheet.dart';
 import 'package:ustadia_user_app/features/reels/presentation/widgets/reel_post_view.dart';
+import 'package:ustadia_user_app/features/reels/presentation/widgets/reel_video_player.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 class ReelsPageParams {
@@ -45,6 +46,8 @@ class _ReelsPageState extends State<ReelsPage> with WidgetsBindingObserver {
   late final PageController pageController;
   int activeIndex = 0;
   bool playbackAllowed = true;
+  final Map<String, Duration> playbackPositions = <String, Duration>{};
+  final ReelVideoControllerCache videoControllerCache = ReelVideoControllerCache(maxControllers: 8);
 
   @override
   void initState() {
@@ -63,6 +66,7 @@ class _ReelsPageState extends State<ReelsPage> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     pageController.dispose();
+    videoControllerCache.clear();
     reelsBloc.close();
     super.dispose();
   }
@@ -78,6 +82,8 @@ class _ReelsPageState extends State<ReelsPage> with WidgetsBindingObserver {
       resolveApiAssetUrl(path, baseUrl: sl<AuthRemoteDataSource>().dio.options.baseUrl);
 
   Future<void> reloadReels() async {
+    playbackPositions.clear();
+    videoControllerCache.clear();
     setState(() {
       activeIndex = 0;
       playbackAllowed = false;
@@ -91,7 +97,9 @@ class _ReelsPageState extends State<ReelsPage> with WidgetsBindingObserver {
 
   void onPageChanged(int index, List<ReelPostModel> posts, ReelsState state) {
     setState(() => activeIndex = index);
-    if (state.pagination.hasNext && index >= posts.length - 3) {
+    // Request the next page before the user reaches the end so the next swipe
+    // does not wait on the network.
+    if (state.pagination.hasNext && index >= posts.length - 4) {
       reelsBloc.add(const ReelsLoadMoreRequested());
     }
   }
@@ -159,6 +167,9 @@ class _ReelsPageState extends State<ReelsPage> with WidgetsBindingObserver {
           onRefresh: reloadReels,
           child: PageView.builder(
               controller: pageController,
+              // Keep the adjacent page alive so its streaming controller can
+              // warm up before the swipe reaches it.
+              allowImplicitScrolling: true,
               scrollDirection: Axis.vertical,
               itemCount: posts.length + (state.isLoadingMore ? 1 : 0),
               onPageChanged: (index) => onPageChanged(index, posts, state),
@@ -168,9 +179,15 @@ class _ReelsPageState extends State<ReelsPage> with WidgetsBindingObserver {
                 }
                 final post = posts[index];
                 return ReelPostView(
+                    key: ValueKey(post.id),
                     post: post,
                     isActive: playbackAllowed && index == activeIndex,
-                    shouldPreload: (index - activeIndex).abs() <= 1,
+                    shouldPreload: (index - activeIndex).abs() <= 2,
+                    initialPosition: playbackPositions[post.id],
+                    onPositionChanged: (position) {
+                      playbackPositions[post.id] = position;
+                    },
+                    controllerCache: videoControllerCache,
                     resolveUrl: resolveMediaUrl,
                     onLike: () => reelsBloc.add(ReelLikeToggled(post: post)),
                     onComments: () => showComments(post),

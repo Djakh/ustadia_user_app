@@ -77,6 +77,9 @@ class LearnSectionsPageState extends State<LearnSectionsPage> {
       case SectionType.writing:
         navigation = context.push(learnWritingRoute, extra: sectionModel);
         break;
+      case SectionType.article:
+        navigation = context.push(learnArticleRoute, extra: sectionModel);
+        break;
     }
     final result = await navigation;
     if (!context.mounted) return;

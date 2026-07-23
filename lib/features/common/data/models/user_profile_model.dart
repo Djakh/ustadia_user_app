@@ -70,18 +70,24 @@ class UserLevelModel {
 
   String nameForLanguage(String languageCode) {
     final normalized = languageCode.toLowerCase();
-    if (normalized.startsWith('ru')) return name['ru']?.trim().isNotEmpty == true ? name['ru']! : fallbackName;
-    if (normalized.startsWith('uz')) return name['uz']?.trim().isNotEmpty == true ? name['uz']! : fallbackName;
+    if (normalized.startsWith('ru'))
+      return name['ru']?.trim().isNotEmpty == true ? name['ru']! : fallbackName;
+    if (normalized.startsWith('uz'))
+      return name['uz']?.trim().isNotEmpty == true ? name['uz']! : fallbackName;
     return name['en']?.trim().isNotEmpty == true ? name['en']! : fallbackName;
   }
 
   String descriptionForLanguage(String languageCode) {
     final normalized = languageCode.toLowerCase();
     if (normalized.startsWith('ru')) {
-      return description['ru']?.trim().isNotEmpty == true ? description['ru']! : fallbackDescription;
+      return description['ru']?.trim().isNotEmpty == true
+          ? description['ru']!
+          : fallbackDescription;
     }
     if (normalized.startsWith('uz')) {
-      return description['uz']?.trim().isNotEmpty == true ? description['uz']! : fallbackDescription;
+      return description['uz']?.trim().isNotEmpty == true
+          ? description['uz']!
+          : fallbackDescription;
     }
     return description['en']?.trim().isNotEmpty == true ? description['en']! : fallbackDescription;
   }
@@ -103,6 +109,32 @@ class UserLevelModel {
   }
 }
 
+/// Server-controlled permissions for features that can expose user content.
+/// A null value means the backend did not provide the capability yet; the app
+/// preserves the existing product behavior until the server contract is ready.
+class SocialPermissionsModel {
+  final bool? canSubmitIeltsWriting;
+  final bool? canUploadPublicAvatar;
+
+  const SocialPermissionsModel({this.canSubmitIeltsWriting, this.canUploadPublicAvatar});
+
+  factory SocialPermissionsModel.fromJson(Map<String, dynamic> json) => SocialPermissionsModel(
+      canSubmitIeltsWriting:
+          _nullableBool(json['can_submit_ielts_writing'] ?? json['canSubmitIeltsWriting']),
+      canUploadPublicAvatar:
+          _nullableBool(json['can_upload_public_avatar'] ?? json['canUploadPublicAvatar']));
+}
+
+bool? _nullableBool(dynamic value) {
+  if (value == null) return null;
+  if (value is bool) return value;
+  if (value is num) return value != 0;
+  final normalized = value.toString().trim().toLowerCase();
+  if (normalized == 'true' || normalized == '1') return true;
+  if (normalized == 'false' || normalized == '0') return false;
+  return null;
+}
+
 class UserProfileBreakdownModel {
   final int practiceCompleted;
   final int assignmentCompleted;
@@ -113,10 +145,11 @@ class UserProfileBreakdownModel {
       required this.assignmentCompleted,
       required this.lessonCompleted});
 
-  factory UserProfileBreakdownModel.fromJson(Map<String, dynamic> json) => UserProfileBreakdownModel(
-      practiceCompleted: (json['practiceCompleted'] as num?)?.toInt() ?? 0,
-      assignmentCompleted: (json['assignmentCompleted'] as num?)?.toInt() ?? 0,
-      lessonCompleted: (json['lessonCompleted'] as num?)?.toInt() ?? 0);
+  factory UserProfileBreakdownModel.fromJson(Map<String, dynamic> json) =>
+      UserProfileBreakdownModel(
+          practiceCompleted: (json['practiceCompleted'] as num?)?.toInt() ?? 0,
+          assignmentCompleted: (json['assignmentCompleted'] as num?)?.toInt() ?? 0,
+          lessonCompleted: (json['lessonCompleted'] as num?)?.toInt() ?? 0);
 }
 
 class UserProfileModel {
@@ -144,6 +177,7 @@ class UserProfileModel {
   final int? myWeeklyRank;
   final int? myMonthlyRank;
   final UserProfileBreakdownModel? breakdown;
+  final SocialPermissionsModel? socialPermissions;
 
   const UserProfileModel(
       {required this.id,
@@ -169,7 +203,8 @@ class UserProfileModel {
       required this.totalVocabulary,
       required this.myWeeklyRank,
       required this.myMonthlyRank,
-      required this.breakdown});
+      required this.breakdown,
+      this.socialPermissions});
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) {
     final profilePictureJson = json['profilePicture'];
@@ -179,6 +214,7 @@ class UserProfileModel {
         ? profilePictureJson['url']?.toString()
         : profilePictureJson?.toString();
 
+    final permissionsValue = json['social_permissions'] ?? json['socialPermissions'];
     return UserProfileModel(
         id: json['id']?.toString() ?? '',
         firstName: json['firstName']?.toString() ?? '',
@@ -216,6 +252,9 @@ class UserProfileModel {
         myMonthlyRank: (json['myMonthlyRank'] as num?)?.toInt(),
         breakdown: json['breakdown'] is Map<String, dynamic>
             ? UserProfileBreakdownModel.fromJson(json['breakdown'] as Map<String, dynamic>)
+            : null,
+        socialPermissions: permissionsValue is Map
+            ? SocialPermissionsModel.fromJson(Map<String, dynamic>.from(permissionsValue))
             : null);
   }
 }

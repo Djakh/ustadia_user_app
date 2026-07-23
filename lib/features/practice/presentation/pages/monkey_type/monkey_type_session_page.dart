@@ -10,7 +10,6 @@ import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
-import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/content_checkers/primary_content_checker.dart';
 import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 import 'package:ustadia_user_app/features/practice/data/models/monkey_type_model.dart';
@@ -32,9 +31,8 @@ class MonkeyTypeSessionPage extends StatefulWidget {
 class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
   final MonkeyTypeSessionBloc sessionBloc = sl<MonkeyTypeSessionBloc>();
   final TextEditingController controller = TextEditingController();
-  final ScrollController pageScrollController = ScrollController();
+  final FocusNode typingFocusNode = FocusNode(debugLabel: 'monkey_type_typing_focus');
   final ScrollController targetScrollController = ScrollController();
-  final ScrollController inputScrollController = ScrollController();
   final Stopwatch stopwatch = Stopwatch();
   final GlobalKey progressKey = GlobalKey(debugLabel: 'monkey_type_progress');
   final GlobalKey statsKey = GlobalKey(debugLabel: 'monkey_type_stats');
@@ -47,12 +45,16 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
   int elapsedSeconds = 0;
   bool hasSubmitted = false;
   String? positionedTextId;
+  bool isClampingControllerText = false;
+  double typingTextWidth = 0;
+  double typingViewportHeight = 0;
 
   @override
   void initState() {
     super.initState();
     sessionBloc.add(MonkeyTypeTextsRequested(practiceId: widget.practice.id));
     controller.addListener(onTypingChanged);
+    typingFocusNode.addListener(onTypingFocusChanged);
   }
 
   @override
@@ -62,21 +64,43 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
     controller
       ..removeListener(onTypingChanged)
       ..dispose();
-    pageScrollController.dispose();
+    typingFocusNode.removeListener(onTypingFocusChanged);
+    typingFocusNode.dispose();
     targetScrollController.dispose();
-    inputScrollController.dispose();
     sessionBloc.close();
     super.dispose();
   }
 
+  String normalizePrompt(String value) =>
+      value.replaceAll(RegExp(r'[–—]'), '-').replaceAll(RegExp(r'\s+'), ' ').trim();
+
+  List<String> charactersOf(String value) => value.characters.toList(growable: false);
+
+  /// Normalizes only input variants produced by mobile keyboards.  The text is
+  /// still displayed exactly as supplied by the practice, but curly quotes,
+  /// long dashes, case and non-breaking spaces are not treated as mistakes.
+  String comparisonCharacter(String value) => value
+      .replaceAll(RegExp(r'[\u00A0\u202F\t\n\r]'), ' ')
+      .replaceAll(RegExp(r'[‘’‚‛]'), "'")
+      .replaceAll(RegExp(r'[“”„‟]'), '"')
+      .replaceAll(RegExp(r'[‐‑‒–—−]'), '-')
+      .toLowerCase();
+
+  bool charactersMatch(String typedCharacter, String targetCharacter) =>
+      comparisonCharacter(typedCharacter) == comparisonCharacter(targetCharacter);
+
   String targetText(List<MonkeyTypeTextModel> texts) =>
-      texts.isEmpty ? '' : texts[activeTextIndex.clamp(0, texts.length - 1)].text;
+      texts.isEmpty ? '' : normalizePrompt(texts[activeTextIndex.clamp(0, texts.length - 1)].text);
 
   int correctChars(String typed, String target) {
-    final count = typed.length < target.length ? typed.length : target.length;
+    final typedCharacters = charactersOf(typed);
+    final targetCharacters = charactersOf(target);
+    final count = typedCharacters.length < targetCharacters.length
+        ? typedCharacters.length
+        : targetCharacters.length;
     var correct = 0;
     for (var i = 0; i < count; i++) {
-      if (typed[i] == target[i]) correct++;
+      if (charactersMatch(typedCharacters[i], targetCharacters[i])) correct++;
     }
     return correct;
   }
@@ -85,7 +109,7 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
 
   double wpm(String typed) => typed.trim().isEmpty
       ? 0
-      : ((typed.length / 5) / (effectiveSeconds / 60)).clamp(0, 999).toDouble();
+      : ((charactersOf(typed).length / 5) / (effectiveSeconds / 60)).clamp(0, 999).toDouble();
 
   double accuracy(String typed, String target) {
     if (typed.isEmpty) return 0;
@@ -93,7 +117,7 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
   }
 
   bool isComplete(String typed, String target) =>
-      typed.length >= target.length && target.isNotEmpty;
+      charactersOf(typed).length >= charactersOf(target).length && target.isNotEmpty;
 
   void startTimer() {
     if (stopwatch.isRunning) return;
@@ -103,12 +127,33 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
   }
 
   void onTypingChanged() {
+    if (isClampingControllerText) return;
+    final target = targetText(sessionBloc.state.texts);
+    final typedCharacters = charactersOf(controller.text);
+    final targetCharacters = charactersOf(target);
+    if (target.isNotEmpty && typedCharacters.length > targetCharacters.length) {
+      final shortenedText = typedCharacters.take(targetCharacters.length).join();
+      isClampingControllerText = true;
+      controller.value = TextEditingValue(
+          text: shortenedText, selection: TextSelection.collapsed(offset: shortenedText.length));
+      isClampingControllerText = false;
+    }
     if (controller.text.isNotEmpty) startTimer();
+    scrollTypingSurfaceToCursor(controller.text, target);
+    if (isComplete(controller.text, target) && !hasSubmitted) {
+      submitAnswer(sessionBloc.state.texts);
+      return;
+    }
     setState(() {});
+  }
+
+  void onTypingFocusChanged() {
+    if (mounted) setState(() {});
   }
 
   void resetCurrentText() {
     controller.clear();
+    typingFocusNode.requestFocus();
     resetTypingPosition();
     stopwatch
       ..reset()
@@ -143,7 +188,34 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       if (targetScrollController.hasClients) targetScrollController.jumpTo(0);
-      if (inputScrollController.hasClients) inputScrollController.jumpTo(0);
+    });
+  }
+
+  void scrollTypingSurfaceToCursor(String typed, String target) {
+    if (target.isEmpty) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !targetScrollController.hasClients) return;
+      final maxScroll = targetScrollController.position.maxScrollExtent;
+      if (maxScroll <= 0) return;
+      final textWidth = typingTextWidth;
+      final viewportHeight = typingViewportHeight;
+      if (textWidth <= 0 || viewportHeight <= 0) return;
+      final painter = TextPainter(
+          text: TextSpan(text: target, style: typingTextStyle(context)),
+          textDirection: Directionality.of(context),
+          maxLines: null)
+        ..layout(maxWidth: textWidth);
+      final targetCharacters = charactersOf(target);
+      final typedCount = charactersOf(typed).length.clamp(0, targetCharacters.length).toInt();
+      final targetTextOffset = targetCharacters.take(typedCount).join().length;
+      final cursorOffset =
+          painter.getOffsetForCaret(TextPosition(offset: targetTextOffset), Rect.zero);
+      final desiredOffset = (cursorOffset.dy - viewportHeight * 0.42).clamp(0.0, maxScroll);
+      targetScrollController.animateTo(
+        desiredOffset,
+        duration: const Duration(milliseconds: 140),
+        curve: Curves.easeOut,
+      );
     });
   }
 
@@ -154,17 +226,8 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       resetTypingPosition();
-      if (!pageScrollController.hasClients) return;
       positionedTextId = text.id;
-      pageScrollController.jumpTo(0);
-      final context = inputKey.currentContext;
-      if (context == null) return;
-      Scrollable.ensureVisible(
-        context,
-        alignment: 0.92,
-        duration: const Duration(milliseconds: 220),
-        curve: Curves.easeOutCubic,
-      );
+      typingFocusNode.requestFocus();
     });
   }
 
@@ -184,7 +247,7 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
         wpm: double.parse(wpm(typed).toStringAsFixed(1)),
         accuracy: accuracy(typed, target),
         correctChars: correctChars(typed, target),
-        totalChars: typed.length,
+        totalChars: charactersOf(typed).length,
         timeTakenSeconds: effectiveSeconds));
   }
 
@@ -235,8 +298,9 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
 
   Widget practiceLinkButton(String url) => Button.border(
       onTap: () => showPracticeLinkSheet(url),
+      height: 44,
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        const Icon(Icons.link_rounded, size: 20),
+        const Icon(Icons.link_rounded, size: 18),
         const SizedBox(width: 8),
         Text('Practice link'.tr())
       ]));
@@ -251,33 +315,138 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
             Text(title, style: Style.small2w4(context, color: TextColorRole.greyColor))
           ])));
 
-  Widget targetTextView(String target, String typed, double height) => PrimaryBox(
-      isTappable: false,
+  TextStyle typingTextStyle(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    final fontSize = width < 380 ? 16.0 : 17.0;
+    return Style.bodyw6(context).copyWith(fontSize: fontSize, height: 1.55, letterSpacing: 0.1);
+  }
+
+  int? firstIncorrectCharacterIndex(List<String> targetCharacters, List<String> typedCharacters) {
+    final count = typedCharacters.length < targetCharacters.length
+        ? typedCharacters.length
+        : targetCharacters.length;
+    for (var index = 0; index < count; index++) {
+      if (!charactersMatch(typedCharacters[index], targetCharacters[index])) return index;
+    }
+    return null;
+  }
+
+  TextSpan charSpan(BuildContext context, List<String> targetCharacters,
+      List<String> typedCharacters, int index, int? firstIncorrectIndex) {
+    final targetCharacter = targetCharacters[index];
+    final hasTyped = index < typedCharacters.length;
+    final isCorrect = hasTyped && charactersMatch(typedCharacters[index], targetCharacter);
+    final isBlockedByEarlierMistake = firstIncorrectIndex != null && index > firstIncorrectIndex;
+    final isCursor = index == typedCharacters.length && !hasSubmitted;
+    final baseStyle = typingTextStyle(context);
+    return TextSpan(
+        // A middle dot makes every required space visible without moving the
+        // text as the user types. It is particularly useful on a phone.
+        text: targetCharacter == ' ' ? '·' : targetCharacter,
+        style: baseStyle.copyWith(
+            color: !hasTyped || isBlockedByEarlierMistake
+                ? AppColors.gray500
+                : isCorrect
+                    ? AppColors.primary
+                    : AppColors.error,
+            decoration: isCursor ? TextDecoration.underline : TextDecoration.none,
+            decorationColor: AppColors.primary,
+            decorationThickness: 2.4));
+  }
+
+  List<InlineSpan> typingSpans(BuildContext context, String target, String typed) {
+    final targetCharacters = charactersOf(target);
+    final typedCharacters = charactersOf(typed);
+    final firstIncorrectIndex = firstIncorrectCharacterIndex(targetCharacters, typedCharacters);
+    final spans = <InlineSpan>[];
+    for (var index = 0; index < targetCharacters.length; index++) {
+      spans.add(charSpan(context, targetCharacters, typedCharacters, index, firstIncorrectIndex));
+    }
+    return spans;
+  }
+
+  Widget hiddenKeyboardInput(MonkeyTypeSessionState state) => SizedBox(
       width: double.infinity,
-      padding: EdgeInsets.zero,
-      child: SizedBox(
-          height: height,
-          child: Scrollbar(
-              controller: targetScrollController,
-              thumbVisibility: target.length > 240,
-              child: SingleChildScrollView(
-                  controller: targetScrollController,
-                  padding: const EdgeInsets.all(16),
-                  child: Wrap(
-                      children: List.generate(target.length, (index) {
-                    final hasTyped = index < typed.length;
-                    final isCorrect = hasTyped && typed[index] == target[index];
-                    return Text(target[index],
-                        style: Style.body2w5(context).copyWith(
-                            color: !hasTyped
-                                ? context.cs.onSurface
-                                : isCorrect
-                                    ? AppColors.primary
-                                    : AppColors.error,
-                            backgroundColor: index == typed.length
-                                ? AppColors.primary.withValues(alpha: 0.12)
-                                : null));
-                  }))))));
+      height: double.infinity,
+      child: Opacity(
+          opacity: 0.01,
+          child: TextField(
+              focusNode: typingFocusNode,
+              controller: controller,
+              autofocus: true,
+              enabled: !state.submitStatus.isLoading && !hasSubmitted,
+              enableInteractiveSelection: false,
+              autocorrect: false,
+              enableSuggestions: false,
+              textCapitalization: TextCapitalization.none,
+              smartDashesType: SmartDashesType.disabled,
+              smartQuotesType: SmartQuotesType.disabled,
+              expands: true,
+              maxLines: null,
+              minLines: null,
+              keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.done,
+              scrollPhysics: const NeverScrollableScrollPhysics(),
+              showCursor: false,
+              style: const TextStyle(color: Colors.transparent, fontSize: 1),
+              cursorColor: Colors.transparent,
+              decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  isCollapsed: true,
+                  contentPadding: EdgeInsets.zero))));
+
+  Widget targetTextView(String target, String typed, MonkeyTypeSessionState state) =>
+      GestureDetector(
+          key: inputKey,
+          behavior: HitTestBehavior.opaque,
+          onTap: () => typingFocusNode.requestFocus(),
+          child: Container(
+              decoration: BoxDecoration(
+                  color: context.cs.surface,
+                  borderRadius: Style.border20,
+                  border: Border.all(
+                      color: typingFocusNode.hasFocus
+                          ? AppColors.primary.withValues(alpha: 0.7)
+                          : AppColors.gray300.withValues(alpha: 0.55),
+                      width: typingFocusNode.hasFocus ? 1.4 : 1)),
+              child: ClipRRect(
+                  borderRadius: Style.border20,
+                  child: LayoutBuilder(builder: (context, constraints) {
+                    const horizontalPadding = 16.0;
+                    typingTextWidth =
+                        (constraints.maxWidth - horizontalPadding * 2).clamp(0, double.infinity);
+                    typingViewportHeight = constraints.maxHeight;
+                    return Stack(children: [
+                      Scrollbar(
+                          controller: targetScrollController,
+                          thumbVisibility: target.length > 420,
+                          child: SingleChildScrollView(
+                              controller: targetScrollController,
+                              padding: const EdgeInsets.fromLTRB(
+                                  horizontalPadding, 16, horizontalPadding, 20),
+                              child: Text.rich(
+                                key: const ValueKey('monkey_type_target_rich_text'),
+                                TextSpan(children: typingSpans(context, target, typed)),
+                                textAlign: TextAlign.start,
+                              ))),
+                      Positioned.fill(child: IgnorePointer(child: hiddenKeyboardInput(state))),
+                      if (!typingFocusNode.hasFocus && typed.isEmpty && !hasSubmitted)
+                        Positioned.fill(
+                            child: IgnorePointer(
+                                child: Center(
+                                    child: Container(
+                                        padding:
+                                            const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                        decoration: BoxDecoration(
+                                            color: AppColors.gray900.withValues(alpha: 0.72),
+                                            borderRadius: Style.border16),
+                                        child: Text('Tap here and start typing'.tr(),
+                                            style: Style.small2w5(context)
+                                                .copyWith(color: AppColors.white))))))
+                    ]);
+                  }))));
 
   Widget resultPanel(BuildContext context, String typed, String target) => PrimaryBox(
       isTappable: false,
@@ -328,87 +497,82 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
                     ]))))
       ]));
 
+  Widget topBar(BuildContext context) => Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: Row(children: [
+        Material(
+            color: context.cs.secondaryContainer,
+            shape: const CircleBorder(),
+            child: InkWell(
+                customBorder: const CircleBorder(),
+                onTap: () => Navigator.of(context).maybePop(),
+                child: const SizedBox(
+                    width: 44, height: 44, child: Icon(Icons.chevron_left_rounded, size: 30)))),
+        const SizedBox(width: 14),
+        Expanded(
+            child: Text(widget.practice.title,
+                maxLines: 1, overflow: TextOverflow.ellipsis, style: Style.body3w7(context)))
+      ]));
+
   Widget sessionView(
       BuildContext context, List<MonkeyTypeTextModel> texts, MonkeyTypeSessionState state) {
     positionAtCurrentTextStart(texts);
     final target = targetText(texts);
     final typed = controller.text;
-    final inputHeight = (MediaQuery.sizeOf(context).height * 0.24).clamp(150.0, 230.0);
-    final targetHeight = (MediaQuery.sizeOf(context).height * 0.26).clamp(170.0, 240.0);
     final practice = state.practice ?? widget.practice;
     final practiceUrl = practice.monkeyTypeUrl;
-    return ListView(
-        controller: pageScrollController,
-        physics: const AlwaysScrollableScrollPhysics(),
-        children: [
-          const SizedBox(height: 20),
+    final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
+    return LayoutBuilder(builder: (context, constraints) {
+      final compact = constraints.maxHeight < 560 || keyboardOpen;
+      return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        if (!compact && practice.description.trim().isNotEmpty) ...[
           Text(practice.description,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: Style.small3w4(context, color: TextColorRole.greyColor)),
-          if (practiceUrl != null) ...[
-            const SizedBox(height: 12),
-            practiceLinkButton(practiceUrl),
-          ],
-          const SizedBox(height: 16),
-          KeyedSubtree(key: progressKey, child: textProgress(texts)),
+          const SizedBox(height: 8),
+        ],
+        if (practiceUrl != null && !keyboardOpen && !compact) ...[
+          practiceLinkButton(practiceUrl),
           const SizedBox(height: 10),
-          KeyedSubtree(
-              key: statsKey,
-              child: Row(children: [
-                statBox(context, 'WPM'.tr(), wpm(typed).toStringAsFixed(0)),
-                const SizedBox(width: 8),
-                statBox(context, 'Accuracy'.tr(), '${accuracy(typed, target).toStringAsFixed(0)}%'),
-                const SizedBox(width: 8),
-                statBox(context, 'Time'.tr(), '${elapsedSeconds}s')
-              ])),
-          const SizedBox(height: 16),
-          KeyedSubtree(key: targetTextKey, child: targetTextView(target, typed, targetHeight)),
-          const SizedBox(height: 14),
-          KeyedSubtree(
-              key: inputKey,
-              child: SizedBox(
-                  height: inputHeight,
-                  child: TextField(
-                      controller: controller,
-                      scrollController: inputScrollController,
-                      scrollPhysics: const AlwaysScrollableScrollPhysics(),
-                      keyboardType: TextInputType.multiline,
-                      expands: true,
-                      minLines: null,
-                      maxLines: null,
-                      enabled: !state.submitStatus.isLoading && !hasSubmitted,
-                      decoration: InputDecoration(
-                          hintText: 'Start typing'.tr(),
-                          filled: true,
-                          fillColor: context.cs.surface,
-                          suffixIcon: controller.text.isEmpty && !hasSubmitted
-                              ? null
-                              : IconButton(
-                                  tooltip: 'Clear'.tr(),
-                                  onPressed: resetCurrentText,
-                                  icon: const Icon(Icons.cancel_rounded)),
-                          border: OutlineInputBorder(borderRadius: Style.border20),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: Style.border20,
-                              borderSide: const BorderSide(color: AppColors.grayF4)))))),
-          const SizedBox(height: 14),
-          if (state.submitStatus.isSuccess && hasSubmitted) resultPanel(context, typed, target),
-          if (state.submitStatus.isError && state.submitErrorMessage != null)
-            Text(state.submitErrorMessage!,
-                style: Style.small3w4(context).copyWith(color: AppColors.error)),
-          const SizedBox(height: 14),
-          KeyedSubtree(
-              key: submitKey,
-              child: Button.primary(
-                  onTap: hasSubmitted ? resetCurrentText : () => submitAnswer(texts),
-                  isLoading: state.submitStatus.isLoading,
-                  isAvialable: hasSubmitted || typed.trim().isNotEmpty,
-                  text: hasSubmitted ? 'Repeat'.tr() : 'Submit'.tr())),
-          if (texts.length > 1) ...[
-            const SizedBox(height: 10),
-            navigationButtons(texts),
-          ],
-          const SizedBox(height: 80),
-        ]);
+        ],
+        KeyedSubtree(key: progressKey, child: textProgress(texts)),
+        const SizedBox(height: 8),
+        KeyedSubtree(
+            key: statsKey,
+            child: Row(children: [
+              statBox(context, 'WPM'.tr(), wpm(typed).toStringAsFixed(0)),
+              const SizedBox(width: 8),
+              statBox(context, 'Accuracy'.tr(), '${accuracy(typed, target).toStringAsFixed(0)}%'),
+              const SizedBox(width: 8),
+              statBox(context, 'Time'.tr(), '${elapsedSeconds}s')
+            ])),
+        const SizedBox(height: 10),
+        Expanded(
+            child: KeyedSubtree(key: targetTextKey, child: targetTextView(target, typed, state))),
+        const SizedBox(height: 10),
+        if (state.submitStatus.isSuccess && hasSubmitted) ...[
+          resultPanel(context, typed, target),
+          const SizedBox(height: 8),
+        ],
+        if (state.submitStatus.isError && state.submitErrorMessage != null) ...[
+          Text(state.submitErrorMessage!,
+              style: Style.small3w4(context).copyWith(color: AppColors.error)),
+          const SizedBox(height: 8),
+        ],
+        KeyedSubtree(
+            key: submitKey,
+            child: Button.primary(
+                onTap: hasSubmitted ? resetCurrentText : () => submitAnswer(texts),
+                isLoading: state.submitStatus.isLoading,
+                isAvialable: hasSubmitted || typed.trim().isNotEmpty,
+                text: hasSubmitted ? 'Repeat'.tr() : 'Submit'.tr())),
+        if (texts.length > 1 && !keyboardOpen) ...[
+          const SizedBox(height: 10),
+          navigationButtons(texts),
+        ],
+      ]);
+    });
   }
 
   Widget get contentChecker =>
@@ -426,6 +590,7 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.cs.surface,
+      resizeToAvoidBottomInset: true,
       body: GuidedTutorialPage(
           pageId: '${TutorialPageIds.practiceSession}.monkey_type',
           steps: TutorialPresets.monkeyTypePractice(
@@ -435,5 +600,11 @@ class _MonkeyTypeSessionPageState extends State<MonkeyTypeSessionPage> {
               inputKey: inputKey,
               submitKey: submitKey,
               navigationKey: navigationKey),
-          child: PrimaryBackground(title: widget.practice.title, child: contentChecker)));
+          child: SafeArea(
+              child: Column(children: [
+            topBar(context),
+            Expanded(
+                child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 12), child: contentChecker))
+          ]))));
 }

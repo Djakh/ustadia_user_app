@@ -1,19 +1,127 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
+import 'package:ustadia_user_app/core/widgets/cached_images/cached_images_primary/cached_image_primary.dart';
 import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 import 'package:video_player/video_player.dart';
 
+class ReelVideoControllerCache {
+  ReelVideoControllerCache({this.maxControllers = 6});
+
+  final int maxControllers;
+  final LinkedHashMap<String, ReelVideoControllerEntry> _entries =
+      LinkedHashMap<String, ReelVideoControllerEntry>();
+  final Map<String, String> _fallbackUrlByFailedUrl = <String, String>{};
+
+  String preferredUrl(String url) => _fallbackUrlByFailedUrl[url] ?? url;
+
+  void rememberFallback({required String failedUrl, required String fallbackUrl}) {
+    _fallbackUrlByFailedUrl[failedUrl] = fallbackUrl;
+  }
+
+  ReelVideoControllerEntry obtain(String url) {
+    final existing = _entries.remove(url);
+    if (existing != null) {
+      _entries[url] = existing;
+      return existing;
+    }
+    final entry = ReelVideoControllerEntry(url);
+    _entries[url] = entry;
+    _trim();
+    return entry;
+  }
+
+  void _trim() {
+    while (_entries.length > maxControllers) {
+      final key = _entries.keys.first;
+      final entry = _entries.remove(key);
+      entry?.dispose();
+    }
+  }
+
+  void clear() {
+    for (final entry in _entries.values) {
+      entry.dispose();
+    }
+    _entries.clear();
+    _fallbackUrlByFailedUrl.clear();
+  }
+}
+
+class ReelVideoControllerEntry {
+  ReelVideoControllerEntry(this.url)
+      : controller = VideoPlayerController.networkUrl(Uri.parse(url));
+
+  final String url;
+  final VideoPlayerController controller;
+  Future<void>? initialization;
+  Object? error;
+  bool isDisposed = false;
+
+  bool get isInitialized => controller.value.isInitialized;
+
+  Future<void> initialize({
+    Duration? initialPosition,
+    required bool isMuted,
+    required double speed,
+  }) {
+    if (initialization != null) return initialization!;
+    initialization = _initialize(initialPosition: initialPosition, isMuted: isMuted, speed: speed);
+    return initialization!;
+  }
+
+  Future<void> _initialize({
+    Duration? initialPosition,
+    required bool isMuted,
+    required double speed,
+  }) async {
+    try {
+      await controller.initialize();
+      if (isDisposed) return;
+      if (initialPosition != null &&
+          initialPosition > Duration.zero &&
+          initialPosition < controller.value.duration) {
+        await controller.seekTo(initialPosition);
+      }
+      await controller.setLooping(true);
+      await controller.setVolume(isMuted ? 0 : 1);
+      await controller.setPlaybackSpeed(speed);
+      error = null;
+    } catch (exception) {
+      error = exception;
+      rethrow;
+    }
+  }
+
+  Future<void> dispose() async {
+    if (isDisposed) return;
+    isDisposed = true;
+    await controller.dispose();
+  }
+}
+
 class ReelVideoPlayer extends StatefulWidget {
   final String videoUrl;
+  final String? fallbackVideoUrl;
+  final String? placeholderUrl;
   final bool isActive;
   final bool shouldInitialize;
+  final Duration? initialPosition;
+  final ValueChanged<Duration>? onPositionChanged;
+  final ReelVideoControllerCache controllerCache;
 
   const ReelVideoPlayer({
     super.key,
     required this.videoUrl,
+    this.fallbackVideoUrl,
+    this.placeholderUrl,
     required this.isActive,
     this.shouldInitialize = true,
+    this.initialPosition,
+    this.onPositionChanged,
+    required this.controllerCache,
   });
 
   @override
@@ -21,7 +129,7 @@ class ReelVideoPlayer extends StatefulWidget {
 }
 
 class _ReelVideoPlayerState extends State<ReelVideoPlayer> with WidgetsBindingObserver {
-  VideoPlayerController? controller;
+  ReelVideoControllerEntry? entry;
   bool hasError = false;
   String errorMessage = '';
   bool appResumed = true;
@@ -31,6 +139,15 @@ class _ReelVideoPlayerState extends State<ReelVideoPlayer> with WidgetsBindingOb
   bool isScrubbing = false;
   double selectedSpeed = 1;
   double scrubProgress = 0;
+  int attachGeneration = 0;
+
+  VideoPlayerController? get controller => entry?.controller;
+
+  void reportPosition() {
+    final player = controller;
+    if (player == null || !player.value.isInitialized) return;
+    widget.onPositionChanged?.call(player.value.position);
+  }
 
   List<double> get speedOptions => const [0.5, 1, 1.5, 2];
 
@@ -38,18 +155,23 @@ class _ReelVideoPlayerState extends State<ReelVideoPlayer> with WidgetsBindingOb
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    if (widget.shouldInitialize) initializePlayer();
+    if (widget.shouldInitialize) attachPlayer();
   }
 
   @override
   void didUpdateWidget(covariant ReelVideoPlayer oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!widget.shouldInitialize) {
-      disposePlayer();
+      // The page is kept alive. Pause the native player, but retain its last
+      // rendered frame and position so returning to the reel is instant.
+      syncPlayback();
       return;
     }
-    if (oldWidget.videoUrl != widget.videoUrl || !oldWidget.shouldInitialize) {
-      initializePlayer();
+    if (oldWidget.videoUrl != widget.videoUrl ||
+        entry == null ||
+        entry!.isDisposed ||
+        !entry!.isInitialized) {
+      attachPlayer();
       return;
     }
     syncPlayback();
@@ -58,7 +180,8 @@ class _ReelVideoPlayerState extends State<ReelVideoPlayer> with WidgetsBindingOb
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    controller?.dispose();
+    reportPosition();
+    controller?.removeListener(reportPosition);
     super.dispose();
   }
 
@@ -68,27 +191,21 @@ class _ReelVideoPlayerState extends State<ReelVideoPlayer> with WidgetsBindingOb
     syncPlayback();
   }
 
-  Future<void> disposePlayer() async {
-    final player = controller;
-    controller = null;
-    hasError = false;
-    isManuallyPaused = false;
-    isTemporarySpeedActive = false;
-    isScrubbing = false;
-    scrubProgress = 0;
-    if (player != null) await player.dispose();
-    if (mounted) setState(() {});
-  }
-
-  Future<void> initializePlayer() async {
-    await controller?.dispose();
-    controller = null;
+  Future<void> attachPlayer() async {
+    final generation = ++attachGeneration;
+    final previousPlayer = controller;
+    if (previousPlayer != null) {
+      reportPosition();
+      previousPlayer.removeListener(reportPosition);
+    }
+    entry = null;
     hasError = false;
     errorMessage = '';
     isManuallyPaused = false;
     isTemporarySpeedActive = false;
     isScrubbing = false;
     scrubProgress = 0;
+    if (!mounted || generation != attachGeneration) return;
     if (widget.videoUrl.isEmpty) {
       setState(() {
         hasError = true;
@@ -96,23 +213,53 @@ class _ReelVideoPlayerState extends State<ReelVideoPlayer> with WidgetsBindingOb
       });
       return;
     }
-    final nextController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
-    controller = nextController;
+    final sourceUrl = widget.controllerCache.preferredUrl(widget.videoUrl);
+    final nextEntry = widget.controllerCache.obtain(sourceUrl);
     try {
-      await nextController.initialize();
-      await nextController.setLooping(true);
-      await nextController.setVolume(isMuted ? 0 : 1);
-      await nextController.setPlaybackSpeed(selectedSpeed);
-      if (widget.isActive && appResumed) await nextController.play();
-      if (mounted) setState(() {});
-    } catch (error) {
-      if (mounted) {
+      await initializeEntry(nextEntry);
+      if (!mounted || generation != attachGeneration) return;
+      if (widget.isActive && appResumed) await nextEntry.controller.play();
+      if (mounted && generation == attachGeneration) setState(() {});
+    } catch (streamError) {
+      final fallbackUrl = widget.fallbackVideoUrl;
+      final canRetryOriginal =
+          fallbackUrl != null && fallbackUrl.isNotEmpty && fallbackUrl != sourceUrl;
+      if (canRetryOriginal) {
+        nextEntry.controller.removeListener(reportPosition);
+        debugPrint('[Reels] Stream URL could not play; retrying original media URL. $streamError');
+        try {
+          final fallbackEntry = widget.controllerCache.obtain(fallbackUrl);
+          await initializeEntry(fallbackEntry);
+          if (!mounted || generation != attachGeneration) return;
+          widget.controllerCache
+              .rememberFallback(failedUrl: widget.videoUrl, fallbackUrl: fallbackUrl);
+          if (widget.isActive && appResumed) await fallbackEntry.controller.play();
+          if (mounted && generation == attachGeneration) setState(() {});
+          return;
+        } catch (fallbackError) {
+          if (mounted && generation == attachGeneration) {
+            setState(() {
+              hasError = true;
+              errorMessage = fallbackError.toString();
+            });
+          }
+          return;
+        }
+      }
+      if (mounted && generation == attachGeneration) {
         setState(() {
           hasError = true;
-          errorMessage = error.toString();
+          errorMessage = streamError.toString();
         });
       }
     }
+  }
+
+  Future<void> initializeEntry(ReelVideoControllerEntry nextEntry) async {
+    entry = nextEntry;
+    nextEntry.controller.addListener(reportPosition);
+    await nextEntry.initialize(
+        initialPosition: widget.initialPosition, isMuted: isMuted, speed: selectedSpeed);
   }
 
   void syncPlayback() {
@@ -267,7 +414,19 @@ class _ReelVideoPlayerState extends State<ReelVideoPlayer> with WidgetsBindingOb
   Widget get loading => Container(
       color: AppColors.black,
       alignment: Alignment.center,
-      child: const PrimaryLoadingIndicator(height: 34, width: 34));
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (widget.placeholderUrl != null && widget.placeholderUrl!.isNotEmpty)
+            CachedImagePrimary(
+                imageUrl: widget.placeholderUrl!,
+                height: double.infinity,
+                width: double.infinity,
+                fit: BoxFit.cover),
+          Container(color: AppColors.black.withValues(alpha: 0.18)),
+          const Center(child: PrimaryLoadingIndicator(height: 34, width: 34)),
+        ],
+      ));
 
   Widget speedChip(BuildContext context, double speed) {
     final isSelected = selectedSpeed == speed && !isTemporarySpeedActive;
@@ -390,11 +549,19 @@ class _ReelVideoPlayerState extends State<ReelVideoPlayer> with WidgetsBindingOb
       child: SizedBox.expand(
           child: Stack(fit: StackFit.expand, children: [
         FittedBox(
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
             child: SizedBox(
                 width: player.value.size.width,
                 height: player.value.size.height,
                 child: VideoPlayer(player))),
+        ValueListenableBuilder<VideoPlayerValue>(
+            valueListenable: player,
+            builder: (context, value, _) {
+              if (!value.isBuffering) return const SizedBox.shrink();
+              return Container(
+                  color: AppColors.black.withValues(alpha: 0.18),
+                  child: const Center(child: PrimaryLoadingIndicator(height: 34, width: 34)));
+            }),
         centerControl(player),
         speedHint(context),
         progressBar(player)
@@ -403,7 +570,6 @@ class _ReelVideoPlayerState extends State<ReelVideoPlayer> with WidgetsBindingOb
   @override
   Widget build(BuildContext context) {
     final player = controller;
-    if (!widget.shouldInitialize) return loading;
     if (hasError) return fallback;
     if (player == null || !player.value.isInitialized) return loading;
     return playerView(player);

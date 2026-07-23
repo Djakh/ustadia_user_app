@@ -1,13 +1,18 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:flutter/foundation.dart';
 
 class DioClient {
   DioClient._();
 
   static final MemCacheStore _cacheStore = MemCacheStore();
+  static bool _hasLoggedFullDebugAccessToken = false;
 
   static Future<void> clearCache() => _cacheStore.clean();
+
+  @visibleForTesting
+  static String sanitizeLogMessageForTest(String message) => _sanitizeLogMessage(message);
 
   static Dio create(
       {String? baseUrl,
@@ -31,8 +36,14 @@ class DioClient {
       final accessToken = accessTokenGetter?.call() ?? '';
       if (accessToken.isNotEmpty) {
         options.headers['Authorization'] = 'Bearer $accessToken';
-        // ignore: avoid_print
-        print('[DIO] accessToken: $accessToken');
+        if (kDebugMode && !_hasLoggedFullDebugAccessToken) {
+          _hasLoggedFullDebugAccessToken = true;
+          // Intentionally available once for local debug testing only.
+          // Never log it from profile/release builds.
+          // ignore: avoid_print
+          print('[DIO] DEBUG full access token (logged once): $accessToken');
+        }
+        _log('accessToken: ${_maskSensitiveValue(accessToken)}');
       }
       _logRequestBody(options);
       return handler.next(options);
@@ -59,7 +70,7 @@ class DioClient {
       LogInterceptor(
         requestBody: false,
         responseBody: false,
-        logPrint: (obj) => _log(obj.toString()),
+        logPrint: (obj) => _log(_sanitizeLogMessage(obj.toString())),
       ),
     );
     return dio;
@@ -126,7 +137,13 @@ class DioClient {
 
   static dynamic _sanitizeForLog(dynamic value) {
     if (value is Map) {
-      return value.map((key, val) => MapEntry(key, _sanitizeForLog(val)));
+      return value.map((key, val) {
+        final normalizedKey = key.toString().toLowerCase();
+        if (_isSensitiveKey(normalizedKey)) {
+          return MapEntry(key, _maskSensitiveValue(val?.toString() ?? ''));
+        }
+        return MapEntry(key, _sanitizeForLog(val));
+      });
     }
     if (value is List) {
       return value.map(_sanitizeForLog).toList();
@@ -141,5 +158,27 @@ class DioClient {
     final normalized = input.replaceAll(RegExp(r'\s+'), ' ').trim();
     if (normalized.length <= 120) return normalized;
     return '${normalized.substring(0, 117)}...';
+  }
+
+  static bool _isSensitiveKey(String key) =>
+      key.contains('token') ||
+      key.contains('authorization') ||
+      key.contains('password') ||
+      key.contains('secret');
+
+  static String _maskSensitiveValue(String value) {
+    if (value.isEmpty) return '';
+    if (value.length <= 12) return '***';
+    return '${value.substring(0, 6)}...${value.substring(value.length - 4)}';
+  }
+
+  static String _sanitizeLogMessage(String message) {
+    final withoutBearer = message.replaceAllMapped(RegExp(r'Bearer\s+([A-Za-z0-9_\-.]+)'), (match) {
+      return 'Bearer ${_maskSensitiveValue(match.group(1) ?? '')}';
+    });
+    return withoutBearer.replaceAllMapped(
+        RegExp(r'(access[_-]?token|token)(:\s*)([^\s,}]+)', caseSensitive: false),
+        (match) =>
+            '${match.group(1)}${match.group(2)}${_maskSensitiveValue(match.group(3) ?? '')}');
   }
 }

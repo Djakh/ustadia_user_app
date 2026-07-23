@@ -1,11 +1,13 @@
 import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/features/common/data/models/flash_card_model/flash_card_set_model.dart';
+import 'package:ustadia_user_app/features/common/data/models/section_model/section_link_position_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_question_model.dart';
+import 'package:ustadia_user_app/features/common/data/models/uploaded_file_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_audio_file_model.dart';
 
 enum SectionProgressState { completed, inProgress, locked }
 
-enum SectionType { listening, reading, writing, speaking, grammar, vocabulary }
+enum SectionType { listening, reading, writing, speaking, grammar, vocabulary, article }
 
 enum SectionSource { learn, assignment, mockExam }
 
@@ -39,6 +41,8 @@ class SectionModel {
   final String status;
   final bool isAvailable;
   final SectionSource source;
+  final UploadedFileModel? image;
+  final List<SectionLinkPositionModel> linkPositions;
 
   const SectionModel({
     required this.id,
@@ -70,6 +74,8 @@ class SectionModel {
     this.status = '',
     this.isAvailable = true,
     this.source = SectionSource.learn,
+    this.image,
+    this.linkPositions = const [],
   });
 
   int get lessonNumber => orderIndex;
@@ -110,7 +116,9 @@ class SectionModel {
         deadlineAt: deadlineAt,
         status: status,
         isAvailable: isAvailable,
-        source: source);
+        source: source,
+        image: this.image,
+        linkPositions: this.linkPositions);
   }
 
   factory SectionModel.fromJson(Map<String, dynamic> json,
@@ -180,6 +188,25 @@ class SectionModel {
         json['audioFileId']?.toString() ??
         json['audio_id']?.toString() ??
         json['audioId']?.toString();
+    // Image hotspots are an article-only content format. Keep other section
+    // types focused on their normal lesson/question payloads.
+    final imageValue = type == SectionType.article
+        ? json['image'] ?? json['image_file'] ?? json['imageFile']
+        : null;
+    final linkPositionsValue =
+        type == SectionType.article ? json['link_positions'] ?? json['linkPositions'] : null;
+    final linkPositions = linkPositionsValue is List
+        ? linkPositionsValue
+            .whereType<Map>()
+            .map((item) => SectionLinkPositionModel.fromJson(Map<String, dynamic>.from(item)))
+            .toList()
+        : const <SectionLinkPositionModel>[];
+    final image = imageValue is Map
+        ? UploadedFileModel.fromJson(Map<String, dynamic>.from(imageValue))
+        : imageValue == null
+            ? null
+            : UploadedFileModel(
+                id: '', filename: '', path: '', mimetype: '', url: imageValue.toString());
 
     return SectionModel(
         id: resolvedSectionId,
@@ -212,7 +239,9 @@ class SectionModel {
         deadlineAt: DateTime.tryParse(json['deadline_at']?.toString() ?? ''),
         status: status,
         isAvailable: isAvailable,
-        source: resolvedSource);
+        source: resolvedSource,
+        image: image,
+        linkPositions: linkPositions);
   }
 
   static int toInt(dynamic value, {int fallback = 0}) {
@@ -290,6 +319,8 @@ extension SectionTypeX on SectionType {
 
       case 'vocabulary':
         return SectionType.vocabulary;
+      case 'article':
+        return SectionType.article;
       default:
         return SectionType.reading;
     }
@@ -310,6 +341,8 @@ extension SectionTypeX on SectionType {
 
       case SectionType.vocabulary:
         return AppImages.vocabulary;
+      case SectionType.article:
+        return AppImages.learnArticle;
     }
   }
 }

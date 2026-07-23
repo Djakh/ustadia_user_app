@@ -9,6 +9,7 @@ class AskAiMessagesList extends StatelessWidget {
   final bool isPaginating;
   final double topPadding;
   final double bottomPadding;
+  final ValueChanged<AiChatMessageModel>? onReport;
 
   const AskAiMessagesList(
       {super.key,
@@ -16,7 +17,8 @@ class AskAiMessagesList extends StatelessWidget {
       required this.scrollController,
       required this.isPaginating,
       required this.topPadding,
-      required this.bottomPadding});
+      required this.bottomPadding,
+      this.onReport});
 
   Widget itemBuilder(BuildContext context, int index) {
     if (index >= messages.length) {
@@ -33,7 +35,10 @@ class AskAiMessagesList extends StatelessWidget {
     return Padding(
         key: ValueKey(message.id),
         padding: const EdgeInsets.symmetric(vertical: 6),
-        child: AskAiAnimatedMessageItem(message: message, isMe: message.role == 'user'));
+        child: AskAiAnimatedMessageItem(
+            message: message,
+            isMe: message.role == 'user',
+            onReport: message.role == 'user' ? null : () => onReport?.call(message)));
   }
 
   @override

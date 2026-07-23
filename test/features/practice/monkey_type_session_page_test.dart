@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_storage_service.dart';
 import 'package:ustadia_user_app/features/common/data/datasources/user_remote_data_source.dart';
 import 'package:ustadia_user_app/features/practice/data/datasources/practice_remote_data_source.dart';
@@ -92,6 +93,58 @@ void main() {
     expect(find.text('Submit'), findsOneWidget);
   });
 
+  testWidgets('typed characters keep position and use green or red feedback', (tester) async {
+    await _registerMonkeyTypeDependencies([_text(id: 'text_1', orderIndex: 0, text: 'Large')]);
+
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final router = GoRouter(routes: [
+      GoRoute(path: '/', builder: (_, __) => MonkeyTypeSessionPage(practice: _practice())),
+    ]);
+
+    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'Lx');
+    await tester.pump();
+
+    final targetText =
+        tester.widget<Text>(find.byKey(const ValueKey('monkey_type_target_rich_text')));
+    final spans = (targetText.textSpan! as TextSpan).children!.whereType<TextSpan>().toList();
+
+    expect(spans[0].style?.color, AppColors.primary);
+    expect(spans[1].style?.color, AppColors.error);
+    expect(spans[0].style?.fontWeight, spans[1].style?.fontWeight);
+    expect(spans[0].style?.fontSize, spans[1].style?.fontSize);
+  });
+
+  testWidgets('smart keyboard punctuation, case and spaces remain correct', (tester) async {
+    await _registerMonkeyTypeDependencies(
+        [_text(id: 'text_1', orderIndex: 0, text: 'It\'s fine - yes')]);
+
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final router = GoRouter(routes: [
+      GoRoute(path: '/', builder: (_, __) => MonkeyTypeSessionPage(practice: _practice())),
+    ]);
+    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'it’s fine – yes');
+    await tester.pump();
+
+    final targetText =
+        tester.widget<Text>(find.byKey(const ValueKey('monkey_type_target_rich_text')));
+    final spans = (targetText.textSpan! as TextSpan).children!.whereType<TextSpan>().toList();
+    expect(spans.every((span) => span.style?.color == AppColors.primary), isTrue);
+  });
+
   testWidgets('practice link opens copy and browser actions', (tester) async {
     await _registerMonkeyTypeDependencies([_text(id: 'text_1', orderIndex: 0)]);
 
@@ -139,10 +192,11 @@ MonkeyTypePracticeModel _practice() => const MonkeyTypePracticeModel(
       updatedAt: null,
     );
 
-MonkeyTypeTextModel _text({required String id, required int orderIndex}) => MonkeyTypeTextModel(
+MonkeyTypeTextModel _text({required String id, required int orderIndex, String? text}) =>
+    MonkeyTypeTextModel(
       id: id,
       practiceId: 'practice_1',
-      text: List.filled(60, 'Large text for typing practice.').join(' '),
+      text: text ?? List.filled(60, 'Large text for typing practice.').join(' '),
       orderIndex: orderIndex,
       createdAt: null,
     );

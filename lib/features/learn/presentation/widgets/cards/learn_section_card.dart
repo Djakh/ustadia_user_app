@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/boxes/primary_box.dart';
@@ -41,8 +42,9 @@ class LearnSectionCard extends StatelessWidget {
         Text(statusText, style: Style.small2w5(context).copyWith(color: statusColor))
       ]);
 
-  Widget iconImage(BuildContext context) =>
-      Image.asset(sectionModel.iconAsset, height: 56, width: 56);
+  Widget sectionIcon() => sectionModel.iconAsset.toLowerCase().endsWith('.svg')
+      ? SvgPicture.asset(sectionModel.iconAsset, height: 56, width: 56)
+      : Image.asset(sectionModel.iconAsset, height: 56, width: 56);
 
   Widget statusBadge(BuildContext context) => Row(children: [
         Icon(Icons.check_circle, size: 16, color: statusColor),
@@ -62,11 +64,8 @@ class LearnSectionCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [titleAndStatus(context), const SizedBox(height: 6), subtitle(context)]);
 
-  Widget view(BuildContext context) => Row(children: [
-        Image.asset(sectionModel.iconAsset, height: 56, width: 56),
-        const SizedBox(width: 8),
-        Expanded(child: cardInfo(context))
-      ]);
+  Widget view(BuildContext context) =>
+      Row(children: [sectionIcon(), const SizedBox(width: 8), Expanded(child: cardInfo(context))]);
 
   @override
   Widget build(BuildContext context) => PrimaryBox(

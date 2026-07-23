@@ -38,6 +38,27 @@ class MockExamAssignModel {
       speakingBand: mockExamModelNumOrNull(json['speaking_band']));
 }
 
+class MockExamTempTokenModel {
+  final String accessToken;
+  final int expiresIn;
+  final String url;
+
+  const MockExamTempTokenModel({
+    required this.accessToken,
+    required this.expiresIn,
+    required this.url,
+  });
+
+  factory MockExamTempTokenModel.fromJson(Map<String, dynamic> json) {
+    final data = json['data'] is Map<String, dynamic> ? json['data'] as Map<String, dynamic> : json;
+    return MockExamTempTokenModel(
+      accessToken: (data['access_token'] ?? data['accessToken'])?.toString() ?? '',
+      expiresIn: mockExamModelIntOrNull(data['expires_in'] ?? data['expiresIn']) ?? 0,
+      url: data['url']?.toString() ?? '',
+    );
+  }
+}
+
 class MockExamAssignmentClassModel {
   final String id;
   final String name;

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
+import 'package:ustadia_user_app/core/compliance/safety_notice.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
@@ -17,6 +18,7 @@ import 'package:ustadia_user_app/features/common/data/models/section_model/secti
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_state.dart';
+import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/file_upload_bloc/file_upload_state.dart';
@@ -50,6 +52,10 @@ class WritingSectionPageState extends State<WritingSectionPage> {
   LearnWritingMethodType? selectedMethod;
   final TextEditingController inputController = TextEditingController();
   static const String inputPlaceholder = 'Start writing here';
+  bool isPickingUpload = false;
+
+  bool get canSubmitIeltsWriting =>
+      sl<UserBloc>().state.profile?.socialPermissions?.canSubmitIeltsWriting != false;
 
   @override
   void dispose() {
@@ -126,7 +132,17 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       mockAttemptId: widget.sectionModel.mockAttemptId));
 
   Future<void> pickUploadFile() async {
+    if (isPickingUpload || !mounted) return;
+    if (!canSubmitIeltsWriting) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('IELTS Writing submissions are not enabled for this account.'.tr())));
+      return;
+    }
+    isPickingUpload = true;
     try {
+      final confirmed =
+          await SafetyNoticeCoordinator.confirm(context, SafetyNoticeType.ieltsWritingSubmission);
+      if (!confirmed || !mounted) return;
       final result = await FilePicker.platform.pickFiles(withData: true);
       if (result == null) return;
       if (!mounted) return;
@@ -142,6 +158,8 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('File picker is not available on this device. Try a real device.'.tr())));
+    } finally {
+      isPickingUpload = false;
     }
   }
 
@@ -213,6 +231,7 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (sheetContext) => LearnWritingBottomSheet(
+          canUploadPaperWriting: canSubmitIeltsWriting,
           onTap: (LearnWritingMethodType type) => onSelectMethod(sheetContext, type)));
 
   /// --- Widgets ---

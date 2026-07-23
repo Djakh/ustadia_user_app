@@ -15,7 +15,9 @@ class MockExamRemoteDataSource {
   Options get freshRequestOptions =>
       CacheOptions(policy: CachePolicy.noCache, store: MemCacheStore()).toOptions();
 
-  String get baseUrl => 'https://dev.backend.ustadia.findecor.io/student/ielts-mocks';
+  /// Keep this relative to [dio.options.baseUrl]. The injected Dio client is
+  /// the single source of truth for whether the app calls production or dev.
+  String get baseUrl => '/student/ielts-mocks';
 
   Future<PaginationResult<MockExamModel>> fetchMockExams({int page = 1, int limit = 10}) async {
     final response = await dio.get(baseUrl,
@@ -33,6 +35,12 @@ class MockExamRemoteDataSource {
         await dio.post('$baseUrl/$mockExamId/attempts/start', options: freshRequestOptions);
     return MockExamAttemptModel.fromJson(response.data as Map<String, dynamic>,
         mockExamId: mockExamId);
+  }
+
+  Future<MockExamTempTokenModel> generateMockExamTempToken({required String mockExamId}) async {
+    final response =
+        await dio.post('$baseUrl/$mockExamId/generate-temp-token', options: freshRequestOptions);
+    return MockExamTempTokenModel.fromJson(response.data as Map<String, dynamic>);
   }
 
   Future<MockExamAttemptModel> startMockExamAttemptFromExam(MockExamModel exam) async {

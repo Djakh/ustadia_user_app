@@ -15,10 +15,11 @@ class PracticeSentenceBuilderStatusResponse {
 
   factory PracticeSentenceBuilderStatusResponse.fromJson(Map<String, dynamic> json) =>
       PracticeSentenceBuilderStatusResponse(
-        sentenceBuilderId: json['sentenceBuilderId']?.toString() ?? '',
+        sentenceBuilderId:
+            (json['sentenceBuilderId'] ?? json['sentence_builder_id'])?.toString() ?? '',
         status: json['status']?.toString() ?? '',
-        correctAnswers: _toInt(json['correctAnswers']),
-        wrongAnswers: _toInt(json['wrongAnswers']),
+        correctAnswers: _toInt(json['correctAnswers'] ?? json['correct_answers']),
+        wrongAnswers: _toInt(json['wrongAnswers'] ?? json['wrong_answers']),
         message: json['message']?.toString() ?? '',
       );
 }

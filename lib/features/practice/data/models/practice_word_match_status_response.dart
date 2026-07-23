@@ -15,10 +15,10 @@ class PracticeWordMatchStatusResponse {
 
   factory PracticeWordMatchStatusResponse.fromJson(Map<String, dynamic> json) =>
       PracticeWordMatchStatusResponse(
-        wordMatchId: json['wordMatchId']?.toString() ?? '',
+        wordMatchId: (json['wordMatchId'] ?? json['word_match_id'])?.toString() ?? '',
         status: json['status']?.toString() ?? '',
-        correctAnswers: _toInt(json['correctAnswers']),
-        wrongAnswers: _toInt(json['wrongAnswers']),
+        correctAnswers: _toInt(json['correctAnswers'] ?? json['correct_answers']),
+        wrongAnswers: _toInt(json['wrongAnswers'] ?? json['wrong_answers']),
         message: json['message']?.toString() ?? '',
       );
 }
