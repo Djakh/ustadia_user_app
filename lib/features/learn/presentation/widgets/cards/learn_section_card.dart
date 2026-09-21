@@ -18,7 +18,7 @@ class LearnSectionCard extends StatelessWidget {
 
   bool get isInProgress => sectionModel.progressState == SectionProgressState.inProgress;
 
-  bool get isCompleted => sectionModel.progressState == SectionProgressState.completed;
+  bool get isCompleted => sectionModel.isCompleted;
 
   Color get statusColor => isLocked ? AppColors.gray300 : AppColors.primary;
 
@@ -56,8 +56,7 @@ class LearnSectionCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(child: title(context)),
-            const SizedBox(width: 8),
-            progressBadge(context)
+            if (sectionModel.tracksProgress) ...[const SizedBox(width: 8), progressBadge(context)]
           ]);
 
   Widget cardInfo(BuildContext context) => Column(

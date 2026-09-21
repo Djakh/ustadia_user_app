@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:ustadia_user_app/core/widgets/connection/reload_conntection_button.dart';
+import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_event.dart';
@@ -32,6 +35,8 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
   final SectionDetailBloc detailBloc = sl<SectionDetailBloc>();
   ListeningSectionStage stage = ListeningSectionStage.lesson;
   int correctCount = 0;
+  bool isReloadingAfterRedo = false;
+  bool shouldRefreshParent = false;
 
   @override
   void initState() {
@@ -40,14 +45,7 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
       stage = ListeningSectionStage.result;
     }
     if (widget.sectionModel.id.isNotEmpty) {
-      detailBloc.add(SectionDetailRequested(
-          sectionId: widget.sectionModel.id,
-          source: widget.sectionModel.source,
-          unitId: widget.sectionModel.unitId,
-          lessonId: widget.sectionModel.lessonId,
-          assignmentId: widget.sectionModel.assignmentId,
-          mockExamId: widget.sectionModel.mockId,
-          mockAttemptId: widget.sectionModel.mockAttemptId));
+      requestSectionDetail();
     }
   }
 
@@ -58,6 +56,24 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
   }
 
   /// --- Methods ---
+
+  void requestSectionDetail() => detailBloc.add(SectionDetailRequested(
+      sectionId: widget.sectionModel.id,
+      source: widget.sectionModel.source,
+      unitId: widget.sectionModel.unitId,
+      lessonId: widget.sectionModel.lessonId,
+      assignmentId: widget.sectionModel.assignmentId,
+      mockExamId: widget.sectionModel.mockId,
+      mockAttemptId: widget.sectionModel.mockAttemptId));
+
+  void startRedo() {
+    setState(() {
+      stage = ListeningSectionStage.quiz;
+      isReloadingAfterRedo = true;
+      shouldRefreshParent = true;
+    });
+    requestSectionDetail();
+  }
 
   void changeStage(SectionDetailState state) {
     if (state.status.isLoading || state.detail == null) return;
@@ -71,6 +87,7 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
     }
     setState(() {
       correctCount = correct;
+      isReloadingAfterRedo = false;
       stage = ListeningSectionStage.result;
     });
   }
@@ -136,8 +153,18 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
       });
       return const SizedBox.shrink();
     }
+    if (isReloadingAfterRedo) {
+      if (state.status.isError) {
+        return Center(child: ReloadConntectionButton(onReloadConnection: requestSectionDetail));
+      }
+      if (!state.status.isSuccess ||
+          state.detail == null ||
+          state.detail!.progressState == SectionProgressState.completed) {
+        return const Center(child: PrimaryLoadingIndicator());
+      }
+    }
     if (state.detail?.progressState == SectionProgressState.completed) {
-      return QuizResultComponent(sectionModel: widget.sectionModel);
+      return QuizResultComponent(sectionModel: widget.sectionModel, onRedo: startRedo);
     }
     if (stage == ListeningSectionStage.lesson) return introView(state, isLoading);
     if (stage == ListeningSectionStage.quiz)
@@ -148,28 +175,35 @@ class ListeningSectionPageState extends State<ListeningSectionPage> {
           headerWidget: quizHeaderWidget(state),
           onFinish: finishQuiz);
     if (stage == ListeningSectionStage.result) {
-      return QuizResultComponent(sectionModel: widget.sectionModel);
+      return QuizResultComponent(sectionModel: widget.sectionModel, onRedo: startRedo);
     }
     return introView(state, isLoading);
   }
 
   @override
-  Widget build(BuildContext context) => GuidedTutorialPage(
-      pageId: '${TutorialPageIds.section}.listening',
-      steps: TutorialPresets.section(sectionType: 'listening'),
-      child: Scaffold(
-          backgroundColor: context.cs.surface,
-          body: PrimaryBackground(
-              header: header,
-              headerTooltipText: widget.sectionModel.title,
-              padding: stage == ListeningSectionStage.quiz ? EdgeInsets.zero : null,
-              margin: stage == ListeningSectionStage.quiz
-                  ? const EdgeInsets.fromLTRB(8, 8, 8, 0)
-                  : null,
-              applyBottomSafeArea: stage != ListeningSectionStage.quiz,
-              isHeader: stage != ListeningSectionStage.result,
-              isScrollable: false,
-              alwaysScrollable: false,
-              child: BlocBuilder<SectionDetailBloc, SectionDetailState>(
-                  bloc: detailBloc, builder: (context, state) => body(context, state)))));
+  Widget build(BuildContext context) => PopScope(
+      canPop: !shouldRefreshParent,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop || !context.mounted) return;
+        context.pop(true);
+      },
+      child: GuidedTutorialPage(
+          pageId: '${TutorialPageIds.section}.listening',
+          steps: TutorialPresets.section(sectionType: 'listening'),
+          child: Scaffold(
+              backgroundColor: context.cs.surface,
+              body: PrimaryBackground(
+                  header: header,
+                  headerTooltipText: widget.sectionModel.title,
+                  onBack: () => context.pop(shouldRefreshParent ? true : null),
+                  padding: stage == ListeningSectionStage.quiz ? EdgeInsets.zero : null,
+                  margin: stage == ListeningSectionStage.quiz
+                      ? const EdgeInsets.fromLTRB(8, 8, 8, 0)
+                      : null,
+                  applyBottomSafeArea: stage != ListeningSectionStage.quiz,
+                  isHeader: stage != ListeningSectionStage.result,
+                  isScrollable: false,
+                  alwaysScrollable: false,
+                  child: BlocBuilder<SectionDetailBloc, SectionDetailState>(
+                      bloc: detailBloc, builder: (context, state) => body(context, state))))));
 }

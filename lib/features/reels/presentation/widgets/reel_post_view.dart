@@ -15,7 +15,7 @@ class ReelPostView extends StatelessWidget {
   final ValueChanged<Duration>? onPositionChanged;
   final ReelVideoControllerCache controllerCache;
   final String Function(String path) resolveUrl;
-  final VoidCallback onLike;
+  final VoidCallback? onLike;
   final VoidCallback onComments;
   final VoidCallback? onAuthorTap;
 

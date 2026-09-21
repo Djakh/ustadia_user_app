@@ -12,9 +12,17 @@ class ManualReviewResultComponent extends StatelessWidget {
   final SectionStatsModel? stats;
   final String? aiFeedback;
   final String? feedback;
+  final VoidCallback? onRedo;
+  final bool isRedoing;
 
   const ManualReviewResultComponent(
-      {super.key, required this.sectionModel, this.stats, this.aiFeedback, this.feedback});
+      {super.key,
+      required this.sectionModel,
+      this.stats,
+      this.aiFeedback,
+      this.feedback,
+      this.onRedo,
+      this.isRedoing = false});
 
   int get pending => stats?.pending ?? answered;
   int get answered => stats?.answeredQuestions ?? sectionModel.answeredQuestions ?? 1;
@@ -132,9 +140,20 @@ class ManualReviewResultComponent extends StatelessWidget {
                   const SizedBox(height: 24),
                   ...feedbackBlocks(context),
                   const Spacer(),
+                  if (onRedo != null) ...[
+                    Button.border(
+                        onTap: onRedo!,
+                        text: 'Redo'.tr(),
+                        isLoading: isRedoing,
+                        isAvialable: !isRedoing,
+                        borderColor: hasPendingReview ? AppColors.orange033 : AppColors.primary,
+                        textColor: hasPendingReview ? AppColors.orange033 : AppColors.primary),
+                    const SizedBox(height: 10)
+                  ],
                   Button.primary(
                       onTap: () => backToTopic(context),
                       text: 'Continue'.tr(),
+                      isAvialable: !isRedoing,
                       color: hasPendingReview ? AppColors.orange033 : AppColors.primary)
                 ]))));
       });

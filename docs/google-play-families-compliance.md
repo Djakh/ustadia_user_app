@@ -28,6 +28,12 @@ The profile response currently exposes `roles` and `currentTeacher`; no parent/c
 
 The mobile `ReelsRemoteDataSource` contains feed reads, comments, likes, and profile reads only. There are no student create/upload/edit/delete controls or routes in the app. Ordinary users therefore cannot publish from this client. Backend authorization must independently reject unauthorized publishing, and the server contract should be reviewed before launch.
 
+## Child social safety and adult controls
+
+- Before the Reels comment composer is made available, the app shows a blocking online-safety reminder covering personal information, impersonation, real-world meetings, and telling a trusted adult when an interaction feels unsafe.
+- Settings now includes **Family & social safety**. Social features are off by default; a parent/guardian unlocks the page with a separate adult PIN and can independently enable or disable comments/replies, likes, or public profiles/avatars. Disabled controls remove the relevant interaction or block it with an explanation.
+- These controls are currently device-level because the backend does not expose a parent/guardian relationship or social-permission endpoint. They are a user-visible safeguard, not a substitute for server enforcement. The backend must add authoritative child-account permissions and enforce them on comments, likes, profile visibility, and uploads before final policy approval.
+
 ## AI English Tutor
 
 - The voice tutor is labeled **AI English Tutor**.

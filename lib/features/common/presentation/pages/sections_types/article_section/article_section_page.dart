@@ -11,12 +11,7 @@ import 'package:ustadia_user_app/features/common/presentation/bloc/section_detai
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_event.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/section_detail_bloc/section_detail_state.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/article_section/article_section_intro.dart';
-import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_quiz_component.dart';
-import 'package:ustadia_user_app/features/common/presentation/widgets/components/section_timer_badge.dart';
-import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/quiz_result_component.dart';
 import 'package:ustadia_user_app/injection_container.dart';
-
-enum ArticleSectionStage { intro, quiz, result }
 
 class ArticleSectionPage extends StatefulWidget {
   final SectionModel sectionModel;
@@ -29,14 +24,10 @@ class ArticleSectionPage extends StatefulWidget {
 
 class _ArticleSectionPageState extends State<ArticleSectionPage> {
   final SectionDetailBloc detailBloc = sl<SectionDetailBloc>();
-  ArticleSectionStage stage = ArticleSectionStage.intro;
 
   @override
   void initState() {
     super.initState();
-    if (widget.sectionModel.progressState == SectionProgressState.completed) {
-      stage = ArticleSectionStage.result;
-    }
     if (widget.sectionModel.id.isNotEmpty) {
       detailBloc.add(SectionDetailRequested(
           sectionId: widget.sectionModel.id,
@@ -55,49 +46,6 @@ class _ArticleSectionPageState extends State<ArticleSectionPage> {
     super.dispose();
   }
 
-  void changeStage(SectionDetailState state) {
-    if (state.status.isLoading || state.detail == null) return;
-    setState(() => stage = ArticleSectionStage.quiz);
-  }
-
-  void finishQuiz(int correct) {
-    if (widget.sectionModel.source == SectionSource.mockExam) {
-      Navigator.of(context).pop(true);
-      return;
-    }
-    setState(() => stage = ArticleSectionStage.result);
-  }
-
-  void closeMockExamSectionOnTimerExpired() {
-    if (widget.sectionModel.source != SectionSource.mockExam || !mounted) return;
-    Navigator.of(context).pop(true);
-  }
-
-  Widget? quizHeaderWidget(SectionDetailState state) {
-    final timeRemaining = state.detail?.timeRemainingSeconds;
-    if (timeRemaining == null) return null;
-    return SectionTimerBadge(
-        timeRemainingSeconds: timeRemaining, onExpired: closeMockExamSectionOnTimerExpired);
-  }
-
-  Widget timerBadge(SectionDetailState state) {
-    final timeRemaining = state.detail?.timeRemainingSeconds;
-    if (timeRemaining == null) return const SizedBox.shrink();
-    return Padding(
-        padding: const EdgeInsets.only(top: 20, bottom: 12),
-        child: SectionTimerBadge(
-            timeRemainingSeconds: timeRemaining, onExpired: closeMockExamSectionOnTimerExpired));
-  }
-
-  Widget introView(SectionDetailState state, bool isLoading) => Column(children: [
-        timerBadge(state),
-        Expanded(
-            child: ArticleSectionIntro(
-                sectionModel: state.detail ?? widget.sectionModel,
-                changeStage: () => changeStage(state),
-                isLoading: isLoading))
-      ]);
-
   Widget get header => Column(children: [
         Text(widget.sectionModel.title,
             maxLines: 1, overflow: TextOverflow.ellipsis, style: Style.body2w6(context)),
@@ -108,27 +56,12 @@ class _ArticleSectionPageState extends State<ArticleSectionPage> {
             style: Style.small3w4(context, color: TextColorRole.greyColor))
       ]);
 
-  Widget body(BuildContext context, SectionDetailState state) {
-    final isLoading = state.status.isLoading || state.detail == null;
-    if (widget.sectionModel.source == SectionSource.mockExam &&
-        state.detail?.progressState == SectionProgressState.completed) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) Navigator.of(context).pop(true);
-      });
-      return const SizedBox.shrink();
-    }
-    if (state.detail?.progressState == SectionProgressState.completed) {
-      return QuizResultComponent(sectionModel: widget.sectionModel);
-    }
-    if (stage == ArticleSectionStage.intro) return introView(state, isLoading);
-    if (stage == ArticleSectionStage.quiz) {
-      return SectionQuizComponent(
-          questions: state.detail?.questions ?? [],
-          sectionContent: state.detail?.content ?? widget.sectionModel.content,
-          headerWidget: quizHeaderWidget(state),
-          onFinish: finishQuiz);
-    }
-    return QuizResultComponent(sectionModel: widget.sectionModel);
+  Widget body(SectionDetailState state) {
+    final isLoading = state.status.isInitial || state.status.isLoading;
+    // Articles are optional read-only material. Their completion flag is always
+    // true, so they must never enter the shared quiz or result flow.
+    return ArticleSectionIntro(
+        sectionModel: state.detail ?? widget.sectionModel, isLoading: isLoading);
   }
 
   @override
@@ -140,13 +73,9 @@ class _ArticleSectionPageState extends State<ArticleSectionPage> {
           body: PrimaryBackground(
               header: header,
               headerTooltipText: widget.sectionModel.title,
-              padding: stage == ArticleSectionStage.quiz ? EdgeInsets.zero : null,
-              margin:
-                  stage == ArticleSectionStage.quiz ? const EdgeInsets.fromLTRB(8, 8, 8, 0) : null,
-              applyBottomSafeArea: stage != ArticleSectionStage.quiz,
-              isHeader: stage != ArticleSectionStage.result,
+              padding: const EdgeInsets.fromLTRB(4, 12, 4, 0),
               isScrollable: false,
               alwaysScrollable: false,
               child: BlocBuilder<SectionDetailBloc, SectionDetailState>(
-                  bloc: detailBloc, builder: (context, state) => body(context, state)))));
+                  bloc: detailBloc, builder: (context, state) => body(state)))));
 }

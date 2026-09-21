@@ -144,6 +144,17 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
         mockAttemptId: section.mockAttemptId));
   }
 
+  void startRedo() {
+    shouldRefreshParent = true;
+    index = 0;
+    showMeaning = false;
+    resultStats = null;
+    _seenMeaning.clear();
+    _knownCards.clear();
+    _learningCards.clear();
+    loadSectionDetail();
+  }
+
   void handleSectionDetail(BuildContext context, SectionDetailState state) {
     if (!state.status.isSuccess) return;
     final detail = state.detail;
@@ -666,6 +677,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
       child: PrimaryBackground(
           header: header,
           headerTooltipText: resolvedFlashcardSet.title,
+          onBack: () => context.pop(shouldRefreshParent ? true : null),
           child: flashcardsContent(context)));
 
   Widget get resultView {
@@ -674,7 +686,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
       return PrimaryBackground(
           isHeader: false,
           isScrollable: false,
-          child: QuizResultComponent(sectionModel: sectionModel));
+          child: QuizResultComponent(sectionModel: sectionModel, onRedo: startRedo));
     }
     return FlashcardSprintResultView(stats: resultStats);
   }
@@ -690,6 +702,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
               style: Style.small3w4(context, color: TextColorRole.greyColor))
         ]),
         headerTooltipText: section.title,
+        onBack: () => context.pop(shouldRefreshParent ? true : null),
         padding: EdgeInsets.zero,
         margin: const EdgeInsets.fromLTRB(8, 8, 8, 0),
         applyBottomSafeArea: false,
@@ -705,6 +718,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
   Widget get emptyView => PrimaryBackground(
       header: header,
       headerTooltipText: resolvedFlashcardSet.title,
+      onBack: () => context.pop(shouldRefreshParent ? true : null),
       child: Center(
           child: Text('No flashcards found.'.tr(),
               style: Style.bodyw5(context, color: TextColorRole.greyColor))));
@@ -713,6 +727,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
       backgroundColor: context.cs.surface,
       body: PrimaryBackground(
           title: resolvedSectionModel?.title ?? 'Vocabulary'.tr(),
+          onBack: () => context.pop(shouldRefreshParent ? true : null),
           isScrollable: false,
           child: const Center(child: PrimaryLoadingIndicator())));
 
@@ -720,6 +735,7 @@ class FlashcardSprintPageState extends State<FlashcardSprintPage> {
       backgroundColor: context.cs.surface,
       body: PrimaryBackground(
           title: resolvedSectionModel?.title ?? 'Vocabulary'.tr(),
+          onBack: () => context.pop(shouldRefreshParent ? true : null),
           isScrollable: false,
           child: Center(child: ReloadConntectionButton(onReloadConnection: loadSectionDetail))));
 

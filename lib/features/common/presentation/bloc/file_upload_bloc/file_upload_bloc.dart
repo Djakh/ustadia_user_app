@@ -10,6 +10,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
   final UploadRemoteDataSource uploadRemoteDataSource;
 
   FileUploadBloc({required this.uploadRemoteDataSource}) : super(const FileUploadState()) {
+    on<FileUploadReset>((event, emit) => emit(const FileUploadState()));
     on<ImageUploadRequested>(handleImageUploadRequested);
   }
 

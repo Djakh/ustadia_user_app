@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/core/network/api_url_resolver.dart';
 import 'package:ustadia_user_app/core/compliance/safety_notice.dart';
+import 'package:ustadia_user_app/core/compliance/social_feature_settings_service.dart';
 import 'package:ustadia_user_app/core/widgets/cached_images/avatars/user_avatar.dart';
 import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_remote_data_source.dart';
@@ -32,7 +33,7 @@ class ProfileEditableAvatar extends StatelessWidget {
   Future<void> showImagePickerSheet(BuildContext context) async {
     final canUpload =
         context.read<UserBloc>().state.profile?.socialPermissions?.canUploadPublicAvatar;
-    if (canUpload == false) return;
+    if (canUpload == false || !sl<SocialFeatureSettingsService>().publicProfilesEnabled) return;
     final confirmed =
         await SafetyNoticeCoordinator.confirm(context, SafetyNoticeType.publicAvatarUpload);
     if (!confirmed || !context.mounted) return;
@@ -76,7 +77,8 @@ class ProfileEditableAvatar extends StatelessWidget {
             avatar,
             if (state.status.isLoading) const PrimaryLoadingIndicator(isCenter: false),
             if (context.read<UserBloc>().state.profile?.socialPermissions?.canUploadPublicAvatar !=
-                false)
+                    false &&
+                sl<SocialFeatureSettingsService>().publicProfilesEnabled)
               editIcon(context)
           ]));
 

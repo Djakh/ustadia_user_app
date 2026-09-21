@@ -37,6 +37,8 @@ class SettingsPageState extends State<SettingsPage> {
         SettingsItemModel(title: 'Account'.tr(), iconData: Icons.person),
         SettingsItemModel(title: 'Language'.tr(), iconData: Icons.language_rounded),
         SettingsItemModel(title: 'Choose teacher'.tr(), iconData: Icons.people),
+        SettingsItemModel(
+            title: 'Family & social safety'.tr(), iconData: Icons.family_restroom_rounded),
         // SettingsItemModel(title: 'Notifications'.tr(), iconAsset: AppImages.settingsNotifications),
         // SettingsItemModel(title: 'Info'.tr(), iconAsset: AppImages.settingsInfo),
         // SettingsItemModel(title: 'Legal'.tr(), iconAsset: AppImages.settingsLegal),
@@ -79,6 +81,8 @@ class SettingsPageState extends State<SettingsPage> {
 
   void goToEditAccount(BuildContext context) => context.push(editAccountRoute);
 
+  void goToFamilySocialSafety(BuildContext context) => context.push(familySocialSafetyRoute);
+
   /// --- Showed Widgets ---
   Future<void> showTeacherPicker(BuildContext context, UserProfileModel userModel) async {
     final didSwap = await showModalBottomSheet<bool>(
@@ -110,6 +114,8 @@ class SettingsPageState extends State<SettingsPage> {
                 const PrimaryDivider(),
                 SettingsListItem(
                     item: mainItems[2], onTap: () => showTeacherPicker(context, state.profile!)),
+                const PrimaryDivider(),
+                SettingsListItem(item: mainItems[3], onTap: () => goToFamilySocialSafety(context)),
                 // const PrimaryDivider(),
                 // SettingsListItem(item: mainItems[3], onTap: () => goToNotifications(context)),
                 // const PrimaryDivider(),

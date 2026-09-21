@@ -431,12 +431,14 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
               border: Border.all(color: AppColors.gray100)),
           child: Row(children: [
             Icon(
-                section.progressState == SectionProgressState.completed
-                    ? Icons.check_circle
-                    : section.isLocked || !section.isAvailable
-                        ? Icons.lock
-                        : Icons.play_circle,
-                color: section.progressState == SectionProgressState.completed
+                section.sectionType == SectionType.article
+                    ? Icons.article_outlined
+                    : section.isCompleted
+                        ? Icons.check_circle
+                        : section.isLocked || !section.isAvailable
+                            ? Icons.lock
+                            : Icons.play_circle,
+                color: section.isCompleted
                     ? AppColors.success
                     : section.isLocked || !section.isAvailable
                         ? AppColors.gray400
@@ -448,22 +450,23 @@ class MockExamSectionsPageState extends State<MockExamSectionsPage> {
                   timeRemainingSeconds: section.timeRemainingSeconds,
                   compact: true,
                   onExpired: refreshAttempt)
-            else
+            else if (section.tracksProgress)
               Text(section.status.isEmpty ? '' : SectionModel.formatTypeLabel(section.status),
                   style: Style.small2w5(context, color: TextColorRole.greyColor))
           ])));
 
   bool shouldShowSectionTimer(SectionModel section) =>
+      section.tracksProgress &&
       section.timeRemainingSeconds != null &&
-      section.progressState != SectionProgressState.completed &&
+      !section.isCompleted &&
       section.status != 'completed' &&
       section.status != 'expired';
 
   bool canOpenSection(SectionModel section) =>
       !section.isLocked &&
       section.isAvailable &&
-      section.progressState != SectionProgressState.completed &&
-      section.status != 'expired';
+      !section.isCompleted &&
+      (!section.tracksProgress || section.status != 'expired');
 
   Widget content(MockExamSectionsState state) {
     if (state.status.isLoading || state.status.isInitial) {

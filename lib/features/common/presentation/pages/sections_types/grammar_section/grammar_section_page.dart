@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:ustadia_user_app/core/widgets/connection/reload_conntection_button.dart';
+import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 import 'package:ustadia_user_app/core/widgets/text/html_text.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/pages/sections_types/grammar_section/grammar_section_intro.dart';
@@ -33,6 +36,8 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
   final SectionDetailBloc detailBloc = sl<SectionDetailBloc>();
   GrammarSectionStage stage = GrammarSectionStage.intro;
   int correctCount = 0;
+  bool isReloadingAfterRedo = false;
+  bool shouldRefreshParent = false;
 
   @override
   void initState() {
@@ -41,14 +46,7 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
       stage = GrammarSectionStage.result;
     }
     if (widget.sectionModel.id.isNotEmpty) {
-      detailBloc.add(SectionDetailRequested(
-          sectionId: widget.sectionModel.id,
-          source: widget.sectionModel.source,
-          unitId: widget.sectionModel.unitId,
-          lessonId: widget.sectionModel.lessonId,
-          assignmentId: widget.sectionModel.assignmentId,
-          mockExamId: widget.sectionModel.mockId,
-          mockAttemptId: widget.sectionModel.mockAttemptId));
+      requestSectionDetail();
     }
   }
 
@@ -59,6 +57,24 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
   }
 
   /// --- Methods ---
+
+  void requestSectionDetail() => detailBloc.add(SectionDetailRequested(
+      sectionId: widget.sectionModel.id,
+      source: widget.sectionModel.source,
+      unitId: widget.sectionModel.unitId,
+      lessonId: widget.sectionModel.lessonId,
+      assignmentId: widget.sectionModel.assignmentId,
+      mockExamId: widget.sectionModel.mockId,
+      mockAttemptId: widget.sectionModel.mockAttemptId));
+
+  void startRedo() {
+    setState(() {
+      stage = GrammarSectionStage.quiz;
+      isReloadingAfterRedo = true;
+      shouldRefreshParent = true;
+    });
+    requestSectionDetail();
+  }
 
   void changeStage(SectionDetailState state) {
     if (state.status.isLoading || state.detail == null) return;
@@ -72,6 +88,7 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
     }
     setState(() {
       correctCount = correct;
+      isReloadingAfterRedo = false;
       stage = GrammarSectionStage.result;
     });
   }
@@ -168,8 +185,18 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
       });
       return const SizedBox.shrink();
     }
+    if (isReloadingAfterRedo) {
+      if (state.status.isError) {
+        return Center(child: ReloadConntectionButton(onReloadConnection: requestSectionDetail));
+      }
+      if (!state.status.isSuccess ||
+          state.detail == null ||
+          state.detail!.progressState == SectionProgressState.completed) {
+        return const Center(child: PrimaryLoadingIndicator());
+      }
+    }
     if (state.detail?.progressState == SectionProgressState.completed) {
-      return QuizResultComponent(sectionModel: widget.sectionModel);
+      return QuizResultComponent(sectionModel: widget.sectionModel, onRedo: startRedo);
     }
     if (stage == GrammarSectionStage.intro) return introView(state, isLoading);
     if (stage == GrammarSectionStage.quiz)
@@ -184,27 +211,35 @@ class GrammarSectionPageState extends State<GrammarSectionPage> {
               label: 'Read'),
           onFinish: finishQuiz);
     if (stage == GrammarSectionStage.result) {
-      return QuizResultComponent(sectionModel: widget.sectionModel);
+      return QuizResultComponent(sectionModel: widget.sectionModel, onRedo: startRedo);
     }
     return introView(state, isLoading);
   }
 
   @override
-  Widget build(BuildContext context) => GuidedTutorialPage(
-      pageId: '${TutorialPageIds.section}.grammar',
-      steps: TutorialPresets.section(sectionType: 'grammar'),
-      child: Scaffold(
-          backgroundColor: context.cs.surface,
-          body: PrimaryBackground(
-              header: header,
-              headerTooltipText: widget.sectionModel.title,
-              padding: stage == GrammarSectionStage.quiz ? EdgeInsets.zero : null,
-              margin:
-                  stage == GrammarSectionStage.quiz ? const EdgeInsets.fromLTRB(8, 8, 8, 0) : null,
-              applyBottomSafeArea: stage != GrammarSectionStage.quiz,
-              isHeader: stage != GrammarSectionStage.result,
-              isScrollable: false,
-              alwaysScrollable: false,
-              child: BlocBuilder<SectionDetailBloc, SectionDetailState>(
-                  bloc: detailBloc, builder: (context, state) => body(context, state)))));
+  Widget build(BuildContext context) => PopScope(
+      canPop: !shouldRefreshParent,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop || !context.mounted) return;
+        context.pop(true);
+      },
+      child: GuidedTutorialPage(
+          pageId: '${TutorialPageIds.section}.grammar',
+          steps: TutorialPresets.section(sectionType: 'grammar'),
+          child: Scaffold(
+              backgroundColor: context.cs.surface,
+              body: PrimaryBackground(
+                  header: header,
+                  headerTooltipText: widget.sectionModel.title,
+                  onBack: () => context.pop(shouldRefreshParent ? true : null),
+                  padding: stage == GrammarSectionStage.quiz ? EdgeInsets.zero : null,
+                  margin: stage == GrammarSectionStage.quiz
+                      ? const EdgeInsets.fromLTRB(8, 8, 8, 0)
+                      : null,
+                  applyBottomSafeArea: stage != GrammarSectionStage.quiz,
+                  isHeader: stage != GrammarSectionStage.result,
+                  isScrollable: false,
+                  alwaysScrollable: false,
+                  child: BlocBuilder<SectionDetailBloc, SectionDetailState>(
+                      bloc: detailBloc, builder: (context, state) => body(context, state))))));
 }

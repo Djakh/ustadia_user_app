@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:record/record.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
@@ -10,6 +11,7 @@ import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
+import 'package:ustadia_user_app/core/widgets/connection/reload_conntection_button.dart';
 import 'package:ustadia_user_app/core/widgets/indicators/page_indicator.dart';
 import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
@@ -48,6 +50,8 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
   final FileUploadBloc uploadBloc = sl<FileUploadBloc>();
   SpeakingSectionStage stage = SpeakingSectionStage.ready;
   int questionIndex = 0;
+  bool isReloadingAfterRedo = false;
+  bool shouldRefreshParent = false;
 
   bool isStopping = false;
   final AudioRecorder recorder = AudioRecorder();
@@ -149,6 +153,30 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
 
   void setStage(SpeakingSectionStage value) => stage = value;
 
+  void requestSectionDetail() => detailBloc.add(SectionDetailRequested(
+      sectionId: widget.sectionModel.id,
+      source: widget.sectionModel.source,
+      unitId: widget.sectionModel.unitId,
+      lessonId: widget.sectionModel.lessonId,
+      assignmentId: widget.sectionModel.assignmentId,
+      mockExamId: widget.sectionModel.mockId,
+      mockAttemptId: widget.sectionModel.mockAttemptId));
+
+  void startRedo() {
+    sessionTimer?.cancel();
+    answerBloc.add(const QuestionAnswerReset());
+    uploadBloc.add(const FileUploadReset());
+    setState(() {
+      questionIndex = 0;
+      pendingAudioPath = null;
+      remainingDuration = maxSpeakingDuration;
+      stage = SpeakingSectionStage.ready;
+      isReloadingAfterRedo = true;
+      shouldRefreshParent = true;
+    });
+    requestSectionDetail();
+  }
+
   String tempRecordingPath() =>
       '${Directory.systemTemp.path}/speaking_${DateTime.now().millisecondsSinceEpoch}.m4a';
 
@@ -205,6 +233,7 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
         return;
       }
       setStage(SpeakingSectionStage.result);
+      isReloadingAfterRedo = false;
       setState(() {});
       return;
     }
@@ -330,11 +359,21 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
   Widget get bodyChecker => BlocBuilder<SectionDetailBloc, SectionDetailState>(
       bloc: detailBloc,
       builder: (context, state) {
+        if (isReloadingAfterRedo) {
+          if (state.status.isError) {
+            return Center(child: ReloadConntectionButton(onReloadConnection: requestSectionDetail));
+          }
+          if (!state.status.isSuccess ||
+              state.detail == null ||
+              state.detail!.progressState == SectionProgressState.completed) {
+            return const PrimaryLoadingIndicator();
+          }
+        }
         if (state.detail?.progressState == SectionProgressState.completed) {
-          return QuizResultComponent(sectionModel: widget.sectionModel);
+          return QuizResultComponent(sectionModel: widget.sectionModel, onRedo: startRedo);
         }
         if (stage == SpeakingSectionStage.result) {
-          return QuizResultComponent(sectionModel: widget.sectionModel);
+          return QuizResultComponent(sectionModel: widget.sectionModel, onRedo: startRedo);
         }
         if (state.status.isLoading && state.detail == null) {
           return const PrimaryLoadingIndicator();
@@ -343,21 +382,28 @@ class SpeakingSectionPageState extends State<SpeakingSectionPage> {
       });
 
   @override
-  Widget build(BuildContext context) => GuidedTutorialPage(
-      pageId: '${TutorialPageIds.section}.speaking',
-      steps: TutorialPresets.section(sectionType: 'speaking'),
-      child: MultiBlocListener(
-          listeners: [
-            BlocListener<FileUploadBloc, FileUploadState>(
-                bloc: uploadBloc, listener: fileUploadListener),
-            BlocListener<QuestionAnswerBloc, QuestionAnswerState>(
-                bloc: answerBloc, listener: questionAnswerListener),
-          ],
-          child: Scaffold(
-              backgroundColor: context.cs.surface,
-              body: PrimaryBackground(
-                  title: widget.sectionModel.title,
-                  headerTooltipText: widget.sectionModel.title,
-                  isScrollable: false,
-                  child: bodyChecker))));
+  Widget build(BuildContext context) => PopScope(
+      canPop: !shouldRefreshParent,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop || !context.mounted) return;
+        context.pop(true);
+      },
+      child: GuidedTutorialPage(
+          pageId: '${TutorialPageIds.section}.speaking',
+          steps: TutorialPresets.section(sectionType: 'speaking'),
+          child: MultiBlocListener(
+              listeners: [
+                BlocListener<FileUploadBloc, FileUploadState>(
+                    bloc: uploadBloc, listener: fileUploadListener),
+                BlocListener<QuestionAnswerBloc, QuestionAnswerState>(
+                    bloc: answerBloc, listener: questionAnswerListener),
+              ],
+              child: Scaffold(
+                  backgroundColor: context.cs.surface,
+                  body: PrimaryBackground(
+                      title: widget.sectionModel.title,
+                      headerTooltipText: widget.sectionModel.title,
+                      onBack: () => context.pop(shouldRefreshParent ? true : null),
+                      isScrollable: false,
+                      child: bodyChecker)))));
 }

@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/compliance/safety_notice.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
@@ -53,6 +54,8 @@ class WritingSectionPageState extends State<WritingSectionPage> {
   final TextEditingController inputController = TextEditingController();
   static const String inputPlaceholder = 'Start writing here';
   bool isPickingUpload = false;
+  bool isReloadingAfterRedo = false;
+  bool shouldRefreshParent = false;
 
   bool get canSubmitIeltsWriting =>
       sl<UserBloc>().state.profile?.socialPermissions?.canSubmitIeltsWriting != false;
@@ -90,7 +93,10 @@ class WritingSectionPageState extends State<WritingSectionPage> {
         Navigator.of(context).pop(true);
         return;
       }
-      setState(() => stage = WritingSectionStage.result);
+      setState(() {
+        isReloadingAfterRedo = false;
+        stage = WritingSectionStage.result;
+      });
     }
   }
 
@@ -130,6 +136,19 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       assignmentId: widget.sectionModel.assignmentId,
       mockExamId: widget.sectionModel.mockId,
       mockAttemptId: widget.sectionModel.mockAttemptId));
+
+  void startRedo() {
+    inputController.clear();
+    answerBloc.add(const QuestionAnswerReset());
+    uploadBloc.add(const FileUploadReset());
+    setState(() {
+      selectedMethod = null;
+      stage = WritingSectionStage.lesson;
+      isReloadingAfterRedo = true;
+      shouldRefreshParent = true;
+    });
+    getSectionDetails();
+  }
 
   Future<void> pickUploadFile() async {
     if (isPickingUpload || !mounted) return;
@@ -314,7 +333,7 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       bloc: detailBloc,
       builder: (context, state) {
         if (state.detail?.progressState == SectionProgressState.completed) {
-          return QuizResultComponent(sectionModel: widget.sectionModel);
+          return QuizResultComponent(sectionModel: widget.sectionModel, onRedo: startRedo);
         }
         if (state.status.isSuccess && state.detail != null)
           return WritingSectionLesson(
@@ -325,6 +344,16 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       });
 
   Widget bodyChecker(SectionDetailState detailState) {
+    if (isReloadingAfterRedo) {
+      if (detailState.status.isError) {
+        return Center(child: ReloadConntectionButton(onReloadConnection: getSectionDetails));
+      }
+      if (!detailState.status.isSuccess ||
+          detailState.detail == null ||
+          detailState.detail!.progressState == SectionProgressState.completed) {
+        return const Center(child: PrimaryLoadingIndicator());
+      }
+    }
     if (stage == WritingSectionStage.lesson) return lessonView;
     if (stage == WritingSectionStage.input) return inputView;
     if (stage == WritingSectionStage.result)
@@ -333,7 +362,8 @@ class WritingSectionPageState extends State<WritingSectionPage> {
           builder: (context, state) => QuizResultComponent(
               sectionModel: widget.sectionModel,
               aiFeedback: state.result?.aiFeedback,
-              feedback: state.result?.error));
+              feedback: state.result?.error,
+              onRedo: startRedo));
 
     return const SizedBox();
   }
@@ -361,23 +391,30 @@ class WritingSectionPageState extends State<WritingSectionPage> {
       ]);
 
   @override
-  Widget build(BuildContext context) => GuidedTutorialPage(
-      pageId: '${TutorialPageIds.section}.writing',
-      steps: TutorialPresets.section(sectionType: 'writing'),
-      child: MultiBlocListener(
-          listeners: [
-            BlocListener<QuestionAnswerBloc, QuestionAnswerState>(
-                bloc: answerBloc, listener: questionAnswerListener),
-            BlocListener<FileUploadBloc, FileUploadState>(
-                bloc: uploadBloc, listener: fileUploadListener),
-          ],
-          child: Scaffold(
-              backgroundColor: context.cs.surface,
-              body: PrimaryBackground(
-                  header: header,
-                  headerTooltipText: widget.sectionModel.title,
-                  isHeader: stage != WritingSectionStage.result,
-                  isScrollable: false,
-                  child: BlocBuilder<SectionDetailBloc, SectionDetailState>(
-                      bloc: detailBloc, builder: (context, state) => view(state))))));
+  Widget build(BuildContext context) => PopScope(
+      canPop: !shouldRefreshParent,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop || !context.mounted) return;
+        context.pop(true);
+      },
+      child: GuidedTutorialPage(
+          pageId: '${TutorialPageIds.section}.writing',
+          steps: TutorialPresets.section(sectionType: 'writing'),
+          child: MultiBlocListener(
+              listeners: [
+                BlocListener<QuestionAnswerBloc, QuestionAnswerState>(
+                    bloc: answerBloc, listener: questionAnswerListener),
+                BlocListener<FileUploadBloc, FileUploadState>(
+                    bloc: uploadBloc, listener: fileUploadListener),
+              ],
+              child: Scaffold(
+                  backgroundColor: context.cs.surface,
+                  body: PrimaryBackground(
+                      header: header,
+                      headerTooltipText: widget.sectionModel.title,
+                      onBack: () => context.pop(shouldRefreshParent ? true : null),
+                      isHeader: stage != WritingSectionStage.result,
+                      isScrollable: false,
+                      child: BlocBuilder<SectionDetailBloc, SectionDetailState>(
+                          bloc: detailBloc, builder: (context, state) => view(state)))))));
 }

@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/compliance/safety_notice.dart';
+import 'package:ustadia_user_app/core/compliance/social_feature_settings_service.dart';
 import 'package:ustadia_user_app/core/network/api_url_resolver.dart';
 import 'package:ustadia_user_app/core/tutorial/guided_tutorial_page.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
@@ -48,6 +50,7 @@ class _ReelsPageState extends State<ReelsPage> with WidgetsBindingObserver {
   bool playbackAllowed = true;
   final Map<String, Duration> playbackPositions = <String, Duration>{};
   final ReelVideoControllerCache videoControllerCache = ReelVideoControllerCache(maxControllers: 8);
+  final socialSettings = sl<SocialFeatureSettingsService>();
 
   @override
   void initState() {
@@ -105,6 +108,14 @@ class _ReelsPageState extends State<ReelsPage> with WidgetsBindingObserver {
   }
 
   Future<void> showComments(ReelPostModel post) async {
+    if (!socialSettings.commentsEnabled) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Comments are disabled by adult controls.'.tr())));
+      return;
+    }
+    final safetyConfirmed =
+        await SafetyNoticeCoordinator.confirm(context, SafetyNoticeType.socialInteraction);
+    if (!safetyConfirmed || !mounted) return;
     reelsBloc.add(ReelCommentsRequested(postId: post.id));
     setState(() => playbackAllowed = false);
     await showModalBottomSheet<void>(
@@ -132,6 +143,11 @@ class _ReelsPageState extends State<ReelsPage> with WidgetsBindingObserver {
   }
 
   Future<void> openAuthorProfile(ReelPostModel post) async {
+    if (!socialSettings.publicProfilesEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Public profiles are disabled by adult controls.'.tr())));
+      return;
+    }
     final author = post.author;
     if (author == null || author.id.isEmpty) return;
     setState(() => playbackAllowed = false);
@@ -189,7 +205,9 @@ class _ReelsPageState extends State<ReelsPage> with WidgetsBindingObserver {
                     },
                     controllerCache: videoControllerCache,
                     resolveUrl: resolveMediaUrl,
-                    onLike: () => reelsBloc.add(ReelLikeToggled(post: post)),
+                    onLike: socialSettings.likesEnabled
+                        ? () => reelsBloc.add(ReelLikeToggled(post: post))
+                        : null,
                     onComments: () => showComments(post),
                     onAuthorTap: () => openAuthorProfile(post));
               }));
