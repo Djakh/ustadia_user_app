@@ -5,7 +5,7 @@ import 'package:ustadia_user_app/features/common/data/models/section_model/secti
 import 'package:ustadia_user_app/features/common/data/models/uploaded_file_model.dart';
 import 'package:ustadia_user_app/features/learn/data/models/learn_audio_file_model.dart';
 
-enum SectionProgressState { completed, inProgress, locked }
+enum SectionProgressState { completed, inProgress, locked, notApplicable }
 
 enum SectionType { listening, reading, writing, speaking, grammar, vocabulary, article }
 
@@ -80,6 +80,10 @@ class SectionModel {
 
   int get lessonNumber => orderIndex;
 
+  bool get tracksProgress => sectionType != SectionType.article;
+
+  bool get isCompleted => tracksProgress && progressState == SectionProgressState.completed;
+
   String get sectionTypeLabel {
     final value = sectionStringType?.trim();
     if (value == null || value.isEmpty) return formatTypeLabel(sectionType.name);
@@ -130,19 +134,23 @@ class SectionModel {
         json['subSectionId']?.toString() ??
         '';
     final orderIndex = toInt(json['order_index']);
+    final type = SectionTypeX.fromApi(json['type']?.toString() ?? '');
     final questionsJson = json['questions'];
-    final totalQuestions = toInt(json['totalQuestions'] ??
-        json['totalquestions'] ??
-        json['taskCount'] ??
-        json['questions_count'] ??
-        (questionsJson is List ? questionsJson.length : null));
+    final totalQuestions = type == SectionType.article
+        ? 0
+        : toInt(json['totalQuestions'] ??
+            json['totalquestions'] ??
+            json['taskCount'] ??
+            json['questions_count'] ??
+            (questionsJson is List ? questionsJson.length : null));
     final answeredQuestionsValue = json['answeredQuestions'] ??
         json['answeredquestions'] ??
         json['CompletedTaskCount'] ??
         json['completedTaskCount'] ??
         json['answered_questions_count'];
-    final answeredQuestions = answeredQuestionsValue == null ? null : toInt(answeredQuestionsValue);
-    final type = SectionTypeX.fromApi(json['type']?.toString() ?? '');
+    final answeredQuestions = type == SectionType.article || answeredQuestionsValue == null
+        ? null
+        : toInt(answeredQuestionsValue);
     final resolvedAssignmentId = assignmentId ?? json['assignment_id']?.toString();
     final resolvedMockId = mockId ?? json['mock_id']?.toString();
     final resolvedMockAttemptId =
@@ -154,29 +162,34 @@ class SectionModel {
             : resolvedMockId != null
                 ? SectionSource.mockExam
                 : SectionSource.learn);
-    final questions = (questionsJson as List<dynamic>?)
-            ?.whereType<Map<String, dynamic>>()
-            .map((item) => SectionQuestionModel.fromJson(item,
-                source: resolvedSource,
-                assignmentId: resolvedAssignmentId,
-                mockExamId: resolvedMockId,
-                mockAttemptId: resolvedMockAttemptId,
-                sectionId: resolvedSectionId,
-                unitId: json['unit_id']?.toString(),
-                lessonId: lessonId))
-            .toList() ??
-        [];
+    final questions = type == SectionType.article
+        ? <SectionQuestionModel>[]
+        : (questionsJson as List<dynamic>?)
+                ?.whereType<Map<String, dynamic>>()
+                .map((item) => SectionQuestionModel.fromJson(item,
+                    source: resolvedSource,
+                    assignmentId: resolvedAssignmentId,
+                    mockExamId: resolvedMockId,
+                    mockAttemptId: resolvedMockAttemptId,
+                    sectionId: resolvedSectionId,
+                    unitId: json['unit_id']?.toString(),
+                    lessonId: lessonId))
+                .toList() ??
+            [];
     questions.sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
-    final status = json['status']?.toString() ?? '';
-    final isAvailable = _toBool(json['is_available'], fallback: status != 'locked');
+    final rawStatus = json['status']?.toString() ?? '';
+    final status = type == SectionType.article ? '' : rawStatus;
+    final isAvailable = _toBool(json['is_available'], fallback: rawStatus != 'locked');
     final isLocked = _toBool(json['isLocked'] ?? json['islocked']);
-    SectionProgressState progressState = isLocked || status == 'locked'
+    final SectionProgressState progressState = isLocked || rawStatus == 'locked'
         ? SectionProgressState.locked
-        : _toBool(json['isCompleted'] ?? json['is_completed'] ?? json['iscompleted']) ||
-                status == 'completed' ||
-                status == 'expired'
-            ? SectionProgressState.completed
-            : SectionProgressState.inProgress;
+        : type == SectionType.article
+            ? SectionProgressState.notApplicable
+            : _toBool(json['isCompleted'] ?? json['is_completed'] ?? json['iscompleted']) ||
+                    status == 'completed' ||
+                    status == 'expired'
+                ? SectionProgressState.completed
+                : SectionProgressState.inProgress;
     final audioFileValue = json['audio_file'] ??
         json['audioFile'] ??
         json['audio'] ??

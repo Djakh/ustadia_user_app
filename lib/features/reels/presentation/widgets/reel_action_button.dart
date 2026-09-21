@@ -5,7 +5,7 @@ import 'package:ustadia_user_app/assets/themes/style.dart';
 class ReelActionButton extends StatelessWidget {
   final IconData icon;
   final String label;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final Color? iconColor;
 
   const ReelActionButton({

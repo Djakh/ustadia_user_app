@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:ustadia_user_app/core/pagination/pagination_meta.dart';
 import 'package:ustadia_user_app/core/pagination/pagination_result.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_stats_model.dart';
@@ -11,6 +12,9 @@ class LearnRemoteDataSource {
   final Dio dio;
 
   LearnRemoteDataSource({required this.dio});
+
+  Options get freshRequestOptions =>
+      CacheOptions(policy: CachePolicy.noCache, store: MemCacheStore()).toOptions();
 
   Future<List<LearnLessonModel>> fetchLessons({int page = 1, int limit = 10}) async {
     final response =
@@ -52,9 +56,13 @@ class LearnRemoteDataSource {
   }
 
   Future<SectionModel> fetchSectionDetail({required String sectionId}) async {
-    final response = await dio.get('/students/sections/$sectionId');
+    final response = await dio.get('/students/sections/$sectionId', options: freshRequestOptions);
     final data = response.data as Map<String, dynamic>;
     return SectionModel.fromJson(data);
+  }
+
+  Future<void> redoSection({required String sectionId}) async {
+    await dio.post('/students/sections/$sectionId/redo');
   }
 
   Future<SectionStatsModel> fetchSectionStats({required String sectionId}) async {

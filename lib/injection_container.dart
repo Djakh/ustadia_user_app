@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ustadia_user_app/core/services/session_logout_service.dart';
+import 'package:ustadia_user_app/core/compliance/social_feature_settings_service.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_storage_service.dart';
 import 'package:ustadia_user_app/features/ask_ai/data/datasources/ai_chat_remote_data_source.dart';
 import 'package:ustadia_user_app/features/ask_ai/data/repositories/auth_repository.dart';
@@ -65,13 +66,15 @@ import 'core/network/dio_client.dart';
 
 final sl = GetIt.instance;
 
-const apiBaseUrl = 'https://backend.ustadia.findecor.io';
-//const apiBaseUrl ='https://dev.backend.ustadia.findecor.io';
+const apiBaseUrl = 'https://backend.ustadia.com';
+//const apiBaseUrl ='https://dev.backend.ustadia.com';
 
 Future<void> initDependencies() async {
   // Core
   final prefs = await SharedPreferences.getInstance();
   sl.registerLazySingleton<SharedPreferences>(() => prefs);
+  sl.registerLazySingleton<SocialFeatureSettingsService>(
+      () => SocialFeatureSettingsService(preferences: sl()));
   sl.registerLazySingleton<TutorialStorageService>(() => TutorialStorageService(prefs: sl()));
   sl.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSource(prefs: sl()));
   sl.registerLazySingleton<Dio>(() => DioClient.create(

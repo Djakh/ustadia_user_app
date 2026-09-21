@@ -4,6 +4,10 @@ abstract class FileUploadEvent {
   const FileUploadEvent();
 }
 
+class FileUploadReset extends FileUploadEvent {
+  const FileUploadReset();
+}
+
 class ImageUploadRequested extends FileUploadEvent {
   final String? filePath;
   final String? fileName;

@@ -19,7 +19,9 @@ class AssignmentSectionCard extends StatelessWidget {
   AssignmentTypeTheme get theme =>
       AssignmentThemeCatalog.themeForType(section.sectionStringType ?? "");
 
-  bool get isCompleted => section.progressState == SectionProgressState.completed;
+  bool get isCompleted => section.isCompleted;
+
+  bool get isArticle => section.sectionType == SectionType.article;
 
   Widget iconBadge() => Container(
       width: 54,
@@ -65,16 +67,18 @@ class AssignmentSectionCard extends StatelessWidget {
               const SizedBox(height: 6),
               Row(children: [
                 tag(context),
-                const SizedBox(width: 8),
-                Row(children: [
-                  const Icon(Icons.access_time, size: 12, color: AppColors.gray400),
-                  const SizedBox(width: 4),
-                  Text(durationLabel,
-                      style: Style.small2w4(context, color: TextColorRole.greyColor))
-                ]),
-                const SizedBox(width: 8),
-                Text('{count} Q'.tr(namedArgs: {'count': '${section.questions.length}'}),
-                    style: Style.small2w5(context).copyWith(color: AppColors.gray400))
+                if (!isArticle) ...[
+                  const SizedBox(width: 8),
+                  Row(children: [
+                    const Icon(Icons.access_time, size: 12, color: AppColors.gray400),
+                    const SizedBox(width: 4),
+                    Text(durationLabel,
+                        style: Style.small2w4(context, color: TextColorRole.greyColor))
+                  ]),
+                  const SizedBox(width: 8),
+                  Text('{count} Q'.tr(namedArgs: {'count': '${section.questions.length}'}),
+                      style: Style.small2w5(context).copyWith(color: AppColors.gray400))
+                ]
               ])
             ])),
             const SizedBox(width: 12),

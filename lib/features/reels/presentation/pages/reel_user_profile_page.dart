@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/compliance/report_reason_dialog.dart';
+import 'package:ustadia_user_app/core/compliance/social_feature_settings_service.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/network/api_url_resolver.dart';
 import 'package:ustadia_user_app/core/widgets/cached_images/avatars/user_avatar.dart';
@@ -33,6 +34,7 @@ class ReelUserProfilePage extends StatefulWidget {
 class _ReelUserProfilePageState extends State<ReelUserProfilePage> {
   final ReelUserProfileBloc profileBloc = sl<ReelUserProfileBloc>();
   final ScrollController scrollController = ScrollController();
+  final socialSettings = sl<SocialFeatureSettingsService>();
 
   @override
   void initState() {
@@ -203,6 +205,13 @@ class _ReelUserProfilePageState extends State<ReelUserProfilePage> {
           ])));
 
   Widget content(ReelUserProfileState state) {
+    if (!socialSettings.publicProfilesEnabled) {
+      return Center(
+          child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Text('Public profiles are disabled by adult controls.'.tr(),
+                  textAlign: TextAlign.center, style: Style.bodyw5(context))));
+    }
     if (state.status.isLoading && state.user == null && state.posts.isEmpty) {
       return const PrimaryLoadingIndicator(height: 30, width: 30);
     }

@@ -3,7 +3,7 @@ import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 
-enum SafetyNoticeType { ieltsWritingSubmission, publicAvatarUpload }
+enum SafetyNoticeType { ieltsWritingSubmission, publicAvatarUpload, socialInteraction }
 
 /// Presents the required privacy reminder immediately before a user-upload flow.
 /// A process-wide guard prevents rapid taps from opening duplicate dialogs.
@@ -35,6 +35,7 @@ class SafetyNoticeDialog extends StatelessWidget {
   String get title => switch (type) {
         SafetyNoticeType.ieltsWritingSubmission => 'Submit your IELTS Writing safely'.tr(),
         SafetyNoticeType.publicAvatarUpload => 'Choose a safe profile image'.tr(),
+        SafetyNoticeType.socialInteraction => 'Stay safe when interacting online'.tr(),
       };
 
   String get message => switch (type) {
@@ -43,6 +44,9 @@ class SafetyNoticeDialog extends StatelessWidget {
               .tr(),
         SafetyNoticeType.publicAvatarUpload =>
           'Your profile image may be visible to other users. Do not upload an image containing identification documents, your address, phone number, school details, financial information, private messages, or other sensitive personal information.\n\nUse an appropriate image that you are comfortable sharing with other users.'
+              .tr(),
+        SafetyNoticeType.socialInteraction =>
+          'Only share information you are comfortable sharing publicly. Never share your home address, phone number, school schedule, passwords, precise location, or private photos. Online interactions can involve people who are not who they claim to be, so do not arrange real-world meetings or respond to requests that make you uncomfortable. Tell a parent, guardian, or teacher if something feels unsafe.'
               .tr(),
       };
 

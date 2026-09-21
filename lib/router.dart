@@ -70,6 +70,7 @@ import 'package:ustadia_user_app/features/profile/presentation/pages/profile_pag
 import 'package:ustadia_user_app/features/profile/presentation/pages/settings_language_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/settings_notifications_page.dart';
 import 'package:ustadia_user_app/features/profile/presentation/pages/settings_page.dart';
+import 'package:ustadia_user_app/features/profile/presentation/pages/family_social_safety_page.dart';
 import 'package:ustadia_user_app/features/reels/data/models/reel_post_model.dart';
 import 'package:ustadia_user_app/features/reels/presentation/pages/reel_user_profile_page.dart';
 import 'package:ustadia_user_app/features/reels/presentation/pages/reels_page.dart';
@@ -162,6 +163,7 @@ const notificationsPath = 'notifications';
 const settingsPath = 'settings';
 const settingsNotificationsPath = 'notifications';
 const settingsLanguagePath = 'language';
+const familySocialSafetyPath = 'family-social-safety';
 const editAccountPath = 'edit-account';
 
 /// --------------------
@@ -191,6 +193,7 @@ const notificationsRoute = '$profileRoute/$notificationsPath';
 const settingsRoute = '$profileRoute/$settingsPath';
 const settingsNotificationsRoute = '$settingsRoute/$settingsNotificationsPath';
 const settingsLanguageRoute = '$settingsRoute/$settingsLanguagePath';
+const familySocialSafetyRoute = '$settingsRoute/$familySocialSafetyPath';
 const editAccountRoute = '$settingsRoute/$editAccountPath';
 const profileImageViewRoute = '/profile-image-view';
 
@@ -691,6 +694,11 @@ final appRouter = GoRouter(
                       parentNavigatorKey: _rootKey,
                       builder: (_, state) =>
                           SettingsLanguagePage(userProfileModel: state.extra as UserProfileModel),
+                    ),
+                    GoRoute(
+                      path: familySocialSafetyPath,
+                      parentNavigatorKey: _rootKey,
+                      builder: (_, __) => const FamilySocialSafetyPage(),
                     ),
                   ],
                 ),

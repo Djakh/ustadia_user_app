@@ -384,8 +384,7 @@ class TutorialPresets {
         'Read the task prompt carefully, write your answer, and attach files only when the task asks for them.'
             .tr(),
       'article' =>
-        'Review the article image first, then continue to answer its questions. Tap a linked area in the image to open its video.'
-            .tr(),
+        'Read the article at your own pace. Tap a linked area in the image to open its video.'.tr(),
       _ =>
         'Read or listen to the intro first, then continue to the quiz. Use question navigation when you want to come back later.'
             .tr(),
@@ -412,6 +411,7 @@ class TutorialPresets {
                   .tr(),
           icon: Icons.touch_app_rounded),
     ];
+    if (sectionType == 'article') return [steps.first];
     return steps;
   }
 

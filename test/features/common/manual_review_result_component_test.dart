@@ -40,11 +40,30 @@ void main() {
     expect(find.text('Awaiting evaluation'), findsOneWidget);
     expect(find.text('Your score and feedback will appear after review.'), findsOneWidget);
   });
+
+  testWidgets('redo resets the section before invoking the page reload', (tester) async {
+    final dataSource = await _registerResultDependencies(_stats(sectionType: 'reading'));
+    var reloadCalls = 0;
+
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+            body: QuizResultComponent(
+                sectionModel: _section(SectionType.reading), onRedo: () => reloadCalls++))));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Redo'));
+    await tester.pumpAndSettle();
+
+    expect(dataSource.redoneSectionIds, ['section_1']);
+    expect(reloadCalls, 1);
+  });
 }
 
-Future<void> _registerResultDependencies(SectionStatsModel stats) async {
+Future<_FakeLearnRemoteDataSource> _registerResultDependencies(SectionStatsModel stats) async {
   await sl.reset();
-  sl.registerLazySingleton<LearnRemoteDataSource>(() => _FakeLearnRemoteDataSource(stats));
+  final dataSource = _FakeLearnRemoteDataSource(stats);
+  sl.registerLazySingleton<LearnRemoteDataSource>(() => dataSource);
+  return dataSource;
 }
 
 SectionStatsModel _stats({required String sectionType}) => SectionStatsModel(
@@ -84,9 +103,15 @@ SectionModel _section(SectionType type) => SectionModel(
 
 class _FakeLearnRemoteDataSource extends LearnRemoteDataSource {
   final SectionStatsModel stats;
+  final List<String> redoneSectionIds = [];
 
   _FakeLearnRemoteDataSource(this.stats) : super(dio: Dio());
 
   @override
   Future<SectionStatsModel> fetchSectionStats({required String sectionId}) async => stats;
+
+  @override
+  Future<void> redoSection({required String sectionId}) async {
+    redoneSectionIds.add(sectionId);
+  }
 }

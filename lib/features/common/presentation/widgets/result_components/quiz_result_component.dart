@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -5,15 +7,18 @@ import 'package:ustadia_user_app/assets/constants/images.dart';
 import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
+import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 import 'package:ustadia_user_app/core/widgets/buttons/button.dart';
 import 'package:ustadia_user_app/core/widgets/connection/reload_conntection_button.dart';
 import 'package:ustadia_user_app/core/widgets/loading/primary_circular_progress_indicator.dart';
 import 'package:ustadia_user_app/features/assignments/data/datasources/assignments_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_model.dart';
 import 'package:ustadia_user_app/features/common/data/models/section_model/section_stats_model.dart';
+import 'package:ustadia_user_app/features/dashboard/data/services/current_unit_store.dart';
 import 'package:ustadia_user_app/features/learn/data/datasources/learn_remote_data_source.dart';
 import 'package:ustadia_user_app/features/common/presentation/widgets/result_components/manual_review_result_component.dart';
 import 'package:ustadia_user_app/features/mock_exam/data/datasources/mock_exam_remote_data_source.dart';
+import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 class QuizResultComponent extends StatefulWidget {
@@ -22,6 +27,7 @@ class QuizResultComponent extends StatefulWidget {
   final String? aiFeedback;
   final String? feedback;
   final SectionModel? sectionModel;
+  final FutureOr<void> Function()? onRedo;
 
   const QuizResultComponent({
     super.key,
@@ -30,6 +36,7 @@ class QuizResultComponent extends StatefulWidget {
     this.aiFeedback,
     this.feedback,
     this.sectionModel,
+    this.onRedo,
   });
 
   @override
@@ -39,9 +46,17 @@ class QuizResultComponent extends StatefulWidget {
 class _QuizResultComponentState extends State<QuizResultComponent> {
   SectionStatsModel? stats;
   bool isLoading = false;
+  bool isRedoing = false;
   String? errorMessage;
 
   bool get hasRemoteStats => widget.sectionModel != null && widget.sectionModel!.id.isNotEmpty;
+  bool get canRedo {
+    final section = widget.sectionModel;
+    return widget.onRedo != null &&
+        section != null &&
+        section.source != SectionSource.mockExam &&
+        section.sectionType != SectionType.article;
+  }
 
   @override
   void initState() {
@@ -71,6 +86,29 @@ class _QuizResultComponentState extends State<QuizResultComponent> {
   }
 
   void backToTopic(BuildContext context) => context.pop(true);
+
+  Future<void> redoSection() async {
+    final section = widget.sectionModel;
+    final onRedo = widget.onRedo;
+    if (isRedoing || section == null || onRedo == null || !canRedo) return;
+    setState(() => isRedoing = true);
+    try {
+      await sl<LearnRemoteDataSource>().redoSection(sectionId: section.id);
+      if (sl.isRegistered<ProfileStatisticsStore>()) {
+        sl<ProfileStatisticsStore>().markStale();
+      }
+      if (sl.isRegistered<CurrentUnitStore>()) {
+        sl<CurrentUnitStore>().markStale();
+      }
+      await Future.sync(onRedo);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(DioErrorMessage.fromUnknown(error))));
+    } finally {
+      if (mounted) setState(() => isRedoing = false);
+    }
+  }
 
   Future<SectionStatsModel> loadSectionStats(SectionModel sectionModel) {
     if (sectionModel.source == SectionSource.assignment) {
@@ -282,11 +320,23 @@ class _QuizResultComponentState extends State<QuizResultComponent> {
     return blocks;
   }
 
-  Widget bottomButton(BuildContext context) => Button.primary(
-        onTap: () => backToTopic(context),
-        text: 'Continue'.tr(),
-        color: accentColor,
-      );
+  Widget bottomButtons(BuildContext context) => Column(children: [
+        if (canRedo) ...[
+          Button.border(
+              onTap: redoSection,
+              text: 'Redo'.tr(),
+              isLoading: isRedoing,
+              isAvialable: !isRedoing,
+              borderColor: accentColor,
+              textColor: accentColor),
+          const SizedBox(height: 10)
+        ],
+        Button.primary(
+            onTap: () => backToTopic(context),
+            text: 'Continue'.tr(),
+            color: accentColor,
+            isAvialable: !isRedoing)
+      ]);
 
   Widget loadingView() => const Center(child: PrimaryLoadingIndicator());
 
@@ -303,7 +353,7 @@ class _QuizResultComponentState extends State<QuizResultComponent> {
                   centerBlock(context),
                   ...feedbackBlocks(context),
                   const Spacer(),
-                  bottomButton(context)
+                  bottomButtons(context)
                 ]))));
       });
 
@@ -316,7 +366,9 @@ class _QuizResultComponentState extends State<QuizResultComponent> {
           sectionModel: widget.sectionModel!,
           stats: stats,
           aiFeedback: widget.aiFeedback,
-          feedback: widget.feedback);
+          feedback: widget.feedback,
+          onRedo: canRedo ? redoSection : null,
+          isRedoing: isRedoing);
     }
     return content(context);
   }

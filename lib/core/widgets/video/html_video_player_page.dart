@@ -11,8 +11,10 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class HtmlVideoPlayerParams {
   final String url;
   final String title;
+  final Duration initialPosition;
 
-  const HtmlVideoPlayerParams({required this.url, this.title = ''});
+  const HtmlVideoPlayerParams(
+      {required this.url, this.title = '', this.initialPosition = Duration.zero});
 }
 
 class HtmlVideoPlayerPage extends StatefulWidget {
@@ -32,6 +34,7 @@ class _HtmlVideoPlayerPageState extends State<HtmlVideoPlayerPage> with WidgetsB
   bool hasError = false;
   String errorMessage = '';
   bool wasPlayingBeforePause = false;
+  bool isClosing = false;
 
   @override
   void initState() {
@@ -82,8 +85,11 @@ class _HtmlVideoPlayerPageState extends State<HtmlVideoPlayerPage> with WidgetsB
     }
     youtubeController = YoutubePlayerController(
         initialVideoId: videoId,
-        flags: const YoutubePlayerFlags(
-            autoPlay: true, controlsVisibleAtStart: true, enableCaption: true));
+        flags: YoutubePlayerFlags(
+            autoPlay: true,
+            controlsVisibleAtStart: true,
+            enableCaption: true,
+            startAt: widget.params.initialPosition.inSeconds));
     if (mounted) setState(() {});
   }
 
@@ -92,6 +98,9 @@ class _HtmlVideoPlayerPageState extends State<HtmlVideoPlayerPage> with WidgetsB
     directController = controller;
     try {
       await controller.initialize();
+      if (widget.params.initialPosition > Duration.zero) {
+        await controller.seekTo(widget.params.initialPosition);
+      }
       await controller.play();
       if (mounted) setState(() {});
     } catch (error) {
@@ -136,8 +145,20 @@ class _HtmlVideoPlayerPageState extends State<HtmlVideoPlayerPage> with WidgetsB
   }
 
   void closePage() {
+    if (isClosing) return;
     pausePlayers();
-    Navigator.of(context).pop();
+    setState(() => isClosing = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) Navigator.of(context).pop(currentPosition);
+    });
+  }
+
+  Duration get currentPosition {
+    final directPlayer = directController;
+    if (directPlayer != null && directPlayer.value.isInitialized) {
+      return directPlayer.value.position;
+    }
+    return youtubeController?.value.position ?? widget.params.initialPosition;
   }
 
   void toggleDirectPlayback(VideoPlayerController controller) {
@@ -337,7 +358,10 @@ class _HtmlVideoPlayerPageState extends State<HtmlVideoPlayerPage> with WidgetsB
 
   @override
   Widget build(BuildContext context) => PopScope(
-      onPopInvokedWithResult: (didPop, result) => pausePlayers(),
+      canPop: isClosing,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) closePage();
+      },
       child: Scaffold(
           backgroundColor: AppColors.black,
           body: Stack(children: [
