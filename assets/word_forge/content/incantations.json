@@ -1,0 +1,545 @@
+{
+ "version": 1,
+ "incantations": [
+  {
+   "id": "inc_001",
+   "text": "She goes to school every day.",
+   "alternatives": [
+    "Every day she goes to school."
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "wordIds": [
+    "go"
+   ]
+  },
+  {
+   "id": "inc_002",
+   "text": "I like red apples.",
+   "alternatives": [],
+   "degree": 1,
+   "cefr": "A1",
+   "wordIds": []
+  },
+  {
+   "id": "inc_003",
+   "text": "The cat is very small.",
+   "alternatives": [],
+   "degree": 1,
+   "cefr": "A1",
+   "wordIds": [
+    "small"
+   ]
+  },
+  {
+   "id": "inc_004",
+   "text": "We play football after school.",
+   "alternatives": [
+    "After school we play football."
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "wordIds": []
+  },
+  {
+   "id": "inc_005",
+   "text": "My brother is tall.",
+   "alternatives": [],
+   "degree": 1,
+   "cefr": "A1",
+   "wordIds": [
+    "tall"
+   ]
+  },
+  {
+   "id": "inc_006",
+   "text": "They live in a big house.",
+   "alternatives": [],
+   "degree": 1,
+   "cefr": "A1",
+   "wordIds": [
+    "big"
+   ]
+  },
+  {
+   "id": "inc_007",
+   "text": "The water is cold.",
+   "alternatives": [],
+   "degree": 1,
+   "cefr": "A1",
+   "wordIds": [
+    "cold"
+   ]
+  },
+  {
+   "id": "inc_008",
+   "text": "He has a fast car.",
+   "alternatives": [],
+   "degree": 1,
+   "cefr": "A1",
+   "wordIds": [
+    "fast"
+   ]
+  },
+  {
+   "id": "inc_009",
+   "text": "I am happy today.",
+   "alternatives": [
+    "Today I am happy."
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "wordIds": [
+    "happy"
+   ]
+  },
+  {
+   "id": "inc_010",
+   "text": "Open the door, please.",
+   "alternatives": [
+    "Please open the door."
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "wordIds": [
+    "open"
+   ]
+  },
+  {
+   "id": "inc_011",
+   "text": "The shop is closed on Sunday.",
+   "alternatives": [
+    "On Sunday the shop is closed."
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "wordIds": [
+    "closed"
+   ]
+  },
+  {
+   "id": "inc_012",
+   "text": "I drink tea in the morning.",
+   "alternatives": [
+    "In the morning I drink tea."
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "wordIds": []
+  },
+  {
+   "id": "inc_013",
+   "text": "Do you like music?",
+   "alternatives": [],
+   "degree": 2,
+   "cefr": "A1",
+   "wordIds": []
+  },
+  {
+   "id": "inc_014",
+   "text": "She can swim very well.",
+   "alternatives": [],
+   "degree": 2,
+   "cefr": "A1",
+   "wordIds": []
+  },
+  {
+   "id": "inc_015",
+   "text": "The children are playing outside.",
+   "alternatives": [
+    "Outside the children are playing."
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "wordIds": [
+    "outside"
+   ]
+  },
+  {
+   "id": "inc_016",
+   "text": "It is dark at night.",
+   "alternatives": [
+    "At night it is dark."
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "wordIds": [
+    "dark",
+    "night"
+   ]
+  },
+  {
+   "id": "inc_017",
+   "text": "This book is very old.",
+   "alternatives": [],
+   "degree": 2,
+   "cefr": "A1",
+   "wordIds": [
+    "old"
+   ]
+  },
+  {
+   "id": "inc_018",
+   "text": "We are late for class.",
+   "alternatives": [],
+   "degree": 2,
+   "cefr": "A1",
+   "wordIds": [
+    "late"
+   ]
+  },
+  {
+   "id": "inc_019",
+   "text": "My room is always tidy.",
+   "alternatives": [],
+   "degree": 2,
+   "cefr": "A2",
+   "wordIds": [
+    "tidy",
+    "always"
+   ]
+  },
+  {
+   "id": "inc_020",
+   "text": "An elephant is bigger than a mouse.",
+   "alternatives": [],
+   "degree": 2,
+   "cefr": "A1",
+   "wordIds": [
+    "big"
+   ]
+  },
+  {
+   "id": "inc_021",
+   "text": "I borrowed a book from the library.",
+   "alternatives": [
+    "From the library I borrowed a book."
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "wordIds": [
+    "borrow"
+   ]
+  },
+  {
+   "id": "inc_022",
+   "text": "Can you lend me your pen?",
+   "alternatives": [],
+   "degree": 3,
+   "cefr": "A2",
+   "wordIds": [
+    "lend"
+   ]
+  },
+  {
+   "id": "inc_023",
+   "text": "He was tired after the long journey.",
+   "alternatives": [
+    "After the long journey he was tired."
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "wordIds": [
+    "tired",
+    "long"
+   ]
+  },
+  {
+   "id": "inc_024",
+   "text": "The train arrived at six o'clock.",
+   "alternatives": [
+    "At six o'clock the train arrived."
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "wordIds": [
+    "arrive"
+   ]
+  },
+  {
+   "id": "inc_025",
+   "text": "Please be careful with the knife.",
+   "alternatives": [
+    "Be careful with the knife, please."
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "wordIds": [
+    "careful"
+   ]
+  },
+  {
+   "id": "inc_026",
+   "text": "My grandmother told me an interesting story.",
+   "alternatives": [],
+   "degree": 3,
+   "cefr": "A2",
+   "wordIds": [
+    "interesting"
+   ]
+  },
+  {
+   "id": "inc_027",
+   "text": "We visited an ancient castle last summer.",
+   "alternatives": [
+    "Last summer we visited an ancient castle."
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "wordIds": [
+    "ancient"
+   ]
+  },
+  {
+   "id": "inc_028",
+   "text": "It is dangerous to swim in this river.",
+   "alternatives": [],
+   "degree": 3,
+   "cefr": "A2",
+   "wordIds": [
+    "dangerous"
+   ]
+  },
+  {
+   "id": "inc_029",
+   "text": "They built a new bridge over the river.",
+   "alternatives": [
+    "Over the river they built a new bridge."
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "wordIds": [
+    "build",
+    "new"
+   ]
+  },
+  {
+   "id": "inc_030",
+   "text": "Don't forget to close the window.",
+   "alternatives": [],
+   "degree": 3,
+   "cefr": "A2",
+   "wordIds": [
+    "forget"
+   ]
+  },
+  {
+   "id": "inc_031",
+   "text": "The brave knight defended his castle.",
+   "alternatives": [],
+   "degree": 3,
+   "cefr": "B1",
+   "wordIds": [
+    "brave",
+    "defend"
+   ]
+  },
+  {
+   "id": "inc_032",
+   "text": "I have never seen a huge dragon.",
+   "alternatives": [],
+   "degree": 3,
+   "cefr": "A2",
+   "wordIds": [
+    "huge",
+    "never"
+   ]
+  },
+  {
+   "id": "inc_033",
+   "text": "The film was so boring that I fell asleep.",
+   "alternatives": [],
+   "degree": 3,
+   "cefr": "A2",
+   "wordIds": [
+    "boring",
+    "asleep"
+   ]
+  },
+  {
+   "id": "inc_034",
+   "text": "Our neighbours are very friendly.",
+   "alternatives": [],
+   "degree": 3,
+   "cefr": "A2",
+   "wordIds": [
+    "friendly"
+   ]
+  },
+  {
+   "id": "inc_035",
+   "text": "I have lived in this city since 2019.",
+   "alternatives": [
+    "Since 2019 I have lived in this city."
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "wordIds": []
+  },
+  {
+   "id": "inc_036",
+   "text": "If it rains, we will stay at home.",
+   "alternatives": [
+    "We will stay at home if it rains."
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "wordIds": [
+    "stay"
+   ]
+  },
+  {
+   "id": "inc_037",
+   "text": "The glass is fragile, so carry it carefully.",
+   "alternatives": [],
+   "degree": 4,
+   "cefr": "B1",
+   "wordIds": [
+    "fragile"
+   ]
+  },
+  {
+   "id": "inc_038",
+   "text": "She refused to answer the question.",
+   "alternatives": [],
+   "degree": 4,
+   "cefr": "B1",
+   "wordIds": [
+    "refuse",
+    "answer"
+   ]
+  },
+  {
+   "id": "inc_039",
+   "text": "My parents allow me to play games at weekends.",
+   "alternatives": [
+    "At weekends my parents allow me to play games."
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "wordIds": [
+    "allow"
+   ]
+  },
+  {
+   "id": "inc_040",
+   "text": "He was proud of his daughter.",
+   "alternatives": [],
+   "degree": 4,
+   "cefr": "B1",
+   "wordIds": [
+    "proud"
+   ]
+  },
+  {
+   "id": "inc_041",
+   "text": "The price includes breakfast and dinner.",
+   "alternatives": [
+    "The price includes dinner and breakfast."
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "wordIds": [
+    "include"
+   ]
+  },
+  {
+   "id": "inc_042",
+   "text": "The number of visitors increased last year.",
+   "alternatives": [
+    "Last year the number of visitors increased."
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "wordIds": [
+    "increase"
+   ]
+  },
+  {
+   "id": "inc_043",
+   "text": "I am certain that I locked the door.",
+   "alternatives": [],
+   "degree": 4,
+   "cefr": "B1",
+   "wordIds": [
+    "certain"
+   ]
+  },
+  {
+   "id": "inc_044",
+   "text": "Nobody knew why the old man disappeared.",
+   "alternatives": [],
+   "degree": 4,
+   "cefr": "B1",
+   "wordIds": [
+    "disappear",
+    "old"
+   ]
+  },
+  {
+   "id": "inc_045",
+   "text": "You should be patient with young children.",
+   "alternatives": [],
+   "degree": 4,
+   "cefr": "B1",
+   "wordIds": [
+    "patient",
+    "young"
+   ]
+  },
+  {
+   "id": "inc_046",
+   "text": "We need to protect the forest from fire.",
+   "alternatives": [],
+   "degree": 4,
+   "cefr": "B1",
+   "wordIds": [
+    "protect"
+   ]
+  },
+  {
+   "id": "inc_047",
+   "text": "Her advice was very wise.",
+   "alternatives": [],
+   "degree": 4,
+   "cefr": "B1",
+   "wordIds": [
+    "wise"
+   ]
+  },
+  {
+   "id": "inc_048",
+   "text": "It is impossible to finish this today.",
+   "alternatives": [
+    "Today it is impossible to finish this."
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "wordIds": [
+    "impossible",
+    "finish"
+   ]
+  },
+  {
+   "id": "inc_049",
+   "text": "She whispered a secret to her friend.",
+   "alternatives": [],
+   "degree": 4,
+   "cefr": "B1",
+   "wordIds": [
+    "whisper",
+    "friend"
+   ]
+  },
+  {
+   "id": "inc_050",
+   "text": "The story was too complicated for the children.",
+   "alternatives": [],
+   "degree": 4,
+   "cefr": "B1",
+   "wordIds": [
+    "complicated"
+   ]
+  }
+ ]
+}

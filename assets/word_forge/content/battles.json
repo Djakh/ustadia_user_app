@@ -1,0 +1,755 @@
+{
+ "version": 2,
+ "battles": [
+  {
+   "id": "r1_n1",
+   "enemies": [
+    "goblin_scout"
+   ],
+   "degree": [
+    1,
+    1
+   ],
+   "rewards": {
+    "xp": 20
+   }
+  },
+  {
+   "id": "r1_n2",
+   "enemies": [
+    "goblin_raider"
+   ],
+   "degree": [
+    1,
+    1
+   ],
+   "rewards": {
+    "xp": 20
+   }
+  },
+  {
+   "id": "r1_n3",
+   "enemies": [
+    "stone_sentinel"
+   ],
+   "degree": [
+    1,
+    1
+   ],
+   "rewards": {
+    "xp": 22
+   }
+  },
+  {
+   "id": "r1_n4",
+   "enemies": [
+    "road_ogre"
+   ],
+   "degree": [
+    1,
+    2
+   ],
+   "rewards": {
+    "xp": 22
+   }
+  },
+  {
+   "id": "r1_n6",
+   "enemies": [
+    "goblin_shaman"
+   ],
+   "degree": [
+    1,
+    2
+   ],
+   "rewards": {
+    "xp": 24
+   }
+  },
+  {
+   "id": "r1_n7",
+   "enemies": [
+    "stone_sentinel"
+   ],
+   "degree": [
+    1,
+    2
+   ],
+   "rewards": {
+    "xp": 24
+   }
+  },
+  {
+   "id": "r1_c1",
+   "enemies": [
+    "road_wisp"
+   ],
+   "degree": [
+    1,
+    2
+   ],
+   "rewards": {
+    "xp": 25,
+    "buffs": {
+     "extraTime": 1
+    }
+   }
+  },
+  {
+   "id": "r1_mb",
+   "enemies": [
+    "bandit_captain"
+   ],
+   "degree": [
+    1,
+    2
+   ],
+   "rewards": {
+    "xp": 50,
+    "buffs": {
+     "shield": 1
+    }
+   },
+   "stages": [
+    {
+     "name": "Ambush",
+     "untilHp": 0.5
+    },
+    {
+     "name": "Last Stand",
+     "enraged": true,
+     "critical": 1.3,
+     "special": 1.3
+    }
+   ]
+  },
+  {
+   "id": "r1_n8",
+   "enemies": [
+    {
+     "id": "goblin_raider",
+     "hp": 45
+    },
+    {
+     "id": "goblin_scout",
+     "hp": 40
+    }
+   ],
+   "degree": [
+    2,
+    2
+   ],
+   "rewards": {
+    "xp": 28
+   }
+  },
+  {
+   "id": "r1_e1",
+   "enemies": [
+    "goblin_warchief"
+   ],
+   "degree": [
+    2,
+    2
+   ],
+   "rewards": {
+    "xp": 40,
+    "buffs": {
+     "timeFreeze": 1
+    }
+   },
+   "stages": [
+    {
+     "name": "War Cry",
+     "untilHp": 0.4
+    },
+    {
+     "name": "Enraged",
+     "enraged": true,
+     "critical": 1.6
+    }
+   ]
+  },
+  {
+   "id": "r1_n9",
+   "enemies": [
+    {
+     "id": "stone_sentinel",
+     "hp": 55
+    },
+    {
+     "id": "goblin_raider",
+     "hp": 45
+    }
+   ],
+   "degree": [
+    2,
+    2
+   ],
+   "rewards": {
+    "xp": 28
+   }
+  },
+  {
+   "id": "r1_mimic",
+   "enemies": [
+    "mimic_chest"
+   ],
+   "degree": [
+    1,
+    2
+   ],
+   "rewards": {
+    "xp": 30,
+    "buffs": {
+     "secondChance": 1
+    }
+   }
+  },
+  {
+   "id": "r1_boss",
+   "enemies": [
+    "gate_keeper"
+   ],
+   "degree": [
+    1,
+    2
+   ],
+   "rewards": {
+    "xp": 80,
+    "buffs": {
+     "hint": 2,
+     "shield": 1
+    }
+   },
+   "stages": [
+    {
+     "name": "The Gate Holds",
+     "untilHp": 0.75,
+     "special": 0,
+     "critical": 0.6
+    },
+    {
+     "name": "Shield of Echoes",
+     "untilHp": 0.5,
+     "opensWith": "protection"
+    },
+    {
+     "name": "Cracks in the Armor",
+     "untilHp": 0.25,
+     "critical": 1.5,
+     "special": 0.5
+    },
+    {
+     "name": "Mirror of the Gate",
+     "opensWith": "mirror_spell",
+     "enraged": true,
+     "grantSpecial": true,
+     "critical": 1.2
+    }
+   ]
+  },
+  {
+   "id": "r2_n1",
+   "enemies": [
+    "forest_imp"
+   ],
+   "degree": [
+    2,
+    3
+   ],
+   "rewards": {
+    "xp": 26
+   }
+  },
+  {
+   "id": "r2_n2",
+   "enemies": [
+    "hedge_witch"
+   ],
+   "degree": [
+    2,
+    3
+   ],
+   "rewards": {
+    "xp": 28
+   }
+  },
+  {
+   "id": "r2_n3",
+   "enemies": [
+    "leaf_devourer"
+   ],
+   "degree": [
+    2,
+    3
+   ],
+   "rewards": {
+    "xp": 28
+   }
+  },
+  {
+   "id": "r2_n4",
+   "enemies": [
+    "moss_sentinel"
+   ],
+   "degree": [
+    2,
+    3
+   ],
+   "rewards": {
+    "xp": 28
+   }
+  },
+  {
+   "id": "r2_c1",
+   "enemies": [
+    "forest_wisp"
+   ],
+   "degree": [
+    2,
+    3
+   ],
+   "rewards": {
+    "xp": 30,
+    "buffs": {
+     "timeFreeze": 1
+    }
+   }
+  },
+  {
+   "id": "r2_n5",
+   "enemies": [
+    "bog_troll"
+   ],
+   "degree": [
+    3,
+    3
+   ],
+   "rewards": {
+    "xp": 30
+   }
+  },
+  {
+   "id": "r2_mimic",
+   "enemies": [
+    "mimic_stump"
+   ],
+   "degree": [
+    2,
+    3
+   ],
+   "rewards": {
+    "xp": 32,
+    "buffs": {
+     "secondChance": 1
+    }
+   }
+  },
+  {
+   "id": "r2_mb",
+   "enemies": [
+    "moss_golem"
+   ],
+   "degree": [
+    2,
+    3
+   ],
+   "rewards": {
+    "xp": 55,
+    "buffs": {
+     "shield": 1
+    }
+   },
+   "stages": [
+    {
+     "name": "Rooted",
+     "untilHp": 0.5
+    },
+    {
+     "name": "Overgrowth",
+     "enraged": true,
+     "critical": 1.3,
+     "special": 1.3
+    }
+   ]
+  },
+  {
+   "id": "r2_n6",
+   "enemies": [
+    {
+     "id": "forest_imp",
+     "hp": 50
+    },
+    {
+     "id": "moss_sentinel",
+     "hp": 60
+    }
+   ],
+   "degree": [
+    3,
+    3
+   ],
+   "rewards": {
+    "xp": 32
+   }
+  },
+  {
+   "id": "r2_e1",
+   "enemies": [
+    "thorn_warlock"
+   ],
+   "degree": [
+    3,
+    3
+   ],
+   "rewards": {
+    "xp": 45,
+    "buffs": {
+     "reveal": 1,
+     "timeFreeze": 1
+    }
+   },
+   "stages": [
+    {
+     "name": "Thorns",
+     "untilHp": 0.4
+    },
+    {
+     "name": "Enraged",
+     "enraged": true,
+     "critical": 1.6
+    }
+   ]
+  },
+  {
+   "id": "r2_n7",
+   "enemies": [
+    {
+     "id": "leaf_devourer",
+     "hp": 55
+    },
+    {
+     "id": "forest_imp",
+     "hp": 45
+    }
+   ],
+   "degree": [
+    3,
+    3
+   ],
+   "rewards": {
+    "xp": 34
+   }
+  },
+  {
+   "id": "r2_boss",
+   "enemies": [
+    "thornmother"
+   ],
+   "degree": [
+    2,
+    3
+   ],
+   "rewards": {
+    "xp": 90,
+    "buffs": {
+     "hint": 2,
+     "runeSense": 1
+    }
+   },
+   "stages": [
+    {
+     "name": "Whispering Roots",
+     "untilHp": 0.75,
+     "special": 0,
+     "critical": 0.6
+    },
+    {
+     "name": "Bark Shield",
+     "untilHp": 0.5,
+     "opensWith": "protection"
+    },
+    {
+     "name": "Heartwood",
+     "untilHp": 0.25,
+     "critical": 1.5,
+     "special": 0.5,
+     "opensWith": "thorn_curse"
+    },
+    {
+     "name": "Storm of Leaves",
+     "opensWith": "word_storm",
+     "enraged": true,
+     "grantSpecial": true,
+     "critical": 1.2
+    }
+   ]
+  },
+  {
+   "id": "r3_n1",
+   "enemies": [
+    "ruin_scribe"
+   ],
+   "degree": [
+    3,
+    4
+   ],
+   "rewards": {
+    "xp": 30
+   }
+  },
+  {
+   "id": "r3_n2",
+   "enemies": [
+    "archive_sentinel"
+   ],
+   "degree": [
+    3,
+    4
+   ],
+   "rewards": {
+    "xp": 32
+   }
+  },
+  {
+   "id": "r3_n3",
+   "enemies": [
+    "ink_devourer"
+   ],
+   "degree": [
+    3,
+    4
+   ],
+   "rewards": {
+    "xp": 32
+   }
+  },
+  {
+   "id": "r3_n4",
+   "enemies": [
+    "ruin_scribe"
+   ],
+   "degree": [
+    4,
+    4
+   ],
+   "rewards": {
+    "xp": 34
+   }
+  },
+  {
+   "id": "r3_c1",
+   "enemies": [
+    "rune_wisp"
+   ],
+   "degree": [
+    3,
+    4
+   ],
+   "rewards": {
+    "xp": 34,
+    "buffs": {
+     "extraTime": 1
+    }
+   }
+  },
+  {
+   "id": "r3_e1",
+   "enemies": [
+    "mirror_mimic"
+   ],
+   "degree": [
+    4,
+    4
+   ],
+   "rewards": {
+    "xp": 48,
+    "buffs": {
+     "secondChance": 1,
+     "runeSense": 1
+    }
+   },
+   "stages": [
+    {
+     "name": "Reflections",
+     "untilHp": 0.4
+    },
+    {
+     "name": "Enraged",
+     "enraged": true,
+     "critical": 1.6
+    }
+   ]
+  },
+  {
+   "id": "r3_mb",
+   "enemies": [
+    "archive_golem"
+   ],
+   "degree": [
+    3,
+    4
+   ],
+   "rewards": {
+    "xp": 60,
+    "buffs": {
+     "shield": 1,
+     "hint": 1
+    }
+   },
+   "stages": [
+    {
+     "name": "Sealed Archive",
+     "untilHp": 0.5
+    },
+    {
+     "name": "Unbound Pages",
+     "enraged": true,
+     "critical": 1.3,
+     "special": 1.3
+    }
+   ]
+  },
+  {
+   "id": "r3_n5",
+   "enemies": [
+    {
+     "id": "ink_devourer",
+     "hp": 60
+    },
+    {
+     "id": "archive_sentinel",
+     "hp": 60
+    }
+   ],
+   "degree": [
+    4,
+    4
+   ],
+   "rewards": {
+    "xp": 36
+   }
+  },
+  {
+   "id": "r3_mimic",
+   "enemies": [
+    "mirror_mimic"
+   ],
+   "degree": [
+    3,
+    4
+   ],
+   "rewards": {
+    "xp": 36,
+    "buffs": {
+     "secondChance": 1
+    }
+   }
+  },
+  {
+   "id": "r3_n6",
+   "enemies": [
+    "ruin_brute"
+   ],
+   "degree": [
+    4,
+    4
+   ],
+   "rewards": {
+    "xp": 36
+   }
+  },
+  {
+   "id": "r3_e2",
+   "enemies": [
+    "grand_warlock"
+   ],
+   "degree": [
+    4,
+    4
+   ],
+   "rewards": {
+    "xp": 52,
+    "buffs": {
+     "timeFreeze": 1,
+     "reveal": 1
+    }
+   },
+   "stages": [
+    {
+     "name": "Arcane Tempest",
+     "untilHp": 0.4
+    },
+    {
+     "name": "Enraged",
+     "enraged": true,
+     "critical": 1.6
+    }
+   ]
+  },
+  {
+   "id": "r3_n7",
+   "enemies": [
+    {
+     "id": "ruin_scribe",
+     "hp": 60
+    },
+    {
+     "id": "ruin_brute",
+     "hp": 60
+    }
+   ],
+   "degree": [
+    4,
+    4
+   ],
+   "rewards": {
+    "xp": 38
+   }
+  },
+  {
+   "id": "r3_boss",
+   "enemies": [
+    "lexicon_lich"
+   ],
+   "degree": [
+    3,
+    4
+   ],
+   "rewards": {
+    "xp": 110,
+    "buffs": {
+     "hint": 2,
+     "shield": 2
+    }
+   },
+   "stages": [
+    {
+     "name": "The First Page",
+     "untilHp": 0.75,
+     "special": 0,
+     "critical": 0.6
+    },
+    {
+     "name": "Binding Wards",
+     "untilHp": 0.5,
+     "opensWith": "protection"
+    },
+    {
+     "name": "Forbidden Chapter",
+     "untilHp": 0.25,
+     "critical": 1.5,
+     "special": 0.5
+    },
+    {
+     "name": "The Last Word",
+     "opensWith": "rune_seal",
+     "enraged": true,
+     "grantSpecial": true,
+     "critical": 1.2
+    }
+   ]
+  }
+ ]
+}

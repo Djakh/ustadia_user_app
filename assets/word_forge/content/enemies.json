@@ -1,0 +1,544 @@
+{
+ "version": 2,
+ "enemies": [
+  {
+   "id": "goblin_scout",
+   "name": "Goblin Scout",
+   "archetype": "goblin",
+   "skin": "goblin",
+   "palette": {
+    "primary": "#7CC05A",
+    "secondary": "#3E6B2C",
+    "accent": "#F2C94C"
+   },
+   "scale": 0.9,
+   "maxHp": 60,
+   "attack": 14,
+   "tempo": 1.2,
+   "distractorStyle": "standard",
+   "traits": []
+  },
+  {
+   "id": "goblin_raider",
+   "name": "Goblin Raider",
+   "archetype": "goblin",
+   "skin": "goblin",
+   "palette": {
+    "primary": "#9DB85A",
+    "secondary": "#6B4A2C",
+    "accent": "#FF9F43"
+   },
+   "scale": 0.95,
+   "maxHp": 70,
+   "attack": 15,
+   "tempo": 1.35,
+   "distractorStyle": "standard",
+   "traits": []
+  },
+  {
+   "id": "stone_sentinel",
+   "name": "Stone Sentinel",
+   "archetype": "stoneGuardian",
+   "skin": "golem",
+   "palette": {
+    "primary": "#9AA3AE",
+    "secondary": "#5C6470",
+    "accent": "#5FE1FF"
+   },
+   "scale": 1.0,
+   "maxHp": 80,
+   "attack": 12,
+   "tempo": 0.8,
+   "distractorStyle": "standard",
+   "traits": []
+  },
+  {
+   "id": "goblin_shaman",
+   "name": "Goblin Shaman",
+   "archetype": "rogueMage",
+   "skin": "mage",
+   "palette": {
+    "primary": "#5E8C3A",
+    "secondary": "#2F4A22",
+    "accent": "#B8F55C"
+   },
+   "scale": 0.95,
+   "maxHp": 80,
+   "attack": 13,
+   "tempo": 1.0,
+   "distractorStyle": "standard",
+   "traits": []
+  },
+  {
+   "id": "road_wisp",
+   "name": "Road Wisp",
+   "archetype": "wisp",
+   "skin": "wisp",
+   "palette": {
+    "primary": "#FFB86B",
+    "secondary": "#FF7A45",
+    "accent": "#FFF3C4"
+   },
+   "scale": 0.9,
+   "maxHp": 50,
+   "attack": 8,
+   "tempo": 1.4,
+   "distractorStyle": "standard",
+   "traits": []
+  },
+  {
+   "id": "bandit_captain",
+   "name": "Bandit Captain",
+   "archetype": "goblin",
+   "skin": "goblin",
+   "palette": {
+    "primary": "#C0674A",
+    "secondary": "#5A2E22",
+    "accent": "#FFD166"
+   },
+   "scale": 1.2,
+   "maxHp": 115,
+   "attack": 16,
+   "tempo": 1.2,
+   "distractorStyle": "standard",
+   "traits": [],
+   "title": "Mini-boss"
+  },
+  {
+   "id": "goblin_warchief",
+   "name": "Goblin Warchief",
+   "archetype": "eliteMage",
+   "skin": "goblin",
+   "palette": {
+    "primary": "#8F7BD8",
+    "secondary": "#3C2F6B",
+    "accent": "#FF5470"
+   },
+   "scale": 1.15,
+   "maxHp": 100,
+   "attack": 17,
+   "tempo": 1.3,
+   "distractorStyle": "semantic",
+   "traits": [],
+   "title": "Elite",
+   "behaviour": {
+    "element": "slash"
+   }
+  },
+  {
+   "id": "mimic_chest",
+   "name": "Mimic",
+   "archetype": "mimic",
+   "skin": "chest",
+   "palette": {
+    "primary": "#B7773D",
+    "secondary": "#5C3A1E",
+    "accent": "#FFD166"
+   },
+   "scale": 1.0,
+   "maxHp": 70,
+   "attack": 14,
+   "tempo": 1.1,
+   "distractorStyle": "mimic",
+   "traits": [
+    "mimic"
+   ]
+  },
+  {
+   "id": "gate_keeper",
+   "name": "Keeper of the Gate",
+   "archetype": "boss",
+   "skin": "knight",
+   "palette": {
+    "primary": "#7C8AA5",
+    "secondary": "#2E3650",
+    "accent": "#FFB547"
+   },
+   "scale": 1.35,
+   "maxHp": 190,
+   "attack": 16,
+   "tempo": 1.0,
+   "distractorStyle": "semantic",
+   "traits": [],
+   "title": "Boss",
+   "behaviour": {
+    "signature": "mirror_spell",
+    "element": "steel",
+    "armor": 0.1
+   }
+  },
+  {
+   "id": "road_ogre",
+   "name": "Road Ogre",
+   "archetype": "brute",
+   "skin": "ogre",
+   "palette": {
+    "primary": "#8C9A6B",
+    "secondary": "#4A4030",
+    "accent": "#FFB547"
+   },
+   "scale": 1.1,
+   "maxHp": 85,
+   "attack": 18,
+   "tempo": 0.75,
+   "distractorStyle": "standard",
+   "traits": []
+  },
+  {
+   "id": "forest_imp",
+   "name": "Forest Imp",
+   "archetype": "goblin",
+   "skin": "goblin",
+   "palette": {
+    "primary": "#4FC3A1",
+    "secondary": "#1F5C4D",
+    "accent": "#E0FF6B"
+   },
+   "scale": 0.9,
+   "maxHp": 80,
+   "attack": 15,
+   "tempo": 1.35,
+   "distractorStyle": "standard",
+   "traits": []
+  },
+  {
+   "id": "hedge_witch",
+   "name": "Hedge Witch",
+   "archetype": "rogueMage",
+   "skin": "mage",
+   "palette": {
+    "primary": "#9B6BD6",
+    "secondary": "#3F2466",
+    "accent": "#7BF1A8"
+   },
+   "scale": 1.0,
+   "maxHp": 90,
+   "attack": 15,
+   "tempo": 1.0,
+   "distractorStyle": "standard",
+   "traits": []
+  },
+  {
+   "id": "leaf_devourer",
+   "name": "Leaf Devourer",
+   "archetype": "wordEater",
+   "skin": "blob",
+   "palette": {
+    "primary": "#6FBF4A",
+    "secondary": "#2B5A20",
+    "accent": "#FFE066"
+   },
+   "scale": 1.0,
+   "maxHp": 95,
+   "attack": 14,
+   "tempo": 1.0,
+   "distractorStyle": "standard",
+   "traits": [
+    "wordEater"
+   ]
+  },
+  {
+   "id": "moss_sentinel",
+   "name": "Moss Sentinel",
+   "archetype": "stoneGuardian",
+   "skin": "golem",
+   "palette": {
+    "primary": "#7FA36B",
+    "secondary": "#3E5A32",
+    "accent": "#9CFFB0"
+   },
+   "scale": 1.05,
+   "maxHp": 105,
+   "attack": 14,
+   "tempo": 0.8,
+   "distractorStyle": "standard",
+   "traits": []
+  },
+  {
+   "id": "forest_wisp",
+   "name": "Forest Wisp",
+   "archetype": "wisp",
+   "skin": "wisp",
+   "palette": {
+    "primary": "#6BD5FF",
+    "secondary": "#2F7FD6",
+    "accent": "#E8FBFF"
+   },
+   "scale": 0.9,
+   "maxHp": 55,
+   "attack": 9,
+   "tempo": 1.4,
+   "distractorStyle": "standard",
+   "traits": []
+  },
+  {
+   "id": "moss_golem",
+   "name": "Moss Golem",
+   "archetype": "stoneGuardian",
+   "skin": "golem",
+   "palette": {
+    "primary": "#6E9E5A",
+    "secondary": "#304A26",
+    "accent": "#FFD166"
+   },
+   "scale": 1.3,
+   "maxHp": 135,
+   "attack": 17,
+   "tempo": 0.8,
+   "distractorStyle": "standard",
+   "traits": [],
+   "title": "Mini-boss"
+  },
+  {
+   "id": "thorn_warlock",
+   "name": "Thorn Warlock",
+   "archetype": "eliteMage",
+   "skin": "mage",
+   "palette": {
+    "primary": "#3E7D5A",
+    "secondary": "#16301F",
+    "accent": "#FF5470"
+   },
+   "scale": 1.1,
+   "maxHp": 115,
+   "attack": 18,
+   "tempo": 1.2,
+   "distractorStyle": "semantic",
+   "traits": [],
+   "title": "Elite"
+  },
+  {
+   "id": "mimic_stump",
+   "name": "Hollow Mimic",
+   "archetype": "mimic",
+   "skin": "chest",
+   "palette": {
+    "primary": "#8B6B45",
+    "secondary": "#3B2A18",
+    "accent": "#9CFFB0"
+   },
+   "scale": 1.0,
+   "maxHp": 80,
+   "attack": 15,
+   "tempo": 1.1,
+   "distractorStyle": "mimic",
+   "traits": [
+    "mimic"
+   ]
+  },
+  {
+   "id": "thornmother",
+   "name": "The Thornmother",
+   "archetype": "boss",
+   "skin": "treant",
+   "palette": {
+    "primary": "#5A7D3A",
+    "secondary": "#2A3B1C",
+    "accent": "#FF7AB6"
+   },
+   "scale": 1.35,
+   "maxHp": 230,
+   "attack": 18,
+   "tempo": 1.0,
+   "distractorStyle": "semantic",
+   "traits": [],
+   "title": "Boss",
+   "behaviour": {
+    "signature": "thorn_curse",
+    "specials": [
+     "protection",
+     "heavy_spell",
+     "thorn_curse"
+    ],
+    "element": "thorn"
+   }
+  },
+  {
+   "id": "bog_troll",
+   "name": "Bog Troll",
+   "archetype": "brute",
+   "skin": "ogre",
+   "palette": {
+    "primary": "#5E7F6E",
+    "secondary": "#2C3B33",
+    "accent": "#C6FF7A"
+   },
+   "scale": 1.15,
+   "maxHp": 95,
+   "attack": 19,
+   "tempo": 0.75,
+   "distractorStyle": "standard",
+   "traits": []
+  },
+  {
+   "id": "ruin_scribe",
+   "name": "Ruin Scribe",
+   "archetype": "rogueMage",
+   "skin": "mage",
+   "palette": {
+    "primary": "#C9A36B",
+    "secondary": "#5C4426",
+    "accent": "#5FE1FF"
+   },
+   "scale": 1.0,
+   "maxHp": 105,
+   "attack": 16,
+   "tempo": 1.0,
+   "distractorStyle": "standard",
+   "traits": []
+  },
+  {
+   "id": "ink_devourer",
+   "name": "Ink Devourer",
+   "archetype": "wordEater",
+   "skin": "blob",
+   "palette": {
+    "primary": "#3B3F5C",
+    "secondary": "#15172A",
+    "accent": "#B28CFF"
+   },
+   "scale": 1.05,
+   "maxHp": 110,
+   "attack": 16,
+   "tempo": 1.0,
+   "distractorStyle": "standard",
+   "traits": [
+    "wordEater"
+   ]
+  },
+  {
+   "id": "archive_sentinel",
+   "name": "Archive Sentinel",
+   "archetype": "stoneGuardian",
+   "skin": "golem",
+   "palette": {
+    "primary": "#8E7BB8",
+    "secondary": "#3D3160",
+    "accent": "#FFD166"
+   },
+   "scale": 1.05,
+   "maxHp": 115,
+   "attack": 15,
+   "tempo": 0.8,
+   "distractorStyle": "standard",
+   "traits": []
+  },
+  {
+   "id": "rune_wisp",
+   "name": "Rune Wisp",
+   "archetype": "wisp",
+   "skin": "wisp",
+   "palette": {
+    "primary": "#FFE066",
+    "secondary": "#E0A800",
+    "accent": "#FFFBE6"
+   },
+   "scale": 0.9,
+   "maxHp": 60,
+   "attack": 10,
+   "tempo": 1.4,
+   "distractorStyle": "standard",
+   "traits": []
+  },
+  {
+   "id": "archive_golem",
+   "name": "Archive Golem",
+   "archetype": "stoneGuardian",
+   "skin": "golem",
+   "palette": {
+    "primary": "#7A6AA8",
+    "secondary": "#2E2550",
+    "accent": "#5FE1FF"
+   },
+   "scale": 1.3,
+   "maxHp": 155,
+   "attack": 18,
+   "tempo": 0.85,
+   "distractorStyle": "standard",
+   "traits": [],
+   "title": "Mini-boss"
+  },
+  {
+   "id": "grand_warlock",
+   "name": "Grand Warlock",
+   "archetype": "eliteMage",
+   "skin": "mage",
+   "palette": {
+    "primary": "#D65A5A",
+    "secondary": "#4A1622",
+    "accent": "#FFD166"
+   },
+   "scale": 1.15,
+   "maxHp": 130,
+   "attack": 19,
+   "tempo": 1.2,
+   "distractorStyle": "semantic",
+   "traits": [],
+   "title": "Elite"
+  },
+  {
+   "id": "mirror_mimic",
+   "name": "Mirror Mimic",
+   "archetype": "mimic",
+   "skin": "chest",
+   "palette": {
+    "primary": "#AEB8C8",
+    "secondary": "#4A5468",
+    "accent": "#5FE1FF"
+   },
+   "scale": 1.05,
+   "maxHp": 115,
+   "attack": 17,
+   "tempo": 1.15,
+   "distractorStyle": "mimic",
+   "traits": [
+    "mimic"
+   ],
+   "title": "Elite"
+  },
+  {
+   "id": "lexicon_lich",
+   "name": "The Lexicon Lich",
+   "archetype": "boss",
+   "skin": "lich",
+   "palette": {
+    "primary": "#7EE0C3",
+    "secondary": "#1E2A3A",
+    "accent": "#B28CFF"
+   },
+   "scale": 1.35,
+   "maxHp": 260,
+   "attack": 19,
+   "tempo": 1.0,
+   "distractorStyle": "semantic",
+   "traits": [],
+   "title": "Boss",
+   "behaviour": {
+    "signature": "rune_seal",
+    "specials": [
+     "protection",
+     "rune_lock",
+     "heavy_spell"
+    ],
+    "element": "frost"
+   }
+  },
+  {
+   "id": "ruin_brute",
+   "name": "Ruin Brute",
+   "archetype": "brute",
+   "skin": "ogre",
+   "palette": {
+    "primary": "#8E7F9E",
+    "secondary": "#3A3148",
+    "accent": "#FFD166"
+   },
+   "scale": 1.15,
+   "maxHp": 105,
+   "attack": 20,
+   "tempo": 0.75,
+   "distractorStyle": "standard",
+   "traits": []
+  }
+ ]
+}

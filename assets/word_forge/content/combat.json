@@ -1,0 +1,186 @@
+{
+ "version": 1,
+ "balance": {
+  "playerMaxHp": 100,
+  "normalDamage": 14,
+  "counterDamage": 5,
+  "criticalCounterDamage": 9,
+  "criticalAttackDamage": 18,
+  "specialDamage": 56,
+  "specialSplash": 0.5,
+  "specialPartial": [
+   0.0,
+   0.3,
+   0.65,
+   1.0
+  ],
+  "enemyCriticalMultiplier": 1.6,
+  "enragedMultiplier": 1.2,
+  "comboStep": 0.03,
+  "comboCap": 8,
+  "flowThreshold": 5,
+  "flowSeconds": 15,
+  "flowDamageBonus": 0.15,
+  "optionCount": 4,
+  "matchMistakesAllowed": 2,
+  "incantationAttempts": 2,
+  "timeFreezeSeconds": 6,
+  "extraTimeSeconds": 5,
+  "runeSenseChallenges": 3,
+  "weakCastShare": 0.35,
+  "weakCastCounterShare": 0.25
+ },
+ "specialMeter": {
+  "max": 100,
+  "start": 20,
+  "normalHit": 9,
+  "weakCast": 0,
+  "defence": 7,
+  "criticalDefence": 12,
+  "criticalAttack": 10,
+  "shieldBreak": 8,
+  "comboMilestone": 6,
+  "comboMilestoneEvery": 4,
+  "flowBonus": 2
+ },
+ "pacing": {
+  "playerCriticalChance": 0.3,
+  "playerCriticalCap": 0.55,
+  "comboCriticalBonus": 0.03,
+  "criticalCooldownTurns": 3,
+  "enemySpecialCooldown": 3,
+  "minNormalEnemyTurns": 1
+ },
+ "timers": {
+  "enemyCritical": [
+   5.5,
+   4.75,
+   4.0
+  ],
+  "minimumChoiceSeconds": 3.5,
+  "readingPerExtraChar": 0.06,
+  "comfortableChars": 26,
+  "unfamiliarBonus": 1.0,
+  "familiarDiscount": 0.4,
+  "hardWordBonus": 0.5,
+  "playerCriticalPerPair": 2.6,
+  "playerCriticalMatchBase": 3,
+  "playerCriticalPerToken": 1.5,
+  "playerCriticalSentenceBase": 4,
+  "rapidPerTask": 4,
+  "enemySpecialPerChoice": 6.5,
+  "enemySpecialPerToken": 1.4,
+  "enemySpecialSentenceBase": 6,
+  "runeSeconds": 8,
+  "normal": [
+   8.0,
+   7.5,
+   7.0
+  ],
+  "minimumNormalSeconds": 5
+ },
+ "gates": {
+  "critical": 1,
+  "special": 2,
+  "protection": 3,
+  "enemySpecials": 5
+ },
+ "archetypes": {
+  "goblin": {
+   "criticalChance": 0.26,
+   "specialChance": 0.0,
+   "specials": [],
+   "timerScale": 0.9,
+   "element": "slash"
+  },
+  "stoneGuardian": {
+   "criticalChance": 0.06,
+   "specialChance": 0.4,
+   "specials": [
+    "protection",
+    "heavy_spell"
+   ],
+   "shieldStrength": 2,
+   "role": "guardian",
+   "armor": 0.2,
+   "timerScale": 1.2,
+   "element": "rock"
+  },
+  "rogueMage": {
+   "criticalChance": 0.12,
+   "specialChance": 0.35,
+   "specials": [
+    "rune_lock"
+   ],
+   "element": "arcane"
+  },
+  "wordEater": {
+   "criticalChance": 0.1,
+   "specialChance": 0.3,
+   "specials": [
+    "sentence_curse"
+   ],
+   "element": "ink"
+  },
+  "mimic": {
+   "criticalChance": 0.15,
+   "specialChance": 0.25,
+   "specials": [
+    "double_threat"
+   ],
+   "element": "glint"
+  },
+  "wisp": {
+   "criticalChance": 0.35,
+   "specialChance": 0.15,
+   "specials": [
+    "wisp_storm"
+   ],
+   "timerScale": 0.85,
+   "element": "spark",
+   "poisonImmune": true
+  },
+  "eliteMage": {
+   "criticalChance": 0.2,
+   "specialChance": 0.3,
+   "specials": [
+    "rune_lock",
+    "double_threat",
+    "protection"
+   ],
+   "shieldStrength": 2,
+   "element": "arcane"
+  },
+  "brute": {
+   "criticalChance": 0.08,
+   "specialChance": 0.4,
+   "specials": [
+    "heavy_spell"
+   ],
+   "timerScale": 1.25,
+   "element": "smash"
+  },
+  "boss": {
+   "criticalChance": 0.2,
+   "specialChance": 0.25,
+   "specials": [
+    "protection",
+    "heavy_spell"
+   ],
+   "shieldStrength": 2,
+   "element": "arcane"
+  }
+ },
+ "playerCriticals": [
+  "word_match",
+  "sentence_strike",
+  "rapid_words"
+ ],
+ "playerSpecial": "apprentice_incantation",
+ "moves": [],
+ "learnableSpecials": [
+  "guardian_ward",
+  "thorn_blight",
+  "rune_bind"
+ ]
+}

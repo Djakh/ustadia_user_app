@@ -1,0 +1,1162 @@
+{
+ "version": 1,
+ "runes": [
+  {
+   "id": "rune_001",
+   "sentence": "She ___ to school every day.",
+   "answer": "goes",
+   "distractors": [
+    "go",
+    "going",
+    "gone"
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "topic": "present_simple",
+   "wordIds": [
+    "go"
+   ]
+  },
+  {
+   "id": "rune_002",
+   "sentence": "I ___ a student.",
+   "answer": "am",
+   "distractors": [
+    "is",
+    "are",
+    "be"
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "topic": "to_be",
+   "wordIds": []
+  },
+  {
+   "id": "rune_003",
+   "sentence": "They ___ from Spain.",
+   "answer": "are",
+   "distractors": [
+    "is",
+    "am",
+    "be"
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "topic": "to_be",
+   "wordIds": []
+  },
+  {
+   "id": "rune_004",
+   "sentence": "He ___ two brothers.",
+   "answer": "has",
+   "distractors": [
+    "have",
+    "having",
+    "to have"
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "topic": "have_got",
+   "wordIds": []
+  },
+  {
+   "id": "rune_005",
+   "sentence": "There ___ a cat on the sofa.",
+   "answer": "is",
+   "distractors": [
+    "are",
+    "am",
+    "be"
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "topic": "there_is",
+   "wordIds": []
+  },
+  {
+   "id": "rune_006",
+   "sentence": "There ___ three books on the table.",
+   "answer": "are",
+   "distractors": [
+    "is",
+    "am",
+    "be"
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "topic": "there_are",
+   "wordIds": []
+  },
+  {
+   "id": "rune_007",
+   "sentence": "I can ___ very fast.",
+   "answer": "run",
+   "distractors": [
+    "runs",
+    "running",
+    "ran"
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "topic": "modal_base",
+   "wordIds": [
+    "fast"
+   ]
+  },
+  {
+   "id": "rune_008",
+   "sentence": "This is ___ apple.",
+   "answer": "an",
+   "distractors": [
+    "a",
+    "these",
+    "many"
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "topic": "articles",
+   "wordIds": []
+  },
+  {
+   "id": "rune_009",
+   "sentence": "The soup is too ___ to eat now. Let it cool down.",
+   "answer": "hot",
+   "distractors": [
+    "cold",
+    "sad",
+    "slow"
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "hot",
+    "cold"
+   ]
+  },
+  {
+   "id": "rune_010",
+   "sentence": "Please turn off the light. I want to ___.",
+   "answer": "sleep",
+   "distractors": [
+    "sleeps",
+    "sleeping",
+    "slept"
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "topic": "infinitive",
+   "wordIds": []
+  },
+  {
+   "id": "rune_011",
+   "sentence": "Nice to ___ you!",
+   "answer": "meet",
+   "distractors": [
+    "meeting",
+    "met",
+    "meets"
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "topic": "expressions",
+   "wordIds": []
+  },
+  {
+   "id": "rune_012",
+   "sentence": "The box is ___. There is nothing in it.",
+   "answer": "empty",
+   "distractors": [
+    "full",
+    "tall",
+    "loud"
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "empty",
+    "full"
+   ]
+  },
+  {
+   "id": "rune_013",
+   "sentence": "An elephant is ___ than a mouse.",
+   "answer": "bigger",
+   "distractors": [
+    "big",
+    "biggest",
+    "more big"
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "topic": "comparatives",
+   "wordIds": [
+    "big"
+   ]
+  },
+  {
+   "id": "rune_014",
+   "sentence": "I am ___ because I lost my keys.",
+   "answer": "sad",
+   "distractors": [
+    "happy",
+    "fast",
+    "tall"
+   ],
+   "degree": 1,
+   "cefr": "A1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "sad",
+    "happy"
+   ]
+  },
+  {
+   "id": "rune_015",
+   "sentence": "We ___ football yesterday.",
+   "answer": "played",
+   "distractors": [
+    "play",
+    "plays",
+    "playing"
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "topic": "past_simple",
+   "wordIds": []
+  },
+  {
+   "id": "rune_016",
+   "sentence": "My sister ___ like coffee.",
+   "answer": "doesn't",
+   "distractors": [
+    "don't",
+    "isn't",
+    "aren't"
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "topic": "present_negative",
+   "wordIds": []
+  },
+  {
+   "id": "rune_017",
+   "sentence": "___ you like tea?",
+   "answer": "Do",
+   "distractors": [
+    "Does",
+    "Is",
+    "Are"
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "topic": "questions",
+   "wordIds": []
+  },
+  {
+   "id": "rune_018",
+   "sentence": "Look at ___ birds in the sky!",
+   "answer": "those",
+   "distractors": [
+    "that",
+    "this",
+    "it"
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "topic": "demonstratives",
+   "wordIds": []
+  },
+  {
+   "id": "rune_019",
+   "sentence": "She is good ___ drawing.",
+   "answer": "at",
+   "distractors": [
+    "in",
+    "on",
+    "to"
+   ],
+   "degree": 2,
+   "cefr": "A2",
+   "topic": "prepositions",
+   "wordIds": [
+    "good"
+   ]
+  },
+  {
+   "id": "rune_020",
+   "sentence": "We go to bed ___ night.",
+   "answer": "at",
+   "distractors": [
+    "in",
+    "on",
+    "to"
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "topic": "prepositions_time",
+   "wordIds": [
+    "night"
+   ]
+  },
+  {
+   "id": "rune_021",
+   "sentence": "My birthday is ___ May.",
+   "answer": "in",
+   "distractors": [
+    "on",
+    "at",
+    "to"
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "topic": "prepositions_time",
+   "wordIds": []
+  },
+  {
+   "id": "rune_022",
+   "sentence": "The shop opens ___ Monday.",
+   "answer": "on",
+   "distractors": [
+    "in",
+    "at",
+    "to"
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "topic": "prepositions_time",
+   "wordIds": [
+    "open"
+   ]
+  },
+  {
+   "id": "rune_023",
+   "sentence": "Get up! You are going to be ___ for school.",
+   "answer": "late",
+   "distractors": [
+    "early",
+    "full",
+    "cold"
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "late",
+    "early"
+   ]
+  },
+  {
+   "id": "rune_024",
+   "sentence": "Please be ___ in the library.",
+   "answer": "quiet",
+   "distractors": [
+    "loud",
+    "fast",
+    "dirty"
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "quiet",
+    "loud"
+   ]
+  },
+  {
+   "id": "rune_025",
+   "sentence": "Wash your hands. They are ___.",
+   "answer": "dirty",
+   "distractors": [
+    "clean",
+    "empty",
+    "tall"
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "dirty",
+    "clean"
+   ]
+  },
+  {
+   "id": "rune_026",
+   "sentence": "I usually ___ breakfast at seven.",
+   "answer": "have",
+   "distractors": [
+    "has",
+    "having",
+    "to have"
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "topic": "present_simple",
+   "wordIds": []
+  },
+  {
+   "id": "rune_027",
+   "sentence": "How ___ is this bag? It's ten dollars.",
+   "answer": "much",
+   "distractors": [
+    "many",
+    "long",
+    "old"
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "topic": "quantifiers",
+   "wordIds": []
+  },
+  {
+   "id": "rune_028",
+   "sentence": "He ___ TV right now.",
+   "answer": "is watching",
+   "distractors": [
+    "watches",
+    "watching",
+    "watched"
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "topic": "present_continuous",
+   "wordIds": []
+  },
+  {
+   "id": "rune_029",
+   "sentence": "Thank you ___ your help.",
+   "answer": "for",
+   "distractors": [
+    "to",
+    "at",
+    "with"
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "topic": "expressions",
+   "wordIds": []
+  },
+  {
+   "id": "rune_030",
+   "sentence": "What time do you ___ up in the morning?",
+   "answer": "get",
+   "distractors": [
+    "got",
+    "getting",
+    "gets"
+   ],
+   "degree": 2,
+   "cefr": "A1",
+   "topic": "phrasal_verbs",
+   "wordIds": []
+  },
+  {
+   "id": "rune_031",
+   "sentence": "Yesterday I ___ my grandmother.",
+   "answer": "visited",
+   "distractors": [
+    "visit",
+    "visits",
+    "visiting"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "past_simple",
+   "wordIds": []
+  },
+  {
+   "id": "rune_032",
+   "sentence": "She ___ to London last year.",
+   "answer": "went",
+   "distractors": [
+    "goes",
+    "go",
+    "going"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "past_simple",
+   "wordIds": [
+    "go"
+   ]
+  },
+  {
+   "id": "rune_033",
+   "sentence": "Have you ever ___ to Paris?",
+   "answer": "been",
+   "distractors": [
+    "be",
+    "was",
+    "being"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "present_perfect",
+   "wordIds": []
+  },
+  {
+   "id": "rune_034",
+   "sentence": "This is the ___ day of my life!",
+   "answer": "best",
+   "distractors": [
+    "good",
+    "better",
+    "well"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "superlatives",
+   "wordIds": [
+    "good"
+   ]
+  },
+  {
+   "id": "rune_035",
+   "sentence": "My bag is ___ than yours.",
+   "answer": "heavier",
+   "distractors": [
+    "heavy",
+    "heaviest",
+    "more heavy"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "comparatives",
+   "wordIds": [
+    "heavy"
+   ]
+  },
+  {
+   "id": "rune_036",
+   "sentence": "Can I ___ your pen? I will give it back.",
+   "answer": "borrow",
+   "distractors": [
+    "lend",
+    "sell",
+    "lose"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "vocabulary",
+   "wordIds": [
+    "borrow",
+    "lend"
+   ]
+  },
+  {
+   "id": "rune_037",
+   "sentence": "Could you ___ me some money until Friday?",
+   "answer": "lend",
+   "distractors": [
+    "borrow",
+    "buy",
+    "take"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "vocabulary",
+   "wordIds": [
+    "lend",
+    "borrow"
+   ]
+  },
+  {
+   "id": "rune_038",
+   "sentence": "Don't ___ to close the window when you leave.",
+   "answer": "forget",
+   "distractors": [
+    "remember",
+    "forgot",
+    "forgetting"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "vocabulary",
+   "wordIds": [
+    "forget",
+    "remember"
+   ]
+  },
+  {
+   "id": "rune_039",
+   "sentence": "The train ___ at the station at 6 pm every day.",
+   "answer": "arrives",
+   "distractors": [
+    "arrive",
+    "arriving",
+    "to arrive"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "present_simple",
+   "wordIds": [
+    "arrive"
+   ]
+  },
+  {
+   "id": "rune_040",
+   "sentence": "It's ___ to swim here. There are sharks!",
+   "answer": "dangerous",
+   "distractors": [
+    "safe",
+    "famous",
+    "polite"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "vocabulary",
+   "wordIds": [
+    "dangerous",
+    "safe"
+   ]
+  },
+  {
+   "id": "rune_041",
+   "sentence": "Say thank you. It's ___.",
+   "answer": "polite",
+   "distractors": [
+    "rude",
+    "lazy",
+    "noisy"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "vocabulary",
+   "wordIds": [
+    "polite",
+    "rude"
+   ]
+  },
+  {
+   "id": "rune_042",
+   "sentence": "If it rains, we ___ at home.",
+   "answer": "will stay",
+   "distractors": [
+    "stayed",
+    "stays",
+    "staying"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "first_conditional",
+   "wordIds": [
+    "stay"
+   ]
+  },
+  {
+   "id": "rune_043",
+   "sentence": "She was tired, ___ she went to bed early.",
+   "answer": "so",
+   "distractors": [
+    "but",
+    "because",
+    "or"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "linking_words",
+   "wordIds": [
+    "tired",
+    "early"
+   ]
+  },
+  {
+   "id": "rune_044",
+   "sentence": "I stayed at home ___ I was sick.",
+   "answer": "because",
+   "distractors": [
+    "so",
+    "but",
+    "or"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "linking_words",
+   "wordIds": [
+    "sick",
+    "stay"
+   ]
+  },
+  {
+   "id": "rune_045",
+   "sentence": "There isn't ___ milk in the fridge.",
+   "answer": "any",
+   "distractors": [
+    "some",
+    "many",
+    "a"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "quantifiers",
+   "wordIds": []
+  },
+  {
+   "id": "rune_046",
+   "sentence": "How ___ apples do you want?",
+   "answer": "many",
+   "distractors": [
+    "much",
+    "any",
+    "long"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "quantifiers",
+   "wordIds": []
+  },
+  {
+   "id": "rune_047",
+   "sentence": "The film was so ___ that I fell asleep.",
+   "answer": "boring",
+   "distractors": [
+    "exciting",
+    "interesting",
+    "famous"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "vocabulary",
+   "wordIds": [
+    "boring",
+    "asleep"
+   ]
+  },
+  {
+   "id": "rune_048",
+   "sentence": "The lake is too ___ for swimming. The water only comes to my knees.",
+   "answer": "shallow",
+   "distractors": [
+    "deep",
+    "wide",
+    "noisy"
+   ],
+   "degree": 3,
+   "cefr": "B1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "shallow",
+    "deep"
+   ]
+  },
+  {
+   "id": "rune_049",
+   "sentence": "He is ___ tallest boy in the class.",
+   "answer": "the",
+   "distractors": [
+    "a",
+    "an",
+    "most"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "superlatives",
+   "wordIds": [
+    "tall"
+   ]
+  },
+  {
+   "id": "rune_050",
+   "sentence": "I'm looking ___ my keys. Have you seen them?",
+   "answer": "for",
+   "distractors": [
+    "at",
+    "after",
+    "into"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "phrasal_verbs",
+   "wordIds": []
+  },
+  {
+   "id": "rune_051",
+   "sentence": "The brave firefighter ___ the child from the fire.",
+   "answer": "saved",
+   "distractors": [
+    "save",
+    "saving",
+    "saves"
+   ],
+   "degree": 3,
+   "cefr": "A2",
+   "topic": "past_simple",
+   "wordIds": [
+    "brave"
+   ]
+  },
+  {
+   "id": "rune_052",
+   "sentence": "I have lived here ___ 2015.",
+   "answer": "since",
+   "distractors": [
+    "for",
+    "ago",
+    "during"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "present_perfect",
+   "wordIds": []
+  },
+  {
+   "id": "rune_053",
+   "sentence": "She has worked here ___ ten years.",
+   "answer": "for",
+   "distractors": [
+    "since",
+    "ago",
+    "during"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "present_perfect",
+   "wordIds": []
+  },
+  {
+   "id": "rune_054",
+   "sentence": "If I ___ rich, I would travel the world.",
+   "answer": "were",
+   "distractors": [
+    "am",
+    "will be",
+    "being"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "second_conditional",
+   "wordIds": [
+    "rich"
+   ]
+  },
+  {
+   "id": "rune_055",
+   "sentence": "This glass is ___. Please carry it carefully.",
+   "answer": "fragile",
+   "distractors": [
+    "sturdy",
+    "public",
+    "permanent"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "fragile",
+    "sturdy"
+   ]
+  },
+  {
+   "id": "rune_056",
+   "sentence": "My parents don't ___ me to stay out after ten.",
+   "answer": "allow",
+   "distractors": [
+    "let",
+    "refuse",
+    "agree"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "verb_patterns",
+   "wordIds": [
+    "allow"
+   ]
+  },
+  {
+   "id": "rune_057",
+   "sentence": "He ___ to answer my question and walked away.",
+   "answer": "refused",
+   "distractors": [
+    "accepted",
+    "allowed",
+    "disappeared"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "verb_patterns",
+   "wordIds": [
+    "refuse"
+   ]
+  },
+  {
+   "id": "rune_058",
+   "sentence": "The magician made the rabbit ___.",
+   "answer": "disappear",
+   "distractors": [
+    "disappeared",
+    "disappearing",
+    "to disappear"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "verb_patterns",
+   "wordIds": [
+    "disappear"
+   ]
+  },
+  {
+   "id": "rune_059",
+   "sentence": "I'm ___ that I locked the door. I remember doing it.",
+   "answer": "certain",
+   "distractors": [
+    "impossible",
+    "temporary",
+    "fragile"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "certain"
+   ]
+  },
+  {
+   "id": "rune_060",
+   "sentence": "It's ___ to finish this in one hour. It's far too much work.",
+   "answer": "impossible",
+   "distractors": [
+    "possible",
+    "private",
+    "valuable"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "impossible",
+    "possible"
+   ]
+  },
+  {
+   "id": "rune_061",
+   "sentence": "The number of students ___ from 20 to 35 this year.",
+   "answer": "increased",
+   "distractors": [
+    "decreased",
+    "reduced",
+    "disappeared"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "increase",
+    "decrease"
+   ]
+  },
+  {
+   "id": "rune_062",
+   "sentence": "You should ___ your coat. It's cold outside.",
+   "answer": "put on",
+   "distractors": [
+    "take off",
+    "put off",
+    "put out"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "phrasal_verbs",
+   "wordIds": [
+    "cold"
+   ]
+  },
+  {
+   "id": "rune_063",
+   "sentence": "Please ___ the lights when you leave the room.",
+   "answer": "turn off",
+   "distractors": [
+    "turn on",
+    "turn up",
+    "turn into"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "phrasal_verbs",
+   "wordIds": [
+    "leave"
+   ]
+  },
+  {
+   "id": "rune_064",
+   "sentence": "She was ___ of her son when he won the prize.",
+   "answer": "proud",
+   "distractors": [
+    "ashamed",
+    "guilty",
+    "careless"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "proud",
+    "ashamed"
+   ]
+  },
+  {
+   "id": "rune_065",
+   "sentence": "He was found ___ of the crime and went to prison.",
+   "answer": "guilty",
+   "distractors": [
+    "innocent",
+    "patient",
+    "valuable"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "guilty",
+    "innocent"
+   ]
+  },
+  {
+   "id": "rune_066",
+   "sentence": "The price ___ breakfast, so you don't need to pay for it.",
+   "answer": "includes",
+   "distractors": [
+    "excludes",
+    "refuses",
+    "imports"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "include",
+    "exclude"
+   ]
+  },
+  {
+   "id": "rune_067",
+   "sentence": "I'd rather ___ at home tonight.",
+   "answer": "stay",
+   "distractors": [
+    "to stay",
+    "staying",
+    "stayed"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "verb_patterns",
+   "wordIds": [
+    "stay"
+   ]
+  },
+  {
+   "id": "rune_068",
+   "sentence": "Neither Tom ___ Anna came to the party.",
+   "answer": "nor",
+   "distractors": [
+    "or",
+    "and",
+    "but"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "linking_words",
+   "wordIds": []
+  },
+  {
+   "id": "rune_069",
+   "sentence": "She speaks English ___ than her brother.",
+   "answer": "better",
+   "distractors": [
+    "good",
+    "best",
+    "well"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "comparatives",
+   "wordIds": [
+    "good"
+   ]
+  },
+  {
+   "id": "rune_070",
+   "sentence": "Be ___ when you cross the road.",
+   "answer": "careful",
+   "distractors": [
+    "careless",
+    "lazy",
+    "cruel"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "careful",
+    "careless"
+   ]
+  },
+  {
+   "id": "rune_071",
+   "sentence": "The old bridge was ___ in the war, so they built a new one.",
+   "answer": "destroyed",
+   "distractors": [
+    "created",
+    "included",
+    "allowed"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "destroy",
+    "build"
+   ]
+  },
+  {
+   "id": "rune_072",
+   "sentence": "Don't ___ at me! I can hear you.",
+   "answer": "shout",
+   "distractors": [
+    "whisper",
+    "shouting",
+    "shouted"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "shout",
+    "whisper"
+   ]
+  },
+  {
+   "id": "rune_073",
+   "sentence": "The window ___ by the storm last night.",
+   "answer": "was broken",
+   "distractors": [
+    "is breaking",
+    "breaks",
+    "has broke"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "passive",
+   "wordIds": [
+    "break"
+   ]
+  },
+  {
+   "id": "rune_074",
+   "sentence": "The sun ___ behind the clouds and the sky became dark.",
+   "answer": "disappeared",
+   "distractors": [
+    "appeared",
+    "increased",
+    "included"
+   ],
+   "degree": 4,
+   "cefr": "B1",
+   "topic": "vocabulary",
+   "wordIds": [
+    "disappear",
+    "dark"
+   ]
+  }
+ ]
+}
