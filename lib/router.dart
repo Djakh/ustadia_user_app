@@ -75,6 +75,7 @@ import 'package:ustadia_user_app/features/reels/data/models/reel_post_model.dart
 import 'package:ustadia_user_app/features/reels/presentation/pages/reel_user_profile_page.dart';
 import 'package:ustadia_user_app/features/reels/presentation/pages/reels_page.dart';
 import 'package:ustadia_user_app/features/splash/presentation/pages/splash_page.dart';
+import 'package:ustadia_user_app/features/word_forge/word_forge.dart';
 import 'package:ustadia_user_app/injection_container.dart';
 
 /// --------------------
@@ -148,6 +149,7 @@ const writingAssessmentPath = 'writing-assessment';
 const listenTapSetsPath = 'listen-tap-sets';
 const monkeyTypePath = 'monkey-type';
 const monkeyTypeSessionPath = 'session';
+const wordForgePath = 'word-forge';
 
 const listenTapPath = 'listen-tap';
 const vocabularyPath = 'vocabulary';
@@ -181,6 +183,7 @@ const writingAssessmentRoute = '$practiceRoute/$writingAssessmentPath';
 const listenTapSetsRoute = '$practiceRoute/$listenTapSetsPath';
 const monkeyTypeRoute = '$practiceRoute/$monkeyTypePath';
 const monkeyTypeSessionRoute = '$monkeyTypeRoute/$monkeyTypeSessionPath';
+const wordForgeRoute = '$practiceRoute/$wordForgePath';
 
 const listenTapRoute = '$practiceRoute/$listenTapPath';
 
@@ -595,6 +598,19 @@ final appRouter = GoRouter(
                           builder: (context, state) => MonkeyTypeSessionPage(
                               practice: state.extra as MonkeyTypePracticeModel))
                     ]),
+
+                GoRoute(
+                  path: wordForgePath,
+                  parentNavigatorKey: _rootKey,
+                  pageBuilder: (_, state) => CustomTransitionPage(
+                    key: state.pageKey,
+                    transitionDuration: WordForgeFadeTransition.duration,
+                    reverseTransitionDuration: WordForgeFadeTransition.duration,
+                    child: WordForgeEntryPage(dependencies: sl<WordForgeDependencies>(), playerId: wordForgePlayerId()),
+                    transitionsBuilder: (_, animation, __, child) =>
+                        WordForgeFadeTransition(animation: animation, child: child),
+                  ),
+                ),
 
                 /// SpeedMix: start -> play/result
                 GoRoute(

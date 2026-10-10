@@ -1,0 +1,626 @@
+{
+ "version": 1,
+ "regions": [
+  {
+   "id": "forgotten_road",
+   "order": 1,
+   "name": "The Forgotten Road",
+   "subtitle": "Where every journey begins",
+   "theme": "road",
+   "degree": [
+    1,
+    2
+   ],
+   "startNodeId": "r1_n1",
+   "bossNodeId": "r1_boss",
+   "nodes": [
+    {
+     "id": "r1_n1",
+     "type": "battle",
+     "title": "Roadside Ambush",
+     "row": 0,
+     "lane": 0,
+     "next": [
+      "r1_n2"
+     ],
+     "battleId": "r1_n1"
+    },
+    {
+     "id": "r1_n2",
+     "type": "battle",
+     "title": "Broken Cart",
+     "row": 1,
+     "lane": -0.4,
+     "next": [
+      "r1_n3"
+     ],
+     "battleId": "r1_n2"
+    },
+    {
+     "id": "r1_n3",
+     "type": "battle",
+     "title": "The Silent Milestone",
+     "row": 2,
+     "lane": 0.1,
+     "next": [
+      "r1_n4",
+      "r1_x1"
+     ],
+     "battleId": "r1_n3"
+    },
+    {
+     "id": "r1_x1",
+     "type": "bonus",
+     "title": "Abandoned Wagon",
+     "row": 2.6,
+     "lane": 0.85,
+     "next": [
+      "r1_n4"
+     ],
+     "optional": true,
+     "rewards": {
+      "hint": 1,
+      "shield": 1
+     }
+    },
+    {
+     "id": "r1_n4",
+     "type": "battle",
+     "title": "Raiders' Crossing",
+     "row": 3.3,
+     "lane": -0.2,
+     "next": [
+      "r1_n5"
+     ],
+     "battleId": "r1_n4"
+    },
+    {
+     "id": "r1_n5",
+     "type": "bonus",
+     "title": "Wayside Shrine",
+     "row": 4.3,
+     "lane": 0.35,
+     "next": [
+      "r1_n6"
+     ],
+     "rewards": {
+      "hint": 1
+     }
+    },
+    {
+     "id": "r1_n6",
+     "type": "battle",
+     "title": "Shaman's Circle",
+     "row": 5.3,
+     "lane": -0.1,
+     "next": [
+      "r1_n7",
+      "r1_c1"
+     ],
+     "battleId": "r1_n6"
+    },
+    {
+     "id": "r1_c1",
+     "type": "challenge",
+     "title": "Rune Trial",
+     "row": 5.9,
+     "lane": -0.85,
+     "next": [
+      "r1_mb"
+     ],
+     "battleId": "r1_c1",
+     "optional": true
+    },
+    {
+     "id": "r1_n7",
+     "type": "battle",
+     "title": "Whispering Stones",
+     "row": 6.4,
+     "lane": 0.4,
+     "next": [
+      "r1_mb"
+     ],
+     "battleId": "r1_n7"
+    },
+    {
+     "id": "r1_mb",
+     "type": "miniBoss",
+     "title": "Bandit Camp",
+     "row": 7.5,
+     "lane": 0,
+     "next": [
+      "r1_n8"
+     ],
+     "battleId": "r1_mb"
+    },
+    {
+     "id": "r1_n8",
+     "type": "battle",
+     "title": "The Old Bridge",
+     "row": 8.5,
+     "lane": -0.3,
+     "next": [
+      "r1_e1",
+      "r1_r1"
+     ],
+     "battleId": "r1_n8"
+    },
+    {
+     "id": "r1_e1",
+     "type": "elite",
+     "title": "Warchief's Tent",
+     "row": 9.5,
+     "lane": -0.75,
+     "next": [
+      "r1_n9"
+     ],
+     "battleId": "r1_e1"
+    },
+    {
+     "id": "r1_r1",
+     "type": "recovery",
+     "title": "Travellers' Campfire",
+     "row": 9.5,
+     "lane": 0.6,
+     "next": [
+      "r1_n9"
+     ],
+     "rewards": {
+      "shield": 1,
+      "secondChance": 1
+     }
+    },
+    {
+     "id": "r1_n9",
+     "type": "battle",
+     "title": "Gate Road",
+     "row": 10.5,
+     "lane": 0,
+     "next": [
+      "r1_boss",
+      "r1_m1"
+     ],
+     "battleId": "r1_n9"
+    },
+    {
+     "id": "r1_m1",
+     "type": "mystery",
+     "title": "Strange Chest",
+     "row": 11.1,
+     "lane": 0.85,
+     "next": [],
+     "optional": true,
+     "outcomes": [
+      {
+       "kind": "treasure",
+       "buffs": {
+        "reveal": 1,
+        "extraTime": 1
+       }
+      },
+      {
+       "kind": "battle",
+       "battleId": "r1_mimic"
+      }
+     ]
+    },
+    {
+     "id": "r1_boss",
+     "type": "boss",
+     "title": "The Forgotten Gate",
+     "row": 12,
+     "lane": -0.1,
+     "next": [],
+     "battleId": "r1_boss",
+     "teaches": "guardian_ward"
+    }
+   ]
+  },
+  {
+   "id": "whispering_forest",
+   "order": 2,
+   "name": "Whispering Forest",
+   "subtitle": "The trees remember every word",
+   "theme": "forest",
+   "degree": [
+    2,
+    3
+   ],
+   "startNodeId": "r2_n1",
+   "bossNodeId": "r2_boss",
+   "nodes": [
+    {
+     "id": "r2_n1",
+     "type": "battle",
+     "title": "Forest Edge",
+     "row": 0,
+     "lane": 0,
+     "next": [
+      "r2_n2"
+     ],
+     "battleId": "r2_n1"
+    },
+    {
+     "id": "r2_n2",
+     "type": "battle",
+     "title": "Witch's Hollow",
+     "row": 1,
+     "lane": 0.35,
+     "next": [
+      "r2_n3",
+      "r2_x1"
+     ],
+     "battleId": "r2_n2"
+    },
+    {
+     "id": "r2_x1",
+     "type": "bonus",
+     "title": "Glowing Mushrooms",
+     "row": 1.7,
+     "lane": -0.85,
+     "next": [
+      "r2_n4"
+     ],
+     "optional": true,
+     "rewards": {
+      "reveal": 1,
+      "extraTime": 1
+     }
+    },
+    {
+     "id": "r2_n3",
+     "type": "battle",
+     "title": "Devoured Path",
+     "row": 2.2,
+     "lane": 0.5,
+     "next": [
+      "r2_n4"
+     ],
+     "battleId": "r2_n3"
+    },
+    {
+     "id": "r2_n4",
+     "type": "battle",
+     "title": "Mossy Ruins",
+     "row": 3.3,
+     "lane": -0.1,
+     "next": [
+      "r2_n5",
+      "r2_c1"
+     ],
+     "battleId": "r2_n4"
+    },
+    {
+     "id": "r2_c1",
+     "type": "challenge",
+     "title": "Wisp Chase",
+     "row": 3.9,
+     "lane": 0.85,
+     "next": [
+      "r2_mb"
+     ],
+     "battleId": "r2_c1",
+     "optional": true
+    },
+    {
+     "id": "r2_n5",
+     "type": "battle",
+     "title": "Moonlit Clearing",
+     "row": 4.4,
+     "lane": -0.5,
+     "next": [
+      "r2_mb",
+      "r2_m1"
+     ],
+     "battleId": "r2_n5"
+    },
+    {
+     "id": "r2_m1",
+     "type": "mystery",
+     "title": "Hollow Stump",
+     "row": 4.9,
+     "lane": -0.95,
+     "next": [],
+     "optional": true,
+     "outcomes": [
+      {
+       "kind": "treasure",
+       "buffs": {
+        "runeSense": 1,
+        "hint": 1
+       }
+      },
+      {
+       "kind": "battle",
+       "battleId": "r2_mimic"
+      }
+     ]
+    },
+    {
+     "id": "r2_mb",
+     "type": "miniBoss",
+     "title": "Golem's Grove",
+     "row": 5.6,
+     "lane": 0.2,
+     "next": [
+      "r2_n6"
+     ],
+     "battleId": "r2_mb"
+    },
+    {
+     "id": "r2_n6",
+     "type": "battle",
+     "title": "Twisting Roots",
+     "row": 6.6,
+     "lane": -0.2,
+     "next": [
+      "r2_e1",
+      "r2_b2"
+     ],
+     "battleId": "r2_n6"
+    },
+    {
+     "id": "r2_e1",
+     "type": "elite",
+     "title": "Warlock's Thicket",
+     "row": 7.6,
+     "lane": -0.75,
+     "next": [
+      "r2_n7"
+     ],
+     "battleId": "r2_e1"
+    },
+    {
+     "id": "r2_b2",
+     "type": "bonus",
+     "title": "Fairy Ring",
+     "row": 7.6,
+     "lane": 0.65,
+     "next": [
+      "r2_n7"
+     ],
+     "rewards": {
+      "timeFreeze": 1,
+      "hint": 1
+     }
+    },
+    {
+     "id": "r2_n7",
+     "type": "battle",
+     "title": "Deep Woods",
+     "row": 8.6,
+     "lane": 0,
+     "next": [
+      "r2_r1"
+     ],
+     "battleId": "r2_n7"
+    },
+    {
+     "id": "r2_r1",
+     "type": "recovery",
+     "title": "Healing Spring",
+     "row": 9.5,
+     "lane": 0.45,
+     "next": [
+      "r2_boss"
+     ],
+     "rewards": {
+      "shield": 1,
+      "secondChance": 1
+     }
+    },
+    {
+     "id": "r2_boss",
+     "type": "boss",
+     "title": "Heart of the Forest",
+     "row": 10.6,
+     "lane": 0,
+     "next": [],
+     "battleId": "r2_boss",
+     "teaches": "thorn_blight"
+    }
+   ]
+  },
+  {
+   "id": "ruins_of_words",
+   "order": 3,
+   "name": "Ruins of Words",
+   "subtitle": "Ancient spells sleep in broken stone",
+   "theme": "ruins",
+   "degree": [
+    3,
+    4
+   ],
+   "startNodeId": "r3_n1",
+   "bossNodeId": "r3_boss",
+   "nodes": [
+    {
+     "id": "r3_n1",
+     "type": "battle",
+     "title": "Fallen Archway",
+     "row": 0,
+     "lane": 0,
+     "next": [
+      "r3_n2"
+     ],
+     "battleId": "r3_n1"
+    },
+    {
+     "id": "r3_n2",
+     "type": "battle",
+     "title": "Hall of Echoes",
+     "row": 1,
+     "lane": -0.35,
+     "next": [
+      "r3_n3",
+      "r3_x1"
+     ],
+     "battleId": "r3_n2"
+    },
+    {
+     "id": "r3_x1",
+     "type": "bonus",
+     "title": "Forgotten Scroll",
+     "row": 1.7,
+     "lane": 0.85,
+     "next": [
+      "r3_n4"
+     ],
+     "optional": true,
+     "rewards": {
+      "hint": 1,
+      "reveal": 1
+     }
+    },
+    {
+     "id": "r3_n3",
+     "type": "battle",
+     "title": "Ink-Stained Steps",
+     "row": 2.2,
+     "lane": -0.45,
+     "next": [
+      "r3_n4"
+     ],
+     "battleId": "r3_n3"
+    },
+    {
+     "id": "r3_n4",
+     "type": "battle",
+     "title": "Scriptorium",
+     "row": 3.3,
+     "lane": 0.1,
+     "next": [
+      "r3_e1",
+      "r3_c1"
+     ],
+     "battleId": "r3_n4",
+     "teaches": "rune_bind"
+    },
+    {
+     "id": "r3_e1",
+     "type": "elite",
+     "title": "Hall of Mirrors",
+     "row": 4.3,
+     "lane": -0.7,
+     "next": [
+      "r3_mb"
+     ],
+     "battleId": "r3_e1"
+    },
+    {
+     "id": "r3_c1",
+     "type": "challenge",
+     "title": "Glyph Sprint",
+     "row": 4.3,
+     "lane": 0.7,
+     "next": [
+      "r3_mb"
+     ],
+     "battleId": "r3_c1"
+    },
+    {
+     "id": "r3_mb",
+     "type": "miniBoss",
+     "title": "Sealed Archive",
+     "row": 5.4,
+     "lane": 0,
+     "next": [
+      "r3_n5"
+     ],
+     "battleId": "r3_mb"
+    },
+    {
+     "id": "r3_n5",
+     "type": "battle",
+     "title": "Collapsed Library",
+     "row": 6.4,
+     "lane": 0.4,
+     "next": [
+      "r3_n6",
+      "r3_m1"
+     ],
+     "battleId": "r3_n5"
+    },
+    {
+     "id": "r3_m1",
+     "type": "mystery",
+     "title": "Silver Reliquary",
+     "row": 6.9,
+     "lane": 0.95,
+     "next": [],
+     "optional": true,
+     "outcomes": [
+      {
+       "kind": "treasure",
+       "buffs": {
+        "shield": 1,
+        "timeFreeze": 1
+       }
+      },
+      {
+       "kind": "battle",
+       "battleId": "r3_mimic"
+      }
+     ]
+    },
+    {
+     "id": "r3_n6",
+     "type": "battle",
+     "title": "Rune Vault",
+     "row": 7.5,
+     "lane": -0.2,
+     "next": [
+      "r3_e2",
+      "r3_r1"
+     ],
+     "battleId": "r3_n6"
+    },
+    {
+     "id": "r3_e2",
+     "type": "elite",
+     "title": "Warlock's Study",
+     "row": 8.5,
+     "lane": -0.8,
+     "next": [
+      "r3_n7"
+     ],
+     "battleId": "r3_e2"
+    },
+    {
+     "id": "r3_r1",
+     "type": "recovery",
+     "title": "Quiet Reading Room",
+     "row": 8.5,
+     "lane": 0.6,
+     "next": [
+      "r3_n7"
+     ],
+     "rewards": {
+      "shield": 1,
+      "secondChance": 1
+     }
+    },
+    {
+     "id": "r3_n7",
+     "type": "battle",
+     "title": "The Last Corridor",
+     "row": 9.5,
+     "lane": 0,
+     "next": [
+      "r3_boss"
+     ],
+     "battleId": "r3_n7"
+    },
+    {
+     "id": "r3_boss",
+     "type": "boss",
+     "title": "Throne of Words",
+     "row": 10.6,
+     "lane": 0,
+     "next": [],
+     "battleId": "r3_boss"
+    }
+   ]
+  }
+ ]
+}

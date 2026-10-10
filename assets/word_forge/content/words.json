@@ -1,0 +1,5150 @@
+{
+ "version": 1,
+ "words": [
+  {
+   "id": "big",
+   "text": "big",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "size_big",
+   "domain": "size",
+   "definition": "large in size",
+   "synonyms": [
+    "large",
+    "huge"
+   ],
+   "antonyms": [
+    "small",
+    "little"
+   ],
+   "examples": [
+    "They live in a big house."
+   ],
+   "tags": [
+    "size"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "small",
+   "text": "small",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "size_small",
+   "domain": "size",
+   "definition": "little in size",
+   "synonyms": [
+    "little",
+    "tiny"
+   ],
+   "antonyms": [
+    "big",
+    "large"
+   ],
+   "examples": [
+    "I have a small dog."
+   ],
+   "tags": [
+    "size"
+   ],
+   "confusables": [
+    "smell"
+   ]
+  },
+  {
+   "id": "hot",
+   "text": "hot",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "heat",
+   "domain": "temperature",
+   "definition": "having a high temperature",
+   "synonyms": [
+    "boiling"
+   ],
+   "antonyms": [
+    "cold"
+   ],
+   "examples": [
+    "The tea is too hot to drink."
+   ],
+   "tags": [
+    "temperature"
+   ],
+   "confusables": [
+    "hat"
+   ]
+  },
+  {
+   "id": "cold",
+   "text": "cold",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "chill",
+   "domain": "temperature",
+   "definition": "having a low temperature",
+   "synonyms": [
+    "chilly",
+    "freezing"
+   ],
+   "antonyms": [
+    "hot"
+   ],
+   "examples": [
+    "Put on a coat. It is cold outside."
+   ],
+   "tags": [
+    "temperature"
+   ],
+   "confusables": [
+    "gold"
+   ]
+  },
+  {
+   "id": "happy",
+   "text": "happy",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "joy",
+   "domain": "emotion",
+   "definition": "feeling good and pleased",
+   "synonyms": [
+    "glad",
+    "cheerful",
+    "joyful"
+   ],
+   "antonyms": [
+    "sad",
+    "unhappy"
+   ],
+   "examples": [
+    "She is happy with her new job."
+   ],
+   "tags": [
+    "emotion"
+   ],
+   "confusables": [
+    "hippy"
+   ]
+  },
+  {
+   "id": "sad",
+   "text": "sad",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "sadness",
+   "domain": "emotion",
+   "definition": "feeling unhappy",
+   "synonyms": [
+    "unhappy",
+    "upset"
+   ],
+   "antonyms": [
+    "happy",
+    "cheerful"
+   ],
+   "examples": [
+    "He was sad when his friend left."
+   ],
+   "tags": [
+    "emotion"
+   ],
+   "confusables": [
+    "said"
+   ]
+  },
+  {
+   "id": "fast",
+   "text": "fast",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "speed_fast",
+   "domain": "speed",
+   "definition": "moving or happening quickly",
+   "synonyms": [
+    "quick",
+    "rapid"
+   ],
+   "antonyms": [
+    "slow"
+   ],
+   "examples": [
+    "This is a very fast car."
+   ],
+   "tags": [
+    "speed"
+   ],
+   "confusables": [
+    "feast"
+   ]
+  },
+  {
+   "id": "slow",
+   "text": "slow",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "speed_slow",
+   "domain": "speed",
+   "definition": "not moving or happening quickly",
+   "synonyms": [],
+   "antonyms": [
+    "fast",
+    "quick"
+   ],
+   "examples": [
+    "The old bus is very slow."
+   ],
+   "tags": [
+    "speed"
+   ],
+   "confusables": [
+    "snow"
+   ]
+  },
+  {
+   "id": "old",
+   "text": "old",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "age_old",
+   "domain": "age",
+   "definition": "having lived or existed for a long time",
+   "synonyms": [
+    "ancient"
+   ],
+   "antonyms": [
+    "new",
+    "young"
+   ],
+   "examples": [
+    "My grandfather is very old."
+   ],
+   "tags": [
+    "age"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "new",
+   "text": "new",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "age_new",
+   "domain": "age",
+   "definition": "recently made or bought",
+   "synonyms": [
+    "modern"
+   ],
+   "antonyms": [
+    "old"
+   ],
+   "examples": [
+    "I bought a new phone."
+   ],
+   "tags": [
+    "age"
+   ],
+   "confusables": [
+    "knew"
+   ]
+  },
+  {
+   "id": "young",
+   "text": "young",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "age_young",
+   "domain": "age",
+   "definition": "having lived for only a short time",
+   "synonyms": [],
+   "antonyms": [
+    "old"
+   ],
+   "examples": [
+    "The young boy is five years old."
+   ],
+   "tags": [
+    "age"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "good",
+   "text": "good",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "quality_good",
+   "domain": "quality",
+   "definition": "of high quality or pleasant",
+   "synonyms": [
+    "fine",
+    "great"
+   ],
+   "antonyms": [
+    "bad"
+   ],
+   "examples": [
+    "This is a good book."
+   ],
+   "tags": [
+    "quality"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "bad",
+   "text": "bad",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "quality_bad",
+   "domain": "quality",
+   "definition": "of low quality or unpleasant",
+   "synonyms": [
+    "awful",
+    "terrible"
+   ],
+   "antonyms": [
+    "good"
+   ],
+   "examples": [
+    "The weather is bad today."
+   ],
+   "tags": [
+    "quality"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "long",
+   "text": "long",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "length_long",
+   "domain": "size",
+   "definition": "measuring a lot from one end to the other",
+   "synonyms": [],
+   "antonyms": [
+    "short"
+   ],
+   "examples": [
+    "She has long hair."
+   ],
+   "tags": [
+    "size"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "short",
+   "text": "short",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "length_short",
+   "domain": "size",
+   "definition": "small in length or height",
+   "synonyms": [],
+   "antonyms": [
+    "long",
+    "tall"
+   ],
+   "examples": [
+    "It was a short walk to the park."
+   ],
+   "tags": [
+    "size"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "tall",
+   "text": "tall",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "height_tall",
+   "domain": "size",
+   "definition": "of great height",
+   "synonyms": [
+    "high"
+   ],
+   "antonyms": [
+    "short"
+   ],
+   "examples": [
+    "My brother is very tall."
+   ],
+   "tags": [
+    "size"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "full",
+   "text": "full",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "quantity_full",
+   "domain": "quantity",
+   "definition": "holding as much as possible",
+   "synonyms": [],
+   "antonyms": [
+    "empty"
+   ],
+   "examples": [
+    "The glass is full of water."
+   ],
+   "tags": [
+    "quantity"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "empty",
+   "text": "empty",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "quantity_empty",
+   "domain": "quantity",
+   "definition": "containing nothing",
+   "synonyms": [],
+   "antonyms": [
+    "full",
+    "crowded"
+   ],
+   "examples": [
+    "The box is empty."
+   ],
+   "tags": [
+    "quantity"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "open",
+   "text": "open",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "state_open",
+   "domain": "state",
+   "definition": "not closed",
+   "synonyms": [],
+   "antonyms": [
+    "closed",
+    "shut"
+   ],
+   "examples": [
+    "The shop is open until nine."
+   ],
+   "tags": [
+    "state"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "closed",
+   "text": "closed",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "state_closed",
+   "domain": "state",
+   "definition": "not open",
+   "synonyms": [
+    "shut"
+   ],
+   "antonyms": [
+    "open"
+   ],
+   "examples": [
+    "The museum is closed on Monday."
+   ],
+   "tags": [
+    "state"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "day",
+   "text": "day",
+   "pos": "noun",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "time_day",
+   "domain": "time",
+   "definition": "the time when it is light outside",
+   "synonyms": [],
+   "antonyms": [
+    "night"
+   ],
+   "examples": [
+    "We worked all day."
+   ],
+   "tags": [
+    "time"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "night",
+   "text": "night",
+   "pos": "noun",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "time_night",
+   "domain": "time",
+   "definition": "the time when it is dark outside",
+   "synonyms": [],
+   "antonyms": [
+    "day"
+   ],
+   "examples": [
+    "I sleep at night."
+   ],
+   "tags": [
+    "time"
+   ],
+   "confusables": [
+    "knight"
+   ]
+  },
+  {
+   "id": "buy",
+   "text": "buy",
+   "pos": "verb",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "trade_buy",
+   "domain": "trade",
+   "definition": "to get something by paying money",
+   "synonyms": [
+    "purchase"
+   ],
+   "antonyms": [
+    "sell"
+   ],
+   "examples": [
+    "I want to buy some bread."
+   ],
+   "tags": [
+    "trade"
+   ],
+   "confusables": [
+    "by"
+   ]
+  },
+  {
+   "id": "sell",
+   "text": "sell",
+   "pos": "verb",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "trade_sell",
+   "domain": "trade",
+   "definition": "to give something in exchange for money",
+   "synonyms": [],
+   "antonyms": [
+    "buy"
+   ],
+   "examples": [
+    "They sell fruit at the market."
+   ],
+   "tags": [
+    "trade"
+   ],
+   "confusables": [
+    "cell"
+   ]
+  },
+  {
+   "id": "come",
+   "text": "come",
+   "pos": "verb",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "motion_toward",
+   "domain": "movement",
+   "definition": "to move towards the speaker",
+   "synonyms": [
+    "arrive"
+   ],
+   "antonyms": [
+    "go",
+    "leave"
+   ],
+   "examples": [
+    "Please come here."
+   ],
+   "tags": [
+    "movement"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "go",
+   "text": "go",
+   "pos": "verb",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "motion_away",
+   "domain": "movement",
+   "definition": "to move from one place to another",
+   "synonyms": [
+    "leave"
+   ],
+   "antonyms": [
+    "come"
+   ],
+   "examples": [
+    "I go to school by bus."
+   ],
+   "tags": [
+    "movement"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "give",
+   "text": "give",
+   "pos": "verb",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "transfer_give",
+   "domain": "exchange",
+   "definition": "to put something into another person's hands",
+   "synonyms": [],
+   "antonyms": [
+    "take"
+   ],
+   "examples": [
+    "Give me the book, please."
+   ],
+   "tags": [
+    "exchange"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "take",
+   "text": "take",
+   "pos": "verb",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "transfer_take",
+   "domain": "exchange",
+   "definition": "to get and carry something with you",
+   "synonyms": [],
+   "antonyms": [
+    "give"
+   ],
+   "examples": [
+    "Take an umbrella with you."
+   ],
+   "tags": [
+    "exchange"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "win",
+   "text": "win",
+   "pos": "verb",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "result_win",
+   "domain": "competition",
+   "definition": "to be the best in a game or fight",
+   "synonyms": [],
+   "antonyms": [
+    "lose"
+   ],
+   "examples": [
+    "Our team wants to win the match."
+   ],
+   "tags": [
+    "competition"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "lose",
+   "text": "lose",
+   "pos": "verb",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "result_lose",
+   "domain": "competition",
+   "definition": "to not win a game or fight",
+   "synonyms": [],
+   "antonyms": [
+    "win"
+   ],
+   "examples": [
+    "We did not want to lose the game."
+   ],
+   "tags": [
+    "competition"
+   ],
+   "confusables": [
+    "loose"
+   ]
+  },
+  {
+   "id": "love",
+   "text": "love",
+   "pos": "verb",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "affection",
+   "domain": "feeling",
+   "definition": "to like someone or something very much",
+   "synonyms": [
+    "adore"
+   ],
+   "antonyms": [
+    "hate"
+   ],
+   "examples": [
+    "I love my family."
+   ],
+   "tags": [
+    "feeling"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "hate",
+   "text": "hate",
+   "pos": "verb",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "dislike",
+   "domain": "feeling",
+   "definition": "to dislike someone or something very much",
+   "synonyms": [
+    "dislike"
+   ],
+   "antonyms": [
+    "love"
+   ],
+   "examples": [
+    "I hate cold weather."
+   ],
+   "tags": [
+    "feeling"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "wet",
+   "text": "wet",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "moisture_wet",
+   "domain": "moisture",
+   "definition": "covered with water",
+   "synonyms": [
+    "damp",
+    "soaked"
+   ],
+   "antonyms": [
+    "dry"
+   ],
+   "examples": [
+    "My shoes are wet from the rain."
+   ],
+   "tags": [
+    "moisture"
+   ],
+   "confusables": [
+    "what"
+   ]
+  },
+  {
+   "id": "dry",
+   "text": "dry",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "moisture_dry",
+   "domain": "moisture",
+   "definition": "without water",
+   "synonyms": [],
+   "antonyms": [
+    "wet"
+   ],
+   "examples": [
+    "Keep the paper dry."
+   ],
+   "tags": [
+    "moisture"
+   ],
+   "confusables": [
+    "try"
+   ]
+  },
+  {
+   "id": "easy",
+   "text": "easy",
+   "pos": "adjective",
+   "degree": 1,
+   "cefr": "A1",
+   "cluster": "difficulty_easy",
+   "domain": "difficulty",
+   "definition": "not difficult",
+   "synonyms": [
+    "simple"
+   ],
+   "antonyms": [
+    "difficult",
+    "hard"
+   ],
+   "examples": [
+    "The test was easy."
+   ],
+   "tags": [
+    "difficulty"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "strong",
+   "text": "strong",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "power_strong",
+   "domain": "strength",
+   "definition": "having a lot of power",
+   "synonyms": [
+    "powerful"
+   ],
+   "antonyms": [
+    "weak"
+   ],
+   "examples": [
+    "He is strong enough to lift the box."
+   ],
+   "tags": [
+    "strength"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "weak",
+   "text": "weak",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "power_weak",
+   "domain": "strength",
+   "definition": "not having much power",
+   "synonyms": [],
+   "antonyms": [
+    "strong",
+    "powerful"
+   ],
+   "examples": [
+    "She felt weak after the illness."
+   ],
+   "tags": [
+    "strength"
+   ],
+   "confusables": [
+    "week"
+   ]
+  },
+  {
+   "id": "early",
+   "text": "early",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "timing_early",
+   "domain": "time",
+   "definition": "happening before the usual time",
+   "synonyms": [],
+   "antonyms": [
+    "late"
+   ],
+   "examples": [
+    "I get up early every day."
+   ],
+   "tags": [
+    "time"
+   ],
+   "confusables": [
+    "yearly"
+   ]
+  },
+  {
+   "id": "late",
+   "text": "late",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "timing_late",
+   "domain": "time",
+   "definition": "happening after the usual time",
+   "synonyms": [],
+   "antonyms": [
+    "early"
+   ],
+   "examples": [
+    "Sorry, I am late."
+   ],
+   "tags": [
+    "time"
+   ],
+   "confusables": [
+    "plate"
+   ]
+  },
+  {
+   "id": "clean",
+   "text": "clean",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "clean",
+   "domain": "cleanliness",
+   "definition": "not dirty",
+   "synonyms": [],
+   "antonyms": [
+    "dirty"
+   ],
+   "examples": [
+    "The kitchen is clean now."
+   ],
+   "tags": [
+    "cleanliness"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "dirty",
+   "text": "dirty",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "dirt",
+   "domain": "cleanliness",
+   "definition": "not clean",
+   "synonyms": [
+    "filthy"
+   ],
+   "antonyms": [
+    "clean"
+   ],
+   "examples": [
+    "Your hands are dirty."
+   ],
+   "tags": [
+    "cleanliness"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "quiet",
+   "text": "quiet",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "sound_quiet",
+   "domain": "sound",
+   "definition": "making little or no noise",
+   "synonyms": [
+    "silent"
+   ],
+   "antonyms": [
+    "loud",
+    "noisy"
+   ],
+   "examples": [
+    "The library is very quiet."
+   ],
+   "tags": [
+    "sound"
+   ],
+   "confusables": [
+    "quite"
+   ]
+  },
+  {
+   "id": "loud",
+   "text": "loud",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "sound_loud",
+   "domain": "sound",
+   "definition": "making a lot of noise",
+   "synonyms": [
+    "noisy"
+   ],
+   "antonyms": [
+    "quiet"
+   ],
+   "examples": [
+    "The music is too loud."
+   ],
+   "tags": [
+    "sound"
+   ],
+   "confusables": [
+    "cloud"
+   ]
+  },
+  {
+   "id": "rich",
+   "text": "rich",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "wealth_rich",
+   "domain": "money",
+   "definition": "having a lot of money",
+   "synonyms": [
+    "wealthy"
+   ],
+   "antonyms": [
+    "poor"
+   ],
+   "examples": [
+    "He became rich after he sold his company."
+   ],
+   "tags": [
+    "money"
+   ],
+   "confusables": [
+    "reach"
+   ]
+  },
+  {
+   "id": "poor",
+   "text": "poor",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "wealth_poor",
+   "domain": "money",
+   "definition": "having very little money",
+   "synonyms": [],
+   "antonyms": [
+    "rich",
+    "wealthy"
+   ],
+   "examples": [
+    "They were too poor to buy a car."
+   ],
+   "tags": [
+    "money"
+   ],
+   "confusables": [
+    "pour"
+   ]
+  },
+  {
+   "id": "difficult",
+   "text": "difficult",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "difficulty_hard",
+   "domain": "difficulty",
+   "definition": "not easy to do or understand",
+   "synonyms": [
+    "hard",
+    "tricky"
+   ],
+   "antonyms": [
+    "easy",
+    "simple"
+   ],
+   "examples": [
+    "This puzzle is difficult."
+   ],
+   "tags": [
+    "difficulty"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "heavy",
+   "text": "heavy",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "weight_heavy",
+   "domain": "weight",
+   "definition": "weighing a lot",
+   "synonyms": [],
+   "antonyms": [
+    "light"
+   ],
+   "examples": [
+    "This bag is very heavy."
+   ],
+   "tags": [
+    "weight"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "dark",
+   "text": "dark",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "light_dark",
+   "domain": "light",
+   "definition": "with little or no light",
+   "synonyms": [],
+   "antonyms": [
+    "bright",
+    "light"
+   ],
+   "examples": [
+    "It gets dark early in winter."
+   ],
+   "tags": [
+    "light"
+   ],
+   "confusables": [
+    "bark"
+   ]
+  },
+  {
+   "id": "bright",
+   "text": "bright",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "light_bright",
+   "domain": "light",
+   "definition": "full of light",
+   "synonyms": [
+    "shiny"
+   ],
+   "antonyms": [
+    "dark",
+    "dull"
+   ],
+   "examples": [
+    "The room is bright and sunny."
+   ],
+   "tags": [
+    "light"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "beautiful",
+   "text": "beautiful",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "looks_beautiful",
+   "domain": "appearance",
+   "definition": "very nice to look at",
+   "synonyms": [
+    "pretty",
+    "lovely"
+   ],
+   "antonyms": [
+    "ugly"
+   ],
+   "examples": [
+    "What a beautiful garden!"
+   ],
+   "tags": [
+    "appearance"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "ugly",
+   "text": "ugly",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "looks_ugly",
+   "domain": "appearance",
+   "definition": "not nice to look at",
+   "synonyms": [],
+   "antonyms": [
+    "beautiful",
+    "pretty"
+   ],
+   "examples": [
+    "It is an ugly old building."
+   ],
+   "tags": [
+    "appearance"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "angry",
+   "text": "angry",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "anger",
+   "domain": "emotion",
+   "definition": "feeling strong displeasure",
+   "synonyms": [
+    "mad",
+    "furious"
+   ],
+   "antonyms": [
+    "calm"
+   ],
+   "examples": [
+    "Dad was angry about the broken window."
+   ],
+   "tags": [
+    "emotion"
+   ],
+   "confusables": [
+    "hungry"
+   ]
+  },
+  {
+   "id": "calm",
+   "text": "calm",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "calm",
+   "domain": "emotion",
+   "definition": "peaceful and not worried or angry",
+   "synonyms": [
+    "peaceful",
+    "relaxed"
+   ],
+   "antonyms": [
+    "angry",
+    "nervous"
+   ],
+   "examples": [
+    "Stay calm and listen."
+   ],
+   "tags": [
+    "emotion"
+   ],
+   "confusables": [
+    "clam"
+   ]
+  },
+  {
+   "id": "cheap",
+   "text": "cheap",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "price_low",
+   "domain": "money",
+   "definition": "not costing much money",
+   "synonyms": [],
+   "antonyms": [
+    "expensive"
+   ],
+   "examples": [
+    "These shoes were cheap."
+   ],
+   "tags": [
+    "money"
+   ],
+   "confusables": [
+    "cheep"
+   ]
+  },
+  {
+   "id": "expensive",
+   "text": "expensive",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "price_high",
+   "domain": "money",
+   "definition": "costing a lot of money",
+   "synonyms": [
+    "costly"
+   ],
+   "antonyms": [
+    "cheap"
+   ],
+   "examples": [
+    "That restaurant is expensive."
+   ],
+   "tags": [
+    "money"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "near",
+   "text": "near",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "distance_near",
+   "domain": "distance",
+   "definition": "not far away",
+   "synonyms": [
+    "close"
+   ],
+   "antonyms": [
+    "far"
+   ],
+   "examples": [
+    "The station is near my house."
+   ],
+   "tags": [
+    "distance"
+   ],
+   "confusables": [
+    "wear"
+   ]
+  },
+  {
+   "id": "far",
+   "text": "far",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "distance_far",
+   "domain": "distance",
+   "definition": "a long way away",
+   "synonyms": [
+    "distant"
+   ],
+   "antonyms": [
+    "near",
+    "close"
+   ],
+   "examples": [
+    "The beach is far from here."
+   ],
+   "tags": [
+    "distance"
+   ],
+   "confusables": [
+    "fur"
+   ]
+  },
+  {
+   "id": "thick",
+   "text": "thick",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "width_thick",
+   "domain": "size",
+   "definition": "having a large distance between two sides",
+   "synonyms": [],
+   "antonyms": [
+    "thin"
+   ],
+   "examples": [
+    "It is a thick book."
+   ],
+   "tags": [
+    "size"
+   ],
+   "confusables": [
+    "trick"
+   ]
+  },
+  {
+   "id": "thin",
+   "text": "thin",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "width_thin",
+   "domain": "size",
+   "definition": "having a small distance between two sides",
+   "synonyms": [],
+   "antonyms": [
+    "thick"
+   ],
+   "examples": [
+    "Cut the bread into thin slices."
+   ],
+   "tags": [
+    "size"
+   ],
+   "confusables": [
+    "think"
+   ]
+  },
+  {
+   "id": "soft",
+   "text": "soft",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "texture_soft",
+   "domain": "texture",
+   "definition": "not hard or firm to touch",
+   "synonyms": [],
+   "antonyms": [
+    "hard",
+    "rough"
+   ],
+   "examples": [
+    "The bed is soft."
+   ],
+   "tags": [
+    "texture"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "correct",
+   "text": "correct",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "truth_correct",
+   "domain": "truth",
+   "definition": "without mistakes",
+   "synonyms": [
+    "right"
+   ],
+   "antonyms": [
+    "wrong",
+    "incorrect"
+   ],
+   "examples": [
+    "Your answer is correct."
+   ],
+   "tags": [
+    "truth"
+   ],
+   "confusables": [
+    "collect"
+   ]
+  },
+  {
+   "id": "wrong",
+   "text": "wrong",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "truth_wrong",
+   "domain": "truth",
+   "definition": "not correct",
+   "synonyms": [
+    "incorrect"
+   ],
+   "antonyms": [
+    "right",
+    "correct"
+   ],
+   "examples": [
+    "I took the wrong bus."
+   ],
+   "tags": [
+    "truth"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "start",
+   "text": "start",
+   "pos": "verb",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "process_start",
+   "domain": "process",
+   "definition": "to begin doing something",
+   "synonyms": [
+    "begin"
+   ],
+   "antonyms": [
+    "finish",
+    "stop",
+    "end"
+   ],
+   "examples": [
+    "The film starts at eight."
+   ],
+   "tags": [
+    "process"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "finish",
+   "text": "finish",
+   "pos": "verb",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "process_end",
+   "domain": "process",
+   "definition": "to complete something",
+   "synonyms": [
+    "end",
+    "complete"
+   ],
+   "antonyms": [
+    "start",
+    "begin"
+   ],
+   "examples": [
+    "Finish your homework first."
+   ],
+   "tags": [
+    "process"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "push",
+   "text": "push",
+   "pos": "verb",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "force_push",
+   "domain": "force",
+   "definition": "to move something away from you",
+   "synonyms": [],
+   "antonyms": [
+    "pull"
+   ],
+   "examples": [
+    "Push the door to open it."
+   ],
+   "tags": [
+    "force"
+   ],
+   "confusables": [
+    "posh"
+   ]
+  },
+  {
+   "id": "pull",
+   "text": "pull",
+   "pos": "verb",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "force_pull",
+   "domain": "force",
+   "definition": "to move something towards you",
+   "synonyms": [],
+   "antonyms": [
+    "push"
+   ],
+   "examples": [
+    "Pull the rope hard."
+   ],
+   "tags": [
+    "force"
+   ],
+   "confusables": [
+    "pool"
+   ]
+  },
+  {
+   "id": "laugh",
+   "text": "laugh",
+   "pos": "verb",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "express_laugh",
+   "domain": "expression",
+   "definition": "to make sounds that show you think something is funny",
+   "synonyms": [
+    "giggle"
+   ],
+   "antonyms": [
+    "cry"
+   ],
+   "examples": [
+    "The joke made everyone laugh."
+   ],
+   "tags": [
+    "expression"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "cry",
+   "text": "cry",
+   "pos": "verb",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "express_cry",
+   "domain": "expression",
+   "definition": "to have tears coming from your eyes",
+   "synonyms": [
+    "weep"
+   ],
+   "antonyms": [
+    "laugh"
+   ],
+   "examples": [
+    "The baby started to cry."
+   ],
+   "tags": [
+    "expression"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "question",
+   "text": "question",
+   "pos": "noun",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "inquiry_ask",
+   "domain": "communication",
+   "definition": "something you ask",
+   "synonyms": [],
+   "antonyms": [
+    "answer"
+   ],
+   "examples": [
+    "Can I ask you a question?"
+   ],
+   "tags": [
+    "communication"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "answer",
+   "text": "answer",
+   "pos": "noun",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "inquiry_reply",
+   "domain": "communication",
+   "definition": "something you say or write back",
+   "synonyms": [
+    "reply"
+   ],
+   "antonyms": [
+    "question"
+   ],
+   "examples": [
+    "I know the answer."
+   ],
+   "tags": [
+    "communication"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "friend",
+   "text": "friend",
+   "pos": "noun",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "relation_friend",
+   "domain": "people",
+   "definition": "a person you like and know well",
+   "synonyms": [
+    "pal",
+    "mate"
+   ],
+   "antonyms": [
+    "enemy"
+   ],
+   "examples": [
+    "She is my best friend."
+   ],
+   "tags": [
+    "people"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "enemy",
+   "text": "enemy",
+   "pos": "noun",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "relation_enemy",
+   "domain": "people",
+   "definition": "a person who hates or fights you",
+   "synonyms": [],
+   "antonyms": [
+    "friend",
+    "ally"
+   ],
+   "examples": [
+    "The two kings were enemies."
+   ],
+   "tags": [
+    "people"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "inside",
+   "text": "inside",
+   "pos": "adverb",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "position_in",
+   "domain": "position",
+   "definition": "in or into a room or building",
+   "synonyms": [
+    "indoors"
+   ],
+   "antonyms": [
+    "outside"
+   ],
+   "examples": [
+    "Let's go inside. It's raining."
+   ],
+   "tags": [
+    "position"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "outside",
+   "text": "outside",
+   "pos": "adverb",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "position_out",
+   "domain": "position",
+   "definition": "not in a building",
+   "synonyms": [
+    "outdoors"
+   ],
+   "antonyms": [
+    "inside"
+   ],
+   "examples": [
+    "The children are playing outside."
+   ],
+   "tags": [
+    "position"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "first",
+   "text": "first",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "order_first",
+   "domain": "order",
+   "definition": "coming before all others",
+   "synonyms": [],
+   "antonyms": [
+    "last"
+   ],
+   "examples": [
+    "January is the first month of the year."
+   ],
+   "tags": [
+    "order"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "last",
+   "text": "last",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "order_last",
+   "domain": "order",
+   "definition": "coming after all others",
+   "synonyms": [
+    "final"
+   ],
+   "antonyms": [
+    "first"
+   ],
+   "examples": [
+    "This is the last question."
+   ],
+   "tags": [
+    "order"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "always",
+   "text": "always",
+   "pos": "adverb",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "freq_always",
+   "domain": "frequency",
+   "definition": "at all times",
+   "synonyms": [],
+   "antonyms": [
+    "never"
+   ],
+   "examples": [
+    "She always drinks tea in the morning."
+   ],
+   "tags": [
+    "frequency"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "never",
+   "text": "never",
+   "pos": "adverb",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "freq_never",
+   "domain": "frequency",
+   "definition": "at no time",
+   "synonyms": [],
+   "antonyms": [
+    "always"
+   ],
+   "examples": [
+    "I never eat meat."
+   ],
+   "tags": [
+    "frequency"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "quick",
+   "text": "quick",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "speed_fast",
+   "domain": "speed",
+   "definition": "done in a short time",
+   "synonyms": [
+    "fast",
+    "rapid"
+   ],
+   "antonyms": [
+    "slow"
+   ],
+   "examples": [
+    "Let's have a quick lunch."
+   ],
+   "tags": [
+    "speed"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "glad",
+   "text": "glad",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "joy",
+   "domain": "emotion",
+   "definition": "pleased and happy",
+   "synonyms": [
+    "happy",
+    "pleased"
+   ],
+   "antonyms": [
+    "sad",
+    "sorry"
+   ],
+   "examples": [
+    "I am glad you came."
+   ],
+   "tags": [
+    "emotion"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "tidy",
+   "text": "tidy",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "order_neat",
+   "domain": "order",
+   "definition": "neat and with everything in its place",
+   "synonyms": [
+    "neat"
+   ],
+   "antonyms": [
+    "messy",
+    "untidy"
+   ],
+   "examples": [
+    "Keep your room tidy."
+   ],
+   "tags": [
+    "order"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "messy",
+   "text": "messy",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "order_messy",
+   "domain": "order",
+   "definition": "dirty or not tidy",
+   "synonyms": [
+    "untidy"
+   ],
+   "antonyms": [
+    "tidy",
+    "neat"
+   ],
+   "examples": [
+    "His desk is always messy."
+   ],
+   "tags": [
+    "order"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "sick",
+   "text": "sick",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "health_bad",
+   "domain": "health",
+   "definition": "not well; ill",
+   "synonyms": [
+    "ill",
+    "unwell"
+   ],
+   "antonyms": [
+    "healthy",
+    "well"
+   ],
+   "examples": [
+    "She stayed at home because she was sick."
+   ],
+   "tags": [
+    "health"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "healthy",
+   "text": "healthy",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "health_good",
+   "domain": "health",
+   "definition": "strong and well; not sick",
+   "synonyms": [
+    "fit",
+    "well"
+   ],
+   "antonyms": [
+    "sick",
+    "ill"
+   ],
+   "examples": [
+    "Eat fruit to stay healthy."
+   ],
+   "tags": [
+    "health"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "awake",
+   "text": "awake",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "sleep_awake",
+   "domain": "sleep",
+   "definition": "not sleeping",
+   "synonyms": [],
+   "antonyms": [
+    "asleep"
+   ],
+   "examples": [
+    "Are you still awake?"
+   ],
+   "tags": [
+    "sleep"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "asleep",
+   "text": "asleep",
+   "pos": "adjective",
+   "degree": 2,
+   "cefr": "A2",
+   "cluster": "sleep_asleep",
+   "domain": "sleep",
+   "definition": "sleeping",
+   "synonyms": [],
+   "antonyms": [
+    "awake"
+   ],
+   "examples": [
+    "The cat is asleep on the sofa."
+   ],
+   "tags": [
+    "sleep"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "find",
+   "text": "find",
+   "pos": "verb",
+   "degree": 2,
+   "cefr": "A1",
+   "cluster": "search_find",
+   "domain": "search",
+   "definition": "to discover something you were looking for",
+   "synonyms": [
+    "discover"
+   ],
+   "antonyms": [
+    "lose"
+   ],
+   "examples": [
+    "I can't find my keys."
+   ],
+   "tags": [
+    "search"
+   ],
+   "confusables": [
+    "fine"
+   ]
+  },
+  {
+   "id": "huge",
+   "text": "huge",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "size_big",
+   "domain": "size",
+   "definition": "extremely big",
+   "synonyms": [
+    "enormous",
+    "giant"
+   ],
+   "antonyms": [
+    "tiny"
+   ],
+   "examples": [
+    "A huge wave hit the boat."
+   ],
+   "tags": [
+    "size"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "tiny",
+   "text": "tiny",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "size_small",
+   "domain": "size",
+   "definition": "extremely small",
+   "synonyms": [
+    "little",
+    "minute"
+   ],
+   "antonyms": [
+    "huge",
+    "enormous"
+   ],
+   "examples": [
+    "The baby has tiny fingers."
+   ],
+   "tags": [
+    "size"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "ancient",
+   "text": "ancient",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "age_old",
+   "domain": "age",
+   "definition": "from a time long ago",
+   "synonyms": [
+    "old"
+   ],
+   "antonyms": [
+    "modern"
+   ],
+   "examples": [
+    "We visited an ancient castle."
+   ],
+   "tags": [
+    "age"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "modern",
+   "text": "modern",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "age_new",
+   "domain": "age",
+   "definition": "of the present time; new",
+   "synonyms": [
+    "new",
+    "up-to-date"
+   ],
+   "antonyms": [
+    "ancient",
+    "old-fashioned"
+   ],
+   "examples": [
+    "They live in a modern flat."
+   ],
+   "tags": [
+    "age"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "remember",
+   "text": "remember",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "memory_keep",
+   "domain": "memory",
+   "definition": "to keep something in your mind",
+   "synonyms": [
+    "recall"
+   ],
+   "antonyms": [
+    "forget"
+   ],
+   "examples": [
+    "I remember my first teacher."
+   ],
+   "tags": [
+    "memory"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "forget",
+   "text": "forget",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "memory_lose",
+   "domain": "memory",
+   "definition": "to not remember something",
+   "synonyms": [],
+   "antonyms": [
+    "remember",
+    "recall"
+   ],
+   "examples": [
+    "Don't forget your passport."
+   ],
+   "tags": [
+    "memory"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "borrow",
+   "text": "borrow",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "loan_receive",
+   "domain": "exchange",
+   "definition": "to take something that you will give back later",
+   "synonyms": [],
+   "antonyms": [
+    "lend"
+   ],
+   "examples": [
+    "Can I borrow your pen?"
+   ],
+   "tags": [
+    "exchange"
+   ],
+   "confusables": [
+    "burrow"
+   ]
+  },
+  {
+   "id": "lend",
+   "text": "lend",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "loan_give",
+   "domain": "exchange",
+   "definition": "to give something that will be given back later",
+   "synonyms": [
+    "loan"
+   ],
+   "antonyms": [
+    "borrow"
+   ],
+   "examples": [
+    "Could you lend me some money?"
+   ],
+   "tags": [
+    "exchange"
+   ],
+   "confusables": [
+    "land"
+   ]
+  },
+  {
+   "id": "arrive",
+   "text": "arrive",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "motion_toward",
+   "domain": "movement",
+   "definition": "to reach a place",
+   "synonyms": [
+    "come",
+    "reach"
+   ],
+   "antonyms": [
+    "leave",
+    "depart"
+   ],
+   "examples": [
+    "The train arrives at six."
+   ],
+   "tags": [
+    "movement"
+   ],
+   "confusables": [
+    "alive"
+   ]
+  },
+  {
+   "id": "leave",
+   "text": "leave",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "motion_away",
+   "domain": "movement",
+   "definition": "to go away from a place",
+   "synonyms": [
+    "depart",
+    "go"
+   ],
+   "antonyms": [
+    "arrive",
+    "stay"
+   ],
+   "examples": [
+    "We leave home at seven."
+   ],
+   "tags": [
+    "movement"
+   ],
+   "confusables": [
+    "live"
+   ]
+  },
+  {
+   "id": "safe",
+   "text": "safe",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "risk_safe",
+   "domain": "safety",
+   "definition": "not in danger",
+   "synonyms": [
+    "secure"
+   ],
+   "antonyms": [
+    "dangerous",
+    "unsafe"
+   ],
+   "examples": [
+    "The children are safe at home."
+   ],
+   "tags": [
+    "safety"
+   ],
+   "confusables": [
+    "save"
+   ]
+  },
+  {
+   "id": "dangerous",
+   "text": "dangerous",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "risk_danger",
+   "domain": "safety",
+   "definition": "able to hurt you",
+   "synonyms": [
+    "risky",
+    "unsafe"
+   ],
+   "antonyms": [
+    "safe"
+   ],
+   "examples": [
+    "It is dangerous to swim here."
+   ],
+   "tags": [
+    "safety"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "polite",
+   "text": "polite",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "manners_good",
+   "domain": "character",
+   "definition": "showing good manners",
+   "synonyms": [
+    "courteous"
+   ],
+   "antonyms": [
+    "rude",
+    "impolite"
+   ],
+   "examples": [
+    "It is polite to say thank you."
+   ],
+   "tags": [
+    "character"
+   ],
+   "confusables": [
+    "police"
+   ]
+  },
+  {
+   "id": "rude",
+   "text": "rude",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "manners_bad",
+   "domain": "character",
+   "definition": "not polite",
+   "synonyms": [
+    "impolite"
+   ],
+   "antonyms": [
+    "polite"
+   ],
+   "examples": [
+    "Don't be rude to your teacher."
+   ],
+   "tags": [
+    "character"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "kind",
+   "text": "kind",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "character_kind",
+   "domain": "character",
+   "definition": "caring about others",
+   "synonyms": [
+    "caring",
+    "generous"
+   ],
+   "antonyms": [
+    "cruel",
+    "unkind"
+   ],
+   "examples": [
+    "She is kind to animals."
+   ],
+   "tags": [
+    "character"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "cruel",
+   "text": "cruel",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "character_cruel",
+   "domain": "character",
+   "definition": "happy to hurt others",
+   "synonyms": [
+    "unkind",
+    "mean"
+   ],
+   "antonyms": [
+    "kind",
+    "gentle"
+   ],
+   "examples": [
+    "The cruel king had no friends."
+   ],
+   "tags": [
+    "character"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "noisy",
+   "text": "noisy",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "sound_loud",
+   "domain": "sound",
+   "definition": "making a lot of noise",
+   "synonyms": [
+    "loud"
+   ],
+   "antonyms": [
+    "quiet",
+    "silent"
+   ],
+   "examples": [
+    "The street is very noisy."
+   ],
+   "tags": [
+    "sound"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "simple",
+   "text": "simple",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "difficulty_easy",
+   "domain": "difficulty",
+   "definition": "easy to understand or do",
+   "synonyms": [
+    "easy",
+    "plain"
+   ],
+   "antonyms": [
+    "complicated",
+    "difficult"
+   ],
+   "examples": [
+    "The rules are simple."
+   ],
+   "tags": [
+    "difficulty"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "begin",
+   "text": "begin",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "process_start",
+   "domain": "process",
+   "definition": "to start",
+   "synonyms": [
+    "start"
+   ],
+   "antonyms": [
+    "end",
+    "finish"
+   ],
+   "examples": [
+    "Let's begin the lesson."
+   ],
+   "tags": [
+    "process"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "end",
+   "text": "end",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "process_end",
+   "domain": "process",
+   "definition": "to finish",
+   "synonyms": [
+    "finish",
+    "stop"
+   ],
+   "antonyms": [
+    "begin",
+    "start"
+   ],
+   "examples": [
+    "The party ended at midnight."
+   ],
+   "tags": [
+    "process"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "tired",
+   "text": "tired",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "energy_low",
+   "domain": "energy",
+   "definition": "needing rest or sleep",
+   "synonyms": [
+    "sleepy",
+    "exhausted"
+   ],
+   "antonyms": [
+    "energetic",
+    "rested"
+   ],
+   "examples": [
+    "I am tired after work."
+   ],
+   "tags": [
+    "energy"
+   ],
+   "confusables": [
+    "tried"
+   ]
+  },
+  {
+   "id": "famous",
+   "text": "famous",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "fame_known",
+   "domain": "fame",
+   "definition": "known by many people",
+   "synonyms": [
+    "well-known"
+   ],
+   "antonyms": [
+    "unknown"
+   ],
+   "examples": [
+    "She is a famous singer."
+   ],
+   "tags": [
+    "fame"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "careful",
+   "text": "careful",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "care_careful",
+   "domain": "attention",
+   "definition": "giving attention to avoid mistakes or danger",
+   "synonyms": [
+    "cautious"
+   ],
+   "antonyms": [
+    "careless"
+   ],
+   "examples": [
+    "Be careful with that knife."
+   ],
+   "tags": [
+    "attention"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "careless",
+   "text": "careless",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "care_careless",
+   "domain": "attention",
+   "definition": "not giving enough attention",
+   "synonyms": [],
+   "antonyms": [
+    "careful"
+   ],
+   "examples": [
+    "A careless driver caused the accident."
+   ],
+   "tags": [
+    "attention"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "honest",
+   "text": "honest",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "truth_honest",
+   "domain": "character",
+   "definition": "always telling the truth",
+   "synonyms": [
+    "truthful",
+    "sincere"
+   ],
+   "antonyms": [
+    "dishonest"
+   ],
+   "examples": [
+    "He gave an honest answer."
+   ],
+   "tags": [
+    "character"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "lazy",
+   "text": "lazy",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "effort_lazy",
+   "domain": "effort",
+   "definition": "not wanting to work",
+   "synonyms": [
+    "idle"
+   ],
+   "antonyms": [
+    "hard-working"
+   ],
+   "examples": [
+    "My lazy cat sleeps all day."
+   ],
+   "tags": [
+    "effort"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "brave",
+   "text": "brave",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "courage",
+   "domain": "courage",
+   "definition": "not afraid of danger",
+   "synonyms": [
+    "courageous",
+    "bold"
+   ],
+   "antonyms": [
+    "cowardly",
+    "afraid"
+   ],
+   "examples": [
+    "The brave firefighter saved the child."
+   ],
+   "tags": [
+    "courage"
+   ],
+   "confusables": [
+    "bravo"
+   ]
+  },
+  {
+   "id": "afraid",
+   "text": "afraid",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "fear",
+   "domain": "courage",
+   "definition": "feeling fear",
+   "synonyms": [
+    "scared",
+    "frightened"
+   ],
+   "antonyms": [
+    "brave",
+    "fearless"
+   ],
+   "examples": [
+    "She is afraid of spiders."
+   ],
+   "tags": [
+    "courage"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "scared",
+   "text": "scared",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "fear",
+   "domain": "courage",
+   "definition": "frightened",
+   "synonyms": [
+    "afraid",
+    "frightened"
+   ],
+   "antonyms": [
+    "brave",
+    "fearless"
+   ],
+   "examples": [
+    "The scared dog hid under the bed."
+   ],
+   "tags": [
+    "courage"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "cheerful",
+   "text": "cheerful",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "joy",
+   "domain": "emotion",
+   "definition": "happy and positive",
+   "synonyms": [
+    "happy",
+    "jolly"
+   ],
+   "antonyms": [
+    "gloomy",
+    "miserable"
+   ],
+   "examples": [
+    "She has a cheerful smile."
+   ],
+   "tags": [
+    "emotion"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "gloomy",
+   "text": "gloomy",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "sadness",
+   "domain": "emotion",
+   "definition": "sad and without hope",
+   "synonyms": [
+    "miserable"
+   ],
+   "antonyms": [
+    "cheerful"
+   ],
+   "examples": [
+    "He looked gloomy after the news."
+   ],
+   "tags": [
+    "emotion"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "terrible",
+   "text": "terrible",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "quality_bad",
+   "domain": "quality",
+   "definition": "very bad",
+   "synonyms": [
+    "awful",
+    "horrible"
+   ],
+   "antonyms": [
+    "wonderful",
+    "excellent"
+   ],
+   "examples": [
+    "We had terrible weather on holiday."
+   ],
+   "tags": [
+    "quality"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "wonderful",
+   "text": "wonderful",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "quality_great",
+   "domain": "quality",
+   "definition": "extremely good",
+   "synonyms": [
+    "fantastic",
+    "amazing",
+    "great"
+   ],
+   "antonyms": [
+    "terrible",
+    "awful"
+   ],
+   "examples": [
+    "We had a wonderful time."
+   ],
+   "tags": [
+    "quality"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "boring",
+   "text": "boring",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "interest_low",
+   "domain": "interest",
+   "definition": "not interesting",
+   "synonyms": [
+    "dull"
+   ],
+   "antonyms": [
+    "interesting",
+    "exciting"
+   ],
+   "examples": [
+    "The film was long and boring."
+   ],
+   "tags": [
+    "interest"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "interesting",
+   "text": "interesting",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "interest_high",
+   "domain": "interest",
+   "definition": "making you want to know more",
+   "synonyms": [
+    "fascinating"
+   ],
+   "antonyms": [
+    "boring",
+    "dull"
+   ],
+   "examples": [
+    "This is an interesting story."
+   ],
+   "tags": [
+    "interest"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "exciting",
+   "text": "exciting",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "interest_thrill",
+   "domain": "interest",
+   "definition": "making you feel very happy and full of energy",
+   "synonyms": [
+    "thrilling"
+   ],
+   "antonyms": [
+    "boring",
+    "dull"
+   ],
+   "examples": [
+    "The match was really exciting."
+   ],
+   "tags": [
+    "interest"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "friendly",
+   "text": "friendly",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "character_kind",
+   "domain": "character",
+   "definition": "kind and pleasant to others",
+   "synonyms": [
+    "kind",
+    "pleasant"
+   ],
+   "antonyms": [
+    "unfriendly",
+    "hostile"
+   ],
+   "examples": [
+    "Our neighbours are very friendly."
+   ],
+   "tags": [
+    "character"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "deep",
+   "text": "deep",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "depth_deep",
+   "domain": "size",
+   "definition": "going far down from the top",
+   "synonyms": [],
+   "antonyms": [
+    "shallow"
+   ],
+   "examples": [
+    "The lake is very deep."
+   ],
+   "tags": [
+    "size"
+   ],
+   "confusables": [
+    "deer"
+   ]
+  },
+  {
+   "id": "shallow",
+   "text": "shallow",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "depth_shallow",
+   "domain": "size",
+   "definition": "not deep",
+   "synonyms": [],
+   "antonyms": [
+    "deep"
+   ],
+   "examples": [
+    "Children can swim in the shallow water."
+   ],
+   "tags": [
+    "size"
+   ],
+   "confusables": [
+    "swallow"
+   ]
+  },
+  {
+   "id": "wide",
+   "text": "wide",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "width_wide",
+   "domain": "size",
+   "definition": "large from one side to the other",
+   "synonyms": [
+    "broad"
+   ],
+   "antonyms": [
+    "narrow"
+   ],
+   "examples": [
+    "The river is wide here."
+   ],
+   "tags": [
+    "size"
+   ],
+   "confusables": [
+    "wild"
+   ]
+  },
+  {
+   "id": "narrow",
+   "text": "narrow",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "width_narrow",
+   "domain": "size",
+   "definition": "small from one side to the other",
+   "synonyms": [],
+   "antonyms": [
+    "wide",
+    "broad"
+   ],
+   "examples": [
+    "We walked down a narrow street."
+   ],
+   "tags": [
+    "size"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "smooth",
+   "text": "smooth",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "texture_smooth",
+   "domain": "texture",
+   "definition": "flat with no rough parts",
+   "synonyms": [
+    "even"
+   ],
+   "antonyms": [
+    "rough"
+   ],
+   "examples": [
+    "The stone is smooth."
+   ],
+   "tags": [
+    "texture"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "rough",
+   "text": "rough",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "texture_rough",
+   "domain": "texture",
+   "definition": "not smooth",
+   "synonyms": [
+    "uneven",
+    "bumpy"
+   ],
+   "antonyms": [
+    "smooth",
+    "soft"
+   ],
+   "examples": [
+    "The road was rough and full of holes."
+   ],
+   "tags": [
+    "texture"
+   ],
+   "confusables": [
+    "tough"
+   ]
+  },
+  {
+   "id": "gentle",
+   "text": "gentle",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "character_kind",
+   "domain": "character",
+   "definition": "kind and careful; not strong or violent",
+   "synonyms": [
+    "soft",
+    "mild"
+   ],
+   "antonyms": [
+    "rough",
+    "harsh"
+   ],
+   "examples": [
+    "Be gentle with the baby."
+   ],
+   "tags": [
+    "character"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "build",
+   "text": "build",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "make_build",
+   "domain": "creation",
+   "definition": "to make something by putting parts together",
+   "synonyms": [
+    "construct",
+    "make"
+   ],
+   "antonyms": [
+    "destroy",
+    "demolish"
+   ],
+   "examples": [
+    "They want to build a bridge."
+   ],
+   "tags": [
+    "creation"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "destroy",
+   "text": "destroy",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "ruin",
+   "domain": "creation",
+   "definition": "to damage something so badly that it cannot be used",
+   "synonyms": [
+    "ruin",
+    "wreck"
+   ],
+   "antonyms": [
+    "build",
+    "create"
+   ],
+   "examples": [
+    "The fire destroyed the old house."
+   ],
+   "tags": [
+    "creation"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "repair",
+   "text": "repair",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "make_fix",
+   "domain": "creation",
+   "definition": "to make something that is broken work again",
+   "synonyms": [
+    "fix",
+    "mend"
+   ],
+   "antonyms": [
+    "break",
+    "damage"
+   ],
+   "examples": [
+    "He can repair bikes."
+   ],
+   "tags": [
+    "creation"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "break",
+   "text": "break",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "damage",
+   "domain": "creation",
+   "definition": "to make something go into pieces or stop working",
+   "synonyms": [
+    "smash"
+   ],
+   "antonyms": [
+    "repair",
+    "fix",
+    "mend"
+   ],
+   "examples": [
+    "Be careful not to break the glass."
+   ],
+   "tags": [
+    "creation"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "attack",
+   "text": "attack",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "combat_attack",
+   "domain": "conflict",
+   "definition": "to try to hurt someone or something",
+   "synonyms": [
+    "strike",
+    "assault"
+   ],
+   "antonyms": [
+    "defend",
+    "protect"
+   ],
+   "examples": [
+    "The dragon attacked the town."
+   ],
+   "tags": [
+    "conflict"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "defend",
+   "text": "defend",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "combat_defend",
+   "domain": "conflict",
+   "definition": "to protect someone from attack",
+   "synonyms": [
+    "protect",
+    "guard"
+   ],
+   "antonyms": [
+    "attack"
+   ],
+   "examples": [
+    "The soldiers defended the castle."
+   ],
+   "tags": [
+    "conflict"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "protect",
+   "text": "protect",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "combat_defend",
+   "domain": "conflict",
+   "definition": "to keep someone or something safe",
+   "synonyms": [
+    "guard",
+    "defend",
+    "shield"
+   ],
+   "antonyms": [
+    "attack",
+    "harm"
+   ],
+   "examples": [
+    "Sunglasses protect your eyes."
+   ],
+   "tags": [
+    "conflict"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "hide",
+   "text": "hide",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "visibility_hide",
+   "domain": "visibility",
+   "definition": "to put something where no one can see it",
+   "synonyms": [
+    "conceal"
+   ],
+   "antonyms": [
+    "show",
+    "reveal"
+   ],
+   "examples": [
+    "The cat likes to hide under the bed."
+   ],
+   "tags": [
+    "visibility"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "victory",
+   "text": "victory",
+   "pos": "noun",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "result_win",
+   "domain": "competition",
+   "definition": "success in a game, fight or war",
+   "synonyms": [
+    "win",
+    "triumph",
+    "success"
+   ],
+   "antonyms": [
+    "defeat",
+    "loss"
+   ],
+   "examples": [
+    "The team celebrated their victory."
+   ],
+   "tags": [
+    "competition"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "defeat",
+   "text": "defeat",
+   "pos": "noun",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "result_lose",
+   "domain": "competition",
+   "definition": "the fact of losing a game or fight",
+   "synonyms": [
+    "loss"
+   ],
+   "antonyms": [
+    "victory",
+    "win",
+    "success"
+   ],
+   "examples": [
+    "It was their first defeat of the season."
+   ],
+   "tags": [
+    "competition"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "fresh",
+   "text": "fresh",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "age_new",
+   "domain": "age",
+   "definition": "recently made or picked; not old",
+   "synonyms": [],
+   "antonyms": [
+    "stale",
+    "rotten"
+   ],
+   "examples": [
+    "I bought fresh bread this morning."
+   ],
+   "tags": [
+    "age"
+   ],
+   "confusables": [
+    "flesh"
+   ]
+  },
+  {
+   "id": "stale",
+   "text": "stale",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "freshness_old",
+   "domain": "age",
+   "definition": "no longer fresh",
+   "synonyms": [],
+   "antonyms": [
+    "fresh"
+   ],
+   "examples": [
+    "This bread is stale."
+   ],
+   "tags": [
+    "age"
+   ],
+   "confusables": [
+    "steal"
+   ]
+  },
+  {
+   "id": "rare",
+   "text": "rare",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "normality_odd",
+   "domain": "frequency",
+   "definition": "not happening or found very often",
+   "synonyms": [
+    "uncommon",
+    "unusual"
+   ],
+   "antonyms": [
+    "common"
+   ],
+   "examples": [
+    "This is a rare bird."
+   ],
+   "tags": [
+    "frequency"
+   ],
+   "confusables": [
+    "rear"
+   ]
+  },
+  {
+   "id": "common",
+   "text": "common",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "normality_usual",
+   "domain": "frequency",
+   "definition": "happening or found often",
+   "synonyms": [
+    "usual",
+    "ordinary"
+   ],
+   "antonyms": [
+    "rare",
+    "unusual"
+   ],
+   "examples": [
+    "It is a common name in England."
+   ],
+   "tags": [
+    "frequency"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "strange",
+   "text": "strange",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "normality_odd",
+   "domain": "normality",
+   "definition": "unusual or surprising",
+   "synonyms": [
+    "odd",
+    "weird",
+    "unusual"
+   ],
+   "antonyms": [
+    "normal",
+    "ordinary"
+   ],
+   "examples": [
+    "I heard a strange noise."
+   ],
+   "tags": [
+    "normality"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "normal",
+   "text": "normal",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "normality_usual",
+   "domain": "normality",
+   "definition": "usual; what you expect",
+   "synonyms": [
+    "usual",
+    "ordinary",
+    "regular"
+   ],
+   "antonyms": [
+    "strange",
+    "unusual"
+   ],
+   "examples": [
+    "It was a normal day at school."
+   ],
+   "tags": [
+    "normality"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "silent",
+   "text": "silent",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "sound_quiet",
+   "domain": "sound",
+   "definition": "without any sound",
+   "synonyms": [
+    "quiet"
+   ],
+   "antonyms": [
+    "noisy",
+    "loud"
+   ],
+   "examples": [
+    "The forest was silent."
+   ],
+   "tags": [
+    "sound"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "powerful",
+   "text": "powerful",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "power_strong",
+   "domain": "strength",
+   "definition": "having great power or strength",
+   "synonyms": [
+    "strong",
+    "mighty"
+   ],
+   "antonyms": [
+    "weak",
+    "powerless"
+   ],
+   "examples": [
+    "A powerful storm hit the coast."
+   ],
+   "tags": [
+    "strength"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "crowded",
+   "text": "crowded",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "quantity_crowded",
+   "domain": "quantity",
+   "definition": "full of people",
+   "synonyms": [
+    "packed",
+    "busy"
+   ],
+   "antonyms": [
+    "empty"
+   ],
+   "examples": [
+    "The market was crowded."
+   ],
+   "tags": [
+    "quantity"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "delicious",
+   "text": "delicious",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "taste_good",
+   "domain": "taste",
+   "definition": "very good to eat",
+   "synonyms": [
+    "tasty"
+   ],
+   "antonyms": [
+    "disgusting"
+   ],
+   "examples": [
+    "This cake is delicious."
+   ],
+   "tags": [
+    "taste"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "wise",
+   "text": "wise",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "wisdom_wise",
+   "domain": "wisdom",
+   "definition": "having good judgement from knowledge and experience",
+   "synonyms": [
+    "sensible"
+   ],
+   "antonyms": [
+    "foolish",
+    "silly"
+   ],
+   "examples": [
+    "The wise old woman gave us advice."
+   ],
+   "tags": [
+    "wisdom"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "foolish",
+   "text": "foolish",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "wisdom_foolish",
+   "domain": "wisdom",
+   "definition": "not sensible; silly",
+   "synonyms": [
+    "silly",
+    "stupid"
+   ],
+   "antonyms": [
+    "wise",
+    "sensible"
+   ],
+   "examples": [
+    "It was foolish to go out in the storm."
+   ],
+   "tags": [
+    "wisdom"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "miserable",
+   "text": "miserable",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "sadness",
+   "domain": "emotion",
+   "definition": "very unhappy",
+   "synonyms": [
+    "unhappy",
+    "sad"
+   ],
+   "antonyms": [
+    "cheerful",
+    "happy"
+   ],
+   "examples": [
+    "I felt miserable when I was ill."
+   ],
+   "tags": [
+    "emotion"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "joyful",
+   "text": "joyful",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "B1",
+   "cluster": "joy",
+   "domain": "emotion",
+   "definition": "very happy",
+   "synonyms": [
+    "happy",
+    "cheerful"
+   ],
+   "antonyms": [
+    "sad",
+    "miserable"
+   ],
+   "examples": [
+    "It was a joyful celebration."
+   ],
+   "tags": [
+    "emotion"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "neat",
+   "text": "neat",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "order_neat",
+   "domain": "order",
+   "definition": "tidy and in order",
+   "synonyms": [
+    "tidy"
+   ],
+   "antonyms": [
+    "messy",
+    "untidy"
+   ],
+   "examples": [
+    "Her handwriting is very neat."
+   ],
+   "tags": [
+    "order"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "hard-working",
+   "text": "hard-working",
+   "pos": "adjective",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "effort_hard",
+   "domain": "effort",
+   "definition": "putting a lot of effort into work",
+   "synonyms": [
+    "diligent"
+   ],
+   "antonyms": [
+    "lazy"
+   ],
+   "examples": [
+    "She is a hard-working student."
+   ],
+   "tags": [
+    "effort"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "shut",
+   "text": "shut",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "A2",
+   "cluster": "state_closed",
+   "domain": "state",
+   "definition": "to close something",
+   "synonyms": [
+    "close"
+   ],
+   "antonyms": [
+    "open"
+   ],
+   "examples": [
+    "Please shut the window."
+   ],
+   "tags": [
+    "state"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "stay",
+   "text": "stay",
+   "pos": "verb",
+   "degree": 3,
+   "cefr": "A1",
+   "cluster": "presence_stay",
+   "domain": "movement",
+   "definition": "to not leave a place",
+   "synonyms": [
+    "remain"
+   ],
+   "antonyms": [
+    "leave",
+    "go"
+   ],
+   "examples": [
+    "Stay here until I come back."
+   ],
+   "tags": [
+    "movement"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "accept",
+   "text": "accept",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "response_yes",
+   "domain": "decision",
+   "definition": "to say yes to something offered",
+   "synonyms": [
+    "receive"
+   ],
+   "antonyms": [
+    "refuse",
+    "reject"
+   ],
+   "examples": [
+    "She accepted the job offer."
+   ],
+   "tags": [
+    "decision"
+   ],
+   "confusables": [
+    "except"
+   ]
+  },
+  {
+   "id": "refuse",
+   "text": "refuse",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "response_no",
+   "domain": "decision",
+   "definition": "to say that you will not do or accept something",
+   "synonyms": [
+    "reject",
+    "decline"
+   ],
+   "antonyms": [
+    "accept",
+    "agree"
+   ],
+   "examples": [
+    "He refused to answer."
+   ],
+   "tags": [
+    "decision"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "increase",
+   "text": "increase",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "amount_up",
+   "domain": "change",
+   "definition": "to become bigger in amount",
+   "synonyms": [
+    "grow",
+    "rise"
+   ],
+   "antonyms": [
+    "decrease",
+    "reduce"
+   ],
+   "examples": [
+    "Prices increase every year."
+   ],
+   "tags": [
+    "change"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "decrease",
+   "text": "decrease",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "amount_down",
+   "domain": "change",
+   "definition": "to become smaller in amount",
+   "synonyms": [
+    "reduce",
+    "fall",
+    "drop"
+   ],
+   "antonyms": [
+    "increase",
+    "rise"
+   ],
+   "examples": [
+    "The number of visitors decreased."
+   ],
+   "tags": [
+    "change"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "appear",
+   "text": "appear",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "visibility_show",
+   "domain": "visibility",
+   "definition": "to start to be seen",
+   "synonyms": [
+    "emerge"
+   ],
+   "antonyms": [
+    "disappear",
+    "vanish"
+   ],
+   "examples": [
+    "A rainbow appeared in the sky."
+   ],
+   "tags": [
+    "visibility"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "disappear",
+   "text": "disappear",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "visibility_gone",
+   "domain": "visibility",
+   "definition": "to become impossible to see",
+   "synonyms": [
+    "vanish"
+   ],
+   "antonyms": [
+    "appear"
+   ],
+   "examples": [
+    "The sun disappeared behind the clouds."
+   ],
+   "tags": [
+    "visibility"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "allow",
+   "text": "allow",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "permission_yes",
+   "domain": "permission",
+   "definition": "to let someone do something",
+   "synonyms": [
+    "permit",
+    "let"
+   ],
+   "antonyms": [
+    "forbid",
+    "ban",
+    "prevent"
+   ],
+   "examples": [
+    "My parents allow me to stay up late."
+   ],
+   "tags": [
+    "permission"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "forbid",
+   "text": "forbid",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "permission_no",
+   "domain": "permission",
+   "definition": "to say that someone must not do something",
+   "synonyms": [
+    "ban",
+    "prohibit"
+   ],
+   "antonyms": [
+    "allow",
+    "permit"
+   ],
+   "examples": [
+    "The rules forbid running in the hall."
+   ],
+   "tags": [
+    "permission"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "agree",
+   "text": "agree",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "A2",
+   "cluster": "opinion_same",
+   "domain": "opinion",
+   "definition": "to have the same opinion",
+   "synonyms": [
+    "concur"
+   ],
+   "antonyms": [
+    "disagree"
+   ],
+   "examples": [
+    "I agree with you."
+   ],
+   "tags": [
+    "opinion"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "disagree",
+   "text": "disagree",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "opinion_diff",
+   "domain": "opinion",
+   "definition": "to have a different opinion",
+   "synonyms": [],
+   "antonyms": [
+    "agree"
+   ],
+   "examples": [
+    "We often disagree about music."
+   ],
+   "tags": [
+    "opinion"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "succeed",
+   "text": "succeed",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "result_win",
+   "domain": "outcome",
+   "definition": "to do what you tried to do",
+   "synonyms": [],
+   "antonyms": [
+    "fail"
+   ],
+   "examples": [
+    "If you work hard, you will succeed."
+   ],
+   "tags": [
+    "outcome"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "fail",
+   "text": "fail",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "result_lose",
+   "domain": "outcome",
+   "definition": "to not do what you tried to do",
+   "synonyms": [],
+   "antonyms": [
+    "succeed",
+    "pass"
+   ],
+   "examples": [
+    "The plan failed."
+   ],
+   "tags": [
+    "outcome"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "sharp",
+   "text": "sharp",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "edge_sharp",
+   "domain": "edge",
+   "definition": "having a thin edge that can cut",
+   "synonyms": [],
+   "antonyms": [
+    "blunt",
+    "dull"
+   ],
+   "examples": [
+    "Be careful, the knife is sharp."
+   ],
+   "tags": [
+    "edge"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "blunt",
+   "text": "blunt",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "edge_blunt",
+   "domain": "edge",
+   "definition": "not sharp",
+   "synonyms": [
+    "dull"
+   ],
+   "antonyms": [
+    "sharp"
+   ],
+   "examples": [
+    "This pencil is blunt."
+   ],
+   "tags": [
+    "edge"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "fragile",
+   "text": "fragile",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "sturdiness_low",
+   "domain": "sturdiness",
+   "definition": "easy to break or damage",
+   "synonyms": [
+    "delicate",
+    "breakable"
+   ],
+   "antonyms": [
+    "sturdy",
+    "strong",
+    "unbreakable"
+   ],
+   "examples": [
+    "Be careful with that glass. It is fragile."
+   ],
+   "tags": [
+    "sturdiness"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "sturdy",
+   "text": "sturdy",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "sturdiness_high",
+   "domain": "sturdiness",
+   "definition": "strong and not easily broken",
+   "synonyms": [
+    "solid",
+    "strong"
+   ],
+   "antonyms": [
+    "fragile",
+    "flimsy"
+   ],
+   "examples": [
+    "We need a sturdy table."
+   ],
+   "tags": [
+    "sturdiness"
+   ],
+   "confusables": [
+    "study"
+   ]
+  },
+  {
+   "id": "generous",
+   "text": "generous",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "character_kind",
+   "domain": "character",
+   "definition": "happy to give money, time or help",
+   "synonyms": [
+    "kind",
+    "giving"
+   ],
+   "antonyms": [
+    "selfish",
+    "mean"
+   ],
+   "examples": [
+    "He is generous with his time."
+   ],
+   "tags": [
+    "character"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "selfish",
+   "text": "selfish",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "sharing_selfish",
+   "domain": "character",
+   "definition": "caring only about yourself",
+   "synonyms": [
+    "self-centred"
+   ],
+   "antonyms": [
+    "generous",
+    "unselfish"
+   ],
+   "examples": [
+    "It was selfish to eat all the cake."
+   ],
+   "tags": [
+    "character"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "certain",
+   "text": "certain",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "certainty_sure",
+   "domain": "certainty",
+   "definition": "completely sure",
+   "synonyms": [
+    "sure",
+    "confident"
+   ],
+   "antonyms": [
+    "uncertain",
+    "unsure",
+    "doubtful"
+   ],
+   "examples": [
+    "I am certain that I locked the door."
+   ],
+   "tags": [
+    "certainty"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "possible",
+   "text": "possible",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "A2",
+   "cluster": "possibility_yes",
+   "domain": "possibility",
+   "definition": "able to happen or be done",
+   "synonyms": [
+    "likely",
+    "feasible"
+   ],
+   "antonyms": [
+    "impossible"
+   ],
+   "examples": [
+    "Is it possible to finish today?"
+   ],
+   "tags": [
+    "possibility"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "impossible",
+   "text": "impossible",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "possibility_no",
+   "domain": "possibility",
+   "definition": "not able to happen or be done",
+   "synonyms": [],
+   "antonyms": [
+    "possible"
+   ],
+   "examples": [
+    "It is impossible to read in this light."
+   ],
+   "tags": [
+    "possibility"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "private",
+   "text": "private",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "access_private",
+   "domain": "access",
+   "definition": "only for one person or group",
+   "synonyms": [
+    "personal"
+   ],
+   "antonyms": [
+    "public"
+   ],
+   "examples": [
+    "This is a private beach."
+   ],
+   "tags": [
+    "access"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "public",
+   "text": "public",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "access_public",
+   "domain": "access",
+   "definition": "open to everyone",
+   "synonyms": [],
+   "antonyms": [
+    "private"
+   ],
+   "examples": [
+    "The park is public."
+   ],
+   "tags": [
+    "access"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "temporary",
+   "text": "temporary",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "duration_short",
+   "domain": "duration",
+   "definition": "lasting for a short time only",
+   "synonyms": [
+    "short-term"
+   ],
+   "antonyms": [
+    "permanent"
+   ],
+   "examples": [
+    "She has a temporary job for the summer."
+   ],
+   "tags": [
+    "duration"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "permanent",
+   "text": "permanent",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "duration_long",
+   "domain": "duration",
+   "definition": "lasting for a very long time or forever",
+   "synonyms": [
+    "lasting"
+   ],
+   "antonyms": [
+    "temporary"
+   ],
+   "examples": [
+    "They moved here and made it their permanent home."
+   ],
+   "tags": [
+    "duration"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "enormous",
+   "text": "enormous",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "size_big",
+   "domain": "size",
+   "definition": "extremely large",
+   "synonyms": [
+    "huge",
+    "giant",
+    "massive"
+   ],
+   "antonyms": [
+    "tiny"
+   ],
+   "examples": [
+    "An enormous dragon flew over the city."
+   ],
+   "tags": [
+    "size"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "ordinary",
+   "text": "ordinary",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "normality_usual",
+   "domain": "normality",
+   "definition": "normal and not special",
+   "synonyms": [
+    "normal",
+    "usual",
+    "common"
+   ],
+   "antonyms": [
+    "unusual",
+    "extraordinary",
+    "special"
+   ],
+   "examples": [
+    "It was just an ordinary day."
+   ],
+   "tags": [
+    "normality"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "create",
+   "text": "create",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "make_build",
+   "domain": "creation",
+   "definition": "to make something new",
+   "synonyms": [
+    "make",
+    "produce"
+   ],
+   "antonyms": [
+    "destroy"
+   ],
+   "examples": [
+    "She created a beautiful painting."
+   ],
+   "tags": [
+    "creation"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "courage",
+   "text": "courage",
+   "pos": "noun",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "courage",
+   "domain": "courage",
+   "definition": "the ability to do something that frightens you",
+   "synonyms": [
+    "bravery"
+   ],
+   "antonyms": [
+    "fear",
+    "cowardice"
+   ],
+   "examples": [
+    "It takes courage to speak in public."
+   ],
+   "tags": [
+    "courage"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "fear",
+   "text": "fear",
+   "pos": "noun",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "fear",
+   "domain": "courage",
+   "definition": "the feeling you have when you are afraid",
+   "synonyms": [
+    "fright",
+    "terror"
+   ],
+   "antonyms": [
+    "courage",
+    "bravery"
+   ],
+   "examples": [
+    "She has a fear of heights."
+   ],
+   "tags": [
+    "courage"
+   ],
+   "confusables": [
+    "fair"
+   ]
+  },
+  {
+   "id": "danger",
+   "text": "danger",
+   "pos": "noun",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "risk_danger",
+   "domain": "safety",
+   "definition": "the possibility of being hurt",
+   "synonyms": [
+    "risk",
+    "threat"
+   ],
+   "antonyms": [
+    "safety"
+   ],
+   "examples": [
+    "The sign warns of danger."
+   ],
+   "tags": [
+    "safety"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "safety",
+   "text": "safety",
+   "pos": "noun",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "risk_safe",
+   "domain": "safety",
+   "definition": "the state of being safe",
+   "synonyms": [
+    "security",
+    "protection"
+   ],
+   "antonyms": [
+    "danger"
+   ],
+   "examples": [
+    "Wear a helmet for your safety."
+   ],
+   "tags": [
+    "safety"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "strength",
+   "text": "strength",
+   "pos": "noun",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "power_strong",
+   "domain": "strength",
+   "definition": "the quality of being strong",
+   "synonyms": [
+    "power",
+    "force"
+   ],
+   "antonyms": [
+    "weakness"
+   ],
+   "examples": [
+    "He does not have the strength to lift it."
+   ],
+   "tags": [
+    "strength"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "weakness",
+   "text": "weakness",
+   "pos": "noun",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "power_weak",
+   "domain": "strength",
+   "definition": "the state of not being strong",
+   "synonyms": [],
+   "antonyms": [
+    "strength",
+    "power"
+   ],
+   "examples": [
+    "Fear is his greatest weakness."
+   ],
+   "tags": [
+    "strength"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "mighty",
+   "text": "mighty",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "power_strong",
+   "domain": "strength",
+   "definition": "very large and powerful",
+   "synonyms": [
+    "powerful",
+    "strong"
+   ],
+   "antonyms": [
+    "weak",
+    "feeble"
+   ],
+   "examples": [
+    "The mighty river flowed to the sea."
+   ],
+   "tags": [
+    "strength"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "frightened",
+   "text": "frightened",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "fear",
+   "domain": "courage",
+   "definition": "afraid",
+   "synonyms": [
+    "afraid",
+    "scared"
+   ],
+   "antonyms": [
+    "brave",
+    "fearless"
+   ],
+   "examples": [
+    "The frightened child held his mother's hand."
+   ],
+   "tags": [
+    "courage"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "disgusting",
+   "text": "disgusting",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "taste_bad",
+   "domain": "taste",
+   "definition": "extremely unpleasant",
+   "synonyms": [
+    "horrible",
+    "revolting"
+   ],
+   "antonyms": [
+    "delicious",
+    "lovely"
+   ],
+   "examples": [
+    "The medicine tastes disgusting."
+   ],
+   "tags": [
+    "taste"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "amazing",
+   "text": "amazing",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "A2",
+   "cluster": "quality_great",
+   "domain": "quality",
+   "definition": "very surprising and good",
+   "synonyms": [
+    "incredible",
+    "fantastic",
+    "wonderful"
+   ],
+   "antonyms": [],
+   "examples": [
+    "The view from the top is amazing."
+   ],
+   "tags": [
+    "quality"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "whisper",
+   "text": "whisper",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "voice_soft",
+   "domain": "voice",
+   "definition": "to speak very quietly",
+   "synonyms": [
+    "murmur"
+   ],
+   "antonyms": [
+    "shout",
+    "yell"
+   ],
+   "examples": [
+    "She whispered the secret in my ear."
+   ],
+   "tags": [
+    "voice"
+   ],
+   "confusables": [
+    "whistle"
+   ]
+  },
+  {
+   "id": "shout",
+   "text": "shout",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "A2",
+   "cluster": "voice_loud",
+   "domain": "voice",
+   "definition": "to say something very loudly",
+   "synonyms": [
+    "yell",
+    "scream"
+   ],
+   "antonyms": [
+    "whisper"
+   ],
+   "examples": [
+    "Don't shout at me!"
+   ],
+   "tags": [
+    "voice"
+   ],
+   "confusables": [
+    "shoot"
+   ]
+  },
+  {
+   "id": "discover",
+   "text": "discover",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "search_find",
+   "domain": "search",
+   "definition": "to find something for the first time",
+   "synonyms": [
+    "find",
+    "uncover"
+   ],
+   "antonyms": [],
+   "examples": [
+    "Scientists discovered a new planet."
+   ],
+   "tags": [
+    "search"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "reveal",
+   "text": "reveal",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "visibility_show",
+   "domain": "visibility",
+   "definition": "to show something that was hidden",
+   "synonyms": [
+    "show",
+    "uncover",
+    "expose"
+   ],
+   "antonyms": [
+    "hide",
+    "conceal"
+   ],
+   "examples": [
+    "The magician revealed the card."
+   ],
+   "tags": [
+    "visibility"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "proud",
+   "text": "proud",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "pride",
+   "domain": "self",
+   "definition": "pleased about something you or others have done",
+   "synonyms": [
+    "pleased"
+   ],
+   "antonyms": [
+    "ashamed"
+   ],
+   "examples": [
+    "I am proud of my daughter."
+   ],
+   "tags": [
+    "self"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "ashamed",
+   "text": "ashamed",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "shame",
+   "domain": "self",
+   "definition": "feeling bad because of something you did",
+   "synonyms": [
+    "embarrassed"
+   ],
+   "antonyms": [
+    "proud"
+   ],
+   "examples": [
+    "He was ashamed of his lie."
+   ],
+   "tags": [
+    "self"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "patient",
+   "text": "patient",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "patience_yes",
+   "domain": "character",
+   "definition": "able to wait calmly",
+   "synonyms": [],
+   "antonyms": [
+    "impatient"
+   ],
+   "examples": [
+    "Be patient. The bus will come soon."
+   ],
+   "tags": [
+    "character"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "nervous",
+   "text": "nervous",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "anxiety",
+   "domain": "emotion",
+   "definition": "worried or a little afraid",
+   "synonyms": [
+    "anxious",
+    "worried"
+   ],
+   "antonyms": [
+    "calm",
+    "relaxed"
+   ],
+   "examples": [
+    "I am nervous about the exam."
+   ],
+   "tags": [
+    "emotion"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "relaxed",
+   "text": "relaxed",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "calm",
+   "domain": "emotion",
+   "definition": "calm and not worried",
+   "synonyms": [
+    "calm",
+    "comfortable"
+   ],
+   "antonyms": [
+    "nervous",
+    "tense",
+    "stressed"
+   ],
+   "examples": [
+    "I feel relaxed on holiday."
+   ],
+   "tags": [
+    "emotion"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "complicated",
+   "text": "complicated",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "difficulty_hard",
+   "domain": "difficulty",
+   "definition": "having many parts and difficult to understand",
+   "synonyms": [
+    "complex",
+    "difficult"
+   ],
+   "antonyms": [
+    "simple",
+    "easy"
+   ],
+   "examples": [
+    "The instructions are too complicated."
+   ],
+   "tags": [
+    "difficulty"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "valuable",
+   "text": "valuable",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "value_high",
+   "domain": "value",
+   "definition": "worth a lot of money or very useful",
+   "synonyms": [
+    "precious"
+   ],
+   "antonyms": [
+    "worthless"
+   ],
+   "examples": [
+    "This old ring is very valuable."
+   ],
+   "tags": [
+    "value"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "worthless",
+   "text": "worthless",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "value_low",
+   "domain": "value",
+   "definition": "having no value",
+   "synonyms": [
+    "useless"
+   ],
+   "antonyms": [
+    "valuable",
+    "precious"
+   ],
+   "examples": [
+    "The fake painting was worthless."
+   ],
+   "tags": [
+    "value"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "guilty",
+   "text": "guilty",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "guilt_yes",
+   "domain": "justice",
+   "definition": "having done something wrong",
+   "synonyms": [],
+   "antonyms": [
+    "innocent"
+   ],
+   "examples": [
+    "The judge said he was guilty."
+   ],
+   "tags": [
+    "justice"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "innocent",
+   "text": "innocent",
+   "pos": "adjective",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "guilt_no",
+   "domain": "justice",
+   "definition": "not having done anything wrong",
+   "synonyms": [
+    "blameless"
+   ],
+   "antonyms": [
+    "guilty"
+   ],
+   "examples": [
+    "She was innocent of the crime."
+   ],
+   "tags": [
+    "justice"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "export",
+   "text": "export",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "trade_out",
+   "domain": "trade",
+   "definition": "to sell goods to another country",
+   "synonyms": [],
+   "antonyms": [
+    "import"
+   ],
+   "examples": [
+    "The country exports coffee."
+   ],
+   "tags": [
+    "trade"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "import",
+   "text": "import",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "trade_in",
+   "domain": "trade",
+   "definition": "to buy goods from another country",
+   "synonyms": [],
+   "antonyms": [
+    "export"
+   ],
+   "examples": [
+    "We import oil from abroad."
+   ],
+   "tags": [
+    "trade"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "include",
+   "text": "include",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "inclusion_in",
+   "domain": "inclusion",
+   "definition": "to have something as a part",
+   "synonyms": [
+    "contain"
+   ],
+   "antonyms": [
+    "exclude"
+   ],
+   "examples": [
+    "The price includes breakfast."
+   ],
+   "tags": [
+    "inclusion"
+   ],
+   "confusables": []
+  },
+  {
+   "id": "exclude",
+   "text": "exclude",
+   "pos": "verb",
+   "degree": 4,
+   "cefr": "B1",
+   "cluster": "inclusion_out",
+   "domain": "inclusion",
+   "definition": "to not include; to keep out",
+   "synonyms": [
+    "omit"
+   ],
+   "antonyms": [
+    "include"
+   ],
+   "examples": [
+    "Don't exclude anyone from the game."
+   ],
+   "tags": [
+    "inclusion"
+   ],
+   "confusables": []
+  }
+ ]
+}

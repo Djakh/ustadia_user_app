@@ -61,6 +61,10 @@ import 'package:ustadia_user_app/features/profile/presentation/bloc/leaderboard_
 import 'package:ustadia_user_app/features/reels/data/datasources/reels_remote_data_source.dart';
 import 'package:ustadia_user_app/features/reels/presentation/bloc/reel_user_profile_bloc/reel_user_profile_bloc.dart';
 import 'package:ustadia_user_app/features/reels/presentation/bloc/reels_bloc/reels_bloc.dart';
+import 'package:ustadia_user_app/core/services/firebase_word_forge_analytics.dart';
+import 'package:ustadia_user_app/features/word_forge/word_forge.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 
 import 'core/network/dio_client.dart';
 
@@ -173,6 +177,26 @@ Future<void> initDependencies() async {
   sl.registerFactory(
       () => MonkeyTypeSessionBloc(practiceRemoteDataSource: sl(), profileStatisticsStore: sl()));
 
+  // Features - Word Forge (self-contained game module; only its ports are wired here)
+  // Saves: local first, synced to /students/word-forge/saves per student.
+  sl.registerLazySingleton<WordForgeDependencies>(() {
+    final content = AssetWordForgeContentRepository();
+    return WordForgeDependencies(
+        contentRepository: content,
+        saveRepository: SyncedWordForgeSaveRepository(
+            local: LocalWordForgeSaveRepository(preferences: sl()),
+            cloud: DioWordForgeCloud(
+                dio: sl<Dio>(), deviceId: DioWordForgeCloud.deviceIdFrom(sl<SharedPreferences>())),
+            preferences: sl(),
+            canSync: (profileId) =>
+                profileId != 'guest' &&
+                !profileId.startsWith('local_') &&
+                sl<AuthLocalDataSource>().hasAccessToken(),
+            content: content.load),
+        analytics: FirebaseWordForgeAnalytics(),
+        audioFactory: AudioplayersWordForgeAudio.new);
+  });
+
   // Features - Notifications
   sl.registerLazySingleton<NotificationsRemoteDataSource>(
       () => NotificationsRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
@@ -228,4 +252,23 @@ Future<void> resetTeacherScopedData() async {
   await sl.resetLazySingleton<PracticeSentenceBuilderSetsBloc>();
   await sl.resetLazySingleton<PracticeWordMatchSetsBloc>();
   await sl.resetLazySingleton<MockExamListBloc>();
+}
+
+/// Stable id for Word Forge saves: the signed-in profile id. While the
+/// profile is still loading (e.g. offline start) the last known id is reused,
+/// so progress is never split between two save slots.
+String wordForgePlayerId() {
+  const lastIdKey = 'word_forge.last_player_id';
+  final prefs = sl<SharedPreferences>();
+  final profileId = sl.isRegistered<UserBloc>() ? sl<UserBloc>().state.profile?.id : null;
+  if (profileId != null && profileId.isNotEmpty) {
+    prefs.setString(lastIdKey, profileId);
+    return profileId;
+  }
+  final lastId = prefs.getString(lastIdKey);
+  if (lastId != null && lastId.isNotEmpty) return lastId;
+  final auth = sl<AuthLocalDataSource>();
+  final identifier = auth.getLastEmail().isNotEmpty ? auth.getLastEmail() : auth.getLastPhone();
+  if (identifier.isEmpty) return 'guest';
+  return 'local_${sha1.convert(utf8.encode(identifier)).toString().substring(0, 16)}';
 }

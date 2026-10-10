@@ -9,6 +9,7 @@ import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/features/practice/data/models/activity_model.dart';
 import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_item_tile_card.dart';
+import 'package:ustadia_user_app/features/practice/presentation/widgets/cards/practice_word_forge_card.dart';
 import 'package:ustadia_user_app/router.dart';
 
 class PracticePage extends StatefulWidget {
@@ -104,6 +105,7 @@ class PracticePageState extends State<PracticePage> {
           // const SizedBox(height: 16),
           //  const PracticeDailyCard(),
           const SizedBox(height: 24),
+          const PracticeWordForgeCard(),
           activityList(context),
 //          const SizedBox(height: 80),
         ],
