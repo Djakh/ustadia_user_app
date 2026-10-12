@@ -11,6 +11,10 @@ import 'package:ustadia_user_app/features/assignments/data/models/assignment_mod
 import 'package:ustadia_user_app/features/assignments/presentation/pages/assignment_details_page.dart';
 import 'package:ustadia_user_app/features/assignments/presentation/pages/assignment_sections_page.dart';
 import 'package:ustadia_user_app/features/assignments/presentation/pages/assignments_page.dart';
+import 'package:ustadia_user_app/features/billing/data/models/billing_order_model.dart';
+import 'package:ustadia_user_app/features/billing/presentation/pages/payment_checkout_page.dart';
+import 'package:ustadia_user_app/features/billing/presentation/pages/subscription_history_page.dart';
+import 'package:ustadia_user_app/features/billing/presentation/pages/subscription_page.dart';
 import 'package:ustadia_user_app/features/auth/data/models/otp_verification_params.dart';
 import 'package:ustadia_user_app/features/auth/presentation/pages/login_page.dart';
 import 'package:ustadia_user_app/features/auth/presentation/pages/otp_page.dart';
@@ -200,6 +204,13 @@ const familySocialSafetyRoute = '$settingsRoute/$familySocialSafetyPath';
 const editAccountRoute = '$settingsRoute/$editAccountPath';
 const profileImageViewRoute = '/profile-image-view';
 
+// Subscription (root level: the 402 paywall can be opened from anywhere)
+const subscriptionRoute = '/subscription';
+const subscriptionHistoryPath = 'history';
+const subscriptionHistoryRoute = '$subscriptionRoute/$subscriptionHistoryPath';
+const subscriptionCheckoutPath = 'checkout';
+const subscriptionCheckoutRoute = '$subscriptionRoute/$subscriptionCheckoutPath';
+
 /// --------------------
 /// Navigator keys
 /// --------------------
@@ -330,6 +341,28 @@ final appRouter = GoRouter(
             })
       ],
     ),
+    GoRoute(
+        path: subscriptionRoute,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) {
+          final extra = state.extra;
+          return SubscriptionPage(
+              params: extra is SubscriptionPageParams ? extra : const SubscriptionPageParams());
+        },
+        routes: [
+          GoRoute(
+              path: subscriptionHistoryPath,
+              parentNavigatorKey: _rootKey,
+              builder: (_, __) => const SubscriptionHistoryPage()),
+          GoRoute(
+              path: subscriptionCheckoutPath,
+              parentNavigatorKey: _rootKey,
+              redirect: (_, state) => state.extra is BillingPurchaseModel ? null : subscriptionRoute,
+              pageBuilder: (_, state) => MaterialPage(
+                  key: state.pageKey,
+                  fullscreenDialog: true,
+                  child: PaymentCheckoutPage(purchase: state.extra as BillingPurchaseModel))),
+        ]),
     GoRoute(
         path: profileImageViewRoute,
         parentNavigatorKey: _rootKey,

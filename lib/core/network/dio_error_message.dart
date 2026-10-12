@@ -5,10 +5,13 @@ class DioErrorMessage {
 
   static const noInternetMessage = 'No internet connection. Please reconnect and try again.';
   static const accountNotFoundMessage = 'Account not found';
+  static const subscriptionExpiredMessage = 'Your subscription has expired';
+  static const subscriptionExpiredCode = 'SUBSCRIPTION_EXPIRED';
 
   static String from(DioException error) {
     final data = error.response?.data;
     if (_isDeletedAccountResponse(error, data)) return accountNotFoundMessage;
+    if (isSubscriptionExpiredResponse(error.response)) return subscriptionExpiredMessage;
     if (data is Map && data['message'] != null) return data['message'].toString();
     if (error.type == DioExceptionType.connectionError ||
         error.type == DioExceptionType.connectionTimeout ||
@@ -45,6 +48,17 @@ class DioErrorMessage {
     }
     return data?.toString().toLowerCase().trim() ?? '';
   }
+
+  /// Backend gate for paid content: `402 { "code": "SUBSCRIPTION_EXPIRED" }`.
+  static bool isSubscriptionExpiredResponse(Response<dynamic>? response) {
+    final data = response?.data;
+    return response?.statusCode == 402 &&
+        data is Map &&
+        data['code']?.toString() == subscriptionExpiredCode;
+  }
+
+  static bool isSubscriptionExpiredMessage(String? message) =>
+      message != null && message.trim() == subscriptionExpiredMessage;
 
   static bool isConnectionMessage(String? message) =>
       message != null && message.trim() == noInternetMessage;

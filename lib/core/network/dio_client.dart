@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/foundation.dart';
+import 'package:ustadia_user_app/core/network/dio_error_message.dart';
 
 class DioClient {
   DioClient._();
@@ -17,7 +18,8 @@ class DioClient {
   static Dio create(
       {String? baseUrl,
       String Function()? accessTokenGetter,
-      Future<void> Function()? onUnauthorized}) {
+      Future<void> Function()? onUnauthorized,
+      void Function()? onSubscriptionExpired}) {
     final options = BaseOptions(
       baseUrl: baseUrl ?? 'https://jsonplaceholder.typicode.com',
       connectTimeout: const Duration(seconds: 10),
@@ -29,7 +31,8 @@ class DioClient {
     final cacheOptions = CacheOptions(
         store: _cacheStore,
         policy: CachePolicy.request,
-        hitCacheOnErrorExcept: [401, 403],
+        // 402 must reach the app: a cached copy would hide an expired subscription.
+        hitCacheOnErrorExcept: [401, 402, 403],
         maxStale: const Duration(days: 7));
     dio.interceptors.add(DioCacheInterceptor(options: cacheOptions));
     dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
@@ -63,6 +66,10 @@ class DioClient {
           accessToken.isNotEmpty &&
           onUnauthorized != null) {
         await onUnauthorized();
+      }
+      if (DioErrorMessage.isSubscriptionExpiredResponse(error.response) &&
+          accessToken.isNotEmpty) {
+        onSubscriptionExpired?.call();
       }
       return handler.next(error);
     }));
