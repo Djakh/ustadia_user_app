@@ -58,6 +58,11 @@ class _SplashPageState extends State<SplashPage> {
         setState(() => startupErrorMessage = state.errorMessage);
         return;
       }
+      // Still signed in: the dashboard retries and the 402 opens the paywall there.
+      if (DioErrorMessage.isSubscriptionExpiredMessage(state.errorMessage)) {
+        goToDashboard();
+        return;
+      }
       goToLogin();
     }
   }

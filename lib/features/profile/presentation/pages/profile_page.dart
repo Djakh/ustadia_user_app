@@ -11,6 +11,8 @@ import 'package:ustadia_user_app/core/tutorial/tutorial_models.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_presets.dart';
 import 'package:ustadia_user_app/core/widgets/cards/primary_background.dart';
 import 'package:ustadia_user_app/core/widgets/loading/shimmer_grid.dart';
+import 'package:ustadia_user_app/features/billing/data/services/subscription_store.dart';
+import 'package:ustadia_user_app/features/billing/presentation/widgets/profile_subscription_card.dart';
 import 'package:ustadia_user_app/features/common/data/models/user_profile_model.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:ustadia_user_app/features/common/presentation/bloc/user_bloc/user_state.dart';
@@ -37,6 +39,7 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends State<ProfilePage> {
   final ProfileStatisticsStore statisticsStore = sl<ProfileStatisticsStore>();
   final NotificationBadgeStore notificationBadgeStore = sl<NotificationBadgeStore>();
+  final SubscriptionStore subscriptionStore = sl<SubscriptionStore>();
   final GlobalKey userCardKey = GlobalKey(debugLabel: 'profile_user_card');
   final GlobalKey statsKey = GlobalKey(debugLabel: 'profile_stats');
   final GlobalKey notificationsKey = GlobalKey(debugLabel: 'profile_notifications');
@@ -52,6 +55,7 @@ class ProfilePageState extends State<ProfilePage> {
     super.initState();
     statisticsStore.refreshIfNeeded();
     unawaited(notificationBadgeStore.refreshIfNeeded());
+    unawaited(subscriptionStore.refreshIfNeeded());
   }
 
   /// --- Data ---
@@ -240,6 +244,8 @@ class ProfilePageState extends State<ProfilePage> {
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const SizedBox(height: 12),
         KeyedSubtree(key: userCardKey, child: const ProfileUserCard()),
+        const SizedBox(height: 12),
+        ProfileSubscriptionCard(subscriptionStore: subscriptionStore),
         const SizedBox(height: 24),
         KeyedSubtree(key: statsKey, child: statsGrid(context)),
         const SizedBox(height: 24),

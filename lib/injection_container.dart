@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ustadia_user_app/core/services/session_logout_service.dart';
+import 'package:ustadia_user_app/core/services/subscription_expired_handler.dart';
 import 'package:ustadia_user_app/core/compliance/social_feature_settings_service.dart';
 import 'package:ustadia_user_app/core/tutorial/tutorial_storage_service.dart';
 import 'package:ustadia_user_app/features/ask_ai/data/datasources/ai_chat_remote_data_source.dart';
@@ -11,6 +12,12 @@ import 'package:ustadia_user_app/features/assignments/data/datasources/assignmen
 import 'package:ustadia_user_app/features/assignments/data/services/assignment_sections_store.dart';
 import 'package:ustadia_user_app/features/assignments/presentation/bloc/assignments_bloc/assignments_bloc.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:ustadia_user_app/features/billing/data/datasources/billing_remote_data_source.dart';
+import 'package:ustadia_user_app/features/billing/data/services/payment_order_poller.dart';
+import 'package:ustadia_user_app/features/billing/data/services/subscription_store.dart';
+import 'package:ustadia_user_app/features/billing/presentation/bloc/subscription_bloc/subscription_bloc.dart';
+import 'package:ustadia_user_app/features/billing/presentation/bloc/subscription_history_bloc/subscription_history_bloc.dart';
+import 'package:ustadia_user_app/features/billing/presentation/pages/subscription_page.dart';
 import 'package:ustadia_user_app/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_login_bloc.dart';
 import 'package:ustadia_user_app/features/auth/presentation/bloc/auth_password_bloc.dart';
@@ -63,6 +70,7 @@ import 'package:ustadia_user_app/features/reels/presentation/bloc/reel_user_prof
 import 'package:ustadia_user_app/features/reels/presentation/bloc/reels_bloc/reels_bloc.dart';
 import 'package:ustadia_user_app/core/services/firebase_word_forge_analytics.dart';
 import 'package:ustadia_user_app/features/word_forge/word_forge.dart';
+import 'package:ustadia_user_app/router.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 
@@ -81,27 +89,15 @@ Future<void> initDependencies() async {
       () => SocialFeatureSettingsService(preferences: sl()));
   sl.registerLazySingleton<TutorialStorageService>(() => TutorialStorageService(prefs: sl()));
   sl.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSource(prefs: sl()));
-  sl.registerLazySingleton<Dio>(() => DioClient.create(
-      baseUrl: apiBaseUrl,
-      accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken(),
-      onUnauthorized: () => SessionLogoutService.logout(
-          authLocalDataSource: sl<AuthLocalDataSource>(),
-          userRemoteDataSource:
-              sl.isRegistered<UserRemoteDataSource>() ? sl<UserRemoteDataSource>() : null,
-          unregisterDevice: false,
-          resetSessionData: resetTeacherScopedData)));
+  sl.registerLazySingleton<SubscriptionExpiredHandler>(() => SubscriptionExpiredHandler(
+      openPaywall: () => appRouter.push(subscriptionRoute,
+          extra: const SubscriptionPageParams(isExpired: true)),
+      currentPath: () => appRouter.routerDelegate.currentConfiguration.uri.path,
+      ignoredPaths: const {splashRoute, onboardingRoute, loginRoute, otpRoute, signUpRoute}));
+  sl.registerLazySingleton<Dio>(createApiDio);
 
   // Features - Auth
-  sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSource(
-      dio: DioClient.create(
-          baseUrl: apiBaseUrl,
-          accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken(),
-          onUnauthorized: () => SessionLogoutService.logout(
-              authLocalDataSource: sl<AuthLocalDataSource>(),
-              userRemoteDataSource:
-                  sl.isRegistered<UserRemoteDataSource>() ? sl<UserRemoteDataSource>() : null,
-              unregisterDevice: false,
-              resetSessionData: resetTeacherScopedData))));
+  sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSource(dio: createApiDio()));
   sl.registerFactory(() => AuthLoginBloc(
       authRemoteDataSource: sl(), authLocalDataSource: sl(), userRemoteDataSource: sl()));
   sl.registerFactory(() => AuthPasswordBloc(authRemoteDataSource: sl()));
@@ -225,12 +221,33 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => MockExamListBloc(mockExamRemoteDataSource: sl()));
   sl.registerFactory(() => MockExamSectionsBloc(mockExamRemoteDataSource: sl()));
 
+  // Features - Billing
+  sl.registerLazySingleton<BillingRemoteDataSource>(
+      () => BillingRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
+  sl.registerLazySingleton<SubscriptionStore>(
+      () => SubscriptionStore(billingRemoteDataSource: sl()));
+  sl.registerFactory(() => PaymentOrderPoller(billingRemoteDataSource: sl()));
+  sl.registerFactory(() => SubscriptionBloc(
+      billingRemoteDataSource: sl(), subscriptionStore: sl(), paymentOrderPoller: sl()));
+  sl.registerFactory(() => SubscriptionHistoryBloc(billingRemoteDataSource: sl()));
+
   // Features - Reels
   sl.registerLazySingleton<ReelsRemoteDataSource>(
       () => ReelsRemoteDataSource(dio: sl<AuthRemoteDataSource>().dio));
   sl.registerFactory(() => ReelsBloc(reelsRemoteDataSource: sl()));
   sl.registerFactory(() => ReelUserProfileBloc(reelsRemoteDataSource: sl()));
 }
+
+Dio createApiDio() => DioClient.create(
+    baseUrl: apiBaseUrl,
+    accessTokenGetter: () => sl<AuthLocalDataSource>().getAccessToken(),
+    onUnauthorized: () => SessionLogoutService.logout(
+        authLocalDataSource: sl<AuthLocalDataSource>(),
+        userRemoteDataSource:
+            sl.isRegistered<UserRemoteDataSource>() ? sl<UserRemoteDataSource>() : null,
+        unregisterDevice: false,
+        resetSessionData: resetTeacherScopedData),
+    onSubscriptionExpired: () => sl<SubscriptionExpiredHandler>().handle());
 
 Future<void> resetTeacherScopedData() async {
   await DioClient.clearCache();
@@ -252,6 +269,7 @@ Future<void> resetTeacherScopedData() async {
   await sl.resetLazySingleton<PracticeSentenceBuilderSetsBloc>();
   await sl.resetLazySingleton<PracticeWordMatchSetsBloc>();
   await sl.resetLazySingleton<MockExamListBloc>();
+  await sl.resetLazySingleton<SubscriptionStore>();
 }
 
 /// Stable id for Word Forge saves: the signed-in profile id. While the

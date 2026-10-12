@@ -6,6 +6,7 @@ import 'package:ustadia_user_app/assets/themes/app_colors.dart';
 import 'package:ustadia_user_app/assets/themes/style.dart';
 import 'package:ustadia_user_app/core/extensions/build_context_extension.dart';
 import 'package:ustadia_user_app/core/inherited_widgets/navigation_shell_scope.dart';
+import 'package:ustadia_user_app/features/billing/data/services/subscription_store.dart';
 import 'package:ustadia_user_app/features/dashboard/data/services/current_unit_store.dart';
 import 'package:ustadia_user_app/features/profile/data/services/profile_statistics_store.dart';
 import 'package:ustadia_user_app/injection_container.dart';
@@ -39,6 +40,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (state != AppLifecycleState.resumed) return;
     sl<ProfileStatisticsStore>().markStale();
     sl<CurrentUnitStore>().markStale();
+    sl<SubscriptionStore>().markStale();
     sl<ProfileStatisticsStore>().refreshIfNeeded();
     sl<CurrentUnitStore>().refreshIfNeeded();
   }
@@ -53,6 +55,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
     if (i == 4) {
       sl<ProfileStatisticsStore>().refreshIfNeeded();
+      sl<SubscriptionStore>().refreshIfNeeded();
     }
     widget.navigationShell.goBranch(i, initialLocation: i == current);
     setState(() {});
